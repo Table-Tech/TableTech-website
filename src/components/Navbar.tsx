@@ -6,7 +6,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="bg-white shadow">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-blue-600">QRMenu</Link>
+        <Link to="/" className="text-xl font-bold text-blue-600">TableTech</Link>
         <nav className={`md:flex space-x-6 ${open ? "" : "hidden"}`}>
           <Link to="/" className="hover:text-blue-600">Home</Link>
           <Link to="/features" className="hover:text-blue-600">Features</Link>
