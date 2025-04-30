@@ -1,18 +1,16 @@
+// src/App.tsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { LandingPage } from "./pages/LandingPage";
+import { Hero } from "./components/Hero"; // ✅ complete homepage wrapper
 import "./index.css";
-// import other pages as you build them
 
-const App: React.FC = () => (
-  <Routes>
-    <Route path="/" element={<LandingPage />} />
-    {/* future routes:
-      <Route path="/features" element={<FeaturesPage />} />
-      <Route path="/pricing" element={<PricingPage />} />
-      ...
-    */}
-  </Routes>
-);
+const App: React.FC = () => {
+  return (
+    <Routes>
+      {/* ✅ Dit toont de volledige homepage met 3D én alle secties */}
+      <Route path="/" element={<Hero />} />
+    </Routes>
+  );
+};
 
 export default App;
