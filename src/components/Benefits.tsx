@@ -78,11 +78,13 @@ export const Benefits: React.FC = () => {
                     : "opacity-0 translate-y-8 scale-95"
                 } hover:scale-[1.03] hover:shadow-2xl transition-transform duration-300`}
               >
-                <img
-                  src={imgSrc}
-                  alt={alt}
-                  className="mx-auto mb-4 h-24 w-24 object-cover rounded-full shadow-md"
-                />
+                <div className="relative group">
+                  <img
+                    src={imgSrc}
+                    alt={alt}
+                    className="mx-auto mb-4 h-24 w-24 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-blue-100"
+                  />
+                </div>
                 <h3 className="text-lg font-semibold mb-2 text-gray-900">{title}</h3>
                 <p className="text-gray-800 text-sm">{desc}</p>
               </div>
