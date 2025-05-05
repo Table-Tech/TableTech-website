@@ -6,19 +6,15 @@ import { PricingPage } from "./pages/PricingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { ScrollProgressBar } from "./components/ScrollProgressBar";
 import { VerticalLightStream } from "./components/VerticalLigthStream"; // ✅ toegevoegd
-import { HolographicLine } from "./components/HolographicLine" // pad afhankelijk van je structuur
+import { HolographicLine } from "./components/HolographicLine"; // pad afhankelijk van je structuur
 
 import "./index.css";
 
 const App: React.FC = () => (
   <>
-    {/* Scroll voortgangsbalk */}
-    <ScrollProgressBar />
-
     {/* Verticale datastraal links */}
-    <VerticalLightStream /> {/* ✅ toegevoegd */}
+    <VerticalLightStream />
     <HolographicLine />
 
     {/* Paginaroutes */}
