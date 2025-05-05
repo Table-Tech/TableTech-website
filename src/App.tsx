@@ -8,6 +8,7 @@ import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { ScrollProgressBar } from "./components/ScrollProgressBar";
 import { VerticalLightStream } from "./components/VerticalLigthStream"; // ✅ toegevoegd
+import { HolographicLine } from "./components/HolographicLine" // pad afhankelijk van je structuur
 
 import "./index.css";
 
@@ -18,6 +19,7 @@ const App: React.FC = () => (
 
     {/* Verticale datastraal links */}
     <VerticalLightStream /> {/* ✅ toegevoegd */}
+    <HolographicLine />
 
     {/* Paginaroutes */}
     <Routes>
