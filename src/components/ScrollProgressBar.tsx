@@ -1,4 +1,4 @@
-// src/components/ScrollProgressBar.tsx
+// src/components/ScrollProgressBar.tsx ****************** we gebruiken dit niet heb uit app.tsx gezet  we kunnen altijd nog gebruiken 
 import { useEffect, useState } from "react";
 
 export const ScrollProgressBar: React.FC = () => {
