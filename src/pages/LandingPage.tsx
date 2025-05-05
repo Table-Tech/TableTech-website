@@ -1,18 +1,30 @@
-import React from "react";
-import { Navbar } from "../components/Navbar";
-import { Hero } from "../components/Hero";
+// src/pages/LandingPage.tsx
+import { HeroSection } from "../components/HeroSection";
 import { Benefits } from "../components/Benefits";
-import { HowItWorks } from "../components/HowItWorks";
+import { DashboardPreview } from "../components/DashboardPreview";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
+import { Navbar } from "../components/Navbar";
+import { ScrollDots } from "../components/ScrollDotss";
+import { VerticalLightStream } from "../components/VerticalLigthStream";
 
-export const LandingPage: React.FC = () => (
-  <>
-    <Navbar />
-    <Hero />
-    <Benefits />
-    <HowItWorks />
-    <CallToAction />
-    <Footer />
-  </>
-);
+
+const LandingPage: React.FC = () => {
+  return (
+    <>
+      <Navbar />
+      <main className="pt-20 min-h-screen">
+        <VerticalLightStream />
+        
+        <ScrollDots />
+        <HeroSection />
+        <Benefits />
+        <DashboardPreview />
+        <CallToAction />
+        <Footer />
+      </main>
+    </>
+  );
+};
+
+export default LandingPage;
