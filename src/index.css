@@ -6,3 +6,20 @@ body {
   background-attachment: fixed;
   min-height: 100vh;
 }
+@keyframes move-down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0.1;
+  }
+}
+
+.animate-move-down {
+  animation: move-down 3.5s linear infinite;
+}
