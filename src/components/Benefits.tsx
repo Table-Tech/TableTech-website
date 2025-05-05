@@ -1,4 +1,3 @@
-// src/components/Benefits.tsx
 import React, { useEffect, useRef, useState } from "react";
 import turnoverImg from "../assets/turnover.png";
 import workloadImg from "../assets/workload.png";
@@ -82,7 +81,7 @@ export const Benefits: React.FC = () => {
                   <img
                     src={imgSrc}
                     alt={alt}
-                    className="mx-auto mb-4 h-24 w-24 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-blue-100"
+                    className="mx-auto mb-6 h-36 w-36 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-blue-100"
                   />
                 </div>
                 <h3 className="text-lg font-semibold mb-2 text-gray-900">{title}</h3>
