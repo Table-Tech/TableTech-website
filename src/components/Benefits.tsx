@@ -59,7 +59,7 @@ export const Benefits: React.FC = () => {
   }, [visible]);
 
   return (
-    <section className="relative bg-blue-50 py-24 px-4">
+    <section id="benefits" className="relative bg-blue-50 py-16 px-4">
       <div className="container mx-auto max-w-7xl">
         <div className="bg-white/40 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-10">
           <h2 className="text-3xl font-bold text-center mb-12 text-blue-900">

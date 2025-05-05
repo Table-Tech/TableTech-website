@@ -18,7 +18,10 @@ export const DashboardPreview: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative z-0 bg-gradient-to-b from-blue-50 via-white to-cyan-50 py-24 px-4">
+    <section
+      id="dashboard"
+      className="relative z-0 bg-gradient-to-b from-blue-50 via-white to-cyan-50 py-24 px-4"
+    >
       <div className="container mx-auto max-w-6xl">
         <div className="bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-10 transition-all duration-700">
           <h2 className="text-3xl font-bold mb-6 text-gray-900 text-center">
@@ -31,7 +34,9 @@ export const DashboardPreview: React.FC = () => {
           <div
             ref={ref}
             className={`flex flex-col lg:flex-row items-center justify-center gap-10 transform transition-all duration-1000 ease-out ${
-              visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-95"
+              visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-8 scale-95"
             }`}
           >
             {/* 📊 Dashboard afbeelding */}
