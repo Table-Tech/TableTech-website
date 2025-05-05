@@ -6,8 +6,8 @@ import { PricingPage } from "./pages/PricingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { VerticalLightStream } from "./components/VerticalLigthStream"; // ✅ toegevoegd
-import { HolographicLine } from "./components/HolographicLine"; // pad afhankelijk van je structuur
+import { VerticalLightStream } from "./components/VerticalLigthStream"; 
+import { HolographicLine } from "./components/HolographicLine"; 
 
 import "./index.css";
 
