@@ -12,6 +12,11 @@ import FooiGevenAnimation from "../assets/animations/fooi-geven-animation.json";
 import ProductVooraad from "../assets/animations/product-stock-animation.json";
 import Multitalen from "../assets/animations/Multi-talen-animation.json";
 import Feedback from "../assets/animations/feedback-animation.json";
+import Upsell from "../assets/animations/upsell-animatie.json";
+import StaffPressure from "../assets/animations/staffPressure-animation.json";
+import HappyClients from "../assets/animations/happy-clinet-animation.json";
+import EffcientWork from "../assets/animations/efficient-work-animation.json";
+
 
 export const FeaturePage: React.FC = () => {
   const features = [
@@ -50,7 +55,8 @@ export const FeaturePage: React.FC = () => {
       title: "Upsell-opties bij bestelling",
       description:
         "Toon slimme suggesties tijdens het bestelproces – verhoog de gemiddelde bestelwaarde.",
-      glow: false,
+        animation: Upsell,
+      glow: true,
     },
     {
       title: "Feedback verzamelen",
@@ -69,18 +75,21 @@ export const FeaturePage: React.FC = () => {
     {
       title: "Minder personeelsdruk",
       description: "Door zelfbediening besparen ondernemers flink op personeel – zeker in drukke tijden.",
-      glow: false,
+      animation: StaffPressure,
+      glow: true,
     },
     {
       title: "Hogere klanttevredenheid",
       description:
         "Gasten ervaren snelheid, duidelijkheid en controle – wat leidt tot hogere reviews en herhaalbezoeken.",
+        animation: HappyClients,
       glow: false,
     },
     {
       title: "Efficiënter werken",
       description:
         "Van bestelling tot betaling – alles digitaal geregeld. Minder fouten, sneller rondes lopen.",
+        animation: EffcientWork,
       glow: false,
     },
   ];
