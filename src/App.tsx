@@ -13,11 +13,8 @@ import "./index.css";
 
 const App: React.FC = () => (
   <>
-    {/* Verticale datastraal links */}
     <VerticalLightStream />
     <HolographicLine />
-
-    {/* Paginaroutes */}
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/features" element={<FeaturePage />} />
