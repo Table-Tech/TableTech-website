@@ -1,3 +1,4 @@
+// src/components/Benefits.tsx
 import React, { useEffect, useRef, useState } from "react";
 import turnoverImg from "../assets/turnover.png";
 import workloadImg from "../assets/workload.png";
@@ -58,13 +59,13 @@ export const Benefits: React.FC = () => {
   }, [visible]);
 
   return (
-    <section id="benefits" className="relative bg-blue-50 py-16 px-4">
-      <div className="container mx-auto max-w-7xl">
-        <div className="bg-white/40 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-10">
-          <h2 className="text-3xl font-bold text-center mb-12 text-blue-900">
+    <section id="benefits" className="relative bg-blue-50 py-12 px-2">
+      <div className="container mx-auto max-w-5xl">
+        <div className="bg-white/40 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-8">
+          <h2 className="text-2xl font-bold text-center mb-10 text-blue-900">
             Waarom TableTech?
           </h2>
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {data.map(({ imgSrc, alt, title, desc }, i) => (
               <div
                 key={title}
@@ -81,10 +82,10 @@ export const Benefits: React.FC = () => {
                   <img
                     src={imgSrc}
                     alt={alt}
-                    className="mx-auto mb-6 h-36 w-36 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-blue-100"
+                    className="mx-auto mb-6 h-32 w-32 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-blue-100"
                   />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900">{title}</h3>
+                <h3 className="text-base font-semibold mb-2 text-gray-900">{title}</h3>
                 <p className="text-gray-800 text-sm">{desc}</p>
               </div>
             ))}
