@@ -19,7 +19,7 @@ export const CallToAction: React.FC = () => {
   return (
     <section
       id="cta"
-      className="relative bg-cyan-50 py-20 px-2 text-center"
+      className="relative py-12 px-2 text-center"
     >
       <div className="container mx-auto max-w-3xl">
         <div
