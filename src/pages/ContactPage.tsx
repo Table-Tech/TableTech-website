@@ -29,7 +29,7 @@ export const ContactPage: React.FC = () => {
     <>
       <Navbar />
 
-      <section className="bg-gradient-to-b from-blue-50 via-white to-cyan-50 pt-24 pb-24 px-4 text-gray-900">
+      <main className="scale-[0.90] origin-top bg-gradient-to-b from-blue-50 via-white to-cyan-50 text-gray-900 pt-24 pb-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-blue-900">
             Vragen? Wij staan voor je klaar
@@ -55,7 +55,6 @@ export const ContactPage: React.FC = () => {
             Laat je gegevens achter, we reageren zo snel mogelijk.
           </p>
 
-          {/* Name + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
               <input
@@ -79,7 +78,6 @@ export const ContactPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Phone + Company */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
               <input
@@ -101,7 +99,6 @@ export const ContactPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Message */}
           <div>
             <textarea
               rows={4}
@@ -112,7 +109,6 @@ export const ContactPage: React.FC = () => {
             ></textarea>
           </div>
 
-          {/* Submit */}
           <div className="text-center">
             <button
               type="submit"
@@ -122,7 +118,7 @@ export const ContactPage: React.FC = () => {
             </button>
           </div>
         </form>
-      </section>
+      </main>
 
       <CallToAction />
       <Footer />
