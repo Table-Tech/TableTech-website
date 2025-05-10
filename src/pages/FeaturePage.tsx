@@ -1,4 +1,4 @@
-// src/pages/FeaturePage.tsx 
+// src/pages/FeaturePage.tsx
 import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 
-// Animaties JONG BOYS
+// Animaties
 import statsAnimation from "../assets/animations/statistics-animation.json";
 import ChefAnimation from "../assets/animations/chef-animation1.json";
 import DigitalReceiptAnimation from "../assets/animations/Digtial-bon-animation.json";
@@ -50,21 +50,18 @@ export const FeaturePage: React.FC = () => {
     },
     {
       title: "Upsell-opties bij bestelling",
-      description:
-        "Toon slimme suggesties tijdens het bestelproces – verhoog de gemiddelde bestelwaarde.",
+      description: "Toon slimme suggesties tijdens het bestelproces – verhoog de gemiddelde bestelwaarde.",
       animation: Upsell,
     },
     null,
     {
       title: "Feedback verzamelen",
-      description:
-        "Gasten geven direct feedback na betaling – waardevol zonder dat personeel iets hoeft te vragen.",
+      description: "Gasten geven direct feedback na betaling – waardevol zonder dat personeel iets hoeft te vragen.",
       animation: Feedback,
     },
     {
       title: "Personeelsnotificaties",
-      description:
-        "Meldingen voor personeel bij nieuwe of aangepaste bestellingen – geen handmatig roepen meer.",
+      description: "Meldingen voor personeel bij nieuwe of aangepaste bestellingen – geen handmatig roepen meer.",
       animation: ChefAnimation,
     },
     {
@@ -74,8 +71,7 @@ export const FeaturePage: React.FC = () => {
     },
     {
       title: "Hogere klanttevredenheid",
-      description:
-        "Gasten ervaren snelheid, duidelijkheid en controle – wat leidt tot hogere reviews en herhaalbezoeken.",
+      description: "Gasten ervaren snelheid, duidelijkheid en controle – wat leidt tot hogere reviews en herhaalbezoeken.",
       animation: HappyClients,
     },
   ];
@@ -83,8 +79,8 @@ export const FeaturePage: React.FC = () => {
   return (
     <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900">
       <Navbar />
-      <main className="pt-16">
-        <section id="dashboard" className="py-16 px-2">
+      <main className="pt-20 sm:pt-24">
+        <section id="dashboard" className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto max-w-7xl">
             <div className="bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-10">
               <h1 className="text-3xl md:text-4xl font-bold text-center mb-12 text-blue-900">
@@ -101,8 +97,8 @@ export const FeaturePage: React.FC = () => {
                       >
                         <Lottie
                           animationData={CircleAnimation}
-                          loop={true}
-                          className="w-80 h-80"
+                          loop
+                          className="w-64 h-64 sm:w-72 sm:h-72"
                         />
                       </div>
                     );
@@ -113,7 +109,7 @@ export const FeaturePage: React.FC = () => {
                   return (
                     <motion.div
                       key={title}
-                      className="relative w-[300px] h-[220px] bg-white/70 backdrop-blur-md border border-white/50 rounded-2xl shadow-xl overflow-hidden group"
+                      className="relative w-[260px] sm:w-[300px] h-[220px] bg-white/70 backdrop-blur-md border border-white/50 rounded-2xl shadow-xl overflow-hidden group"
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       whileHover={{
@@ -129,10 +125,10 @@ export const FeaturePage: React.FC = () => {
                       </div>
 
                       <div className="pointer-events-none z-0 flex items-center justify-center h-full pt-5">
-                        <Lottie animationData={animation} loop={true} className="w-28 h-28" />
+                        <Lottie animationData={animation} loop className="w-24 h-24 sm:w-28 sm:h-28" />
                       </div>
 
-                      <div className="absolute top-0 left-0 w-full h-full pt-[38px] bg-white/95 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-linear flex flex-col items-center justify-center text-center px-5 z-10 rounded-2xl">
+                      <div className="absolute top-0 left-0 w-full h-full pt-[38px] bg-white/95 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-linear flex flex-col items-center justify-center text-center px-4 z-10 rounded-2xl">
                         <p className="text-sm text-gray-700">{description}</p>
                       </div>
                     </motion.div>
