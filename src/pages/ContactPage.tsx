@@ -1,3 +1,4 @@
+// src/pages/ContactPage.tsx
 import React, { useRef } from "react";
 import emailjs from "@emailjs/browser";
 import { Navbar } from "../components/Navbar";
@@ -28,16 +29,16 @@ export const ContactPage: React.FC = () => {
     <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900 flex flex-col">
       <Navbar />
 
-      <main className="pt-16 scale-[0.90] transform origin-top transition-transform duration-300 flex-grow">
-        <section className="py-16 px-4">
+      <main className="pt-20 sm:pt-24 scale-[0.97] transform origin-top transition-transform duration-300 flex-grow">
+        <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-blue-900">
               Vragen? Wij staan voor je klaar
             </h2>
-            <p className="mb-4 max-w-xl mx-auto text-sm md:text-base">
+            <p className="mb-4 max-w-xl mx-auto text-sm sm:text-base">
               Heb je vragen over sales of een samenwerking? Laat je gegevens achter en we nemen snel contact op.
             </p>
-            <p className="mb-10 max-w-xl mx-auto text-sm md:text-base">
+            <p className="mb-10 max-w-xl mx-auto text-sm sm:text-base">
               Voor <strong>support</strong> kun je mailen naar{" "}
               <a href="mailto:info@tabletech.nl" className="text-blue-600 underline font-medium">
                 info@tabletech.nl
@@ -48,7 +49,7 @@ export const ContactPage: React.FC = () => {
           <form
             ref={form}
             onSubmit={sendEmail}
-            className="mt-12 max-w-4xl mx-auto bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 md:p-10 space-y-6"
+            className="mt-12 max-w-4xl mx-auto bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 space-y-6"
           >
             <h3 className="text-xl font-semibold text-center text-blue-800">Contactgegevens</h3>
             <p className="text-sm text-center text-gray-700 mb-6">
@@ -120,7 +121,6 @@ export const ContactPage: React.FC = () => {
           </form>
         </section>
 
-        {/* Geen ruimte onder CallToAction */}
         <section className="p-0 m-0">
           <div className="flex justify-center">
             <CallToAction />
@@ -128,7 +128,6 @@ export const ContactPage: React.FC = () => {
         </section>
       </main>
 
-      {/* Footer direct onder CallToAction zonder padding */}
       <Footer />
     </div>
   );
