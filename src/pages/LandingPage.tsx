@@ -8,22 +8,24 @@ import { Navbar } from "../components/Navbar";
 import { ScrollDots } from "../components/ScrollDotss";
 import { VerticalLightStream } from "../components/VerticalLigthStream";
 
-
 const LandingPage: React.FC = () => {
   return (
-    <>
+    <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900">
       <Navbar />
-      <main className="pt-20 min-h-screen">
+      <main className="pt-20">
         <VerticalLightStream />
-        
         <ScrollDots />
         <HeroSection />
         <Benefits />
         <DashboardPreview />
-        <CallToAction />
-        <Footer />
+        <section className="pt-12 pb-6">
+          <CallToAction />
+        </section>
+        <footer className="py-6">
+          <Footer />
+        </footer>
       </main>
-    </>
+    </div>
   );
 };
 
