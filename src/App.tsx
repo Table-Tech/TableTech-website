@@ -6,8 +6,10 @@ import { PricingPage } from "./pages/PricingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { VerticalLightStream } from "./components/VerticalLigthStream"; 
-import { HolographicLine } from "./components/HolographicLine"; 
+import { VerticalLightStream } from "./components/VerticalLigthStream";
+import { HolographicLine } from "./components/HolographicLine";
+import ScrollToTop from "./components/ScrollToTop";
+import { ScrollDots } from "./components/ScrollDotss"; 
 
 import "./index.css";
 
@@ -15,6 +17,9 @@ const App: React.FC = () => (
   <>
     <VerticalLightStream />
     <HolographicLine />
+    <ScrollToTop />
+    <ScrollDots /> 
+
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/features" element={<FeaturePage />} />
