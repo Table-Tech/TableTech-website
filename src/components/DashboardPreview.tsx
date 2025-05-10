@@ -18,10 +18,7 @@ export const DashboardPreview: React.FC = () => {
   }, []);
 
   return (
-    <section
-      id="dashboard"
-      className="relative z-0 bg-gradient-to-b from-blue-50 via-white to-cyan-50 py-20 px-2"
-    >
+    <section id="dashboard" className="relative py-16 px-2">
       <div className="container mx-auto max-w-5xl">
         <div className="bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-8 transition-all duration-700">
           <h2 className="text-2xl font-bold mb-4 text-gray-900 text-center">
