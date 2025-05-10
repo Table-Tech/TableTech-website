@@ -8,7 +8,7 @@ export const AboutPage: React.FC = () => (
   <>
     <Navbar />
 
-    <section className="bg-gradient-to-b from-blue-50 via-white to-cyan-50 text-gray-900 py-24 px-4">
+    <main className="scale-[0.90] origin-top bg-gradient-to-b from-blue-50 via-white to-cyan-50 text-gray-900 py-24 px-4">
       <div className="max-w-5xl mx-auto bg-white/60 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-10">
         <h1 className="text-4xl font-bold text-center mb-12 text-blue-900">Over TableTech</h1>
 
@@ -55,7 +55,7 @@ export const AboutPage: React.FC = () => (
           </p>
         </section>
       </div>
-    </section>
+    </main>
 
     <CallToAction />
     <Footer />
