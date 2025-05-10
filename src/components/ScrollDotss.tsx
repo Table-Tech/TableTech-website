@@ -37,7 +37,7 @@ export const ScrollDots: React.FC = () => {
           className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
             active === id
               ? "bg-blue-600 border-blue-600 scale-125"
-              : "bg-white/70 border-white"
+              : "bg-white/60 border-gray-400"
           }`}
           aria-label={`Ga naar ${id}`}
         />
