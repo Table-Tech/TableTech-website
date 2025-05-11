@@ -10,7 +10,7 @@ import { VerticalLightStream } from "./components/VerticalLigthStream";
 import { HolographicLine } from "./components/HolographicLine";
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
-import { SupportChat } from "./pages/ChatWidget";
+import { SupportChat } from "./pages/SupportChat";
 
 import "./index.css";
 
