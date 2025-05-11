@@ -9,7 +9,8 @@ import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { VerticalLightStream } from "./components/VerticalLigthStream";
 import { HolographicLine } from "./components/HolographicLine";
 import ScrollToTop from "./components/ScrollToTop";
-import { ScrollDots } from "./components/ScrollDotss"; 
+import { ScrollDots } from "./components/ScrollDotss";
+import { SupportChat } from "./pages/ChatWidget";
 
 import "./index.css";
 
@@ -18,8 +19,8 @@ const App: React.FC = () => (
     <VerticalLightStream />
     <HolographicLine />
     <ScrollToTop />
-    <ScrollDots /> 
-
+    <ScrollDots />
+    <SupportChat />
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/features" element={<FeaturePage />} />
