@@ -11,7 +11,7 @@ export const Footer: React.FC = () => (
         &copy; {new Date().getFullYear()}{" "}
         <span className="font-semibold text-gray-800">TableTech</span>. Alle rechten voorbehouden.
       </p>
-      <div className="flex space-x-6 mt-4 md:mt-0 justify-center md:justify-end">
+      <div className="flex space-x-6 mt-4 md:mt-0 justify-center md:justify-end md:pr-8">
         <Link
           to="/about"
           className="hover:text-blue-600 hover:underline underline-offset-4 transition-all duration-200"
