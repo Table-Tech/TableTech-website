@@ -122,7 +122,7 @@ export const PhoneMock: React.FC = () => {
 
       {/* Order Bar */}
       <AnimatePresence>
-        {cart.length > 0 && (
+        {cart.length > 0 && !selectedItem && (
           <motion.div
             key={cart.length}
             initial={{ opacity: 0 }}
@@ -153,42 +153,112 @@ export const PhoneMock: React.FC = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.3 }}
-            className="absolute inset-0 z-40 bg-white flex flex-col pb-[60px]"
+            className="absolute inset-0 z-40 bg-white flex flex-col"
           >
-            <img
-              src={`/menu/${selectedItem.image}`}
-              alt={selectedItem.name}
-              className="w-full h-40 object-cover"
-            />
-            <div className="p-4 flex-1 flex flex-col">
-              <h2 className="text-xl font-bold mb-2">{selectedItem.name}</h2>
-              <p className="text-sm text-gray-600 mb-6">
-                This is a delicious example dish with rich flavor and
-                presentation.
-              </p>
-              <div className="mt-auto flex justify-between items-center">
-                <span className="text-lg font-semibold">
-                  €{selectedItem.price.toFixed(2)}
-                </span>
-                <button
-                  onClick={() => {
-                    addToCart(selectedItem.id);
-                    setSelectedItem(null);
-                  }}
-                  className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition shadow"
-                >
-                  Add to Order
-                </button>
-              </div>
+            {/* Header image with back button */}
+            <div className="relative">
+              <img
+                src={`/menu/${selectedItem.image}`}
+                alt={selectedItem.name}
+                className="w-full h-44 object-cover"
+              />
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white text-xl font-bold text-gray-800 flex items-center justify-center shadow"
+              >
+                ←
+              </button>
             </div>
 
-            {/* Back button */}
-            <button
-              onClick={() => setSelectedItem(null)}
-              className="absolute top-3 left-4 w-8 h-8 rounded-full bg-gray-200 text-xl font-bold text-gray-700 hover:bg-gray-300 flex items-center justify-center shadow"
-            >
-              ←
-            </button>
+            {/* Info content */}
+            {/* Info content with fade */}
+            <div className="relative flex-1 overflow-hidden">
+              {/* Scrollable content */}
+              <div className="p-4 h-full overflow-y-auto pb-[100px] flex flex-col gap-4">
+                {/* Title + Price */}
+                <div>
+                  <h2 className="text-2xl font-bold text-black">
+                    {selectedItem.name}
+                  </h2>
+                  <p className="text-xl text-gray-500 mt-1">
+                    €{selectedItem.price.toFixed(2)}
+                  </p>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-gray-600">
+                  This is a delicious example dish with rich flavor and
+                  presentation.
+                </p>
+
+                {/* Spicy/Original radio group */}
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">
+                    Keuze Original/Spicy
+                  </h4>
+                  <p className="text-xs text-gray-500 mb-2">Choose up to 1</p>
+                  <div className="flex flex-col gap-2">
+                    {["Spicy", "Original"].map((option) => (
+                      <label
+                        key={option}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        <input
+                          type="radio"
+                          name="flavor"
+                          className="accent-black"
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Toppings */}
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">
+                    Toppings toevoegen / Add Toppings
+                  </h4>
+                  <p className="text-xs text-gray-500 mb-2">Choose up to 7</p>
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { name: "extra kaas", price: 0.75 },
+                      { name: "extra augurk", price: 0.75 },
+                      { name: "extra jalopenos", price: 0.75 },
+                    ].map((top) => (
+                      <label
+                        key={top.name}
+                        className="flex justify-between items-center text-sm"
+                      >
+                        <div>
+                          <span className="block font-medium">{top.name}</span>
+                          <span className="text-xs text-gray-500">
+                            +€{top.price.toFixed(2)}
+                          </span>
+                        </div>
+                        <input type="checkbox" className="accent-black" />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Gradient fade-out */}
+              <div className="pointer-events-none absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent z-10" />
+            </div>
+
+            {/* Add to Order Button */}
+            <div className="absolute bottom-4 left-4 right-4 z-50">
+              <button
+                onClick={() => {
+                  addToCart(selectedItem.id);
+                  setSelectedItem(null);
+                }}
+                className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition text-center"
+              >
+                Toevoegen aan bestelling • €{selectedItem.price.toFixed(2)}
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
