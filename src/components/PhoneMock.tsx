@@ -13,6 +13,9 @@ export const PhoneMock: React.FC = () => {
   const [cart, setCart] = useState<number[]>([]);
   const [hasCartAppeared, setHasCartAppeared] = useState(false);
   const [floaters, setFloaters] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<(typeof mockMenu)[0] | null>(
+    null
+  );
 
   const addToCart = (id: number) => {
     setCart((prev) => [...prev, id]);
@@ -32,10 +35,6 @@ export const PhoneMock: React.FC = () => {
     .map((id) => mockMenu.find((item) => item.id === id)?.price || 0)
     .reduce((a, b) => a + b, 0)
     .toFixed(2);
-
-  const [selectedItem, setSelectedItem] = useState<(typeof mockMenu)[0] | null>(
-    null
-  );
 
   return (
     <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
@@ -78,7 +77,8 @@ export const PhoneMock: React.FC = () => {
           {mockMenu.map((item) => (
             <div
               key={item.id}
-              className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition"
+              onClick={() => setSelectedItem(item)}
+              className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition cursor-pointer"
             >
               <img
                 src={`/menu/${item.image}`}
@@ -92,7 +92,10 @@ export const PhoneMock: React.FC = () => {
                 €{item.price.toFixed(2)}
               </p>
               <button
-                onClick={() => addToCart(item.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(item.id);
+                }}
                 className="absolute bottom-2 right-2 bg-green-500 hover:bg-green-600 text-white rounded-full w-7 h-7 text-sm flex items-center justify-center shadow-md transition"
               >
                 +
@@ -126,7 +129,7 @@ export const PhoneMock: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute bottom-0 left-0 w-full p-3 bg-black text-white text-sm font-semibold text-center"
+            className="absolute bottom-0 left-0 w-full p-3 bg-black text-white text-sm font-semibold text-center z-50"
           >
             Order {cart.length} item{cart.length > 1 && "s"} for{" "}
             <motion.span
@@ -138,6 +141,54 @@ export const PhoneMock: React.FC = () => {
             >
               €{total}
             </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal View */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-40 bg-white flex flex-col pb-[60px]"
+          >
+            <img
+              src={`/menu/${selectedItem.image}`}
+              alt={selectedItem.name}
+              className="w-full h-40 object-cover"
+            />
+            <div className="p-4 flex-1 flex flex-col">
+              <h2 className="text-xl font-bold mb-2">{selectedItem.name}</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                This is a delicious example dish with rich flavor and
+                presentation.
+              </p>
+              <div className="mt-auto flex justify-between items-center">
+                <span className="text-lg font-semibold">
+                  €{selectedItem.price.toFixed(2)}
+                </span>
+                <button
+                  onClick={() => {
+                    addToCart(selectedItem.id);
+                    setSelectedItem(null);
+                  }}
+                  className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition shadow"
+                >
+                  Add to Order
+                </button>
+              </div>
+            </div>
+
+            {/* Back button */}
+            <button
+              onClick={() => setSelectedItem(null)}
+              className="absolute top-3 left-4 w-8 h-8 rounded-full bg-gray-200 text-xl font-bold text-gray-700 hover:bg-gray-300 flex items-center justify-center shadow"
+            >
+              ←
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
