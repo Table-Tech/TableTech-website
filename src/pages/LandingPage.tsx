@@ -3,7 +3,6 @@ import { HeroSection } from "../components/HeroSection";
 import { Benefits } from "../components/Benefits";
 import { DashboardPreview } from "../components/DashboardPreview";
 import { CallToAction } from "../components/CallToAction";
-import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { ScrollDots } from "../components/ScrollDotss";
 import { VerticalLightStream } from "../components/VerticalLigthStream";
@@ -24,10 +23,6 @@ const LandingPage: React.FC = () => {
         <section className="pt-12 pb-6">
           <CallToAction />
         </section>
-
-        <footer className="py-6">
-          <Footer />
-        </footer>
       </main>
     </div>
   );
