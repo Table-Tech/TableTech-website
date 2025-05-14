@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const mockMenu = [
@@ -11,13 +11,17 @@ const mockMenu = [
 
 export const PhoneMock: React.FC = () => {
   const [cart, setCart] = useState<number[]>([]);
-  const [justAdded, setJustAdded] = useState(false);
+  const [hasCartAppeared, setHasCartAppeared] = useState(false);
 
   const addToCart = (id: number) => {
     setCart((prev) => [...prev, id]);
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 500); // Reset animation flag
   };
+
+  useEffect(() => {
+    if (cart.length > 0 && !hasCartAppeared) {
+      setHasCartAppeared(true);
+    }
+  }, [cart.length, hasCartAppeared]);
 
   const total = cart
     .map((id) => mockMenu.find((item) => item.id === id)?.price || 0)
@@ -25,21 +29,23 @@ export const PhoneMock: React.FC = () => {
     .toFixed(2);
 
   return (
-    <div className="w-[300px] h-[600px] rounded-[2rem] shadow-lg border-4 border-black bg-white overflow-hidden flex flex-col">
+    <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="text-lg font-bold text-red-600">★ TableTech</div>
-        <button className="text-sm border px-2 py-1 rounded-full">
+      <div className="flex items-center justify-between p-4 border-b shadow-sm">
+        <div className="text-lg font-bold text-red-600 tracking-tight">
+          ★ TableTech
+        </div>
+        <button className="text-xs border px-3 py-1 rounded-full hover:bg-gray-100 transition">
           English
         </button>
       </div>
 
       {/* Categories */}
-      <div className="flex overflow-x-auto p-2 gap-3 border-b">
+      <div className="flex overflow-x-auto px-2 py-3 gap-2 border-b">
         {["Popular", "Curry", "Ramen", "Teppanyaki", "Donburi"].map((cat) => (
           <button
             key={cat}
-            className="text-sm whitespace-nowrap bg-yellow-100 rounded-full px-4 py-1 font-medium"
+            className="text-xs whitespace-nowrap bg-yellow-200 hover:bg-yellow-300 rounded-full px-4 py-1 font-medium transition"
           >
             {cat}
           </button>
@@ -47,25 +53,27 @@ export const PhoneMock: React.FC = () => {
       </div>
 
       {/* Menu List */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-24">
         <div className="grid grid-cols-2 gap-3">
           {mockMenu.map((item) => (
             <div
               key={item.id}
-              className="relative flex flex-col items-center bg-white border rounded-lg shadow-md overflow-hidden p-2 pb-10"
+              className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition"
             >
               <img
-                src={`/menu/${item.image}`} // <- coming soon, see step 2
+                src={`/menu/${item.image}`}
                 alt={item.name}
                 className="w-full h-24 object-cover rounded"
               />
-              <h3 className="text-sm font-medium mt-2 text-center">
+              <h3 className="text-sm font-semibold mt-2 text-center leading-tight">
                 {item.name}
               </h3>
-              <p className="text-xs text-gray-500">€{item.price.toFixed(2)}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                €{item.price.toFixed(2)}
+              </p>
               <button
                 onClick={() => addToCart(item.id)}
-                className="absolute bottom-2 right-2 bg-green-500 text-white rounded-full w-7 h-7 text-sm flex items-center justify-center shadow-lg"
+                className="absolute bottom-2 right-2 bg-green-500 hover:bg-green-600 text-white rounded-full w-7 h-7 text-sm flex items-center justify-center shadow-md transition"
               >
                 +
               </button>
@@ -79,11 +87,11 @@ export const PhoneMock: React.FC = () => {
         {cart.length > 0 && (
           <motion.div
             key={cart.length}
-            initial={{ y: 0 }} // <-- was y: 80 before, now matches final
-            animate={{ y: [0, -6, 0] }}
+            initial={{ y: hasCartAppeared ? 0 : 80 }}
+            animate={{ y: hasCartAppeared ? [0, -6, 0] : 0 }}
             exit={{ y: 80 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="p-3 bg-black text-white text-sm font-semibold text-center"
+            className="absolute bottom-0 left-0 w-full p-3 bg-black text-white text-sm font-semibold text-center"
           >
             Order {cart.length} item{cart.length > 1 && "s"} for €{total}
           </motion.div>
