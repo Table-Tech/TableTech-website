@@ -39,7 +39,7 @@ export const HeroSection: React.FC = () => {
                   Bekijk hoe gasten eenvoudig bestellen via QR.
                 </p>
                 <a
-                  href="/demo/klant"
+                  href="/klant-demo"
                   className="inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full text-white text-sm font-medium transition"
                 >
                   Start demo
