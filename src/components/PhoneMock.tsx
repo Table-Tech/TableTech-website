@@ -12,9 +12,14 @@ const mockMenu = [
 export const PhoneMock: React.FC = () => {
   const [cart, setCart] = useState<number[]>([]);
   const [hasCartAppeared, setHasCartAppeared] = useState(false);
+  const [floaters, setFloaters] = useState<number[]>([]);
 
   const addToCart = (id: number) => {
     setCart((prev) => [...prev, id]);
+    setFloaters((prev) => [...prev, id]);
+    setTimeout(() => {
+      setFloaters((prev) => prev.filter((f) => f !== id));
+    }, 500);
   };
 
   useEffect(() => {
@@ -27,6 +32,10 @@ export const PhoneMock: React.FC = () => {
     .map((id) => mockMenu.find((item) => item.id === id)?.price || 0)
     .reduce((a, b) => a + b, 0)
     .toFixed(2);
+
+  const [selectedItem, setSelectedItem] = useState<(typeof mockMenu)[0] | null>(
+    null
+  );
 
   return (
     <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
@@ -41,13 +50,24 @@ export const PhoneMock: React.FC = () => {
       </div>
 
       {/* Categories */}
-      <div className="flex overflow-x-auto px-2 py-3 gap-2 border-b">
-        {["Popular", "Curry", "Ramen", "Teppanyaki", "Donburi"].map((cat) => (
+      <div className="flex overflow-x-auto px-2 py-3 gap-3 border-b">
+        {[
+          { name: "Popular", icon: "popular.png" },
+          { name: "Curry", icon: "curry.png" },
+          { name: "Ramen", icon: "ramen.png" },
+          { name: "Pizza", icon: "pizza.png" },
+          { name: "Drinks", icon: "drink.png" },
+        ].map((cat) => (
           <button
-            key={cat}
-            className="text-xs whitespace-nowrap bg-yellow-200 hover:bg-yellow-300 rounded-full px-4 py-1 font-medium transition"
+            key={cat.name}
+            className="flex flex-col items-center min-w-[70px] text-xs bg-orange-200 hover:bg-yellow-300 rounded-xl px-3 py-2 transition shadow-sm"
           >
-            {cat}
+            <img
+              src={`/icons/${cat.icon}`}
+              alt={cat.name}
+              className="w-6 h-6 mb-1 object-contain"
+            />
+            {cat.name}
           </button>
         ))}
       </div>
@@ -77,6 +97,21 @@ export const PhoneMock: React.FC = () => {
               >
                 +
               </button>
+
+              {/* Floating +1 animation */}
+              <AnimatePresence>
+                {floaters.includes(item.id) && (
+                  <motion.div
+                    initial={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: 0, y: -20 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute text-sm font-semibold text-green-500 bottom-12 right-3 pointer-events-none"
+                  >
+                    +1
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
@@ -87,13 +122,22 @@ export const PhoneMock: React.FC = () => {
         {cart.length > 0 && (
           <motion.div
             key={cart.length}
-            initial={{ y: hasCartAppeared ? 0 : 80 }}
-            animate={{ y: hasCartAppeared ? [0, -6, 0] : 0 }}
-            exit={{ y: 80 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="absolute bottom-0 left-0 w-full p-3 bg-black text-white text-sm font-semibold text-center"
           >
-            Order {cart.length} item{cart.length > 1 && "s"} for €{total}
+            Order {cart.length} item{cart.length > 1 && "s"} for{" "}
+            <motion.span
+              key={total}
+              initial={{ opacity: 0.5, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="inline-block"
+            >
+              €{total}
+            </motion.span>
           </motion.div>
         )}
       </AnimatePresence>
