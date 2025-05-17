@@ -4,7 +4,7 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative w-screen min-h-screen overflow-hidden text-center"
+      className="relative w-screen min-h-screen overflow-hidden text-center snap-start"
     >
       {/* Achtergrondvideo */}
       <video
@@ -19,7 +19,7 @@ export const HeroSection: React.FC = () => {
       </video>
 
       {/* Donkere overlay */}
-      <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0"></div>
+      <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
 
       {/* Inhoud */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 pt-40 pb-28 text-white">
@@ -58,8 +58,8 @@ export const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Fade naar Benefits (onder) */}
-      <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-b from-transparent to-black/20 z-10 pointer-events-none" />
+      {/* Smooth fade naar volgende sectie */}
+      <div className="h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10 relative" />
     </section>
   );
 };

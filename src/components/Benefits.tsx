@@ -37,19 +37,16 @@ export const Benefits: React.FC = () => {
   const [visible, setVisible] = useState<boolean[]>(Array(data.length).fill(false));
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const updated = [...visible];
-        entries.forEach((entry) => {
-          const index = refs.current.findIndex((el) => el === entry.target);
-          if (entry.isIntersecting && index !== -1) {
-            updated[index] = true;
-          }
-        });
-        setVisible(updated);
-      },
-      { threshold: 0.3 }
-    );
+    const observer = new IntersectionObserver((entries) => {
+      const updated = [...visible];
+      entries.forEach((entry) => {
+        const index = refs.current.findIndex((el) => el === entry.target);
+        if (entry.isIntersecting && index !== -1) {
+          updated[index] = true;
+        }
+      });
+      setVisible(updated);
+    }, { threshold: 0.3 });
 
     refs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
@@ -65,8 +62,8 @@ export const Benefits: React.FC = () => {
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
-      <div className="relative z-10 container mx-auto max-w-5xl">
-        <div className="bg-[#f5efe7]/80 backdrop-blur-md border border-[#b89b85]/30 rounded-3xl shadow-2xl p-8">
+      <div className="relative z-10 w-full px-4 flex justify-end">
+        <div className="w-full max-w-3xl bg-[#f5efe7]/80 backdrop-blur-md border border-[#b89b85]/30 rounded-3xl shadow-2xl p-8">
           <h2 className="text-2xl font-bold text-center mb-10 text-[#5e3d2b]">
             Waarom TableTech?
           </h2>
