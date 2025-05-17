@@ -24,5 +24,35 @@
 
 ---
 
-## 🏗️ Project Structure
+## 💻 Getting Started
+
+- git clone https://github.com/Table-Tech/TableTech-website.git
+- cd TableTech-website
+- npm install
+- npm run dev
+
+- Open http://localhost:5173 in your browser.
+
+---
+
+👥 Team & Contributing
+Built by the TableTech team.
+
+---
+
+📄 License
+MIT License.
+
+---
+
+✨ Acknowledgements
+Inspired by the modern needs of the restaurant industry.
+
+Built using open-source tools: thank you to the React and Vite communities!
+
+---
+
+Want a custom dashboard, branded QR codes, or more features?
+Contact us at # info@tabletech.nl
+
 
