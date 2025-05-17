@@ -6,30 +6,31 @@ import { PricingPage } from "./pages/PricingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { VerticalLightStream } from "./components/VerticalLigthStream";
-import { HolographicLine } from "./components/HolographicLine";
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
 import { SupportChat } from "./pages/SupportChat";
+import { useLenisScroll } from "./components/useLenisScroll";
 
 import "./index.css";
 
-const App: React.FC = () => (
-  <>
-    <VerticalLightStream />
-    <HolographicLine />
-    <ScrollToTop />
-    <ScrollDots />
-    <SupportChat />
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/features" element={<FeaturePage />} />
-      <Route path="/pricing" element={<PricingPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/privacy" element={<PrivacyPolicyPage />} />
-    </Routes>
-  </>
-);
+const App: React.FC = () => {
+  useLenisScroll(); // <-- Smooth scroll inladen
+
+  return (
+    <>
+      <ScrollToTop />
+      <ScrollDots />
+      <SupportChat />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/features" element={<FeaturePage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+      </Routes>
+    </>
+  );
+};
 
 export default App;
