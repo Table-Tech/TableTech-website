@@ -311,39 +311,37 @@ export default function App() {
           </>
         )}
       </AnimatePresence>
-
       {/* 2) Basket bottom‐sheet */}
-<AnimatePresence>
-  {cartOpen && (
-    // backdrop
-    <motion.div
-      className="absolute inset-0 bg-black/50 z-50"
-      onClick={() => setCartOpen(false)}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      {/* sheet panel */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        exit={{ y: "100%" }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 220,  // Reduced from 300
-          damping: 40,     // Increased from 30
-          mass: 1          // Explicitly setting mass
-        }}
-      >
-        {/* header */}
-        <div className="p-4 flex justify-between items-center border-b">
-          <h2 className="text-lg font-bold">Jouw bestelling</h2>
-          <button
+      <AnimatePresence>
+        {cartOpen && (
+          // backdrop
+          <motion.div
+            className="absolute inset-0 bg-black/50 z-50"
             onClick={() => setCartOpen(false)}
-            aria-label="Close basket"
-            className="
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* sheet panel */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{
+                type: "tween",
+                ease: [0.16, 1, 0.3, 1], // Custom cubic-bezier curve (nice spring-like feel with no bounce)
+                duration: 0.6,
+              }}
+            >
+              {/* header */}
+              <div className="p-4 flex justify-between items-center border-b">
+                <h2 className="text-lg font-bold">Jouw bestelling</h2>
+                <button
+                  onClick={() => setCartOpen(false)}
+                  aria-label="Close basket"
+                  className="
             group
             p-0
             rounded-full
@@ -351,94 +349,93 @@ export default function App() {
             hover:bg-gray-200
             focus:outline-none
           "
-          >
-            <span className="text-3xl font-bold text-gray-700 group-hover:text-black leading-none">
-              ×
-            </span>
-          </button>
-        </div>
-
-        {/* list of unique cart items */}
-        <div className="flex-1 overflow-y-auto">
-          {[...new Set(cart.map((i) => i.id))].map((id) => {
-            const item = cart.find((i) => i.id === id)!;
-            const qty = cart.filter((i) => i.id === id).length;
-            return (
-              <div
-                key={id}
-                className="flex items-center justify-between p-3 pr-2 border-b"
-              >
-                {/* left: image + text */}
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-12 h-12 rounded object-cover"
-                  />
-                  <div>
-                    <p className="text-sm font-medium mb-0.5">
-                      {item.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      €{item.price.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* right: quantity controls */}
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => removeFromCart(id)}
-                    className="
-                    w-8 h-8
-                    bg-gray-100 rounded-full
-                    flex items-center justify-center
-                    hover:bg-gray-200 active:bg-gray-300
-                    transition-colors duration-150
-                  "
-                  >
-                    −
-                  </button>
-                  <span className="text-xl font-bold">{qty}</span>
-                  <button
-                    onClick={() => addToCart(id, item.category)}
-                    className="
-                    w-8 h-8
-                    bg-gray-100 rounded-full
-                    flex items-center justify-center
-                    hover:bg-gray-200 active:bg-gray-300
-                    transition-colors duration-150
-                  "
-                  >
-                    +
-                  </button>
-                </div>
+                >
+                  <span className="text-3xl font-bold text-gray-700 group-hover:text-black leading-none">
+                    ×
+                  </span>
+                </button>
               </div>
-            );
-          })}
-        </div>
 
-        <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
-          <span>Subtotal</span>
-          <span className="text-lg font-bold">€{total}</span>
-        </div>
+              {/* list of unique cart items */}
+              <div className="flex-1 overflow-y-auto">
+                {[...new Set(cart.map((i) => i.id))].map((id) => {
+                  const item = cart.find((i) => i.id === id)!;
+                  const qty = cart.filter((i) => i.id === id).length;
+                  return (
+                    <div
+                      key={id}
+                      className="flex items-center justify-between p-3 pr-2 border-b"
+                    >
+                      {/* left: image + text */}
+                      <div className="flex items-center space-x-4">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded object-cover"
+                        />
+                        <div>
+                          <p className="text-sm font-medium mb-0.5">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            €{item.price.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
 
-        {/* Continue button */}
-        <div className="p-4">
-          <button
-            className="
+                      {/* right: quantity controls */}
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => removeFromCart(id)}
+                          className="
+                    w-8 h-8
+                    bg-gray-100 rounded-full
+                    flex items-center justify-center
+                    hover:bg-gray-200 active:bg-gray-300
+                    transition-colors duration-150
+                  "
+                        >
+                          −
+                        </button>
+                        <span className="text-xl font-bold">{qty}</span>
+                        <button
+                          onClick={() => addToCart(id, item.category)}
+                          className="
+                    w-8 h-8
+                    bg-gray-100 rounded-full
+                    flex items-center justify-center
+                    hover:bg-gray-200 active:bg-gray-300
+                    transition-colors duration-150
+                  "
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
+                <span>Subtotal</span>
+                <span className="text-lg font-bold">€{total}</span>
+              </div>
+
+              {/* Continue button */}
+              <div className="p-4">
+                <button
+                  className="
               w-full bg-black text-white py-3 rounded-full
               font-semibold shadow-md transition hover:bg-gray-900
             "
-          >
-            Continue
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Modal View */}
       <AnimatePresence>
         {selectedItem && (
