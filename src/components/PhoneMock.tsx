@@ -241,16 +241,15 @@ export default function App() {
 
   return (
     <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
-      {/* Header */}
+      {" "}
       <div className="flex items-center justify-between p-4 border-b shadow-sm">
         <div className="text-lg font-bold text-red-600 tracking-tight">
-          ★ TableTech
+          TableTech.
         </div>
         <button className="text-xs border px-3 py-1 rounded-full hover:bg-gray-100 transition">
           English
         </button>
       </div>
-
       {/* Categories */}
       <div className="flex overflow-x-auto px-2 py-3 gap-3 border-b">
         {categories.map((cat) => (
@@ -272,40 +271,44 @@ export default function App() {
           </button>
         ))}
       </div>
-
       {/* Menu List with Sections */}
       <div className="flex-1 overflow-y-auto px-3 pt-2 pb-40">
         {categories.map((cat) => renderMenuSection(cat.id))}
       </div>
-
       {/* Order Bar */}
       <AnimatePresence>
         {cart.length > 0 && !selectedItem && !cartOpen && (
-          <motion.div
-            onClick={() => setCartOpen(true)}
-            key={cart.length}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="
-        absolute bottom-0 left-0 w-full p-4 bg-black text-white
-        text-sm font-bold text-center z-50 cursor-pointer
-        rounded-b-[2rem]
-        
-      "
-          >
-            Bestel {cart.length} gerecht{cart.length === 1 ? "" : "en"} voor{" "}
-            <motion.span
-              key={total}
-              initial={{ opacity: 0.5, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
+          <>
+            {/* White gradient fade above button */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40" />
+
+            {/* Pill-shaped Order Button */}
+            <motion.div
+              onClick={() => setCartOpen(true)}
+              key={cart.length}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="inline-block"
+              className="
+          absolute bottom-5 left-4 right-4 z-50
+          bg-black text-white py-4 px-4 rounded-full
+          text-sm font-bold text-center cursor-pointer shadow-lg
+          transition hover:bg-gray-900
+        "
             >
-              €{total}
-            </motion.span>
-          </motion.div>
+              Bestel {cart.length} gerecht{cart.length === 1 ? "" : "en"} voor{" "}
+              <motion.span
+                key={total}
+                initial={{ opacity: 0.5, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="inline-block"
+              >
+                €{total}
+              </motion.span>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
