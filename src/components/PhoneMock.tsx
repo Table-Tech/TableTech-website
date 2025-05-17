@@ -19,34 +19,94 @@ interface CategoryItem {
 
 const mockMenu: Record<CategoryId, MenuItem[]> = {
   popular: [
-    { id: 1, name: "Prawn Raisukaree",     price: 12.0, image: "/menu/menu1.jpg", category: "popular" },
-    { id: 2, name: "Firecracker Prawn",    price: 11.0, image: "/menu/menu2.jpg", category: "popular" },
+    {
+      id: 1,
+      name: "Prawn Raisukaree",
+      price: 12.0,
+      image: "/menu/menu1.jpg",
+      category: "popular",
+    },
+    {
+      id: 2,
+      name: "Firecracker Prawn",
+      price: 11.0,
+      image: "/menu/menu2.jpg",
+      category: "popular",
+    },
   ],
   curry: [
-    { id: 3, name: "Chicken Katsu Curry",  price: 10.5, image: "/menu/menu3.jpg", category: "curry" },
-    { id: 4, name: "Vegetable Curry",      price:  9.0, image: "/menu/menu4.jpg", category: "curry" },
+    {
+      id: 3,
+      name: "Chicken Katsu Curry",
+      price: 10.5,
+      image: "/menu/menu3.jpg",
+      category: "curry",
+    },
+    {
+      id: 4,
+      name: "Vegetable Curry",
+      price: 9.0,
+      image: "/menu/menu4.jpg",
+      category: "curry",
+    },
   ],
   ramen: [
-    { id: 5, name: "Tofu Firecracker Ramen", price: 9.75, image: "/menu/menu5.jpg", category: "ramen" },
-    { id: 6, name: "Chilli Steak Ramen",     price: 8.95, image: "/menu/menu4.jpg", category: "ramen" },
+    {
+      id: 5,
+      name: "Tofu Firecracker Ramen",
+      price: 9.75,
+      image: "/menu/menu5.jpg",
+      category: "ramen",
+    },
+    {
+      id: 6,
+      name: "Chilli Steak Ramen",
+      price: 8.95,
+      image: "/menu/menu4.jpg",
+      category: "ramen",
+    },
   ],
   pizza: [
-    { id: 7, name: "Margherita Pizza",      price: 8.5,  image: "/menu/menu1.jpg", category: "pizza" },
-    { id: 8, name: "Pepperoni Pizza",       price: 9.5,  image: "/menu/menu2.jpg", category: "pizza" },
+    {
+      id: 7,
+      name: "Margherita Pizza",
+      price: 8.5,
+      image: "/menu/menu1.jpg",
+      category: "pizza",
+    },
+    {
+      id: 8,
+      name: "Pepperoni Pizza",
+      price: 9.5,
+      image: "/menu/menu2.jpg",
+      category: "pizza",
+    },
   ],
   drinks: [
-    { id: 9, name: "Fresh Lemonade",        price: 3.5,  image: "/menu/menu5.jpg", category: "drinks" },
-    { id: 10, name: "Iced Green Tea",       price: 2.95, image: "/menu/menu3.jpg", category: "drinks" },
+    {
+      id: 9,
+      name: "Fresh Lemonade",
+      price: 3.5,
+      image: "/menu/menu5.jpg",
+      category: "drinks",
+    },
+    {
+      id: 10,
+      name: "Iced Green Tea",
+      price: 2.95,
+      image: "/menu/menu3.jpg",
+      category: "drinks",
+    },
   ],
 };
 
 // point these at public/icons/*.png
 const categories: CategoryItem[] = [
   { name: "Popular", icon: "/icons/popular.png", id: "popular" },
-  { name: "Curry",   icon: "/icons/curry.png",   id: "curry"   },
-  { name: "Ramen",   icon: "/icons/ramen.png",   id: "ramen"   },
-  { name: "Pizza",   icon: "/icons/pizza.png",   id: "pizza"   },
-  { name: "Drinks",  icon: "/icons/drink.png",   id: "drinks"  },
+  { name: "Curry", icon: "/icons/curry.png", id: "curry" },
+  { name: "Ramen", icon: "/icons/ramen.png", id: "ramen" },
+  { name: "Pizza", icon: "/icons/pizza.png", id: "pizza" },
+  { name: "Drinks", icon: "/icons/drink.png", id: "drinks" },
 ];
 
 export default function App() {
@@ -97,7 +157,7 @@ export default function App() {
 
     return (
       <div ref={sectionRefs[categoryId]} className="mb-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-3 px-1 sticky top-0 bg-white py-2 border-b z-10">
+        <h2 className="text-lg font-bold text-gray-800 mb-3 px-1 sticky -top-2 bg-white py-2 border-b z-10">
           {categories.find((c) => c.id === categoryId)?.name}
         </h2>
         <div className="grid grid-cols-2 gap-3">
@@ -107,8 +167,9 @@ export default function App() {
               onClick={() => setSelectedItem(item)}
               className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition cursor-pointer"
             >
+              {" "}
               <img
-                src={`/api/placeholder/150/100`}
+                src={item.image}
                 alt={item.name}
                 className="w-full h-24 object-cover rounded"
               />
@@ -127,7 +188,6 @@ export default function App() {
               >
                 +
               </button>
-
               <AnimatePresence>
                 {floaters.includes(item.id) && (
                   <motion.div
@@ -172,16 +232,18 @@ export default function App() {
                 : "bg-orange-200 hover:bg-yellow-200"
             }`}
           >
-            <div className="w-6 h-6 mb-1 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs">
-              {cat.name[0]}
-            </div>
+            <img
+              src={cat.icon}
+              alt={cat.name}
+              className="w-6 h-6 mb-1 object-contain"
+            />
             {cat.name}
           </button>
         ))}
       </div>
 
       {/* Menu List with Sections */}
-      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-24">
+      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-40">
         {categories.map((cat) => renderMenuSection(cat.id))}
       </div>
 
@@ -222,8 +284,9 @@ export default function App() {
           >
             {/* Header image with back button */}
             <div className="relative">
+              {" "}
               <img
-                src={`/api/placeholder/320/150`}
+                src={selectedItem.image}
                 alt={selectedItem.name}
                 className="w-full h-44 object-cover"
               />
