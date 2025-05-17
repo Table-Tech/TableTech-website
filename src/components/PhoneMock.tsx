@@ -451,9 +451,6 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-
-
-
       {/* Modal View */}
       <AnimatePresence>
         {selectedItem && (
@@ -461,7 +458,11 @@ export default function App() {
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ duration: 0.3 }}
+            transition={{
+              type: "tween",
+              ease: [0.16, 1, 0.3, 1], // Same custom cubic-bezier curve as bottom sheet
+              duration: 0.6,
+            }}
             className="absolute inset-0 z-40 bg-white flex flex-col"
           >
             {/* Header image + back */}
@@ -563,14 +564,14 @@ export default function App() {
                             );
                           }}
                           className="
-                            appearance-none
-                            w-5 h-5
-                            border-2 border-gray-400
-                            rounded-full
-                            checked:bg-black checked:border-black
-                            hover:border-gray-500 active:border-gray-600
-                            transition-colors duration-150
-                          "
+                      appearance-none
+                      w-5 h-5
+                      border-2 border-gray-400
+                      rounded-full
+                      checked:bg-black checked:border-black
+                      hover:border-gray-500 active:border-gray-600
+                      transition-colors duration-150
+                    "
                         />
                       </label>
                     ))}
@@ -595,15 +596,11 @@ export default function App() {
                 className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition"
               >
                 Toevoegen aan bestelling • €{buttonTotal}
-
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-
-      
     </div>
   );
 }
