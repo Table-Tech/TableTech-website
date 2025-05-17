@@ -115,6 +115,17 @@ export default function App() {
   const [floaters, setFloaters] = useState<number[]>([]);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [activeCategory, setActiveCategory] = useState<CategoryId>("popular");
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const removeFromCart = (id: number) => {
+    setCart((prev) => {
+      const idx = prev.findIndex((i) => i.id === id);
+      if (idx < 0) return prev;
+      const copy = [...prev];
+      copy.splice(idx, 1);
+      return copy;
+    });
+  };
 
   // Refs for section scrolling
   const sectionRefs: Record<CategoryId, React.RefObject<HTMLDivElement>> = {
@@ -249,8 +260,9 @@ export default function App() {
 
       {/* Order Bar */}
       <AnimatePresence>
-        {cart.length > 0 && !selectedItem && (
+        {cart.length > 0 && !selectedItem && !cartOpen && (
           <motion.div
+            onClick={() => setCartOpen(true)}
             key={cart.length}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -268,6 +280,91 @@ export default function App() {
             >
               €{total}
             </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 2) Basket bottom‐sheet */}
+      <AnimatePresence>
+        {cartOpen && (
+          // backdrop
+          <motion.div
+            className="absolute inset-0 bg-black/50 z-50"
+            onClick={() => setCartOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* sheet panel */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {/* header */}
+              <div className="p-4 flex justify-between items-center border-b">
+                <h2 className="text-lg font-bold">Your Basket</h2>
+                <button
+                  onClick={() => setCartOpen(false)}
+                  className="text-2xl font-light leading-none"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* list of unique cart items */}
+              <div className="flex-1 overflow-y-auto">
+                {[...new Set(cart.map((i) => i.id))].map((id) => {
+                  const item = cart.find((i) => i.id === id)!;
+                  const qty = cart.filter((i) => i.id === id).length;
+                  return (
+                    <div key={id} className="flex items-center p-4 border-b">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-12 h-12 rounded object-cover"
+                      />
+                      <div className="flex-1 ml-4">
+                        <p className="font-semibold">{item.name}</p>
+                        <p className="text-gray-500">
+                          €{item.price.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => removeFromCart(id)}
+                          className="w-6 h-6 border rounded flex items-center justify-center"
+                        >
+                          −
+                        </button>
+                        <span>{qty}</span>
+                        <button
+                          onClick={() => addToCart(id, item.category)}
+                          className="w-6 h-6 border rounded flex items-center justify-center"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
+                <span>Subtotal</span>
+                <span>€{total}</span>
+              </div>
+
+              {/* Continue button */}
+              <div className="p-4">
+                <button className="w-full bg-black text-white py-3 rounded-full">
+                  Continue
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
