@@ -13,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
 import { SupportChat } from "./pages/SupportChat";
 import { useLenisScroll } from "./components/useLenisScroll";
+import KlantDemoPage from "./pages/KlantDemoPage";
 
 import "./index.css";
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
       <SupportChat />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/demo/klant" element={<KlantDemoPage />} />
         <Route path="/features" element={<FeaturePage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
