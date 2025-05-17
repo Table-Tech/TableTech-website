@@ -5,6 +5,7 @@ import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import { FaUser, FaEnvelope, FaPhone, FaBuilding } from "react-icons/fa";
+import planten2 from "../assets/Planten.png";
 
 export const ContactPage: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
@@ -16,31 +17,43 @@ export const ContactPage: React.FC = () => {
     emailjs
       .sendForm("service_fye4t2s", "template_g0yqwdl", form.current, "WvojOqr0UVF9lHbU_")
       .then(() => {
-        alert("Message sent!");
+        alert("Bericht verzonden!");
         form.current?.reset();
       })
       .catch((error) => {
         console.error("EmailJS error:", error);
-        alert("Something went wrong, please try again.");
+        alert("Er ging iets mis. Probeer het opnieuw.");
       });
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900 flex flex-col">
+    <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="pt-20 sm:pt-24 scale-[0.97] transform origin-top transition-transform duration-300 flex-grow">
+      {/* Hero afbeelding */}
+      <div className="relative w-full h-[60vh] overflow-hidden">
+        <img
+          src={planten2}
+          alt="Contact Hero"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[#2C1E1A]/20 flex items-center justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+            Neem contact op
+          </h1>
+        </div>
+      </div>
+
+      <main className="pt-12 sm:pt-16 flex-grow">
         <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-blue-900">
-              Vragen? Wij staan voor je klaar
-            </h2>
-            <p className="mb-4 max-w-xl mx-auto text-sm sm:text-base">
+          <div className="max-w-4xl mx-auto text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Vragen? Wij staan voor je klaar</h2>
+            <p className="mb-4 max-w-xl mx-auto">
               Heb je vragen over sales of een samenwerking? Laat je gegevens achter en we nemen snel contact op.
             </p>
-            <p className="mb-10 max-w-xl mx-auto text-sm sm:text-base">
+            <p className="max-w-xl mx-auto">
               Voor <strong>support</strong> kun je mailen naar{" "}
-              <a href="mailto:info@tabletech.nl" className="text-blue-600 underline font-medium">
+              <a href="mailto:info@tabletech.nl" className="text-[#FFD382] underline font-medium">
                 info@tabletech.nl
               </a>.
             </p>
@@ -49,10 +62,10 @@ export const ContactPage: React.FC = () => {
           <form
             ref={form}
             onSubmit={sendEmail}
-            className="mt-12 max-w-4xl mx-auto bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 space-y-6"
+            className="mt-6 max-w-4xl mx-auto bg-white/70 text-[#2C1E1A] border border-[#E8D8CE] rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 space-y-6"
           >
-            <h3 className="text-xl font-semibold text-center text-blue-800">Contactgegevens</h3>
-            <p className="text-sm text-center text-gray-700 mb-6">
+            <h3 className="text-xl font-semibold text-center">Contactgegevens</h3>
+            <p className="text-sm text-center mb-6">
               Laat je gegevens achter, we reageren zo snel mogelijk.
             </p>
 
@@ -113,7 +126,7 @@ export const ContactPage: React.FC = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition"
+                className="bg-[#A77B5D] hover:bg-[#916249] text-white font-semibold px-8 py-3 rounded-full shadow-lg transition"
               >
                 Verstuur bericht
               </button>
@@ -121,11 +134,7 @@ export const ContactPage: React.FC = () => {
           </form>
         </section>
 
-        <section className="p-0 m-0">
-          <div className="flex justify-center">
-            <CallToAction />
-          </div>
-        </section>
+        <CallToAction />
       </main>
 
       <Footer />

@@ -3,6 +3,7 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
+import planten2 from "../assets/Planten.png";
 
 export const PricingPage: React.FC = () => {
   const pricingData = [
@@ -26,27 +27,41 @@ export const PricingPage: React.FC = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900 flex flex-col">
+    <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="pt-20 sm:pt-24 flex-grow scale-[0.97] transform origin-top transition-transform duration-300">
+      {/* Hero bovenaan - helder zoals FeaturePage */}
+      <div className="relative w-full h-[60vh] overflow-hidden">
+        <img
+          src={planten2}
+          alt="Pricing Hero"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[#2C1E1A]/20 flex items-center justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+            Vergelijk onze abonnementen
+          </h1>
+        </div>
+      </div>
+
+      <main className="pt-12 sm:pt-16 flex-grow">
         <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="container max-w-6xl mx-auto">
-            <div className="bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-10">
-              <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-10">
-                Vergelijk onze abonnementen
-              </h1>
+            <div className="bg-white/70 backdrop-blur-md border border-[#E8D8CE] rounded-3xl shadow-2xl p-6 sm:p-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-[#3B2A1D]">
+                Wat krijg je per pakket?
+              </h2>
 
               <div className="overflow-x-auto text-xs sm:text-sm">
-                <table className="w-full border border-black border-collapse">
+                <table className="w-full border border-[#cbb6a0] border-collapse text-[#2C1E1A] bg-white/90">
                   <thead>
-                    <tr className="bg-white text-blue-900 font-semibold border-b border-black">
-                      <th className="p-4 border-r border-black text-left">Functie</th>
-                      <th className="p-4 border-r border-black text-center">
+                    <tr className="bg-[#A77B5D] text-white font-semibold border-b border-[#d5c8bb]">
+                      <th className="p-4 border-r border-[#d5c8bb] text-left">Functie</th>
+                      <th className="p-4 border-r border-[#d5c8bb] text-center">
                         Starter<br />
                         <span className="text-[10px] sm:text-xs font-normal">(€65/m of €650/j)</span>
                       </th>
-                      <th className="p-4 border-r border-black text-center">
+                      <th className="p-4 border-r border-[#d5c8bb] text-center">
                         Standaard<br />
                         <span className="text-[10px] sm:text-xs font-normal">(€70/m of €700/j)</span>
                       </th>
@@ -56,12 +71,12 @@ export const PricingPage: React.FC = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white text-gray-800">
+                  <tbody>
                     {pricingData.map(([feature, starter, standard, pro], i) => (
-                      <tr key={i} className="border-b border-black">
-                        <td className="p-3 border-r border-black text-left">{feature}</td>
-                        <td className="p-3 text-center border-r border-black">{starter}</td>
-                        <td className="p-3 text-center border-r border-black">{standard}</td>
+                      <tr key={i} className="border-b border-[#d5c8bb]">
+                        <td className="p-3 border-r border-[#d5c8bb] text-left">{feature}</td>
+                        <td className="p-3 text-center border-r border-[#d5c8bb]">{starter}</td>
+                        <td className="p-3 text-center border-r border-[#d5c8bb]">{standard}</td>
                         <td className="p-3 text-center">{pro}</td>
                       </tr>
                     ))}
@@ -72,9 +87,7 @@ export const PricingPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="m-0 p-0">
-          <CallToAction />
-        </section>
+        <CallToAction />
       </main>
 
       <Footer />
