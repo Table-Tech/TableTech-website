@@ -111,6 +111,12 @@ const categories: CategoryItem[] = [
   { name: "Drinks", icon: "/icons/drink.png", id: "drinks" },
 ];
 
+const toppingsData = [
+  { name: "extra kaas", price: 0.75 },
+  { name: "extra augurk", price: 0.75 },
+  { name: "extra jalopenos", price: 0.75 },
+];
+
 export default function App() {
   const [cart, setCart] = useState<MenuItem[]>([]);
   const [hasCartAppeared, setHasCartAppeared] = useState(false);
@@ -118,6 +124,7 @@ export default function App() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [activeCategory, setActiveCategory] = useState<CategoryId>("popular");
   const [cartOpen, setCartOpen] = useState(false);
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
 
   const removeFromCart = (id: number) => {
     setCart((prev) => {
@@ -163,6 +170,14 @@ export default function App() {
   }, [cart.length, hasCartAppeared]);
 
   const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+
+  const extraTotal = selectedToppings
+    .map((t) => toppingsData.find((top) => top.name === t)?.price || 0)
+    .reduce((a, b) => a + b, 0);
+
+  const buttonTotal = selectedItem
+    ? (selectedItem.price + extraTotal).toFixed(2)
+    : "0.00";
 
   const renderMenuSection = (categoryId: CategoryId) => {
     const items = mockMenu[categoryId];
@@ -436,6 +451,9 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+
+
       {/* Modal View */}
       <AnimatePresence>
         {selectedItem && (
@@ -536,15 +554,23 @@ export default function App() {
                         </div>
                         <input
                           type="checkbox"
+                          checked={selectedToppings.includes(top.name)}
+                          onChange={() => {
+                            setSelectedToppings((prev) =>
+                              prev.includes(top.name)
+                                ? prev.filter((t) => t !== top.name)
+                                : [...prev, top.name]
+                            );
+                          }}
                           className="
-                      appearance-none
-                      w-5 h-5
-                      border-2 border-gray-400
-                      rounded-full
-                      checked:bg-black checked:border-black
-                      hover:border-gray-500 active:border-gray-600
-                      transition-colors duration-150
-                    "
+                            appearance-none
+                            w-5 h-5
+                            border-2 border-gray-400
+                            rounded-full
+                            checked:bg-black checked:border-black
+                            hover:border-gray-500 active:border-gray-600
+                            transition-colors duration-150
+                          "
                         />
                       </label>
                     ))}
@@ -568,12 +594,16 @@ export default function App() {
                 }}
                 className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition"
               >
-                Toevoegen aan bestelling • €{selectedItem.price.toFixed(2)}
+                Toevoegen aan bestelling • €{buttonTotal}
+
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+
+      
     </div>
   );
 }
