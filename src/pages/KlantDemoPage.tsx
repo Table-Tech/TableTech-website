@@ -1,5 +1,5 @@
 import React from "react";
-import { PhoneMock } from "../components/PhoneMock";
+import PhoneMock from "../components/PhoneMock";
 
 const KlantDemoPage: React.FC = () => {
   return (

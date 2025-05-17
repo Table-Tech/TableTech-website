@@ -1,24 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const mockMenu = [
-  { id: 1, name: "Prawn Raisukaree", price: 12.0, image: "menu1.jpg" },
-  { id: 2, name: "Firecracker Prawn", price: 11.0, image: "menu2.jpg" },
-  { id: 3, name: "Tofu Firecracker", price: 9.75, image: "menu3.jpg" },
-  { id: 4, name: "Chilli Steak Ramen", price: 8.95, image: "menu4.jpg" },
-  { id: 5, name: "Yaki Udon", price: 8.95, image: "menu5.jpg" },
+type CategoryId = "popular" | "curry" | "ramen" | "pizza" | "drinks";
+
+interface MenuItem {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: CategoryId;
+}
+
+interface CategoryItem {
+  name: string;
+  icon: string;
+  id: CategoryId;
+}
+
+const mockMenu: Record<CategoryId, MenuItem[]> = {
+  popular: [
+    { id: 1, name: "Prawn Raisukaree",     price: 12.0, image: "/menu/menu1.jpg", category: "popular" },
+    { id: 2, name: "Firecracker Prawn",    price: 11.0, image: "/menu/menu2.jpg", category: "popular" },
+  ],
+  curry: [
+    { id: 3, name: "Chicken Katsu Curry",  price: 10.5, image: "/menu/menu3.jpg", category: "curry" },
+    { id: 4, name: "Vegetable Curry",      price:  9.0, image: "/menu/menu4.jpg", category: "curry" },
+  ],
+  ramen: [
+    { id: 5, name: "Tofu Firecracker Ramen", price: 9.75, image: "/menu/menu5.jpg", category: "ramen" },
+    { id: 6, name: "Chilli Steak Ramen",     price: 8.95, image: "/menu/menu4.jpg", category: "ramen" },
+  ],
+  pizza: [
+    { id: 7, name: "Margherita Pizza",      price: 8.5,  image: "/menu/menu1.jpg", category: "pizza" },
+    { id: 8, name: "Pepperoni Pizza",       price: 9.5,  image: "/menu/menu2.jpg", category: "pizza" },
+  ],
+  drinks: [
+    { id: 9, name: "Fresh Lemonade",        price: 3.5,  image: "/menu/menu5.jpg", category: "drinks" },
+    { id: 10, name: "Iced Green Tea",       price: 2.95, image: "/menu/menu3.jpg", category: "drinks" },
+  ],
+};
+
+// point these at public/icons/*.png
+const categories: CategoryItem[] = [
+  { name: "Popular", icon: "/icons/popular.png", id: "popular" },
+  { name: "Curry",   icon: "/icons/curry.png",   id: "curry"   },
+  { name: "Ramen",   icon: "/icons/ramen.png",   id: "ramen"   },
+  { name: "Pizza",   icon: "/icons/pizza.png",   id: "pizza"   },
+  { name: "Drinks",  icon: "/icons/drink.png",   id: "drinks"  },
 ];
 
-export const PhoneMock: React.FC = () => {
-  const [cart, setCart] = useState<number[]>([]);
+export default function App() {
+  const [cart, setCart] = useState<MenuItem[]>([]);
   const [hasCartAppeared, setHasCartAppeared] = useState(false);
   const [floaters, setFloaters] = useState<number[]>([]);
-  const [selectedItem, setSelectedItem] = useState<(typeof mockMenu)[0] | null>(
-    null
-  );
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("popular");
 
-  const addToCart = (id: number) => {
-    setCart((prev) => [...prev, id]);
+  // Refs for section scrolling
+  const sectionRefs: Record<CategoryId, React.RefObject<HTMLDivElement>> = {
+    popular: useRef<HTMLDivElement>(null),
+    curry: useRef<HTMLDivElement>(null),
+    ramen: useRef<HTMLDivElement>(null),
+    pizza: useRef<HTMLDivElement>(null),
+    drinks: useRef<HTMLDivElement>(null),
+  };
+
+  const scrollToSection = (categoryId: CategoryId) => {
+    setActiveCategory(categoryId);
+    sectionRefs[categoryId].current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const addToCart = (id: number, category: CategoryId) => {
+    const item = mockMenu[category].find((i) => i.id === id);
+    if (!item) return;
+    setCart((prev) => [...prev, item]);
     setFloaters((prev) => [...prev, id]);
     setTimeout(() => {
       setFloaters((prev) => prev.filter((f) => f !== id));
@@ -31,57 +89,26 @@ export const PhoneMock: React.FC = () => {
     }
   }, [cart.length, hasCartAppeared]);
 
-  const total = cart
-    .map((id) => mockMenu.find((item) => item.id === id)?.price || 0)
-    .reduce((a, b) => a + b, 0)
-    .toFixed(2);
+  const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
-  return (
-    <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b shadow-sm">
-        <div className="text-lg font-bold text-red-600 tracking-tight">
-          ★ TableTech
-        </div>
-        <button className="text-xs border px-3 py-1 rounded-full hover:bg-gray-100 transition">
-          English
-        </button>
-      </div>
+  // Function to render a section of menu items
+  const renderMenuSection = (categoryId: CategoryId) => {
+    const items = mockMenu[categoryId];
 
-      {/* Categories */}
-      <div className="flex overflow-x-auto px-2 py-3 gap-3 border-b">
-        {[
-          { name: "Popular", icon: "popular.png" },
-          { name: "Curry", icon: "curry.png" },
-          { name: "Ramen", icon: "ramen.png" },
-          { name: "Pizza", icon: "pizza.png" },
-          { name: "Drinks", icon: "drink.png" },
-        ].map((cat) => (
-          <button
-            key={cat.name}
-            className="flex flex-col items-center min-w-[70px] text-xs bg-orange-200 hover:bg-yellow-300 rounded-xl px-3 py-2 transition shadow-sm"
-          >
-            <img
-              src={`/icons/${cat.icon}`}
-              alt={cat.name}
-              className="w-6 h-6 mb-1 object-contain"
-            />
-            {cat.name}
-          </button>
-        ))}
-      </div>
-
-      {/* Menu List */}
-      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-24">
+    return (
+      <div ref={sectionRefs[categoryId]} className="mb-6">
+        <h2 className="text-lg font-bold text-gray-800 mb-3 px-1 sticky top-0 bg-white py-2 border-b z-10">
+          {categories.find((c) => c.id === categoryId)?.name}
+        </h2>
         <div className="grid grid-cols-2 gap-3">
-          {mockMenu.map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               onClick={() => setSelectedItem(item)}
               className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition cursor-pointer"
             >
               <img
-                src={`/menu/${item.image}`}
+                src={`/api/placeholder/150/100`}
                 alt={item.name}
                 className="w-full h-24 object-cover rounded"
               />
@@ -94,14 +121,13 @@ export const PhoneMock: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart(item.id);
+                  addToCart(item.id, item.category);
                 }}
                 className="absolute bottom-2 right-2 bg-green-500 hover:bg-green-600 text-white rounded-full w-7 h-7 text-sm flex items-center justify-center shadow-md transition"
               >
                 +
               </button>
 
-              {/* Floating +1 animation */}
               <AnimatePresence>
                 {floaters.includes(item.id) && (
                   <motion.div
@@ -118,6 +144,45 @@ export const PhoneMock: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b shadow-sm">
+        <div className="text-lg font-bold text-red-600 tracking-tight">
+          ★ TableTech
+        </div>
+        <button className="text-xs border px-3 py-1 rounded-full hover:bg-gray-100 transition">
+          English
+        </button>
+      </div>
+
+      {/* Categories */}
+      <div className="flex overflow-x-auto px-2 py-3 gap-3 border-b">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => scrollToSection(cat.id)}
+            className={`flex flex-col items-center min-w-[70px] text-xs rounded-xl px-3 py-2 transition shadow-sm ${
+              activeCategory === cat.id
+                ? "bg-yellow-300"
+                : "bg-orange-200 hover:bg-yellow-200"
+            }`}
+          >
+            <div className="w-6 h-6 mb-1 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs">
+              {cat.name[0]}
+            </div>
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Menu List with Sections */}
+      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-24">
+        {categories.map((cat) => renderMenuSection(cat.id))}
       </div>
 
       {/* Order Bar */}
@@ -158,7 +223,7 @@ export const PhoneMock: React.FC = () => {
             {/* Header image with back button */}
             <div className="relative">
               <img
-                src={`/menu/${selectedItem.image}`}
+                src={`/api/placeholder/320/150`}
                 alt={selectedItem.name}
                 className="w-full h-44 object-cover"
               />
@@ -171,7 +236,6 @@ export const PhoneMock: React.FC = () => {
             </div>
 
             {/* Info content */}
-            {/* Info content with fade */}
             <div className="relative flex-1 overflow-hidden">
               {/* Scrollable content */}
               <div className="p-4 h-full overflow-y-auto pb-[100px] flex flex-col gap-4">
@@ -251,7 +315,7 @@ export const PhoneMock: React.FC = () => {
             <div className="absolute bottom-4 left-4 right-4 z-50">
               <button
                 onClick={() => {
-                  addToCart(selectedItem.id);
+                  addToCart(selectedItem.id, selectedItem.category);
                   setSelectedItem(null);
                 }}
                 className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition text-center"
@@ -264,4 +328,4 @@ export const PhoneMock: React.FC = () => {
       </AnimatePresence>
     </div>
   );
-};
+}
