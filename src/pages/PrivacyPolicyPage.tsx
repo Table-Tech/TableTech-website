@@ -1,60 +1,48 @@
-// src/pages/PrivacyPolicyPage.tsx
 import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
+import planten2 from "../assets/Planten.png";
 
 export const PrivacyPolicyPage: React.FC = () => (
-  <div className="bg-gradient-to-b from-blue-100 via-white to-cyan-100 min-h-screen text-gray-900 flex flex-col">
+  <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col">
     <Navbar />
 
-    <main className="pt-20 sm:pt-24 scale-[0.97] transform origin-top transition-transform duration-300 flex-grow">
+    {/* Hero */}
+    <div className="relative w-full h-[60vh] overflow-hidden">
+      <img src={planten2} alt="Privacy Hero" className="w-full h-full object-cover object-center" />
+      <div className="absolute inset-0 bg-[#2C1E1A]/20 flex items-center justify-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+          Privacybeleid
+        </h1>
+      </div>
+    </div>
+
+    <main className="pt-12 sm:pt-16 flex-grow">
       <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-8">
-            Privacybeleid
-          </h1>
+        <div className="max-w-4xl mx-auto bg-white/70 text-[#2C1E1A] border border-[#E8D8CE] rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12">
+          <p className="mb-6">Bij TableTech nemen we jouw privacy serieus...</p>
 
-          <p className="mb-6 text-gray-700 leading-relaxed text-sm sm:text-base">
-            Bij TableTech nemen we jouw privacy serieus. In dit beleid leggen we uit welke gegevens we verzamelen, waarom we dat doen en hoe we deze beschermen.
-          </p>
-
-          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-blue-800">1. Gegevens die we verzamelen</h2>
-          <ul className="list-disc list-inside text-gray-700 mb-6 space-y-1 text-sm sm:text-base">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">1. Gegevens die we verzamelen</h2>
+          <ul className="list-disc list-inside mb-6 space-y-1">
             <li>Naam, e-mailadres en telefoonnummer</li>
             <li>Bedrijfsinformatie</li>
-            <li>Informatie over bestellingen en gebruik van de app</li>
           </ul>
 
-          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-blue-800">2. Waarom we deze informatie gebruiken</h2>
-          <p className="text-gray-700 mb-6 text-sm sm:text-base">
-            Wij gebruiken jouw gegevens om onze diensten te leveren, verbeteren en beveiligen.
-          </p>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">2. Waarom we deze informatie gebruiken</h2>
+          <p className="mb-6">Wij gebruiken jouw gegevens om onze diensten te leveren...</p>
 
-          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-blue-800">3. Delen met derden</h2>
-          <p className="text-gray-700 mb-6 text-sm sm:text-base">
-            TableTech verkoopt jouw gegevens nooit aan derden. We delen enkel gegevens met vertrouwde partners die ons helpen onze dienst te leveren.
-          </p>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">3. Delen met derden</h2>
+          <p className="mb-6">TableTech verkoopt jouw gegevens nooit aan derden...</p>
 
-          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-blue-800">4. Jouw rechten</h2>
-          <p className="text-gray-700 mb-6 text-sm sm:text-base">
-            Je hebt het recht om je gegevens in te zien, aan te passen of te verwijderen. Neem contact met ons op via{" "}
-            <a href="mailto:privacy@tabletech.nl" className="text-blue-600 underline">
-              privacy@tabletech.nl
-            </a>.
-          </p>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">4. Jouw rechten</h2>
+          <p className="mb-6">Je hebt het recht om je gegevens in te zien...</p>
 
-          <p className="text-sm text-gray-500 mt-10">
-            Laatst bijgewerkt: 5 mei 2025
-          </p>
+          <p className="text-sm text-gray-500 mt-10">Laatst bijgewerkt: 5 mei 2025</p>
         </div>
       </section>
 
-      <section className="p-0 m-0">
-        <div className="flex justify-center">
-          <CallToAction />
-        </div>
-      </section>
+      <CallToAction />
     </main>
 
     <Footer />
