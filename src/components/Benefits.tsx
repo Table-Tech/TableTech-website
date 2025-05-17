@@ -3,6 +3,7 @@ import turnoverImg from "../assets/turnover.png";
 import workloadImg from "../assets/workload.png";
 import experienceImg from "../assets/experience.png";
 import plantenBg from "../assets/Planten.png";
+import tabletechPhoneImg from "../assets/Telefoon.png"; // <- jouw mockup hier toevoegen
 
 type Benefit = {
   imgSrc: string;
@@ -37,16 +38,19 @@ export const Benefits: React.FC = () => {
   const [visible, setVisible] = useState<boolean[]>(Array(data.length).fill(false));
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const updated = [...visible];
-      entries.forEach((entry) => {
-        const index = refs.current.findIndex((el) => el === entry.target);
-        if (entry.isIntersecting && index !== -1) {
-          updated[index] = true;
-        }
-      });
-      setVisible(updated);
-    }, { threshold: 0.3 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const updated = [...visible];
+        entries.forEach((entry) => {
+          const index = refs.current.findIndex((el) => el === entry.target);
+          if (entry.isIntersecting && index !== -1) {
+            updated[index] = true;
+          }
+        });
+        setVisible(updated);
+      },
+      { threshold: 0.3 }
+    );
 
     refs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
@@ -62,7 +66,18 @@ export const Benefits: React.FC = () => {
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
-      <div className="relative z-10 w-full px-4 flex justify-end transform scale-[0.85] origin-center">
+
+      <div className="relative z-10 w-full px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center justify-center gap-12">
+        {/* Linkerzijde – Telefoon */}
+        <div className="w-full max-w-sm flex justify-center">
+          <img
+            src={tabletechPhoneImg}
+            alt="TableTech app mockup"
+            className="w-full max-w-[300px] rounded-3xl shadow-xl"
+          />
+        </div>
+
+        {/* Rechterzijde – Tekstblokken */}
         <div className="w-full max-w-3xl bg-[#f5efe7]/80 backdrop-blur-md border border-[#b89b85]/30 rounded-3xl shadow-2xl p-8">
           <h2 className="text-2xl font-bold text-center mb-10 text-[#5e3d2b]">
             Waarom TableTech?
@@ -78,16 +93,18 @@ export const Benefits: React.FC = () => {
                   visible[i]
                     ? "opacity-100 translate-y-0 scale-100"
                     : "opacity-0 translate-y-8 scale-95"
-                } hover:scale-[1.03] hover:shadow-xl transition-transform duration-300`}
+                } hover:scale-[1.03] hover:shadow-xl`}
               >
                 <div className="relative group">
                   <img
                     src={imgSrc}
                     alt={alt}
-                    className="mx-auto mb-6 h-32 w-32 object-cover rounded-full shadow-md transform transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-[#e9d7c2]"
+                    className="mx-auto mb-6 h-28 w-28 object-cover rounded-full shadow-md transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-[#e9d7c2]"
                   />
                 </div>
-                <h3 className="text-base font-semibold mb-2 text-[#4b2e1e]">{title}</h3>
+                <h3 className="text-base font-semibold mb-2 text-[#4b2e1e]">
+                  {title}
+                </h3>
                 <p className="text-[#5f4534] text-sm">{desc}</p>
               </div>
             ))}
