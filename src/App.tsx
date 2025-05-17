@@ -9,12 +9,10 @@ import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
 import { SupportChat } from "./pages/SupportChat";
-import { useLenisScroll } from "./components/useLenisScroll";
 
 import "./index.css";
 
 const App: React.FC = () => {
-  useLenisScroll(); // <-- Smooth scroll inladen
 
   return (
     <>
