@@ -1,21 +1,51 @@
 @import "tailwindcss";
 
+/* =======================
+   Algemene HTML & BODY
+========================== */
 html, body {
   @apply bg-gradient-to-br from-blue-50 via-white to-cyan-50 text-gray-800;
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
   max-width: 100%;
-  overflow-x: hidden;           
-  overflow-y: scroll;          
-  scrollbar-width: none;        
-  -ms-overflow-style: none;   
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  /* Scrollbar verbergen voor Firefox/IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
+/* Scrollbar verbergen voor WebKit browsers (Chrome/Safari/Edge) */
 body::-webkit-scrollbar {
-  display: none;               
+  display: none;
 }
 
+/* =======================
+   Scrollbar helper class
+========================== */
+.no-scrollbar {
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE/Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;                 /* WebKit */
+}
+
+/* =======================
+   Snap scroll ondersteuning
+========================== */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* =======================
+   Custom animaties
+========================== */
 @keyframes move-down {
   0% {
     transform: translateY(-100%);
@@ -32,4 +62,17 @@ body::-webkit-scrollbar {
 
 .animate-move-down {
   animation: move-down 3.5s linear infinite;
+}
+
+/* =======================
+   Horizontale scroll panels
+========================== */
+.panel {
+  flex: 0 0 100vw;
+  height: 100vh;
+}
+
+/* Optioneel: smooth scroll voor body (indien nodig) */
+html {
+  scroll-behavior: smooth;
 }
