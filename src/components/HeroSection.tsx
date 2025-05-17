@@ -44,7 +44,9 @@ export const HeroSection: React.FC = () => {
             </a>
           </div>
           <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-xs hover:scale-105 transition">
-            <h3 className="text-base font-semibold mb-1">Probeer als Werknemer</h3>
+            <h3 className="text-base font-semibold mb-1">
+              Probeer als Werknemer
+            </h3>
             <p className="text-white/80 mb-3 text-sm">
               Zie hoe het dashboard werkt voor personeel.
             </p>
