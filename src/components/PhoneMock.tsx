@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { IoArrowBack } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa";
 
 type CategoryId = "popular" | "curry" | "ramen" | "pizza" | "drinks";
 
@@ -162,7 +164,6 @@ export default function App() {
 
   const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
-  // Function to render a section of menu items
   const renderMenuSection = (categoryId: CategoryId) => {
     const items = mockMenu[categoryId];
 
@@ -176,37 +177,56 @@ export default function App() {
             <div
               key={item.id}
               onClick={() => setSelectedItem(item)}
-              className="relative flex flex-col items-center bg-white border rounded-xl shadow-md overflow-hidden p-2 pb-10 hover:shadow-lg transition cursor-pointer"
+              className="
+            relative flex flex-col items-center
+            bg-white ring-1 ring-gray-200
+            rounded-2xl overflow-hidden
+            p-3 pb-3 transform transition
+            hover:-translate-y-1 hover:shadow-lg
+            cursor-pointer
+          "
             >
-              {" "}
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full h-24 object-cover rounded"
+                className="w-full aspect-square object-cover rounded-lg mb-2"
               />
-              <h3 className="text-sm font-semibold mt-2 text-center leading-tight">
+              <h3 className="text-sm font-semibold text-center leading-tight">
                 {item.name}
               </h3>
-              <p className="text-xs text-gray-500 mt-1">
-                €{item.price.toFixed(2)}
-              </p>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(item.id, item.category);
-                }}
-                className="absolute bottom-2 right-2 bg-green-500 hover:bg-green-600 text-white rounded-full w-7 h-7 text-sm flex items-center justify-center shadow-md transition"
-              >
-                +
-              </button>
+              {/* Price + Button row */}
+              <div className="flex items-center w-full mt-2">
+                <span className="text-base font-bold text-gray-600 flex-1">
+                  €{item.price.toFixed(2)}
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(item.id, item.category);
+                  }}
+                  className="
+                bg-green-500 hover:bg-green-600
+                text-white rounded-full
+                w-8 h-8 flex items-center justify-center
+                shadow-md transition-colors duration-150
+              "
+                >
+                  <FaPlus size={14} />
+                </button>
+              </div>
+
+              {/* Floating +1 */}
               <AnimatePresence>
                 {floaters.includes(item.id) && (
                   <motion.div
                     initial={{ opacity: 1, y: 0 }}
-                    animate={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 0, y: -4 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="absolute text-sm font-semibold text-green-500 bottom-12 right-3 pointer-events-none"
+                    className="
+                  absolute text-sm font-semibold text-green-500
+                  bottom-14 right-4 pointer-events-none
+                "
                   >
                     +1
                   </motion.div>
@@ -268,9 +288,14 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute bottom-0 left-0 w-full p-3 bg-black text-white text-sm font-semibold text-center z-50"
+            className="
+        absolute bottom-0 left-0 w-full p-4 bg-black text-white
+        text-sm font-bold text-center z-50 cursor-pointer
+        rounded-b-[2rem]
+        
+      "
           >
-            Order {cart.length} item{cart.length > 1 && "s"} for{" "}
+            Bestel {cart.length} gerecht{cart.length === 1 ? "" : "en"} voor{" "}
             <motion.span
               key={total}
               initial={{ opacity: 0.5, scale: 0.95 }}
@@ -306,12 +331,22 @@ export default function App() {
             >
               {/* header */}
               <div className="p-4 flex justify-between items-center border-b">
-                <h2 className="text-lg font-bold">Your Basket</h2>
+                <h2 className="text-lg font-bold">Jouw bestelling</h2>
                 <button
                   onClick={() => setCartOpen(false)}
-                  className="text-2xl font-light leading-none"
+                  aria-label="Close basket"
+                  className="
+                  group
+                  p-0
+                  rounded-full
+                  transition
+                  hover:bg-gray-200
+                  focus:outline-none
+                "
                 >
-                  ×
+                  <span className="text-3xl font-bold text-gray-700 group-hover:text-black leading-none">
+                    ×
+                  </span>
                 </button>
               </div>
 
@@ -321,29 +356,51 @@ export default function App() {
                   const item = cart.find((i) => i.id === id)!;
                   const qty = cart.filter((i) => i.id === id).length;
                   return (
-                    <div key={id} className="flex items-center p-4 border-b">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-12 h-12 rounded object-cover"
-                      />
-                      <div className="flex-1 ml-4">
-                        <p className="font-semibold">{item.name}</p>
-                        <p className="text-gray-500">
-                          €{item.price.toFixed(2)}
-                        </p>
+                    <div
+                      key={id}
+                      className="flex items-center justify-between p-3 pr-2 border-b"
+                    >
+                      {/* left: image + text */}
+                      <div className="flex items-center space-x-4">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded object-cover"
+                        />
+                        <div>
+                          <p className="text-sm font-medium mb-0.5">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            €{item.price.toFixed(2)}
+                          </p>
+                        </div>
                       </div>
+
+                      {/* right: quantity controls */}
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => removeFromCart(id)}
-                          className="w-6 h-6 border rounded flex items-center justify-center"
+                          className="
+              w-8 h-8
+              bg-gray-100 rounded-full
+              flex items-center justify-center
+              hover:bg-gray-200 active:bg-gray-300
+              transition-colors duration-150
+            "
                         >
                           −
                         </button>
-                        <span>{qty}</span>
+                        <span className="text-xl font-bold">{qty}</span>
                         <button
                           onClick={() => addToCart(id, item.category)}
-                          className="w-6 h-6 border rounded flex items-center justify-center"
+                          className="
+              w-8 h-8
+              bg-gray-100 rounded-full
+              flex items-center justify-center
+              hover:bg-gray-200 active:bg-gray-300
+              transition-colors duration-150
+            "
                         >
                           +
                         </button>
@@ -355,12 +412,17 @@ export default function App() {
 
               <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
                 <span>Subtotal</span>
-                <span>€{total}</span>
+                <span className="text-lg font-bold">€{total}</span>
               </div>
 
               {/* Continue button */}
               <div className="p-4">
-                <button className="w-full bg-black text-white py-3 rounded-full">
+                <button
+                  className="
+                  w-full bg-black text-white py-3 rounded-full
+                  font-semibold shadow-md transition hover:bg-gray-900
+                "
+                >
                   Continue
                 </button>
               </div>
@@ -379,9 +441,8 @@ export default function App() {
             transition={{ duration: 0.3 }}
             className="absolute inset-0 z-40 bg-white flex flex-col"
           >
-            {/* Header image with back button */}
+            {/* Header image + back */}
             <div className="relative">
-              {" "}
               <img
                 src={selectedItem.image}
                 alt={selectedItem.name}
@@ -389,22 +450,28 @@ export default function App() {
               />
               <button
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white text-xl font-bold text-gray-800 flex items-center justify-center shadow"
+                className="
+            absolute top-3 left-3
+            w-8 h-8
+            flex items-center justify-center
+            bg-white rounded-full shadow
+            hover:bg-gray-100 active:bg-gray-600
+            transition-colors duration-150
+          "
               >
-                ←
+                <IoArrowBack size={20} className="text-gray-800" />
               </button>
             </div>
 
-            {/* Info content */}
+            {/* Content */}
             <div className="relative flex-1 overflow-hidden">
-              {/* Scrollable content */}
               <div className="p-4 h-full overflow-y-auto pb-[100px] flex flex-col gap-4">
-                {/* Title + Price */}
+                {/* Title on top, price underneath */}
                 <div>
                   <h2 className="text-2xl font-bold text-black">
                     {selectedItem.name}
                   </h2>
-                  <p className="text-xl text-gray-500 mt-1">
+                  <p className="text-xl font-semibold text-gray-500 mt-1">
                     €{selectedItem.price.toFixed(2)}
                   </p>
                 </div>
@@ -415,9 +482,9 @@ export default function App() {
                   presentation.
                 </p>
 
-                {/* Spicy/Original radio group */}
+                {/* Flavor */}
                 <div>
-                  <h4 className="font-semibold text-sm mb-1">
+                  <h4 className="text-sm font-semibold mb-1">
                     Keuze Original/Spicy
                   </h4>
                   <p className="text-xs text-gray-500 mb-2">Choose up to 1</p>
@@ -438,9 +505,11 @@ export default function App() {
                   </div>
                 </div>
 
+                <hr className="border-gray-200 my-4" />
+
                 {/* Toppings */}
                 <div>
-                  <h4 className="font-semibold text-sm mb-1">
+                  <h4 className="text-sm font-semibold mb-1">
                     Toppings toevoegen / Add Toppings
                   </h4>
                   <p className="text-xs text-gray-500 mb-2">Choose up to 7</p>
@@ -460,25 +529,39 @@ export default function App() {
                             +€{top.price.toFixed(2)}
                           </span>
                         </div>
-                        <input type="checkbox" className="accent-black" />
+                        <input
+                          type="checkbox"
+                          className="
+                      appearance-none
+                      w-5 h-5
+                      border-2 border-gray-400
+                      rounded-full
+                      checked:bg-black checked:border-black
+                      hover:border-gray-500 active:border-gray-600
+                      transition-colors duration-150
+                    "
+                        />
                       </label>
                     ))}
                   </div>
                 </div>
               </div>
-
-              {/* Gradient fade-out */}
-              <div className="pointer-events-none absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent z-10" />
             </div>
 
-            {/* Add to Order Button */}
+            {/* Solid white block under the button */}
+            <div className="absolute bottom-0 left-0 right-4 h-14 bg-white z-10" />
+
+            {/* Gradient fade‐out above that white block */}
+            <div className="pointer-events-none absolute bottom-12 left-0 right-4 h-24 bg-gradient-to-t from-white to-transparent z-10" />
+
+            {/* Add to Order */}
             <div className="absolute bottom-4 left-4 right-4 z-50">
               <button
                 onClick={() => {
                   addToCart(selectedItem.id, selectedItem.category);
                   setSelectedItem(null);
                 }}
-                className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition text-center"
+                className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition"
               >
                 Toevoegen aan bestelling • €{selectedItem.price.toFixed(2)}
               </button>
