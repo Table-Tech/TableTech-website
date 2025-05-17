@@ -1,4 +1,3 @@
-// src/components/DashboardPreview.tsx
 import React, { useEffect, useRef, useState } from "react";
 import dashboardImg from "../assets/dashboard-mockup.png";
 
@@ -18,13 +17,19 @@ export const DashboardPreview: React.FC = () => {
   }, []);
 
   return (
-    <section id="dashboard" className="relative py-16 px-2">
-      <div className="container mx-auto max-w-5xl">
-        <div className="bg-white/50 backdrop-blur-lg border border-white/30 rounded-3xl shadow-2xl p-8 transition-all duration-700">
-          <h2 className="text-2xl font-bold mb-4 text-gray-900 text-center">
+    <section
+      id="dashboard"
+      className="relative py-20 px-4 bg-[#2C1E1A] transition-colors duration-500"
+    >
+      {/* Fade bovenin (naar Benefits) */}
+      <div className="absolute top-0 left-0 w-full h-10 bg-gradient-to-t from-transparent to-[#2C1E1A] z-10 pointer-events-none" />
+
+      <div className="relative z-10 container mx-auto max-w-6xl">
+        <div className="bg-[#E6DED5]/90 backdrop-blur-md border border-[#C7B4A2]/40 rounded-3xl shadow-2xl p-10 transition-all duration-700">
+          <h2 className="text-2xl font-bold mb-4 text-[#3E2B21] text-center">
             Beheer alles in één dashboard
           </h2>
-          <p className="text-gray-700 mb-8 max-w-2xl mx-auto text-center text-sm">
+          <p className="text-[#5A4235] mb-8 max-w-2xl mx-auto text-center text-sm">
             Volg live bestellingen, analyseer je omzet per dag of week en pas je menukaart in een paar klikken aan. Alles realtime.
           </p>
 
@@ -39,14 +44,14 @@ export const DashboardPreview: React.FC = () => {
             <img
               src={dashboardImg}
               alt="Dashboard weergave"
-              className="w-full lg:w-1/2 max-w-sm rounded-2xl shadow-xl border border-white/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+              className="w-full lg:w-1/2 max-w-sm rounded-2xl shadow-xl border border-[#D3C3B6]/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
             />
             <video
               autoPlay
               muted
               loop
               playsInline
-              className="w-full lg:w-1/2 max-w-sm rounded-xl shadow-lg border border-white/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+              className="w-full lg:w-1/2 max-w-sm rounded-xl shadow-lg border border-[#D3C3B6]/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <source src="/videos/Qr Code.mp4" type="video/mp4" />
               Je browser ondersteunt geen video.

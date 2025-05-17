@@ -1,35 +1,108 @@
-// src/components/Footer.tsx
 import { Link } from "react-router-dom";
 
 export const Footer: React.FC = () => (
-  <footer
-    id="footer"
-    className="bg-transparent pt-4 pb-6 transition-all"
-  >
-    <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-sm text-gray-700">
-      <p className="text-center md:text-left">
-        &copy; {new Date().getFullYear()}{" "}
-        <span className="font-semibold text-gray-800">TableTech</span>. Alle rechten voorbehouden.
-      </p>
-      <div className="flex space-x-6 mt-4 md:mt-0 justify-center md:justify-end md:pr-8">
-        <Link
-          to="/about"
-          className="hover:text-blue-600 hover:underline underline-offset-4 transition-all duration-200"
-        >
-          Over ons
-        </Link>
-        <Link
-          to="/contact"
-          className="hover:text-blue-600 hover:underline underline-offset-4 transition-all duration-200"
-        >
-          Contact
-        </Link>
-        <Link
-          to="/privacy"
-          className="hover:text-blue-600 hover:underline underline-offset-4 transition-all duration-200"
-        >
-          Privacybeleid
-        </Link>
+  <footer id="footer" className="bg-[#2C1E1A] text-[#FFD382] py-12">
+    <div className="container mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        {/* Logo & contact */}
+        <div>
+          <div className="flex items-center mb-4">
+            <span className="text-2xl font-bold text-white">TableTech</span>
+          </div>
+          <p className="mb-1">📞 +31 85 303 07 23</p>
+          <p className="mb-1">✉️ info@tabletech.nl</p>
+          <p>📍 Nederland</p>
+        </div>
+
+        {/* Info links */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-white">Info</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/integraties" className="hover:text-white transition">
+                Integraties
+              </Link>
+            </li>
+            <li>
+              <Link to="/pricing" className="hover:text-white transition">
+                Prijzen
+              </Link>
+            </li>
+            <li>
+              <Link to="/demo" className="hover:text-white transition">
+                Demo
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Horeca types */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-white">Type horeca</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="#" className="hover:text-white transition">
+                Cafés
+              </Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition">
+                Hotels
+              </Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition">
+                Restaurants
+              </Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition">
+                Festivals
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Bedrijf */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-white">Bedrijf</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/about" className="hover:text-white transition">
+                Over ons
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-white transition">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/privacy" className="hover:text-white transition">
+                Privacybeleid
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-12 pt-6 border-t border-[#3B2A1D] flex flex-col md:flex-row justify-between items-center text-sm text-[#FFD382]">
+        <p>
+          &copy; {new Date().getFullYear()}{" "}
+          <span className="font-semibold text-white">TableTech</span>. Alle
+          rechten voorbehouden.
+        </p>
+        <div className="flex space-x-4 mt-4 md:mt-0">
+          <Link to="/privacy" className="hover:text-white transition">
+            Privacy
+          </Link>
+          <Link to="/voorwaarden" className="hover:text-white transition">
+            Algemene voorwaarden
+          </Link>
+          <Link to="/cookies" className="hover:text-white transition">
+            Cookies
+          </Link>
+        </div>
       </div>
     </div>
   </footer>

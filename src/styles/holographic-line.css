@@ -15,13 +15,13 @@
 .holographic-line {
   width: 4px;
   height: 80%;
-  background: linear-gradient(to bottom, #38bdf8, #3b82f6, #38bdf8);
+  background: linear-gradient(to bottom, #e6b17e, #c68a53, #e6b17e);
   border-radius: 9999px;
   animation: pulse-stream 4s linear infinite;
   opacity: 0.7;
-  filter: blur(1.5px) drop-shadow(0 0 4px #38bdf8);
+  filter: blur(1.5px) drop-shadow(0 0 4px #e6b17e);
   backdrop-filter: blur(4px);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 12px rgba(198, 138, 83, 0.5);
 }
 
 @keyframes pulse-stream {
