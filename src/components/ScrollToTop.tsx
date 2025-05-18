@@ -6,7 +6,15 @@ const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    // Gebruik Lenis instance op window, of fallback naar native
+    requestAnimationFrame(() => {
+      const lenis = window.lenis;
+      if (lenis?.scrollTo) {
+        lenis.scrollTo(0, { immediate: true });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    });
   }, [pathname]);
 
   return null;
