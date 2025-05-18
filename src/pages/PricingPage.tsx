@@ -4,8 +4,11 @@ import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import planten2 from "../assets/Planten.png";
+import { useLenisScroll } from "../components/useLenisScroll"; // ✅ Lenis hook import
 
 export const PricingPage: React.FC = () => {
+  useLenisScroll(); // ✅ Activeer smooth scroll
+
   const pricingData = [
     ["Tablet inbegrepen", "❌ Huur €12/m", "✔ 1 tablet", "✔ 1+ tablets"],
     ["Dashboard & bestellingen", "✔", "✔", "✔"],
@@ -30,7 +33,6 @@ export const PricingPage: React.FC = () => {
     <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Hero bovenaan - helder zoals FeaturePage */}
       <div className="relative w-full h-[60vh] overflow-hidden">
         <img
           src={planten2}
