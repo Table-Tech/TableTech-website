@@ -5,6 +5,7 @@ import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
+import { useLenisScroll } from "../components/useLenisScroll";
 
 // Animaties
 import statsAnimation from "../assets/animations/statistics-animation.json";
@@ -23,6 +24,8 @@ import CircleAnimation from "../assets/animations/cirlce-aniamtion.json";
 import planten2 from "../assets/Planten.png";
 
 export const FeaturePage: React.FC = () => {
+  useLenisScroll(); // Activeer smooth scroll
+
   const features = [
     {
       title: "Statistieken & inzichten",
@@ -82,7 +85,6 @@ export const FeaturePage: React.FC = () => {
     <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen">
       <Navbar />
 
-      {/* Hero met afbeelding */}
       <div className="relative w-full h-[60vh] overflow-hidden">
         <img
           src={planten2}
