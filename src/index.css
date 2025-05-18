@@ -9,8 +9,7 @@ html, body {
   background-attachment: fixed;
   min-height: 100vh;
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-x: hidden; /* ✅ Alleen X verbergen, Y laat Lenis regelen */
 
   /* Scrollbar verbergen voor Firefox/IE */
   scrollbar-width: none;
@@ -71,8 +70,11 @@ body::-webkit-scrollbar {
   flex: 0 0 100vw;
   height: 100vh;
 }
-
-/* Optioneel: smooth scroll voor body (indien nodig) */
-html {
-  scroll-behavior: smooth;
+/* Scrollbar volledig verbergen */
+.scrollbar-none {
+  scrollbar-width: none;            /* Firefox */
+  -ms-overflow-style: none;         /* IE/Edge */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;                    /* Chrome, Safari, Opera */
 }
