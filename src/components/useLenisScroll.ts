@@ -1,4 +1,6 @@
+// src/components/useLenisScroll.ts
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -6,23 +8,46 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const useLenisScroll = () => {
+  const location = useLocation();
+
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.05, // vloeiend, maar stopt snel
-      duration: 1.2,
+      lerp: 0.07,
+      duration: 1.1,
     });
 
-    function raf(time: number) {
+    // ✅ Koppel Lenis aan window met juiste type
+    window.lenis = lenis;
+
+    const raf = (time: number) => {
       lenis.raf(time);
       requestAnimationFrame(raf);
-    }
+    };
 
     requestAnimationFrame(raf);
 
-    // GSAP fade-in animaties voor .fade-in elementen
+    ScrollTrigger.scrollerProxy(document.body, {
+      scrollTop(value) {
+        if (typeof value === "number") {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+    });
+
+    ScrollTrigger.refresh();
+
     gsap.utils.toArray(".fade-in").forEach((el) => {
       if (el instanceof HTMLElement) {
         gsap.from(el, {
@@ -40,7 +65,8 @@ export const useLenisScroll = () => {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      lenis.destroy();
     };
-  }, []);
+  }, [location.pathname]);
 };
