@@ -1,4 +1,3 @@
-// src/pages/ContactPage.tsx
 import React, { useRef } from "react";
 import emailjs from "@emailjs/browser";
 import { Navbar } from "../components/Navbar";
@@ -6,8 +5,11 @@ import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import { FaUser, FaEnvelope, FaPhone, FaBuilding } from "react-icons/fa";
 import planten2 from "../assets/Planten.png";
+import { useLenisScroll } from "../components/useLenisScroll"; // ✅ Lenis scroll import
 
 export const ContactPage: React.FC = () => {
+  useLenisScroll(); // ✅ Activeer Lenis scroll
+
   const form = useRef<HTMLFormElement>(null);
 
   const sendEmail = (e: React.FormEvent) => {
