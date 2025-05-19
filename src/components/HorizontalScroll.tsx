@@ -24,7 +24,7 @@ export const HorizontalScroll: React.FC = () => {
           pin: true,
           scrub: 1,
           snap: 1 / (panels.length - 1),
-          end: () => "+=" + container.offsetWidth,
+          end: () => "+=" + container.scrollWidth,
         },
       });
     }, container);
@@ -35,12 +35,12 @@ export const HorizontalScroll: React.FC = () => {
   return (
     <div
       ref={scrollRef}
-      className="horizontal-scroll flex h-screen w-[200vw] overflow-hidden bg-[#1e1208]"
+      className="horizontal-scroll relative flex w-[200vw] h-screen overflow-hidden bg-[#1e1208]"
     >
-      <div className="panel w-screen h-screen shrink-0">
+      <div className="panel w-screen h-screen shrink-0 overflow-hidden">
         <Benefits />
       </div>
-      <div className="panel w-screen h-screen shrink-0">
+      <div className="panel w-screen h-screen shrink-0 overflow-hidden">
         <BenefitsTwo />
       </div>
     </div>
