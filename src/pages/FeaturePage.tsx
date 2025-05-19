@@ -1,4 +1,3 @@
-// src/pages/FeaturePage.tsx
 import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
@@ -24,7 +23,7 @@ import CircleAnimation from "../assets/animations/cirlce-aniamtion.json";
 import planten2 from "../assets/Planten.png";
 
 export const FeaturePage: React.FC = () => {
-  useLenisScroll(); // Activeer smooth scroll
+  useLenisScroll();
 
   const features = [
     {
@@ -49,25 +48,25 @@ export const FeaturePage: React.FC = () => {
     },
     null,
     {
-      title: "Meertalig menu",
-      description: "Menu automatisch vertaald – ideaal voor internationale gasten zonder taalbarrières.",
-      animation: Multitalen,
+      title: "Personeelsnotificaties",
+      description: "Meldingen voor personeel bij nieuwe of aangepaste bestellingen – geen handmatig roepen meer.",
+      animation: ChefAnimation,
     },
-    {
-      title: "Upsell-opties bij bestelling",
-      description: "Toon slimme suggesties tijdens het bestelproces – verhoog de gemiddelde bestelwaarde.",
-      animation: Upsell,
-    },
-    null,
     {
       title: "Feedback verzamelen",
       description: "Gasten geven direct feedback na betaling – waardevol zonder dat personeel iets hoeft te vragen.",
       animation: Feedback,
     },
+    null,
     {
-      title: "Personeelsnotificaties",
-      description: "Meldingen voor personeel bij nieuwe of aangepaste bestellingen – geen handmatig roepen meer.",
-      animation: ChefAnimation,
+      title: "Upsell-opties bij bestelling",
+      description: "Toon slimme suggesties tijdens het bestelproces – verhoog de gemiddelde bestelwaarde.",
+      animation: Upsell,
+    },
+    {
+      title: "Meertalig menu",
+      description: "Menu automatisch vertaald – ideaal voor internationale gasten zonder taalbarrières.",
+      animation: Multitalen,
     },
     {
       title: "Minder personeelsdruk",
@@ -111,7 +110,7 @@ export const FeaturePage: React.FC = () => {
                   if (item === null) {
                     return (
                       <div
-                        key={`circle-animation-${index}`}
+                        key={`circle-${index}`}
                         className="w-full flex items-center justify-center col-span-1"
                       >
                         <Lottie
@@ -123,12 +122,15 @@ export const FeaturePage: React.FC = () => {
                     );
                   }
 
-                  const { title, description, animation } = item;
+                  const isWhite =
+                    item.title === "Personeelsnotificaties" || item.title === "Feedback verzamelen";
 
                   return (
                     <motion.div
-                      key={title}
-                      className="relative w-[260px] sm:w-[300px] h-[220px] bg-[#FFF7F1] backdrop-blur-sm border border-[#E8D8CE] rounded-2xl shadow-xl overflow-hidden group"
+                      key={item.title}
+                      className={`relative w-[260px] sm:w-[300px] h-[220px] ${
+                        isWhite ? "bg-white" : "bg-[#FFF7F1]"
+                      } backdrop-blur-sm border border-[#E8D8CE] rounded-2xl shadow-xl overflow-hidden group`}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       whileHover={{
@@ -140,15 +142,15 @@ export const FeaturePage: React.FC = () => {
                       transition={{ delay: index * 0.04, duration: 0.35 }}
                     >
                       <div className="absolute top-0 left-0 w-full bg-[#A77B5D] text-white text-sm font-semibold py-2 text-center rounded-t-2xl z-20">
-                        {title}
+                        {item.title}
                       </div>
 
                       <div className="pointer-events-none z-0 flex items-center justify-center h-full pt-5">
-                        <Lottie animationData={animation} loop className="w-24 h-24 sm:w-28 sm:h-28" />
+                        <Lottie animationData={item.animation} loop className="w-24 h-24 sm:w-28 sm:h-28" />
                       </div>
 
                       <div className="absolute top-0 left-0 w-full h-full pt-[38px] bg-white/95 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-linear flex flex-col items-center justify-center text-center px-4 z-10 rounded-2xl">
-                        <p className="text-sm text-gray-700">{description}</p>
+                        <p className="text-sm text-gray-700">{item.description}</p>
                       </div>
                     </motion.div>
                   );
