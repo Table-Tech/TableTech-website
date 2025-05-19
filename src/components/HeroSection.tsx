@@ -5,7 +5,7 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative w-full min-h-screen overflow-hidden text-center snap-start bg-black"
+      className="relative w-full h-screen flex flex-col justify-between overflow-hidden text-center snap-start bg-black"
     >
       {/* Achtergrondvideo */}
       <video
@@ -23,7 +23,7 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
 
       {/* Inhoud */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 2xl:px-20 3xl:px-40 pt-40 pb-28 text-white">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 2xl:px-20 3xl:px-40 pt-40 pb-20 text-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 3xl:text-7xl font-bold mb-6 leading-snug drop-shadow-md">
           De nieuwe manier van bestellen in jouw restaurant
         </h1>
@@ -61,8 +61,8 @@ export const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Fade naar volgende sectie */}
-      <div className="h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10 relative" />
+      {/* Fade effect onderaan (gefixed positionering) */}
+      <div className="absolute bottom-0 h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10" />
     </section>
   );
 };
