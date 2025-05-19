@@ -1,3 +1,4 @@
+// tailwind.config.js
 const { fontFamily } = require('tailwindcss/defaultTheme')
 
 module.exports = {
@@ -7,6 +8,16 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '3rem',
+        xl: '4rem',
+        '2xl': '5rem',
+      },
+    },
     extend: {
       screens: {
         xs: '475px',
@@ -51,6 +62,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
-    require('tailwind-scrollbar')({ nocompatible: true }), // ✅ Toegevoegd
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 }
