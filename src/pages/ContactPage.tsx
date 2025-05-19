@@ -5,10 +5,10 @@ import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import { FaUser, FaEnvelope, FaPhone, FaBuilding } from "react-icons/fa";
 import planten2 from "../assets/Planten.png";
-import { useLenisScroll } from "../components/useLenisScroll"; // ✅ Lenis scroll import
+import { useLenisScroll } from "../components/useLenisScroll";
 
 export const ContactPage: React.FC = () => {
-  useLenisScroll(); // ✅ Activeer Lenis scroll
+  useLenisScroll();
 
   const form = useRef<HTMLFormElement>(null);
 
@@ -29,7 +29,7 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col">
+    <div className="bg-[#2C1E1A] text-[#F5F0EB] min-h-screen flex flex-col w-full overflow-x-hidden">
       <Navbar />
 
       {/* Hero afbeelding */}
@@ -46,16 +46,22 @@ export const ContactPage: React.FC = () => {
         </div>
       </div>
 
-      <main className="pt-12 sm:pt-16 flex-grow">
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Vragen? Wij staan voor je klaar</h2>
+      {/* Inhoud */}
+      <main className="pt-12 sm:pt-16 flex-grow w-full">
+        <section className="py-16 w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64">
+          <div className="w-full max-w-5xl mx-auto text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Vragen? Wij staan voor je klaar
+            </h2>
             <p className="mb-4 max-w-xl mx-auto">
               Heb je vragen over sales of een samenwerking? Laat je gegevens achter en we nemen snel contact op.
             </p>
             <p className="max-w-xl mx-auto">
               Voor <strong>support</strong> kun je mailen naar{" "}
-              <a href="mailto:info@tabletech.nl" className="text-[#FFD382] underline font-medium">
+              <a
+                href="mailto:info@tabletech.nl"
+                className="text-[#FFD382] underline font-medium"
+              >
                 info@tabletech.nl
               </a>.
             </p>
@@ -64,7 +70,7 @@ export const ContactPage: React.FC = () => {
           <form
             ref={form}
             onSubmit={sendEmail}
-            className="mt-6 max-w-4xl mx-auto bg-white/70 text-[#2C1E1A] border border-[#E8D8CE] rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 space-y-6"
+            className="mt-6 w-full max-w-5xl mx-auto bg-white/70 text-[#2C1E1A] border border-[#E8D8CE] rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 space-y-6"
           >
             <h3 className="text-xl font-semibold text-center">Contactgegevens</h3>
             <p className="text-sm text-center mb-6">
