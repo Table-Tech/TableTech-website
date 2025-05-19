@@ -3,7 +3,7 @@ import turnoverImg from "../assets/turnover.png";
 import workloadImg from "../assets/workload.png";
 import experienceImg from "../assets/experience.png";
 import plantenBg from "../assets/Planten.png";
-import tabletechPhoneImg from "../assets/Telefoon.png"; // <- jouw mockup hier toevoegen
+import tabletechPhoneImg from "../assets/Telefoon.png";
 
 type Benefit = {
   imgSrc: string;
@@ -62,13 +62,15 @@ export const Benefits: React.FC = () => {
   return (
     <section
       id="benefits"
-      className="w-screen h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0"
+      className="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
+      {/* Donkere overlay */}
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
 
-      <div className="relative z-10 w-full px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center justify-center gap-12">
-        {/* Linkerzijde – Telefoon */}
+      {/* Inhoud */}
+      <div className="relative z-10 w-full max-w-screen-3xl px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-40 flex flex-col lg:flex-row items-center justify-center gap-12">
+        {/* Telefoonmockup */}
         <div className="w-full max-w-sm flex justify-center">
           <img
             src={tabletechPhoneImg}
@@ -77,9 +79,9 @@ export const Benefits: React.FC = () => {
           />
         </div>
 
-        {/* Rechterzijde – Tekstblokken */}
-        <div className="w-full max-w-3xl bg-[#f5efe7]/80 backdrop-blur-md border border-[#b89b85]/30 rounded-3xl shadow-2xl p-8">
-          <h2 className="text-2xl font-bold text-center mb-10 text-[#5e3d2b]">
+        {/* Cards */}
+        <div className="w-full max-w-6xl bg-[#f5efe7]/80 backdrop-blur-md border border-[#b89b85]/30 rounded-3xl shadow-2xl p-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10 text-[#5e3d2b]">
             Waarom TableTech?
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -105,7 +107,7 @@ export const Benefits: React.FC = () => {
                 <h3 className="text-base font-semibold mb-2 text-[#4b2e1e]">
                   {title}
                 </h3>
-                <p className="text-[#5f4534] text-sm">{desc}</p>
+                <p className="text-[#5f4534] text-sm md:text-base">{desc}</p>
               </div>
             ))}
           </div>
