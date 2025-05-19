@@ -16,14 +16,11 @@ export const CallToAction: React.FC = () => {
   }, []);
 
   return (
-    <section
-      id="cta"
-      className="bg-[#2C1E1A] text-white py-16 px-4 text-center"
-    >
-      <div className="container mx-auto max-w-3xl">
+    <section id="cta" className="bg-[#2C1E1A] text-white py-16 px-4 w-full">
+      <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 flex justify-center">
         <div
           ref={ref}
-          className={`bg-[#3A2B24]/90 backdrop-blur-sm border border-[#4A372E] rounded-3xl shadow-xl p-8 inline-block transform transition-all duration-1000 ease-out ${
+          className={`bg-[#3A2B24]/90 backdrop-blur-sm border border-[#4A372E] rounded-3xl shadow-xl p-8 transform transition-all duration-1000 ease-out w-full max-w-4xl text-center ${
             visible
               ? "opacity-100 translate-y-0 scale-100"
               : "opacity-0 translate-y-8 scale-95"

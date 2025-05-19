@@ -21,8 +21,10 @@ export const HorizontalScroll: React.FC = () => {
         ease: "none",
         scrollTrigger: {
           trigger: container,
+          start: "top top",
           pin: true,
           scrub: 1,
+          anticipatePin: 1, // 💡 voorkomt flitsen bro duurde even dat ik dit kon fixen 
           snap: 1 / (panels.length - 1),
           end: () => "+=" + container.offsetWidth,
         },
@@ -33,15 +35,17 @@ export const HorizontalScroll: React.FC = () => {
   }, []);
 
   return (
-    <div
-      ref={scrollRef}
-      className="horizontal-scroll flex h-screen w-[200vw] overflow-hidden bg-[#1e1208]"
-    >
-      <div className="panel w-screen h-screen shrink-0">
-        <Benefits />
-      </div>
-      <div className="panel w-screen h-screen shrink-0">
-        <BenefitsTwo />
+    <div className="w-full overflow-hidden relative">
+      <div
+        ref={scrollRef}
+        className="horizontal-scroll relative flex w-[200vw] h-screen overflow-hidden bg-[#1e1208]"
+      >
+        <div className="panel w-screen h-screen shrink-0 overflow-hidden">
+          <Benefits />
+        </div>
+        <div className="panel w-screen h-screen shrink-0 overflow-hidden">
+          <BenefitsTwo />
+        </div>
       </div>
     </div>
   );
