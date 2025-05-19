@@ -60,11 +60,12 @@ export const Benefits: React.FC = () => {
   }, [visible]);
 
   return (
-    <section
-      id="benefits"
-      className="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
-      style={{ backgroundImage: `url(${plantenBg})` }}
+      <section
+    id="benefits"
+    className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
+    style={{ backgroundImage: `url(${plantenBg})` }}
     >
+
       {/* Donkere overlay */}
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
 
