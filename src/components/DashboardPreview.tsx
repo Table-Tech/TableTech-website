@@ -19,12 +19,11 @@ export const DashboardPreview: React.FC = () => {
   return (
     <section
       id="dashboard"
-      className="relative py-20 px-4 bg-[#2C1E1A] transition-colors duration-500"
+      className="relative py-20 px-4 bg-[#2C1E1A] w-full overflow-x-hidden"
     >
-      {/* Fade bovenin (naar Benefits) */}
       <div className="absolute top-0 left-0 w-full h-10 bg-gradient-to-t from-transparent to-[#2C1E1A] z-10 pointer-events-none" />
 
-      <div className="relative z-10 container mx-auto max-w-6xl">
+      <div className="relative z-10 w-full max-w-7xl mx-auto">
         <div className="bg-[#E6DED5]/90 backdrop-blur-md border border-[#C7B4A2]/40 rounded-3xl shadow-2xl p-10 transition-all duration-700">
           <h2 className="text-2xl font-bold mb-4 text-[#3E2B21] text-center">
             Beheer alles in één dashboard
