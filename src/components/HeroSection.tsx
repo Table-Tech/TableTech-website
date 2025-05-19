@@ -5,7 +5,7 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative w-screen min-h-screen overflow-hidden text-center snap-start"
+      className="relative w-full min-h-screen overflow-hidden text-center snap-start bg-black"
     >
       {/* Achtergrondvideo */}
       <video
@@ -15,7 +15,7 @@ export const HeroSection: React.FC = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/videos/background-2.mp4" type="video/mp4" />
+        <source src="/videos/background-2.webm" type="video/webm" />
         Je browser ondersteunt geen HTML5 video.
       </video>
 
@@ -23,16 +23,16 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
 
       {/* Inhoud */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 pt-40 pb-28 text-white">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-snug drop-shadow-md">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 2xl:px-20 3xl:px-40 pt-40 pb-28 text-white">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 3xl:text-7xl font-bold mb-6 leading-snug drop-shadow-md">
           De nieuwe manier van bestellen in jouw restaurant
         </h1>
-        <p className="text-lg text-white/90 mb-10">
+        <p className="text-base sm:text-lg text-white/90 mb-10 max-w-3xl mx-auto 2xl:text-xl">
           Laat gasten bestellen & betalen via QR – sneller, veiliger, slimmer.
         </p>
 
         <div className="flex flex-col md:flex-row justify-center gap-6">
-          <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-xs hover:scale-105 transition">
+          <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition">
             <h3 className="text-base font-semibold mb-1">Probeer als Klant</h3>
             <p className="text-white/80 mb-3 text-sm">
               Bekijk hoe gasten eenvoudig bestellen via QR.
@@ -44,7 +44,7 @@ export const HeroSection: React.FC = () => {
               Start demo
             </Link>
           </div>
-          <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-xs hover:scale-105 transition">
+          <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition">
             <h3 className="text-base font-semibold mb-1">
               Probeer als Werknemer
             </h3>
@@ -61,7 +61,7 @@ export const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Smooth fade naar volgende sectie */}
+      {/* Fade naar volgende sectie */}
       <div className="h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10 relative" />
     </section>
   );
