@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaWhatsapp, FaComments, FaTimes, FaRobot, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaWhatsapp,
+  FaComments,
+  FaTimes,
+  FaRobot,
+  FaQuestionCircle,
+} from "react-icons/fa";
 
 export const SupportChat: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -10,24 +17,22 @@ export const SupportChat: React.FC = () => {
   const handleAsk = (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
-
-    // Simuleer AI-reactie
     setResponse("Dankjewel voor je vraag! We nemen zo snel mogelijk contact met je op of je krijgt direct antwoord van onze slimme assistent.");
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {open ? (
-        <div className="w-[340px] bg-white/80 backdrop-blur-lg border border-white/30 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
+        <div className="w-[340px] bg-[#f5efe7]/90 backdrop-blur-lg border border-[#d4c0ac] shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/30 bg-white/60">
-            <div className="flex items-center gap-2 font-semibold text-blue-800 text-sm">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#d4c0ac] bg-[#f5efe7] text-[#4e3323] font-semibold text-sm">
+            <div className="flex items-center gap-2">
               <FaRobot />
               Klantenservice
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-gray-600 hover:text-red-500"
+              className="text-[#4e3323] hover:text-red-500 transition"
               aria-label="Sluit"
             >
               <FaTimes />
@@ -35,41 +40,32 @@ export const SupportChat: React.FC = () => {
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-around bg-white/50 border-b border-white/30 text-sm font-medium">
-            <button
-              className={`flex-1 py-2 flex items-center justify-center gap-1 transition ${
-                activeTab === "form" ? "text-blue-600 bg-white" : "text-gray-600"
-              }`}
-              onClick={() => {
-                setActiveTab("form");
-                setResponse("");
-              }}
-            >
-              <FaQuestionCircle />
-              Vraag
-            </button>
-            <button
-              className={`flex-1 py-2 flex items-center justify-center gap-1 transition ${
-                activeTab === "email" ? "text-blue-600 bg-white" : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("email")}
-            >
-              <FaEnvelope />
-              E-mail
-            </button>
-            <button
-              className={`flex-1 py-2 flex items-center justify-center gap-1 transition ${
-                activeTab === "whatsapp" ? "text-green-600 bg-white" : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("whatsapp")}
-            >
-              <FaWhatsapp />
-              WhatsApp
-            </button>
+          <div className="flex justify-around border-b border-[#d4c0ac] text-sm font-medium bg-[#f5efe7]/70">
+            {[
+              { id: "form", icon: <FaQuestionCircle />, label: "Vraag" },
+              { id: "email", icon: <FaEnvelope />, label: "E-mail" },
+              { id: "whatsapp", icon: <FaWhatsapp />, label: "WhatsApp" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                className={`flex-1 py-2 flex items-center justify-center gap-1 transition ${
+                  activeTab === tab.id
+                    ? "text-[#7b4f35] bg-white"
+                    : "text-[#5f4534]"
+                }`}
+                onClick={() => {
+                  setActiveTab(tab.id as typeof activeTab);
+                  setResponse("");
+                }}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           {/* Inhoud */}
-          <div className="p-4 text-sm text-gray-800">
+          <div className="p-4 text-sm text-[#3b2a1d] bg-[#fffdfb]">
             {activeTab === "form" && (
               <form onSubmit={handleAsk} className="space-y-3">
                 <textarea
@@ -77,16 +73,16 @@ export const SupportChat: React.FC = () => {
                   rows={3}
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
-                  className="w-full px-4 py-2 rounded-md border border-white/40 bg-white/90 placeholder:text-gray-500 resize-none"
+                  className="w-full px-4 py-2 rounded-md border border-[#d8c4b1] bg-white placeholder:text-gray-500 resize-none"
                 />
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-medium transition"
+                  className="w-full bg-[#7b4f35] hover:bg-[#5e3b29] text-white py-2 rounded-md font-medium transition"
                 >
                   Verstuur
                 </button>
                 {response && (
-                  <div className="bg-white/80 mt-3 p-3 rounded-md text-gray-700 border border-white/40 shadow-inner">
+                  <div className="bg-[#fff8f3] mt-3 p-3 rounded-md text-[#4e3a2e] border border-[#e4d4c2] shadow-inner animate-fade-in">
                     <strong>AI antwoord:</strong>
                     <p className="mt-1">{response}</p>
                   </div>
@@ -96,10 +92,10 @@ export const SupportChat: React.FC = () => {
 
             {activeTab === "email" && (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-700 mb-2">Stuur ons een e-mail:</p>
+                <p className="mb-2">Stuur ons een e-mail:</p>
                 <a
                   href="mailto:info@tabletech.nl"
-                  className="text-blue-600 font-medium underline"
+                  className="text-[#7b4f35] font-medium underline hover:text-[#5e3b29]"
                 >
                   info@tabletech.nl
                 </a>
@@ -108,8 +104,15 @@ export const SupportChat: React.FC = () => {
 
             {activeTab === "whatsapp" && (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-700 mb-2">WhatsApp ons op:</p>
-                <span className="text-green-600 font-semibold">-</span>
+                <p className="mb-2">WhatsApp ons op:</p>
+                <a
+                  href="https://wa.me/31612345678"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 font-semibold underline hover:text-green-700"
+                >
+                  +31 6 12345678
+                </a>
               </div>
             )}
           </div>
@@ -117,7 +120,7 @@ export const SupportChat: React.FC = () => {
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition"
+          className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white rounded-full p-4 shadow-lg flex items-center justify-center transition"
           aria-label="Open support"
         >
           <FaComments size={20} />

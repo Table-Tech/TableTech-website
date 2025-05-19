@@ -29,17 +29,16 @@ export const ScrollDots: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 hidden md:flex flex-col space-y-4">
+    <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 hidden md:flex flex-col space-y-4">
       {sections.map((id) => (
-        <a
+        <div
           key={id}
-          href={`#${id}`}
           className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
             active === id
-              ? "bg-blue-600 border-blue-600 scale-125"
-              : "bg-white/60 border-gray-400"
+              ? "bg-[#7b4f35] border-[#7b4f35] scale-125"
+              : "bg-[#f5efe7]/60 border-[#b89b85]"
           }`}
-          aria-label={`Ga naar ${id}`}
+          aria-label={`Section: ${id}`}
         />
       ))}
     </div>
