@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import dashboardImg from "../assets/dashboard-mockup.png";
+import dashboardImg from "../../assets/afbeeldingen/dashboard-mockup.png";
 
 export const DashboardPreview: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);

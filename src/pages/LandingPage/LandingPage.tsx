@@ -1,12 +1,12 @@
 // src/pages/LandingPage.tsx
-import { HeroSection } from "../components/HeroSection";
-import { DashboardPreview } from "../components/DashboardPreview";
-import { CallToAction } from "../components/CallToAction";
-import { Navbar } from "../components/Navbar";
-import { ScrollDots } from "../components/ScrollDotss";
-import { HorizontalScroll } from "../components/HorizontalScroll";
-import { useLenisScroll } from "../components/useLenisScroll";
-import { Footer } from "../components/Footer";
+import { HeroSection } from "./HeroSection";
+import { DashboardPreview } from "./DashboardPreview";
+import { CallToAction } from "../../components/CallToAction";
+import { Navbar } from "../../components/Navbar";
+import { ScrollDots } from "../../components/ScrollDotss";
+import { HorizontalScroll } from "../../components/HorizontalScroll";
+import { useLenisScroll } from "../../components/useLenisScroll";
+import { Footer } from "../../components/Footer";
 
 const LandingPage: React.FC = () => {
   useLenisScroll();

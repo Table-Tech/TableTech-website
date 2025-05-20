@@ -4,7 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
 import { FaUser, FaEnvelope, FaPhone, FaBuilding } from "react-icons/fa";
-import planten2 from "../assets/Planten.png";
+import planten2 from "../assets/afbeeldingen/Planten.png";
 import { useLenisScroll } from "../components/useLenisScroll";
 
 export const ContactPage: React.FC = () => {

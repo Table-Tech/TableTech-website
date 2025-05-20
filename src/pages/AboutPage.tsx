@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
-import planten2 from "../assets/Planten.png";
+import planten2 from "../assets/afbeeldingen/Planten.png";
 import { useLenisScroll } from "../components/useLenisScroll"; // ✅ Lenis scroll hook
 
 export const AboutPage: React.FC = () => {
