@@ -5,7 +5,7 @@ import { Footer } from "../components/Footer";
 import { useLenisScroll } from "../components/useLenisScroll";
 import { CallToAction } from "../components/CallToAction";
 
-import planten from "../assets/Planten.png";
+import planten from "../assets/afbeeldingen/Planten.png";
 
 const KlantDemoPage: React.FC = () => {
   useLenisScroll();

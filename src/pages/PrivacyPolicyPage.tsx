@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
-import planten2 from "../assets/Planten.png";
+import planten2 from "../assets/afbeeldingen/Planten.png";
 import { useLenisScroll } from "../components/useLenisScroll"; // ✅ toegevoegd
 
 export const PrivacyPolicyPage: React.FC = () => {

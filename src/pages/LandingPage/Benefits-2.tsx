@@ -1,5 +1,5 @@
 import React from "react";
-import plantenBg from "../assets/Planten.png";
+import plantenBg from "../../assets/afbeeldingen/Planten.png";
 
 export const BenefitsTwo: React.FC = () => {
   return (

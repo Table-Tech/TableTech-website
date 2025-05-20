@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { Benefits } from "./Benefits";
-import { BenefitsTwo } from "./Benefits-2";
+import { Benefits } from "../pages/LandingPage/Benefits";
+import { BenefitsTwo } from "../pages/LandingPage/Benefits-2";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

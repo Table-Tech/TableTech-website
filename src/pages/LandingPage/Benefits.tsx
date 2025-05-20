@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import turnoverImg from "../assets/turnover.png";
-import workloadImg from "../assets/workload.png";
-import experienceImg from "../assets/experience.png";
-import plantenBg from "../assets/Planten.png";
-import tabletechPhoneImg from "../assets/Telefoon.png";
+import turnoverImg from "../../assets/afbeeldingen/turnover.png";
+import workloadImg from "../../assets/afbeeldingen/workload.png";
+import experienceImg from "../../assets/afbeeldingen/experience.png";
+import plantenBg from "../../assets/afbeeldingen/Planten.png";
+import tabletechPhoneImg from "../../assets/afbeeldingen/Telefoon.png";
 
 type Benefit = {
   imgSrc: string;

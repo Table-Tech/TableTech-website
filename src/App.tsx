@@ -3,7 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import { FeaturePage } from "./pages/FeaturePage";
 import { PricingPage } from "./pages/PricingPage";
 import { AboutPage } from "./pages/AboutPage";

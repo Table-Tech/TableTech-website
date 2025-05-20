@@ -20,7 +20,7 @@ import HappyClients from "../assets/animations/happy-clinet-animation.json";
 import CircleAnimation from "../assets/animations/cirlce-aniamtion.json";
 
 // Hero afbeelding
-import planten2 from "../assets/Planten.png";
+import planten2 from "../assets/afbeeldingen/Planten.png";
 
 export const FeaturePage: React.FC = () => {
   useLenisScroll();
