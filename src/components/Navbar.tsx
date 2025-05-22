@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
+import "../i18n";
 
 export const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-transparent text-white backdrop-blur-sm transition">
@@ -12,12 +16,19 @@ export const Navbar: React.FC = () => {
         </Link>
 
         <nav className="hidden md:flex space-x-8 items-center text-sm font-medium">
-          <Link to="/" className="hover:text-[#ffe7c3] transition">Home</Link>
-          <Link to="/features" className="hover:text-[#ffe7c3] transition">Functies</Link>
-          <Link to="/pricing" className="hover:text-[#ffe7c3] transition">Prijzen</Link>
-          <Link to="/about" className="hover:text-[#ffe7c3] transition">Over ons</Link>
-          <Link to="/signup" className="ml-4 bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-5 py-2 rounded-full font-medium transition">
-            Probeer gratis
+          <Link to="/" className="hover:text-[#ffe7c3] transition">{t("home")}</Link>
+          <Link to="/features" className="hover:text-[#ffe7c3] transition">{t("features")}</Link>
+          <Link to="/pricing" className="hover:text-[#ffe7c3] transition">{t("pricing")}</Link>
+          <Link to="/about" className="hover:text-[#ffe7c3] transition">{t("about")}</Link>
+
+          {/* ✅ Hier staat de taalkiezer links van de signup knop */}
+          <LanguageSwitcher />
+
+          <Link
+            to="/signup"
+            className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-5 py-2 rounded-full font-medium transition"
+          >
+            {t("signup")}
           </Link>
         </nav>
 
@@ -31,13 +42,18 @@ export const Navbar: React.FC = () => {
       {open && (
         <div className="md:hidden bg-[#3a2a20]/80 backdrop-blur border-t border-white/10 shadow-xl px-6 py-4 transition-all duration-300 ease-in-out">
           <nav className="flex flex-col space-y-4 text-center text-sm text-white font-medium">
-            <Link to="/" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">Home</Link>
-            <Link to="/features" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">Functies</Link>
-            <Link to="/pricing" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">Prijzen</Link>
-            <Link to="/about" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">Over ons</Link>
+            <Link to="/" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">{t("home")}</Link>
+            <Link to="/features" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">{t("features")}</Link>
+            <Link to="/pricing" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">{t("pricing")}</Link>
+            <Link to="/about" onClick={() => setOpen(false)} className="hover:text-[#ffe7c3] transition">{t("about")}</Link>
             <Link to="/signup" onClick={() => setOpen(false)} className="mt-4 bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-5 py-2 rounded-full font-medium transition">
-              Probeer gratis
+              {t("signup")}
             </Link>
+
+            {/* ✅ Mobile taalwissel */}
+            <div className="mt-4 flex justify-center">
+              <LanguageSwitcher />
+            </div>
           </nav>
         </div>
       )}
