@@ -63,6 +63,31 @@ body::-webkit-scrollbar {
   animation: move-down 3.5s linear infinite;
 }
 
+/* ✅ Nieuwe animaties voor OnePageLanding */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
 /* =======================
    Horizontale scroll panels
 ========================== */
@@ -70,6 +95,7 @@ body::-webkit-scrollbar {
   flex: 0 0 100vw;
   height: 100vh;
 }
+
 /* Scrollbar volledig verbergen */
 .scrollbar-none {
   scrollbar-width: none;            /* Firefox */

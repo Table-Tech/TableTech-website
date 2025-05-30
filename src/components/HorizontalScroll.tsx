@@ -1,6 +1,8 @@
+// src/components/HorizontalScroll.tsx
 import React, { useEffect, useRef } from "react";
 import { Benefits } from "../pages/LandingPage/Benefits";
 import { BenefitsTwo } from "../pages/LandingPage/Benefits-2";
+import { Benefits3 } from "../pages/LandingPage/Benefits-3"; // ✅ Fixed import name
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -38,13 +40,16 @@ export const HorizontalScroll: React.FC = () => {
     <div className="w-full overflow-hidden relative">
       <div
         ref={scrollRef}
-        className="horizontal-scroll relative flex w-[200vw] h-screen overflow-hidden bg-[#1e1208]"
+        className="horizontal-scroll relative flex w-[300vw] h-screen overflow-hidden bg-[#1e1208]"
       >
         <div className="panel w-screen h-screen shrink-0 overflow-hidden">
           <Benefits />
         </div>
         <div className="panel w-screen h-screen shrink-0 overflow-hidden">
           <BenefitsTwo />
+        </div>
+        <div className="panel w-screen h-screen shrink-0 overflow-hidden">
+          <Benefits3 />
         </div>
       </div>
     </div>
