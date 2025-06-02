@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Benefits } from "../pages/LandingPage/Benefits";
+import { BenefitsOne } from "../pages/LandingPage/Benefits";
 import { BenefitsTwo } from "../pages/LandingPage/Benefits-2";
+import { BenefitsThree } from "../pages/LandingPage/Benefits-3";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -24,7 +25,7 @@ export const HorizontalScroll: React.FC = () => {
           start: "top top",
           pin: true,
           scrub: 1,
-          anticipatePin: 1, // 💡 voorkomt flitsen bro duurde even dat ik dit kon fixen 
+          anticipatePin: 1, // 💡 voorkomt flitsen
           snap: 1 / (panels.length - 1),
           end: () => "+=" + container.offsetWidth,
         },
@@ -38,13 +39,16 @@ export const HorizontalScroll: React.FC = () => {
     <div className="w-full overflow-hidden relative">
       <div
         ref={scrollRef}
-        className="horizontal-scroll relative flex w-[200vw] h-screen overflow-hidden bg-[#1e1208]"
+        className="horizontal-scroll relative flex w-[300vw] h-screen overflow-hidden bg-[#1e1208]"
       >
         <div className="panel w-screen h-screen shrink-0 overflow-hidden">
-          <Benefits />
+          <BenefitsOne />
         </div>
         <div className="panel w-screen h-screen shrink-0 overflow-hidden">
           <BenefitsTwo />
+        </div>
+        <div className="panel w-screen h-screen shrink-0 overflow-hidden">
+          <BenefitsThree />
         </div>
       </div>
     </div>
