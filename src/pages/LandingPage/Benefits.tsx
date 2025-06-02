@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import turnoverImg from "../../assets/afbeeldingen/turnover.png";
 import workloadImg from "../../assets/afbeeldingen/workload.png";
 import experienceImg from "../../assets/afbeeldingen/experience.png";
-import plantenBg from "../../assets/afbeeldingen/Planten.png";
+import plantenBg from "../../assets/afbeeldingen/optie4.png";
 import tabletechPhoneImg from "../../assets/afbeeldingen/Telefoon.png";
 
 type Benefit = {
@@ -33,7 +33,7 @@ const data: Benefit[] = [
   },
 ];
 
-export const Benefits: React.FC = () => {
+export const BenefitsOne: React.FC = () => {
   const refs = useRef<HTMLDivElement[]>([]);
   const [visible, setVisible] = useState<boolean[]>(Array(data.length).fill(false));
 
@@ -60,12 +60,11 @@ export const Benefits: React.FC = () => {
   }, [visible]);
 
   return (
-      <section
-    id="benefits"
-    className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
-    style={{ backgroundImage: `url(${plantenBg})` }}
+    <section
+      id="benefits-1"
+      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
+      style={{ backgroundImage: `url(${plantenBg})` }}
     >
-
       {/* Donkere overlay */}
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
 
