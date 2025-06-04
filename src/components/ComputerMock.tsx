@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Home, 
-  Users, 
-  Menu, 
-  BarChart3, 
+import {
+  Home,
+  Users,
+  Menu,
+  BarChart3,
   Settings,
   Plus,
   Clock,
   CheckCircle,
   AlertCircle,
-  DollarSign,
+  Euro,
   TrendingUp,
   Download,
   Edit,
@@ -75,7 +75,7 @@ export default function ComputerMock() {
     return () => clearInterval(timer);
   }, []);
 
-  const tables: Table[] = [
+  const initialTables: Table[] = [
     { id: 1, number: 1, status: 'available' },
     { id: 2, number: 2, status: 'occupied', guests: 4, duration: '45 min', orders: 6, total: 68.50, customerName: 'Familie Jansen' },
     { id: 3, number: 3, status: 'reserved', reservedFor: '18:30', guests: 6, customerName: 'Van der Berg' },
@@ -92,6 +92,70 @@ export default function ComputerMock() {
     { id: 14, number: 14, status: 'available' },
     { id: 15, number: 15, status: 'reserved', reservedFor: '20:15', guests: 3, customerName: 'Mulder' },
   ];
+
+  const [tablesState, setTablesState] = useState<Table[]>(initialTables);
+  const [tableAction, setTableAction] = useState<
+    | { action: 'guests' | 'reserve' | 'new'; tableId?: number }
+    | null
+  >(null);
+  const [guestInput, setGuestInput] = useState(0);
+  const [reserveData, setReserveData] = useState({ guests: 0, name: '', time: '' });
+  const [newTableNumber, setNewTableNumber] = useState(initialTables.length + 1);
+
+  const handleSaveGuests = () => {
+    if (!tableAction?.tableId) return;
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === tableAction.tableId ? { ...t, guests: guestInput, status: 'occupied' } : t
+      )
+    );
+    setTableAction(null);
+    setGuestInput(0);
+  };
+
+  const handleReserve = () => {
+    if (!tableAction?.tableId) return;
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === tableAction.tableId
+          ? {
+              ...t,
+              guests: reserveData.guests,
+              customerName: reserveData.name,
+              reservedFor: reserveData.time,
+              status: 'reserved'
+            }
+          : t
+      )
+    );
+    setTableAction(null);
+    setReserveData({ guests: 0, name: '', time: '' });
+  };
+
+  const handleAddTable = () => {
+    setTablesState(prev => [
+      ...prev,
+      { id: prev.length + 1, number: newTableNumber, status: 'available' }
+    ]);
+    setTableAction(null);
+    setNewTableNumber(newTableNumber + 1);
+  };
+
+  const handleCheckIn = (id: number) => {
+    setTablesState(prev =>
+      prev.map(t => (t.id === id ? { ...t, status: 'occupied' } : t))
+    );
+  };
+
+  const handleCancelReservation = (id: number) => {
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === id
+          ? { id: t.id, number: t.number, status: 'available' }
+          : t
+      )
+    );
+  };
 
   const menuItems: MenuItem[] = [
     { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
@@ -171,7 +235,7 @@ export default function ComputerMock() {
     switch (activeTab) {
       case 'home':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             {/* Top Stats */}
             <div className="grid grid-cols-4 gap-4">
               <motion.div 
@@ -188,7 +252,7 @@ export default function ComputerMock() {
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-emerald-600" />
+                    <Euro className="w-6 h-6 text-emerald-600" />
                   </div>
                 </div>
               </motion.div>
@@ -298,7 +362,7 @@ export default function ComputerMock() {
               </div>
               <div className="p-4">
                 <div className="grid grid-cols-6 gap-3">
-                  {tables.map((table) => (
+                  {tablesState.map((table) => (
                     <motion.div
                       key={table.id}
                       whileHover={{ scale: 1.05 }}
@@ -346,11 +410,11 @@ export default function ComputerMock() {
 
       case 'tables':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Tafel Management</h2>
               <button
-                onClick={() => setManageModal('Nieuwe tafel aanmaken')}
+                onClick={() => setTableAction({ action: 'new' })}
                 className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -358,8 +422,8 @@ export default function ComputerMock() {
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              {tables.map((table) => (
+            <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-[520px]">
+              {tablesState.map((table) => (
                 <motion.div 
                   key={table.id} 
                   whileHover={{ scale: 1.02 }}
@@ -421,10 +485,16 @@ export default function ComputerMock() {
                   <div className="flex space-x-2">
                     {table.status === 'available' && (
                       <>
-                        <button className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
+                        <button
+                          onClick={() => setTableAction({ action: 'guests', tableId: table.id })}
+                          className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors"
+                        >
                           Gasten
                         </button>
-                        <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                        <button
+                          onClick={() => setTableAction({ action: 'reserve', tableId: table.id })}
+                          className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                        >
                           Reserveren
                         </button>
                       </>
@@ -448,13 +518,13 @@ export default function ComputerMock() {
                     {table.status === 'reserved' && (
                       <>
                         <button
-                          onClick={() => setManageModal(`Check-in tafel ${table.number}`)}
+                          onClick={() => handleCheckIn(table.id)}
                           className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors"
                         >
                           Check-in
                         </button>
                         <button
-                          onClick={() => setManageModal(`Reservering tafel ${table.number} annuleren`)}
+                          onClick={() => handleCancelReservation(table.id)}
                           className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-700 transition-colors"
                         >
                           Annuleren
@@ -579,7 +649,7 @@ export default function ComputerMock() {
               <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-600">Totale winst</h3>
-                  <DollarSign className="w-5 h-5 text-emerald-600" />
+                  <Euro className="w-5 h-5 text-emerald-600" />
                 </div>
                 <p className="text-3xl font-bold text-emerald-600">€31,847</p>
                 <p className="text-sm text-emerald-600 flex items-center mt-1">
@@ -822,7 +892,7 @@ export default function ComputerMock() {
                     onClick={() => setManageModal('Prijzen en BTW')}
                     className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
                   >
-                    <DollarSign className="w-4 h-4" />
+                    <Euro className="w-4 h-4" />
                     <span>Prijzen & BTW</span>
                   </button>
                   <button
@@ -898,7 +968,7 @@ export default function ComputerMock() {
           {/* Dashboard Content */}
           <div className="flex h-full bg-gray-50">
             {/* Sidebar */}
-            <div className="w-56 bg-white border-r border-gray-200 flex flex-col">
+            <div className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
               <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white">
                 <h1 className="text-lg font-bold">TableTech</h1>
                 <p className="text-sm opacity-90">Restaurant Dashboard</p>
@@ -928,7 +998,7 @@ export default function ComputerMock() {
                 </div>
               </nav>
 
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
                     <span className="text-sm font-semibold text-white">JD</span>
@@ -991,6 +1061,76 @@ export default function ComputerMock() {
               Sluiten
             </button>
           </div>
+        </div>
+      )}
+
+      {tableAction && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          {tableAction.action === 'guests' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+              <h3 className="text-lg font-semibold mb-2 text-gray-900">Aantal gasten</h3>
+              <input
+                type="number"
+                value={guestInput}
+                onChange={e => setGuestInput(parseInt(e.target.value))}
+                className="w-full border border-gray-200 rounded-lg p-2 mb-4"
+              />
+              <button
+                onClick={handleSaveGuests}
+                className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700"
+              >
+                Opslaan
+              </button>
+            </div>
+          )}
+          {tableAction.action === 'reserve' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg space-y-3">
+              <h3 className="text-lg font-semibold text-gray-900">Reserveren</h3>
+              <input
+                type="number"
+                placeholder="Aantal personen"
+                value={reserveData.guests}
+                onChange={e => setReserveData({ ...reserveData, guests: parseInt(e.target.value) })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <input
+                type="text"
+                placeholder="Naam"
+                value={reserveData.name}
+                onChange={e => setReserveData({ ...reserveData, name: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <input
+                type="time"
+                value={reserveData.time}
+                onChange={e => setReserveData({ ...reserveData, time: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <button
+                onClick={handleReserve}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+              >
+                Opslaan
+              </button>
+            </div>
+          )}
+          {tableAction.action === 'new' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg space-y-3">
+              <h3 className="text-lg font-semibold text-gray-900">Nieuwe tafel</h3>
+              <input
+                type="number"
+                value={newTableNumber}
+                onChange={e => setNewTableNumber(parseInt(e.target.value))}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <button
+                onClick={handleAddTable}
+                className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+              >
+                Toevoegen
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
