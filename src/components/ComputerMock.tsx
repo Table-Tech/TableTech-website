@@ -51,6 +51,7 @@ interface MenuItem {
   available: boolean;
   rating?: number;
   description?: string;
+  ingredients?: string;
 }
 
 interface Order {
@@ -98,6 +99,7 @@ export default function ComputerMock() {
     | { action: 'guests' | 'reserve' | 'new'; tableId?: number }
     | null
   >(null);
+  const [detailsTable, setDetailsTable] = useState<Table | null>(null);
   const [guestInput, setGuestInput] = useState(0);
   const [reserveData, setReserveData] = useState({ guests: 0, name: '', time: '' });
   const [newTableNumber, setNewTableNumber] = useState(initialTables.length + 1);
@@ -157,18 +159,71 @@ export default function ComputerMock() {
     );
   };
 
-  const menuItems: MenuItem[] = [
-    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
-    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: '/menu/menu2.jpg', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas' },
-    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: '/menu/menu1.jpg', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst' },
-    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: '/menu/menu3.jpg', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating' },
-    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: '/menu/menu5.jpg', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten' },
-    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: '/menu/menu5.jpg', sold: 67, available: true, rating: 4.0, description: 'Koude cola' },
-    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: '/menu/menu3.jpg', sold: 45, available: true, rating: 4.1, description: 'Bruisend water' },
-    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: '/menu/menu4.jpg', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees' },
-    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: '/menu/menu2.jpg', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu' },
-    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: '/menu/menu4.jpg', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit' },
+  const handleSaveEditItem = () => {
+    if (!editingItem) return;
+    setMenuItems(prev =>
+      prev.map(item => (item.id === editingItem.id ? editingItem : item))
+    );
+    setEditingItem(null);
+  };
+
+  const handleAddItem = () => {
+    const nextId = menuItems.length + 1;
+    setMenuItems(prev => [
+      ...prev,
+      {
+        id: nextId,
+        name: newItemData.name,
+        category: 'Overig',
+        price: newItemData.price,
+        image: newItemData.image,
+        sold: 0,
+        available: true,
+        ingredients: newItemData.ingredients,
+        description: newItemData.description,
+        rating: 0
+      }
+    ]);
+    setNewItemModal(false);
+    setNewItemData({ name: '', ingredients: '', price: 0, image: '/menu/menu1.jpg', description: '' });
+  };
+
+  const handleDeleteItem = (id: number) => {
+    setMenuItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleDuplicateItem = (item: MenuItem) => {
+    const nextId = menuItems.length + 1;
+    setMenuItems(prev => [
+      ...prev,
+      { ...item, id: nextId, name: item.name + ' kopie' }
+    ]);
+  };
+
+  const initialMenuItems: MenuItem[] = [
+    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum', ingredients: 'Tomaat, mozzarella, basilicum' },
+    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: '/menu/menu2.jpg', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas', ingredients: 'Pepperoni, kaas, tomaat' },
+    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: '/menu/menu1.jpg', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst', ingredients: 'Garnalen, curry, rijst' },
+    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: '/menu/menu3.jpg', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating', ingredients: 'Kip, curry, panko' },
+    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: '/menu/menu5.jpg', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten', ingredients: 'Tofu, groenten, bouillon' },
+    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: '/menu/menu5.jpg', sold: 67, available: true, rating: 4.0, description: 'Koude cola', ingredients: 'Water, suiker, koolzuur' },
+    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: '/menu/menu3.jpg', sold: 45, available: true, rating: 4.1, description: 'Bruisend water', ingredients: 'Water, koolzuur' },
+    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: '/menu/menu4.jpg', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees', ingredients: 'Rundvlees, noodles, bouillon' },
+    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: '/menu/menu2.jpg', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu', ingredients: 'Mascarpone, koffie, cacao' },
+    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: '/menu/menu4.jpg', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit', ingredients: 'Druiven' },
   ];
+
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialMenuItems);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [newItemModal, setNewItemModal] = useState(false);
+  const [newItemData, setNewItemData] = useState({
+    name: '',
+    ingredients: '',
+    price: 0,
+    image: '/menu/menu1.jpg',
+    description: ''
+  });
+  const [menuOptionsOpen, setMenuOptionsOpen] = useState<number | null>(null);
 
   const liveOrders: Order[] = [
     { id: 1, table: 2, items: ['Margherita Pizza', 'Cola'], total: 12.45, status: 'preparing', time: '5 min', orderTime: '17:23' },
@@ -502,7 +557,7 @@ export default function ComputerMock() {
                     {(table.status === 'occupied' || table.status === 'ordering') && (
                       <>
                         <button
-                          onClick={() => setManageModal(`Tafel ${table.number} details`)}
+                          onClick={() => setDetailsTable(table)}
                           className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors"
                         >
                           Details
@@ -540,7 +595,7 @@ export default function ComputerMock() {
 
       case 'menu':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Menu Management</h2>
               <div className="flex space-x-3">
@@ -554,7 +609,10 @@ export default function ComputerMock() {
                     className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   />
                 </div>
-                <button className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors">
+                <button
+                  onClick={() => setNewItemModal(true)}
+                  className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
+                >
                   <Plus className="w-4 h-4" />
                   <span>Nieuw Gerecht</span>
                 </button>
@@ -597,17 +655,43 @@ export default function ComputerMock() {
                                   </span>
                                   <div className="flex space-x-1">
                                     <button
-                                      onClick={() => setManageModal('Gerecht bewerken')}
+                                      onClick={() => setEditingItem(item)}
                                       className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
                                     >
                                       <Edit className="w-4 h-4" />
                                     </button>
-                                    <button
-                                      onClick={() => setManageModal('Meer opties')}
-                                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                                    >
-                                      <MoreHorizontal className="w-4 h-4" />
-                                    </button>
+                                    <div className="relative">
+                                      <button
+                                        onClick={() =>
+                                          setMenuOptionsOpen(menuOptionsOpen === item.id ? null : item.id)
+                                        }
+                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                      >
+                                        <MoreHorizontal className="w-4 h-4" />
+                                      </button>
+                                      {menuOptionsOpen === item.id && (
+                                        <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10 text-sm">
+                                          <button
+                                            onClick={() => {
+                                              handleDeleteItem(item.id);
+                                              setMenuOptionsOpen(null);
+                                            }}
+                                            className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                          >
+                                            Verwijderen
+                                          </button>
+                                          <button
+                                            onClick={() => {
+                                              handleDuplicateItem(item);
+                                              setMenuOptionsOpen(null);
+                                            }}
+                                            className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                          >
+                                            Dupliceren
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -624,7 +708,7 @@ export default function ComputerMock() {
 
       case 'stats':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Analytics & Statistieken</h2>
               <div className="flex space-x-3">
@@ -773,7 +857,7 @@ export default function ComputerMock() {
 
       case 'manage':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <h2 className="text-2xl font-bold text-gray-900">Restaurant Beheer</h2>
 
             <div className="grid grid-cols-2 gap-6">
@@ -942,7 +1026,7 @@ export default function ComputerMock() {
   };
 
   return (
-    <div className="relative w-[1200px] h-[750px] rounded-t-2xl overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
+    <div className="relative w-[1200px] h-[768px] rounded-t-2xl overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
       {/* Laptop Screen */}
       <div className="w-full h-full bg-black rounded-t-2xl p-2">
         {/* Screen Bezel */}
@@ -968,13 +1052,13 @@ export default function ComputerMock() {
           {/* Dashboard Content */}
           <div className="flex h-full bg-gray-50">
             {/* Sidebar */}
-            <div className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
+            <div className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto scrollbar-thin">
               <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white">
                 <h1 className="text-lg font-bold">TableTech</h1>
                 <p className="text-sm opacity-90">Restaurant Dashboard</p>
               </div>
               
-              <nav className="flex-1 p-4">
+              <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin">
                 <div className="space-y-2">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
@@ -1131,6 +1215,112 @@ export default function ComputerMock() {
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {editingItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">Gerecht bewerken</h3>
+            <input
+              type="text"
+              value={editingItem.name}
+              onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Naam"
+            />
+            <input
+              type="text"
+              value={editingItem.ingredients || ''}
+              onChange={e => setEditingItem({ ...editingItem, ingredients: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Ingrediënten"
+            />
+            <input
+              type="number"
+              value={editingItem.price}
+              onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Prijs"
+            />
+            <textarea
+              value={editingItem.description || ''}
+              onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Beschrijving"
+            />
+            <button
+              onClick={handleSaveEditItem}
+              className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700"
+            >
+              Opslaan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {newItemModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">Nieuw gerecht</h3>
+            <input
+              type="text"
+              value={newItemData.name}
+              onChange={e => setNewItemData({ ...newItemData, name: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Naam"
+            />
+            <input
+              type="text"
+              value={newItemData.ingredients}
+              onChange={e => setNewItemData({ ...newItemData, ingredients: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Ingrediënten"
+            />
+            <input
+              type="number"
+              value={newItemData.price}
+              onChange={e => setNewItemData({ ...newItemData, price: parseFloat(e.target.value) })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Prijs"
+            />
+            <textarea
+              value={newItemData.description}
+              onChange={e => setNewItemData({ ...newItemData, description: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Beschrijving"
+            />
+            <button
+              onClick={handleAddItem}
+              className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+            >
+              Toevoegen
+            </button>
+          </div>
+        </div>
+      )}
+
+      {detailsTable && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 text-gray-900">Tafel {detailsTable.number} details</h3>
+            <div className="space-y-2 text-sm text-gray-700 mb-4">
+              {liveOrders
+                .filter(o => o.table === detailsTable.number)
+                .map(o => (
+                  <div key={o.id} className="flex justify-between">
+                    <span>{o.items.join(', ')}</span>
+                    <span>€{o.total.toFixed(2)}</span>
+                  </div>
+                ))}
+            </div>
+            <button
+              onClick={() => setDetailsTable(null)}
+              className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+            >
+              Sluiten
+            </button>
+          </div>
         </div>
       )}
     </div>
