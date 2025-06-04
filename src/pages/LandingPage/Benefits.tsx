@@ -75,6 +75,7 @@ export const BenefitsOne: React.FC = () => {
           <img
             src={tabletechPhoneImg}
             alt="TableTech app mockup"
+            loading="lazy"
             className="w-full max-w-[300px] rounded-3xl shadow-xl"
           />
         </div>
@@ -101,6 +102,7 @@ export const BenefitsOne: React.FC = () => {
                   <img
                     src={imgSrc}
                     alt={alt}
+                    loading="lazy"
                     className="mx-auto mb-6 h-28 w-28 object-cover rounded-full shadow-md transition duration-300 group-hover:-translate-y-1 group-hover:ring-4 group-hover:ring-[#e9d7c2]"
                   />
                 </div>

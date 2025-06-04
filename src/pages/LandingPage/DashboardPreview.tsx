@@ -43,6 +43,7 @@ export const DashboardPreview: React.FC = () => {
             <img
               src={dashboardImg}
               alt="Dashboard weergave"
+              loading="lazy"
               className="w-full lg:w-1/2 max-w-sm rounded-2xl shadow-xl border border-[#D3C3B6]/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
             />
             <video
@@ -50,6 +51,7 @@ export const DashboardPreview: React.FC = () => {
               muted
               loop
               playsInline
+              preload="metadata"
               className="w-full lg:w-1/2 max-w-sm rounded-xl shadow-lg border border-[#D3C3B6]/40 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <source src="/videos/Qr Code.mp4" type="video/mp4" />
