@@ -46,6 +46,7 @@ export const HeroSection: React.FC = () => {
           muted
           loop
           playsInline
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/videos/background-2.webm" type="video/webm" />

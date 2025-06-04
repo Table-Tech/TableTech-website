@@ -36,6 +36,7 @@ export const HowItWorks: React.FC = () => (
             <img
               src={image}
               alt={alt}
+              loading="lazy"
               className="mx-auto mb-4 h-150 w-150 object-contain rounded"
             />
             <h3 className="font-semibold">{title}</h3>
