@@ -310,6 +310,7 @@ const PhoneMockup: React.FC = () => {
               <img
                 src={item.image}
                 alt={item.name}
+                loading="lazy"
                 className="w-full aspect-square object-cover rounded-lg mb-2"
               />
               <h3 className="text-sm font-semibold text-center leading-tight">
@@ -391,6 +392,7 @@ const PhoneMockup: React.FC = () => {
             <img
               src={cat.icon}
               alt={cat.name}
+              loading="lazy"
               className="w-6 h-6 mb-1 object-contain"
             />
             {cat.name}
@@ -494,6 +496,7 @@ const PhoneMockup: React.FC = () => {
                         <img
                           src={item.image}
                           alt={item.name}
+                          loading="lazy"
                           className="w-12 h-12 rounded object-cover"
                         />
                         <div>
@@ -559,6 +562,7 @@ const PhoneMockup: React.FC = () => {
               <img
                 src={selectedItem.image}
                 alt={selectedItem.name}
+                loading="lazy"
                 className="w-full h-44 object-cover"
               />
               <button
