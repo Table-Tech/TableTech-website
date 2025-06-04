@@ -1,0 +1,899 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Home, 
+  Users, 
+  Menu, 
+  BarChart3, 
+  Settings,
+  Plus,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  DollarSign,
+  TrendingUp,
+  Download,
+  Edit,
+  UserPlus,
+  CreditCard,
+  Palette,
+  Bell,
+  Search,
+  Calendar,
+  Star,
+  Eye,
+  MoreHorizontal,
+  ChefHat,
+  MapPin,
+  Timer
+} from 'lucide-react';
+
+type TabId = 'home' | 'tables' | 'menu' | 'stats' | 'manage';
+
+interface Table {
+  id: number;
+  number: number;
+  status: 'available' | 'occupied' | 'reserved' | 'cleaning' | 'ordering';
+  guests?: number;
+  duration?: string;
+  orders?: number;
+  reservedFor?: string;
+  total?: number;
+  customerName?: string;
+}
+
+interface MenuItem {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+  sold: number;
+  available: boolean;
+  rating?: number;
+  description?: string;
+}
+
+interface Order {
+  id: number;
+  table: number;
+  items: string[];
+  total: number;
+  status: 'pending' | 'preparing' | 'ready' | 'served';
+  time: string;
+  orderTime: string;
+}
+
+export default function ComputerMock() {
+  const [activeTab, setActiveTab] = useState<TabId>('home');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const tables: Table[] = [
+    { id: 1, number: 1, status: 'available' },
+    { id: 2, number: 2, status: 'occupied', guests: 4, duration: '45 min', orders: 6, total: 68.50, customerName: 'Familie Jansen' },
+    { id: 3, number: 3, status: 'reserved', reservedFor: '18:30', guests: 6, customerName: 'Van der Berg' },
+    { id: 4, number: 4, status: 'occupied', guests: 3, duration: '65 min', orders: 8, total: 94.20, customerName: 'Pietersen' },
+    { id: 5, number: 5, status: 'available' },
+    { id: 6, number: 6, status: 'available' },
+    { id: 7, number: 7, status: 'reserved', reservedFor: '19:45', guests: 4, customerName: 'De Vries' },
+    { id: 8, number: 8, status: 'occupied', guests: 2, duration: '15 min', orders: 2, total: 31.40, customerName: 'Bakker' },
+    { id: 9, number: 9, status: 'available' },
+    { id: 10, number: 10, status: 'cleaning' },
+    { id: 11, number: 11, status: 'available' },
+    { id: 12, number: 12, status: 'ordering', guests: 5, customerName: 'Smit' },
+    { id: 13, number: 13, status: 'occupied', guests: 2, duration: '25 min', orders: 3, total: 47.80, customerName: 'Hendriks' },
+    { id: 14, number: 14, status: 'available' },
+    { id: 15, number: 15, status: 'reserved', reservedFor: '20:15', guests: 3, customerName: 'Mulder' },
+  ];
+
+  const menuItems: MenuItem[] = [
+    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: 'pizza', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
+    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: 'pizza', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas' },
+    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: 'curry', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst' },
+    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: 'curry', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating' },
+    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: 'ramen', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten' },
+    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: 'drink', sold: 67, available: true, rating: 4.0, description: 'Koude cola' },
+    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: 'water', sold: 45, available: true, rating: 4.1, description: 'Bruisend water' },
+    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: 'ramen', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees' },
+    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: 'dessert', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu' },
+    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: 'wine', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit' },
+  ];
+
+  const liveOrders: Order[] = [
+    { id: 1, table: 2, items: ['Margherita Pizza', 'Cola'], total: 12.45, status: 'preparing', time: '5 min', orderTime: '17:23' },
+    { id: 2, table: 4, items: ['Pepperoni Pizza', 'Prawn Raisukaree'], total: 23.50, status: 'ready', time: '12 min', orderTime: '17:15' },
+    { id: 3, table: 8, items: ['Chicken Katsu Curry'], total: 10.50, status: 'pending', time: '2 min', orderTime: '17:25' },
+    { id: 4, table: 13, items: ['Tofu Ramen', 'Spa Blauw'], total: 11.75, status: 'served', time: '18 min', orderTime: '17:09' },
+    { id: 5, table: 12, items: ['Beef Ramen', 'Witte Wijn'], total: 15.75, status: 'preparing', time: '8 min', orderTime: '17:19' },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'available': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'occupied': return 'bg-amber-50 text-amber-700 border-amber-200';
+      case 'reserved': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'cleaning': return 'bg-gray-50 text-gray-700 border-gray-200';
+      case 'ordering': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+      default: return 'bg-gray-50 text-gray-700 border-gray-200';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'available': return <CheckCircle className="w-3 h-3" />;
+      case 'occupied': return <Users className="w-3 h-3" />;
+      case 'reserved': return <Clock className="w-3 h-3" />;
+      case 'cleaning': return <AlertCircle className="w-3 h-3" />;
+      case 'ordering': return <Menu className="w-3 h-3" />;
+      default: return <AlertCircle className="w-3 h-3" />;
+    }
+  };
+
+  const getOrderStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+      case 'preparing': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'ready': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'served': return 'bg-gray-50 text-gray-700 border-gray-200';
+      default: return 'bg-gray-50 text-gray-700 border-gray-200';
+    }
+  };
+
+  const getMenuIcon = (imageType: string) => {
+    switch (imageType) {
+      case 'pizza': return <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-orange-600" /></div>;
+      case 'curry': return <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-red-600" /></div>;
+      case 'ramen': return <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-yellow-600" /></div>;
+      case 'drink': return <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-blue-600 rounded"></div></div>;
+      case 'water': return <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-cyan-600 rounded"></div></div>;
+      case 'wine': return <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-purple-600 rounded"></div></div>;
+      case 'dessert': return <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center"><Star className="w-4 h-4 text-pink-600" /></div>;
+      default: return <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-gray-600" /></div>;
+    }
+  };
+
+  const tabs = [
+    { id: 'home' as TabId, label: 'Dashboard', icon: Home },
+    { id: 'tables' as TabId, label: 'Tafels', icon: MapPin },
+    { id: 'menu' as TabId, label: 'Menu', icon: Menu },
+    { id: 'stats' as TabId, label: 'Analytics', icon: BarChart3 },
+    { id: 'manage' as TabId, label: 'Beheer', icon: Settings },
+  ];
+
+  const filteredMenuItems = menuItems.filter(item => 
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'home':
+        return (
+          <div className="space-y-6">
+            {/* Top Stats */}
+            <div className="grid grid-cols-4 gap-4">
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Totale omzet</p>
+                    <p className="text-2xl font-bold text-emerald-600">€847.30</p>
+                    <p className="text-sm text-emerald-600 flex items-center">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      +12.5%
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-emerald-600" />
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Actieve tafels</p>
+                    <p className="text-2xl font-bold text-amber-600">6</p>
+                    <p className="text-sm text-amber-600">van 15 tafels</p>
+                  </div>
+                  <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-amber-600" />
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Live bestellingen</p>
+                    <p className="text-2xl font-bold text-blue-600">{liveOrders.length}</p>
+                    <p className="text-sm text-blue-600">actief nu</p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Vandaag verkocht</p>
+                    <p className="text-2xl font-bold text-purple-600">127</p>
+                    <p className="text-sm text-purple-600">items</p>
+                  </div>
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Live Orders */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-gray-900">Live Bestellingen</h3>
+                <div className="text-sm text-gray-500">
+                  {currentTime.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {liveOrders.map((order) => (
+                      <motion.div 
+                        key={order.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-blue-100 text-blue-700 rounded-lg flex items-center justify-center font-semibold">
+                            T{order.table}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {order.items.join(', ')}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Besteld om {order.orderTime}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getOrderStatusColor(order.status)}`}>
+                            {order.status === 'pending' && 'Wachtend'}
+                            {order.status === 'preparing' && 'In bereiding'}
+                            {order.status === 'ready' && 'Klaar'}
+                            {order.status === 'served' && 'Geserveerd'}
+                          </span>
+                          <div className="text-sm text-gray-500 min-w-[3rem]">{order.time}</div>
+                          <div className="text-lg font-semibold text-emerald-600 min-w-[4rem] text-right">€{order.total.toFixed(2)}</div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
+            {/* Table Overview */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="p-4 border-b border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900">Tafel Overzicht</h3>
+              </div>
+              <div className="p-4">
+                <div className="grid grid-cols-6 gap-3">
+                  {tables.map((table) => (
+                    <motion.div
+                      key={table.id}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${getStatusColor(table.status)}`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold">T{table.number}</span>
+                        {getStatusIcon(table.status)}
+                      </div>
+                      {table.guests && (
+                        <div className="space-y-1 text-sm">
+                          <div className="flex items-center">
+                            <Users className="w-3 h-3 mr-1" />
+                            {table.guests}
+                          </div>
+                          {table.duration && (
+                            <div className="flex items-center">
+                              <Timer className="w-3 h-3 mr-1" />
+                              {table.duration}
+                            </div>
+                          )}
+                          {table.total && (
+                            <div className="font-semibold text-emerald-600">
+                              €{table.total.toFixed(0)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {table.reservedFor && (
+                        <div className="text-sm">
+                          <div className="flex items-center">
+                            <Clock className="w-3 h-3 mr-1" />
+                            {table.reservedFor}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'tables':
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Tafel Management</h2>
+              <button 
+                className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Nieuwe Tafel</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              {tables.map((table) => (
+                <motion.div 
+                  key={table.id} 
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900">Tafel {table.number}</h3>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(table.status)}`}>
+                      {table.status === 'available' && 'Beschikbaar'}
+                      {table.status === 'occupied' && 'Bezet'}
+                      {table.status === 'reserved' && 'Gereserveerd'}
+                      {table.status === 'cleaning' && 'Schoonmaken'}
+                      {table.status === 'ordering' && 'Bestellen'}
+                    </span>
+                  </div>
+
+                  {table.customerName && (
+                    <div className="text-sm text-gray-600 mb-3 flex items-center">
+                      <Users className="w-4 h-4 mr-2" />
+                      {table.customerName}
+                    </div>
+                  )}
+
+                  {table.status === 'occupied' && (
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Users className="w-4 h-4 mr-2" />
+                        {table.guests} gasten
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {table.duration}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        {table.orders} bestellingen
+                      </div>
+                      {table.total && (
+                        <div className="text-lg font-semibold text-emerald-600">
+                          €{table.total.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {table.status === 'reserved' && (
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {table.reservedFor}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Users className="w-4 h-4 mr-2" />
+                        {table.guests} personen
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex space-x-2">
+                    {table.status === 'available' && (
+                      <>
+                        <button className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
+                          Gasten
+                        </button>
+                        <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                          Reserveren
+                        </button>
+                      </>
+                    )}
+                    {(table.status === 'occupied' || table.status === 'ordering') && (
+                      <>
+                        <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                          Details
+                        </button>
+                        <button className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
+                          Afrekenen
+                        </button>
+                      </>
+                    )}
+                    {table.status === 'reserved' && (
+                      <>
+                        <button className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors">
+                          Check-in
+                        </button>
+                        <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-700 transition-colors">
+                          Annuleren
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'menu':
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Menu Management</h2>
+              <div className="flex space-x-3">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Zoek gerechten..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  />
+                </div>
+                <button className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors">
+                  <Plus className="w-4 h-4" />
+                  <span>Nieuw Gerecht</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="p-6">
+                <div className="grid grid-cols-2 gap-6">
+                  {['Pizza', 'Popular', 'Curry', 'Ramen'].map((category) => (
+                    <div key={category}>
+                      <h3 className="text-lg font-semibold mb-4 text-gray-900">{category}</h3>
+                      <div className="space-y-3">
+                        {filteredMenuItems
+                          .filter(item => item.category === category)
+                          .slice(0, 3)
+                          .map((item) => (
+                            <motion.div 
+                              key={item.id} 
+                              whileHover={{ scale: 1.02 }}
+                              className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all"
+                            >
+                              <div className="flex items-center space-x-3">
+                                {getMenuIcon(item.image)}
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-gray-900">{item.name}</h4>
+                                  <p className="text-lg font-bold text-amber-600">€{item.price.toFixed(2)}</p>
+                                  <div className="flex items-center space-x-3 mt-1">
+                                    <div className="flex items-center">
+                                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                                      <span className="text-sm text-gray-600 ml-1">{item.rating}</span>
+                                    </div>
+                                    <span className="text-sm text-gray-600">{item.sold} verkocht</span>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end space-y-2">
+                                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${item.available ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                                    {item.available ? 'Beschikbaar' : 'Niet beschikbaar'}
+                                  </span>
+                                  <div className="flex space-x-1">
+                                    <button className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                                      <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'stats':
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Analytics & Statistieken</h2>
+              <div className="flex space-x-3">
+                <button className="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700 transition-colors">
+                  <Calendar className="w-4 h-4" />
+                  <span>Deze week</span>
+                </button>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
+                  <Download className="w-4 h-4" />
+                  <span>Export</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-600">Totale winst</h3>
+                  <DollarSign className="w-5 h-5 text-emerald-600" />
+                </div>
+                <p className="text-3xl font-bold text-emerald-600">€31,847</p>
+                <p className="text-sm text-emerald-600 flex items-center mt-1">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  +12.5% vs vorige maand
+                </p>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-600">Totale bestellingen</h3>
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                </div>
+                <p className="text-3xl font-bold text-blue-600">1,247</p>
+                <p className="text-sm text-blue-600 flex items-center mt-1">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  +8.3% vs vorige maand
+                </p>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-600">Gemiddelde bestelling</h3>
+                  <TrendingUp className="w-5 h-5 text-purple-600" />
+                </div>
+                <p className="text-3xl font-bold text-purple-600">€25.53</p>
+                <p className="text-sm text-purple-600 flex items-center mt-1">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  +3.1% vs vorige maand
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900">Best verkochte items</h3>
+                </div>
+                <div className="p-4">
+                  <div className="space-y-4">
+                    {menuItems
+                      .sort((a, b) => b.sold - a.sold)
+                      .slice(0, 5)
+                      .map((item, index) => (
+                        <div key={item.id} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <span className={`text-lg font-bold w-8 text-center ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-amber-600' : 'text-gray-400'}`}>
+                              #{index + 1}
+                            </span>
+                            {getMenuIcon(item.image)}
+                            <div>
+                              <p className="font-medium text-gray-900">{item.name}</p>
+                              <p className="text-sm text-gray-500">{item.sold} verkocht</p>
+                            </div>
+                          </div>
+                          <p className="font-semibold text-emerald-600">€{(item.price * item.sold).toFixed(0)}</p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900">Verkoop Trend</h3>
+                </div>
+                <div className="p-4">
+                  <div className="h-40 bg-gradient-to-t from-blue-50 to-white rounded-lg flex items-end justify-center p-4">
+                    <div className="flex items-end space-x-2 h-full w-full">
+                      {[20, 35, 25, 45, 30, 50, 40].map((height, i) => (
+                        <div key={i} className="flex-1 bg-blue-500 rounded-t-lg" style={{height: `${height}%`}}></div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-500 mt-3">
+                    <span>Ma</span>
+                    <span>Di</span>
+                    <span>Wo</span>
+                    <span>Do</span>
+                    <span>Vr</span>
+                    <span>Za</span>
+                    <span>Zo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional stats */}
+            <div className="grid grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Clock className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="text-xl font-bold text-gray-900">8.5 min</div>
+                <div className="text-sm text-gray-600">Gem. wachttijd</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Star className="w-6 h-6 text-yellow-600" />
+                </div>
+                <div className="text-xl font-bold text-gray-900">4.6/5</div>
+                <div className="text-sm text-gray-600">Klantwaardering</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Users className="w-6 h-6 text-green-600" />
+                </div>
+                <div className="text-xl font-bold text-gray-900">89%</div>
+                <div className="text-sm text-gray-600">Tafel bezetting</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <TrendingUp className="w-6 h-6 text-purple-600" />
+                </div>
+                <div className="text-xl font-bold text-gray-900">2.3x</div>
+                <div className="text-sm text-gray-600">Tafel omloop</div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'manage':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Restaurant Beheer</h2>
+
+            <div className="grid grid-cols-2 gap-6">
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Menu className="w-5 h-5 mr-2 text-amber-600" />
+                    Menu Beheer
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                    <Plus className="w-4 h-4" />
+                    <span>Nieuw gerecht toevoegen</span>
+                  </button>
+                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                    <Edit className="w-4 h-4" />
+                    <span>Categorieën beheren</span>
+                  </button>
+                  <button className="w-full bg-amber-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-amber-700 transition-colors">
+                    <Eye className="w-4 h-4" />
+                    <span>Preview klant menu</span>
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Users className="w-5 h-5 mr-2 text-blue-600" />
+                    Personeel Beheer
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                    <UserPlus className="w-4 h-4" />
+                    <span>Werknemer toevoegen</span>
+                  </button>
+                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                    <Edit className="w-4 h-4" />
+                    <span>Rollen & rechten</span>
+                  </button>
+                  <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors">
+                    <Calendar className="w-4 h-4" />
+                    <span>Rooster plannen</span>
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Settings className="w-5 h-5 mr-2 text-gray-600" />
+                    Restaurant Instellingen
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                    <Palette className="w-4 h-4" />
+                    <span>Thema & branding</span>
+                  </button>
+                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                    <Bell className="w-4 h-4" />
+                    <span>Notificatie instellingen</span>
+                  </button>
+                  <button className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors">
+                    <Clock className="w-4 h-4" />
+                    <span>Openingstijden</span>
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02 }} className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                    <CreditCard className="w-5 h-5 mr-2 text-green-600" />
+                    Betalingen & Facturen
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                    <CreditCard className="w-4 h-4" />
+                    <span>Betaalmethoden</span>
+                  </button>
+                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                    <DollarSign className="w-4 h-4" />
+                    <span>Prijzen & BTW</span>
+                  </button>
+                  <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors">
+                    <Download className="w-4 h-4" />
+                    <span>Factuur export</span>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-100">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Snelle acties</h3>
+              <div className="grid grid-cols-3 gap-3">
+                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>Alles schoonmaken</span>
+                </button>
+                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Dag afsluiten</span>
+                </button>
+                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                  <Download className="w-4 h-4" />
+                  <span>Backup maken</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return <div>Tab niet gevonden</div>;
+    }
+  };
+
+  return (
+    <div className="relative w-[1200px] h-[750px] rounded-t-2xl overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
+      {/* Laptop Screen */}
+      <div className="w-full h-full bg-black rounded-t-2xl p-2">
+        {/* Screen Bezel */}
+        <div className="w-full h-full bg-gray-50 rounded-xl overflow-hidden">
+          {/* Browser Chrome */}
+          <div className="bg-white border-b flex items-center justify-between px-4 py-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            </div>
+            <div className="flex-1 mx-6">
+              <div className="bg-gray-50 rounded-lg px-4 py-2 text-sm text-gray-600 flex items-center">
+                <div className="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                uwbedrijf.app/dashboard
+              </div>
+            </div>
+            <div className="text-sm text-gray-500">
+              {currentTime.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+
+          {/* Dashboard Content */}
+          <div className="flex h-full bg-gray-50">
+            {/* Sidebar */}
+            <div className="w-56 bg-white border-r border-gray-200 flex flex-col">
+              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white">
+                <h1 className="text-lg font-bold">TableTech</h1>
+                <p className="text-sm opacity-90">Restaurant Dashboard</p>
+              </div>
+              
+              <nav className="flex-1 p-4">
+                <div className="space-y-2">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <motion.button
+                        key={tab.id}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all ${
+                          activeTab === tab.id
+                            ? 'bg-amber-600 text-white shadow-lg'
+                            : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="font-medium">{tab.label}</span>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </nav>
+
+              <div className="p-4 border-t border-gray-200 bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-semibold text-white">JD</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Jan Doe</p>
+                    <p className="text-sm text-gray-500">Manager</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-y-auto p-6">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {renderTabContent()}
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Laptop Base */}
+      <div className="w-[1600px] h-5 bg-gray-400 rounded-b-2xl -mt-1 shadow-lg mx-auto"></div>
+      <div className="w-[1700px] h-3 bg-gray-500 rounded-full -mt-1 shadow-xl mx-auto"></div>
+    </div>
+  );
+}
