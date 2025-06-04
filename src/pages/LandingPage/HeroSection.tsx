@@ -74,7 +74,7 @@ export const HeroSection: React.FC = () => {
               <button
                 onClick={handleOpenCustomerDemo}
                 type="button"
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
+                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer"
               >
                 Start klant demo
               </button>
@@ -91,7 +91,7 @@ export const HeroSection: React.FC = () => {
               <button
                 onClick={handleOpenEmployeeDemo}
                 type="button"
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
+                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer"
               >
                 Start dashboard demo
               </button>
