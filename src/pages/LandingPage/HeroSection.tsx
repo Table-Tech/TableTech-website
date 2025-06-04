@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { CustomCursor } from "../../components/CustomCursor";
 import { DemoOverlay as CustomerDemoOverlay } from "../../components/DemoOverlay";
 import { DemoOverlay as EmployeeDemoOverlay } from "../../components/DemoOverlay-laptop";
 
 export const HeroSection: React.FC = () => {
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
-  const [cursorHover, setCursorHover] = useState(false);
-  const [cursorVisible, setCursorVisible] = useState(false);
 
   const handleOpenCustomerDemo = () => {
     setIsCustomerDemoOpen(true);
@@ -41,11 +38,8 @@ export const HeroSection: React.FC = () => {
     <>
       <section
         id="hero"
-        onMouseEnter={() => setCursorVisible(true)}
-        onMouseLeave={() => setCursorVisible(false)}
         className="relative w-full h-screen flex flex-col justify-between overflow-hidden text-center snap-start bg-black"
       >
-        <CustomCursor hover={cursorHover} visible={cursorVisible} />
         {/* Achtergrondvideo */}
         <video
           autoPlay
@@ -80,9 +74,7 @@ export const HeroSection: React.FC = () => {
               </p>
               <button
                 onClick={handleOpenCustomerDemo}
-                onMouseEnter={() => setCursorHover(true)}
-                onMouseLeave={() => setCursorHover(false)}
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
+                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all cursor-pointer duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
               >
                 Start klant demo
               </button>
@@ -99,9 +91,7 @@ export const HeroSection: React.FC = () => {
               </p>
               <button
                 onClick={handleOpenEmployeeDemo}
-                onMouseEnter={() => setCursorHover(true)}
-                onMouseLeave={() => setCursorHover(false)}
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
+                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all cursor-pointer duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
               >
                 Start dashboard demo
               </button>
