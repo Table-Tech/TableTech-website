@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 
 export const useBreakpoint = () => {
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState<number>(
+    typeof window === "undefined" ? 0 : window.innerWidth
+  );
 
   const getBreakpoint = (w: number) => ({
     width: w,
@@ -12,12 +14,14 @@ export const useBreakpoint = () => {
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-    };
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setWidth(window.innerWidth);
+      };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   return getBreakpoint(width);

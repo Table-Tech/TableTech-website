@@ -18,6 +18,8 @@ export const SupportChat: React.FC = () => {
     e.preventDefault();
     if (!question.trim()) return;
     setResponse("Dankjewel voor je vraag! We nemen zo snel mogelijk contact met je op of je krijgt direct antwoord van onze slimme assistent.");
+    // Clear the input after submitting so the user can type a new question
+    setQuestion("");
   };
 
   return (
