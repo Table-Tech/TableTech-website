@@ -1052,7 +1052,7 @@ export default function ComputerMock() {
           {/* Dashboard Content */}
           <div className="flex h-full bg-gray-50">
             {/* Sidebar */}
-            <div className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto scrollbar-thin">
+            <div className="w-56 bg-white border-r border-gray-200 flex flex-col h-full overflow-hidden">
               <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white">
                 <h1 className="text-lg font-bold">TableTech</h1>
                 <p className="text-sm opacity-90">Restaurant Dashboard</p>
