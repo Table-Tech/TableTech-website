@@ -1,5 +1,7 @@
+/// <reference types="vitest" />
 import { renderHook, act } from '@testing-library/react';
 import { useBreakpoint } from '../useBreakpoint';
+
 
 describe('useBreakpoint', () => {
   const setWidth = (width: number) => {
