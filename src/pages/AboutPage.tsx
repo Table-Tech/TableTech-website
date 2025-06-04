@@ -29,6 +29,7 @@ export const AboutPage: React.FC = () => {
         <img
           src={planten2}
           alt="About Hero"
+          loading="lazy"
           className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-[#2C1E1A]/20 flex items-center justify-center">
