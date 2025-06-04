@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Home, 
-  Users, 
-  Menu, 
-  BarChart3, 
+import {
+  Home,
+  Users,
+  Menu,
+  BarChart3,
   Settings,
   Plus,
   Clock,
   CheckCircle,
   AlertCircle,
-  DollarSign,
+  Euro,
   TrendingUp,
   Download,
   Edit,
@@ -51,6 +51,7 @@ interface MenuItem {
   available: boolean;
   rating?: number;
   description?: string;
+  ingredients?: string;
 }
 
 interface Order {
@@ -75,7 +76,7 @@ export default function ComputerMock() {
     return () => clearInterval(timer);
   }, []);
 
-  const tables: Table[] = [
+  const initialTables: Table[] = [
     { id: 1, number: 1, status: 'available' },
     { id: 2, number: 2, status: 'occupied', guests: 4, duration: '45 min', orders: 6, total: 68.50, customerName: 'Familie Jansen' },
     { id: 3, number: 3, status: 'reserved', reservedFor: '18:30', guests: 6, customerName: 'Van der Berg' },
@@ -93,18 +94,136 @@ export default function ComputerMock() {
     { id: 15, number: 15, status: 'reserved', reservedFor: '20:15', guests: 3, customerName: 'Mulder' },
   ];
 
-  const menuItems: MenuItem[] = [
-    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
-    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: '/menu/menu2.jpg', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas' },
-    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: '/menu/menu1.jpg', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst' },
-    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: '/menu/menu3.jpg', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating' },
-    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: '/menu/menu5.jpg', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten' },
-    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: '/menu/menu5.jpg', sold: 67, available: true, rating: 4.0, description: 'Koude cola' },
-    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: '/menu/menu3.jpg', sold: 45, available: true, rating: 4.1, description: 'Bruisend water' },
-    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: '/menu/menu4.jpg', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees' },
-    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: '/menu/menu2.jpg', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu' },
-    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: '/menu/menu4.jpg', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit' },
+  const [tablesState, setTablesState] = useState<Table[]>(initialTables);
+  const [tableAction, setTableAction] = useState<
+    | { action: 'guests' | 'reserve' | 'new'; tableId?: number }
+    | null
+  >(null);
+  const [detailsTable, setDetailsTable] = useState<Table | null>(null);
+  const [guestInput, setGuestInput] = useState(0);
+  const [reserveData, setReserveData] = useState({ guests: 0, name: '', time: '' });
+  const [newTableNumber, setNewTableNumber] = useState(initialTables.length + 1);
+
+  const handleSaveGuests = () => {
+    if (!tableAction?.tableId) return;
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === tableAction.tableId ? { ...t, guests: guestInput, status: 'occupied' } : t
+      )
+    );
+    setTableAction(null);
+    setGuestInput(0);
+  };
+
+  const handleReserve = () => {
+    if (!tableAction?.tableId) return;
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === tableAction.tableId
+          ? {
+              ...t,
+              guests: reserveData.guests,
+              customerName: reserveData.name,
+              reservedFor: reserveData.time,
+              status: 'reserved'
+            }
+          : t
+      )
+    );
+    setTableAction(null);
+    setReserveData({ guests: 0, name: '', time: '' });
+  };
+
+  const handleAddTable = () => {
+    setTablesState(prev => [
+      ...prev,
+      { id: prev.length + 1, number: newTableNumber, status: 'available' }
+    ]);
+    setTableAction(null);
+    setNewTableNumber(newTableNumber + 1);
+  };
+
+  const handleCheckIn = (id: number) => {
+    setTablesState(prev =>
+      prev.map(t => (t.id === id ? { ...t, status: 'occupied' } : t))
+    );
+  };
+
+  const handleCancelReservation = (id: number) => {
+    setTablesState(prev =>
+      prev.map(t =>
+        t.id === id
+          ? { id: t.id, number: t.number, status: 'available' }
+          : t
+      )
+    );
+  };
+
+  const handleSaveEditItem = () => {
+    if (!editingItem) return;
+    setMenuItems(prev =>
+      prev.map(item => (item.id === editingItem.id ? editingItem : item))
+    );
+    setEditingItem(null);
+  };
+
+  const handleAddItem = () => {
+    const nextId = menuItems.length + 1;
+    setMenuItems(prev => [
+      ...prev,
+      {
+        id: nextId,
+        name: newItemData.name,
+        category: 'Overig',
+        price: newItemData.price,
+        image: newItemData.image,
+        sold: 0,
+        available: true,
+        ingredients: newItemData.ingredients,
+        description: newItemData.description,
+        rating: 0
+      }
+    ]);
+    setNewItemModal(false);
+    setNewItemData({ name: '', ingredients: '', price: 0, image: '/menu/menu1.jpg', description: '' });
+  };
+
+  const handleDeleteItem = (id: number) => {
+    setMenuItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleDuplicateItem = (item: MenuItem) => {
+    const nextId = menuItems.length + 1;
+    setMenuItems(prev => [
+      ...prev,
+      { ...item, id: nextId, name: item.name + ' kopie' }
+    ]);
+  };
+
+  const initialMenuItems: MenuItem[] = [
+    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum', ingredients: 'Tomaat, mozzarella, basilicum' },
+    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: '/menu/menu2.jpg', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas', ingredients: 'Pepperoni, kaas, tomaat' },
+    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: '/menu/menu1.jpg', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst', ingredients: 'Garnalen, curry, rijst' },
+    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: '/menu/menu3.jpg', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating', ingredients: 'Kip, curry, panko' },
+    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: '/menu/menu5.jpg', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten', ingredients: 'Tofu, groenten, bouillon' },
+    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: '/menu/menu5.jpg', sold: 67, available: true, rating: 4.0, description: 'Koude cola', ingredients: 'Water, suiker, koolzuur' },
+    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: '/menu/menu3.jpg', sold: 45, available: true, rating: 4.1, description: 'Bruisend water', ingredients: 'Water, koolzuur' },
+    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: '/menu/menu4.jpg', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees', ingredients: 'Rundvlees, noodles, bouillon' },
+    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: '/menu/menu2.jpg', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu', ingredients: 'Mascarpone, koffie, cacao' },
+    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: '/menu/menu4.jpg', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit', ingredients: 'Druiven' },
   ];
+
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialMenuItems);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [newItemModal, setNewItemModal] = useState(false);
+  const [newItemData, setNewItemData] = useState({
+    name: '',
+    ingredients: '',
+    price: 0,
+    image: '/menu/menu1.jpg',
+    description: ''
+  });
+  const [menuOptionsOpen, setMenuOptionsOpen] = useState<number | null>(null);
 
   const liveOrders: Order[] = [
     { id: 1, table: 2, items: ['Margherita Pizza', 'Cola'], total: 12.45, status: 'preparing', time: '5 min', orderTime: '17:23' },
@@ -171,7 +290,7 @@ export default function ComputerMock() {
     switch (activeTab) {
       case 'home':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             {/* Top Stats */}
             <div className="grid grid-cols-4 gap-4">
               <motion.div 
@@ -188,7 +307,7 @@ export default function ComputerMock() {
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-emerald-600" />
+                    <Euro className="w-6 h-6 text-emerald-600" />
                   </div>
                 </div>
               </motion.div>
@@ -298,7 +417,7 @@ export default function ComputerMock() {
               </div>
               <div className="p-4">
                 <div className="grid grid-cols-6 gap-3">
-                  {tables.map((table) => (
+                  {tablesState.map((table) => (
                     <motion.div
                       key={table.id}
                       whileHover={{ scale: 1.05 }}
@@ -346,11 +465,11 @@ export default function ComputerMock() {
 
       case 'tables':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Tafel Management</h2>
               <button
-                onClick={() => setManageModal('Nieuwe tafel aanmaken')}
+                onClick={() => setTableAction({ action: 'new' })}
                 className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -358,8 +477,8 @@ export default function ComputerMock() {
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              {tables.map((table) => (
+            <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-[520px]">
+              {tablesState.map((table) => (
                 <motion.div 
                   key={table.id} 
                   whileHover={{ scale: 1.02 }}
@@ -421,10 +540,16 @@ export default function ComputerMock() {
                   <div className="flex space-x-2">
                     {table.status === 'available' && (
                       <>
-                        <button className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
+                        <button
+                          onClick={() => setTableAction({ action: 'guests', tableId: table.id })}
+                          className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors"
+                        >
                           Gasten
                         </button>
-                        <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                        <button
+                          onClick={() => setTableAction({ action: 'reserve', tableId: table.id })}
+                          className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                        >
                           Reserveren
                         </button>
                       </>
@@ -432,7 +557,7 @@ export default function ComputerMock() {
                     {(table.status === 'occupied' || table.status === 'ordering') && (
                       <>
                         <button
-                          onClick={() => setManageModal(`Tafel ${table.number} details`)}
+                          onClick={() => setDetailsTable(table)}
                           className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors"
                         >
                           Details
@@ -448,13 +573,13 @@ export default function ComputerMock() {
                     {table.status === 'reserved' && (
                       <>
                         <button
-                          onClick={() => setManageModal(`Check-in tafel ${table.number}`)}
+                          onClick={() => handleCheckIn(table.id)}
                           className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors"
                         >
                           Check-in
                         </button>
                         <button
-                          onClick={() => setManageModal(`Reservering tafel ${table.number} annuleren`)}
+                          onClick={() => handleCancelReservation(table.id)}
                           className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-700 transition-colors"
                         >
                           Annuleren
@@ -470,7 +595,7 @@ export default function ComputerMock() {
 
       case 'menu':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Menu Management</h2>
               <div className="flex space-x-3">
@@ -484,7 +609,10 @@ export default function ComputerMock() {
                     className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   />
                 </div>
-                <button className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors">
+                <button
+                  onClick={() => setNewItemModal(true)}
+                  className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
+                >
                   <Plus className="w-4 h-4" />
                   <span>Nieuw Gerecht</span>
                 </button>
@@ -527,17 +655,43 @@ export default function ComputerMock() {
                                   </span>
                                   <div className="flex space-x-1">
                                     <button
-                                      onClick={() => setManageModal('Gerecht bewerken')}
+                                      onClick={() => setEditingItem(item)}
                                       className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
                                     >
                                       <Edit className="w-4 h-4" />
                                     </button>
-                                    <button
-                                      onClick={() => setManageModal('Meer opties')}
-                                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                                    >
-                                      <MoreHorizontal className="w-4 h-4" />
-                                    </button>
+                                    <div className="relative">
+                                      <button
+                                        onClick={() =>
+                                          setMenuOptionsOpen(menuOptionsOpen === item.id ? null : item.id)
+                                        }
+                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                      >
+                                        <MoreHorizontal className="w-4 h-4" />
+                                      </button>
+                                      {menuOptionsOpen === item.id && (
+                                        <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10 text-sm">
+                                          <button
+                                            onClick={() => {
+                                              handleDeleteItem(item.id);
+                                              setMenuOptionsOpen(null);
+                                            }}
+                                            className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                          >
+                                            Verwijderen
+                                          </button>
+                                          <button
+                                            onClick={() => {
+                                              handleDuplicateItem(item);
+                                              setMenuOptionsOpen(null);
+                                            }}
+                                            className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                          >
+                                            Dupliceren
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -554,7 +708,7 @@ export default function ComputerMock() {
 
       case 'stats':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Analytics & Statistieken</h2>
               <div className="flex space-x-3">
@@ -579,7 +733,7 @@ export default function ComputerMock() {
               <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-600">Totale winst</h3>
-                  <DollarSign className="w-5 h-5 text-emerald-600" />
+                  <Euro className="w-5 h-5 text-emerald-600" />
                 </div>
                 <p className="text-3xl font-bold text-emerald-600">€31,847</p>
                 <p className="text-sm text-emerald-600 flex items-center mt-1">
@@ -703,7 +857,7 @@ export default function ComputerMock() {
 
       case 'manage':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto">
             <h2 className="text-2xl font-bold text-gray-900">Restaurant Beheer</h2>
 
             <div className="grid grid-cols-2 gap-6">
@@ -822,7 +976,7 @@ export default function ComputerMock() {
                     onClick={() => setManageModal('Prijzen en BTW')}
                     className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
                   >
-                    <DollarSign className="w-4 h-4" />
+                    <Euro className="w-4 h-4" />
                     <span>Prijzen & BTW</span>
                   </button>
                   <button
@@ -872,7 +1026,7 @@ export default function ComputerMock() {
   };
 
   return (
-    <div className="relative w-[1200px] h-[750px] rounded-t-2xl overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
+    <div className="relative w-[1200px] h-[768px] rounded-t-2xl overflow-hidden shadow-2xl border-4 border-black bg-white flex flex-col font-sans">
       {/* Laptop Screen */}
       <div className="w-full h-full bg-black rounded-t-2xl p-2">
         {/* Screen Bezel */}
@@ -898,13 +1052,13 @@ export default function ComputerMock() {
           {/* Dashboard Content */}
           <div className="flex h-full bg-gray-50">
             {/* Sidebar */}
-            <div className="w-56 bg-white border-r border-gray-200 flex flex-col">
+            <div className="w-56 bg-white border-r border-gray-200 flex flex-col overflow-y-auto scrollbar-thin">
               <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white">
                 <h1 className="text-lg font-bold">TableTech</h1>
                 <p className="text-sm opacity-90">Restaurant Dashboard</p>
               </div>
               
-              <nav className="flex-1 p-4">
+              <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin">
                 <div className="space-y-2">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
@@ -928,7 +1082,7 @@ export default function ComputerMock() {
                 </div>
               </nav>
 
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
                     <span className="text-sm font-semibold text-white">JD</span>
@@ -987,6 +1141,182 @@ export default function ComputerMock() {
             <button
               onClick={() => setManageModal(null)}
               className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
+
+      {tableAction && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          {tableAction.action === 'guests' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+              <h3 className="text-lg font-semibold mb-2 text-gray-900">Aantal gasten</h3>
+              <input
+                type="number"
+                value={guestInput}
+                onChange={e => setGuestInput(parseInt(e.target.value))}
+                className="w-full border border-gray-200 rounded-lg p-2 mb-4"
+              />
+              <button
+                onClick={handleSaveGuests}
+                className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700"
+              >
+                Opslaan
+              </button>
+            </div>
+          )}
+          {tableAction.action === 'reserve' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg space-y-3">
+              <h3 className="text-lg font-semibold text-gray-900">Reserveren</h3>
+              <input
+                type="number"
+                placeholder="Aantal personen"
+                value={reserveData.guests}
+                onChange={e => setReserveData({ ...reserveData, guests: parseInt(e.target.value) })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <input
+                type="text"
+                placeholder="Naam"
+                value={reserveData.name}
+                onChange={e => setReserveData({ ...reserveData, name: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <input
+                type="time"
+                value={reserveData.time}
+                onChange={e => setReserveData({ ...reserveData, time: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <button
+                onClick={handleReserve}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+              >
+                Opslaan
+              </button>
+            </div>
+          )}
+          {tableAction.action === 'new' && (
+            <div className="bg-white rounded-xl p-6 w-80 shadow-lg space-y-3">
+              <h3 className="text-lg font-semibold text-gray-900">Nieuwe tafel</h3>
+              <input
+                type="number"
+                value={newTableNumber}
+                onChange={e => setNewTableNumber(parseInt(e.target.value))}
+                className="w-full border border-gray-200 rounded-lg p-2"
+              />
+              <button
+                onClick={handleAddTable}
+                className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+              >
+                Toevoegen
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {editingItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">Gerecht bewerken</h3>
+            <input
+              type="text"
+              value={editingItem.name}
+              onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Naam"
+            />
+            <input
+              type="text"
+              value={editingItem.ingredients || ''}
+              onChange={e => setEditingItem({ ...editingItem, ingredients: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Ingrediënten"
+            />
+            <input
+              type="number"
+              value={editingItem.price}
+              onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Prijs"
+            />
+            <textarea
+              value={editingItem.description || ''}
+              onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Beschrijving"
+            />
+            <button
+              onClick={handleSaveEditItem}
+              className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700"
+            >
+              Opslaan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {newItemModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">Nieuw gerecht</h3>
+            <input
+              type="text"
+              value={newItemData.name}
+              onChange={e => setNewItemData({ ...newItemData, name: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Naam"
+            />
+            <input
+              type="text"
+              value={newItemData.ingredients}
+              onChange={e => setNewItemData({ ...newItemData, ingredients: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Ingrediënten"
+            />
+            <input
+              type="number"
+              value={newItemData.price}
+              onChange={e => setNewItemData({ ...newItemData, price: parseFloat(e.target.value) })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Prijs"
+            />
+            <textarea
+              value={newItemData.description}
+              onChange={e => setNewItemData({ ...newItemData, description: e.target.value })}
+              className="w-full border border-gray-200 rounded-lg p-2"
+              placeholder="Beschrijving"
+            />
+            <button
+              onClick={handleAddItem}
+              className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+            >
+              Toevoegen
+            </button>
+          </div>
+        </div>
+      )}
+
+      {detailsTable && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 text-gray-900">Tafel {detailsTable.number} details</h3>
+            <div className="space-y-2 text-sm text-gray-700 mb-4">
+              {liveOrders
+                .filter(o => o.table === detailsTable.number)
+                .map(o => (
+                  <div key={o.id} className="flex justify-between">
+                    <span>{o.items.join(', ')}</span>
+                    <span>€{o.total.toFixed(2)}</span>
+                  </div>
+                ))}
+            </div>
+            <button
+              onClick={() => setDetailsTable(null)}
+              className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
             >
               Sluiten
             </button>
