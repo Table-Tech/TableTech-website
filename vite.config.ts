@@ -10,4 +10,8 @@ export default defineConfig({
     viteCompression(), // gzip compressie
     imagetools(),      // image optimalisatie
   ],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+  },
 });
