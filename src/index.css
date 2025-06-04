@@ -22,6 +22,82 @@ body::-webkit-scrollbar {
 }
 
 /* =======================
+   Demo Overlay Specifieke Styles
+========================== */
+
+/* Body locking voor overlay (voorkomt scroll tijdens demo) */
+body.demo-overlay-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+/* Computer Mock Container - optimalisaties voor smooth scaling */
+.computer-mock-container {
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Responsieve ComputerMock constraints */
+@media (max-width: 768px) {
+  .computer-mock-container {
+    max-width: 95vw;
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 1024px) {
+  .computer-mock-container {
+    max-width: 90vw;
+    max-height: 60vh;
+  }
+}
+
+@media (max-width: 1400px) {
+  .computer-mock-container {
+    max-width: 85vw;
+    max-height: 70vh;
+  }
+}
+
+/* Demo overlay backdrop blur enhancement */
+.demo-backdrop {
+  backdrop-filter: blur(12px) saturate(180%);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Glassmorphism effect voor panel backgrounds */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Hover effects voor interactive elementen */
+.glass-button {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth transitions voor alle interactive elementen */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =======================
    Scrollbar helper class
 ========================== */
 .no-scrollbar {
@@ -63,6 +139,52 @@ body::-webkit-scrollbar {
   animation: move-down 3.5s linear infinite;
 }
 
+/* Demo overlay entrance animatie */
+@keyframes demo-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-demo-entrance {
+  animation: demo-entrance 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Floating animatie voor close button */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse effect voor attention-grabbing elementen */
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
 /* =======================
    Horizontale scroll panels
 ========================== */
@@ -70,6 +192,7 @@ body::-webkit-scrollbar {
   flex: 0 0 100vw;
   height: 100vh;
 }
+
 /* Scrollbar volledig verbergen */
 .scrollbar-none {
   scrollbar-width: none;            /* Firefox */
@@ -77,4 +200,72 @@ body::-webkit-scrollbar {
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;                    /* Chrome, Safari, Opera */
+}
+
+/* =======================
+   Performance optimalisaties
+========================== */
+
+/* GPU acceleration voor smooth animaties */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Prevent layout shifts tijdens overlay transitions */
+.demo-container {
+  contain: layout style paint;
+}
+
+/* =======================
+   Mobile optimalisaties
+========================== */
+@media (max-width: 640px) {
+  /* Kleinere spacing op mobile */
+  .demo-mobile-spacing {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  /* Aangepaste font sizes voor mobile */
+  .demo-mobile-text {
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+  
+  /* Mobile-friendly button sizes */
+  .demo-mobile-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* =======================
+   Dark mode ondersteuning (voor toekomst)
+========================== */
+@media (prefers-color-scheme: dark) {
+  .glass-panel-dark {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-button-dark {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* =======================
+   Focus states voor accessibility
+========================== */
+.demo-focus:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.demo-focus:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.8);
+  outline-offset: 2px;
 }
