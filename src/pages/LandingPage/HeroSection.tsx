@@ -67,13 +67,13 @@ export const HeroSection: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-center gap-6">
             {/* Customer Demo Card */}
             <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20">
-              <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🍽️</div>
               <h3 className="text-base font-semibold mb-2">Probeer als Klant</h3>
               <p className="text-white/80 mb-4 text-sm leading-relaxed">
                 Bekijk hoe gasten eenvoudig bestellen via QR-code.
               </p>
               <button
                 onClick={handleOpenCustomerDemo}
+                type="button"
                 className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
               >
                 Start klant demo
@@ -82,7 +82,6 @@ export const HeroSection: React.FC = () => {
 
             {/* Employee Demo Card */}
             <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20">
-              <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">👨‍💼</div>
               <h3 className="text-base font-semibold mb-2">
                 Probeer als Werknemer
               </h3>
@@ -91,6 +90,7 @@ export const HeroSection: React.FC = () => {
               </p>
               <button
                 onClick={handleOpenEmployeeDemo}
+                type="button"
                 className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl"
               >
                 Start dashboard demo
@@ -98,33 +98,14 @@ export const HeroSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Feature highlights */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-2xl mb-2">⚡</div>
-              <h4 className="text-sm font-semibold mb-1">Sneller</h4>
-              <p className="text-xs text-white/70">Geen wachten op personeel</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-2">🔒</div>
-              <h4 className="text-sm font-semibold mb-1">Veiliger</h4>
-              <p className="text-xs text-white/70">Contactloos bestellen</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-2">🧠</div>
-              <h4 className="text-sm font-semibold mb-1">Slimmer</h4>
-              <p className="text-xs text-white/70">Real-time analytics</p>
-            </div>
           </div>
-        </div>
-
+        
         {/* Fade effect onderaan */}
         <div className="absolute bottom-0 h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10" />
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
           <div className="flex flex-col items-center">
-            <span className="text-xs mb-2">Ontdek meer</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
