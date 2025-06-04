@@ -53,6 +53,6 @@ Built using open-source tools: thank you to the React and Vite communities!
 ---
 
 Want a custom dashboard, branded QR codes, or more features?
-Contact us at # info@tabletech.nl
+Contact us at info@tabletech.nl
 
 
