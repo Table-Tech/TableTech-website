@@ -23,7 +23,6 @@ import {
   Star,
   Eye,
   MoreHorizontal,
-  ChefHat,
   MapPin,
   Timer
 } from 'lucide-react';
@@ -68,6 +67,8 @@ export default function ComputerMock() {
   const [activeTab, setActiveTab] = useState<TabId>('home');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [manageModal, setManageModal] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -93,16 +94,16 @@ export default function ComputerMock() {
   ];
 
   const menuItems: MenuItem[] = [
-    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: 'pizza', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
-    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: 'pizza', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas' },
-    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: 'curry', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst' },
-    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: 'curry', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating' },
-    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: 'ramen', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten' },
-    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: 'drink', sold: 67, available: true, rating: 4.0, description: 'Koude cola' },
-    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: 'water', sold: 45, available: true, rating: 4.1, description: 'Bruisend water' },
-    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: 'ramen', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees' },
-    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: 'dessert', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu' },
-    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: 'wine', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit' },
+    { id: 1, name: 'Margherita Pizza', category: 'Pizza', price: 9.95, image: '/menu/menu1.jpg', sold: 23, available: true, rating: 4.5, description: 'Klassieke pizza met tomaat, mozzarella en basilicum' },
+    { id: 2, name: 'Pepperoni Pizza', category: 'Pizza', price: 11.50, image: '/menu/menu2.jpg', sold: 18, available: true, rating: 4.3, description: 'Pizza met pepperoni en extra kaas' },
+    { id: 3, name: 'Prawn Raisukaree', category: 'Popular', price: 12.00, image: '/menu/menu1.jpg', sold: 31, available: true, rating: 4.8, description: 'Pittige garnalen curry met rijst' },
+    { id: 4, name: 'Chicken Katsu Curry', category: 'Curry', price: 10.50, image: '/menu/menu3.jpg', sold: 15, available: true, rating: 4.4, description: 'Japanse kip curry met panko coating' },
+    { id: 5, name: 'Tofu Firecracker Ramen', category: 'Ramen', price: 9.75, image: '/menu/menu5.jpg', sold: 12, available: false, rating: 4.2, description: 'Pittige ramen met tofu en groenten' },
+    { id: 6, name: 'Cola', category: 'Drankjes', price: 2.50, image: '/menu/menu5.jpg', sold: 67, available: true, rating: 4.0, description: 'Koude cola' },
+    { id: 7, name: 'Spa Blauw', category: 'Drankjes', price: 2.00, image: '/menu/menu3.jpg', sold: 45, available: true, rating: 4.1, description: 'Bruisend water' },
+    { id: 8, name: 'Beef Ramen', category: 'Ramen', price: 11.25, image: '/menu/menu4.jpg', sold: 19, available: true, rating: 4.6, description: 'Rijke ramen met rundvlees' },
+    { id: 9, name: 'Tiramisu', category: 'Dessert', price: 6.50, image: '/menu/menu2.jpg', sold: 8, available: true, rating: 4.7, description: 'Klassieke Italiaanse tiramisu' },
+    { id: 10, name: 'Witte Wijn', category: 'Drankjes', price: 4.50, image: '/menu/menu4.jpg', sold: 22, available: true, rating: 4.3, description: 'Huiswijn wit' },
   ];
 
   const liveOrders: Order[] = [
@@ -145,18 +146,13 @@ export default function ComputerMock() {
     }
   };
 
-  const getMenuIcon = (imageType: string) => {
-    switch (imageType) {
-      case 'pizza': return <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-orange-600" /></div>;
-      case 'curry': return <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-red-600" /></div>;
-      case 'ramen': return <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-yellow-600" /></div>;
-      case 'drink': return <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-blue-600 rounded"></div></div>;
-      case 'water': return <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-cyan-600 rounded"></div></div>;
-      case 'wine': return <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center"><div className="w-2 h-4 bg-purple-600 rounded"></div></div>;
-      case 'dessert': return <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center"><Star className="w-4 h-4 text-pink-600" /></div>;
-      default: return <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"><ChefHat className="w-4 h-4 text-gray-600" /></div>;
-    }
-  };
+  const getMenuIcon = (src: string) => (
+    <img
+      src={src}
+      alt="menu-item"
+      className="w-12 h-12 rounded-lg object-cover"
+    />
+  );
 
   const tabs = [
     { id: 'home' as TabId, label: 'Dashboard', icon: Home },
@@ -353,7 +349,8 @@ export default function ComputerMock() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Tafel Management</h2>
-              <button 
+              <button
+                onClick={() => setManageModal('Nieuwe tafel aanmaken')}
                 className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -434,20 +431,32 @@ export default function ComputerMock() {
                     )}
                     {(table.status === 'occupied' || table.status === 'ordering') && (
                       <>
-                        <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                        <button
+                          onClick={() => setManageModal(`Tafel ${table.number} details`)}
+                          className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                        >
                           Details
                         </button>
-                        <button className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors">
+                        <button
+                          onClick={() => setManageModal(`Afrekenen tafel ${table.number}`)}
+                          className="flex-1 bg-emerald-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-emerald-700 transition-colors"
+                        >
                           Afrekenen
                         </button>
                       </>
                     )}
                     {table.status === 'reserved' && (
                       <>
-                        <button className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors">
+                        <button
+                          onClick={() => setManageModal(`Check-in tafel ${table.number}`)}
+                          className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors"
+                        >
                           Check-in
                         </button>
-                        <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-700 transition-colors">
+                        <button
+                          onClick={() => setManageModal(`Reservering tafel ${table.number} annuleren`)}
+                          className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-700 transition-colors"
+                        >
                           Annuleren
                         </button>
                       </>
@@ -493,10 +502,11 @@ export default function ComputerMock() {
                           .filter(item => item.category === category)
                           .slice(0, 3)
                           .map((item) => (
-                            <motion.div 
-                              key={item.id} 
+                            <motion.div
+                              key={item.id}
                               whileHover={{ scale: 1.02 }}
-                              className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all"
+                              onClick={() => setSelectedItem(item)}
+                              className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
                             >
                               <div className="flex items-center space-x-3">
                                 {getMenuIcon(item.image)}
@@ -516,10 +526,16 @@ export default function ComputerMock() {
                                     {item.available ? 'Beschikbaar' : 'Niet beschikbaar'}
                                   </span>
                                   <div className="flex space-x-1">
-                                    <button className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                                    <button
+                                      onClick={() => setManageModal('Gerecht bewerken')}
+                                      className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                                    >
                                       <Edit className="w-4 h-4" />
                                     </button>
-                                    <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <button
+                                      onClick={() => setManageModal('Meer opties')}
+                                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
                                       <MoreHorizontal className="w-4 h-4" />
                                     </button>
                                   </div>
@@ -542,11 +558,17 @@ export default function ComputerMock() {
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Analytics & Statistieken</h2>
               <div className="flex space-x-3">
-                <button className="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700 transition-colors">
+                <button
+                  onClick={() => setManageModal('Filter periode: deze week')}
+                  className="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700 transition-colors"
+                >
                   <Calendar className="w-4 h-4" />
                   <span>Deze week</span>
                 </button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
+                <button
+                  onClick={() => setManageModal('Data export')}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors"
+                >
                   <Download className="w-4 h-4" />
                   <span>Export</span>
                 </button>
@@ -693,15 +715,24 @@ export default function ComputerMock() {
                   </h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Nieuw gerecht toevoegen')}
+                    className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors"
+                  >
                     <Plus className="w-4 h-4" />
                     <span>Nieuw gerecht toevoegen</span>
                   </button>
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Categorieën beheren')}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+                  >
                     <Edit className="w-4 h-4" />
                     <span>Categorieën beheren</span>
                   </button>
-                  <button className="w-full bg-amber-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-amber-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Preview klant menu')}
+                    className="w-full bg-amber-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-amber-700 transition-colors"
+                  >
                     <Eye className="w-4 h-4" />
                     <span>Preview klant menu</span>
                   </button>
@@ -716,15 +747,24 @@ export default function ComputerMock() {
                   </h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Werknemer toevoegen')}
+                    className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors"
+                  >
                     <UserPlus className="w-4 h-4" />
                     <span>Werknemer toevoegen</span>
                   </button>
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Rollen en rechten')}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+                  >
                     <Edit className="w-4 h-4" />
                     <span>Rollen & rechten</span>
                   </button>
-                  <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Rooster plannen')}
+                    className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors"
+                  >
                     <Calendar className="w-4 h-4" />
                     <span>Rooster plannen</span>
                   </button>
@@ -739,15 +779,24 @@ export default function ComputerMock() {
                   </h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Thema en branding')}
+                    className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors"
+                  >
                     <Palette className="w-4 h-4" />
                     <span>Thema & branding</span>
                   </button>
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Notificatie instellingen')}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+                  >
                     <Bell className="w-4 h-4" />
                     <span>Notificatie instellingen</span>
                   </button>
-                  <button className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Openingstijden')}
+                    className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors"
+                  >
                     <Clock className="w-4 h-4" />
                     <span>Openingstijden</span>
                   </button>
@@ -762,15 +811,24 @@ export default function ComputerMock() {
                   </h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  <button className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Betaalmethoden')}
+                    className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors"
+                  >
                     <CreditCard className="w-4 h-4" />
                     <span>Betaalmethoden</span>
                   </button>
-                  <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Prijzen en BTW')}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+                  >
                     <DollarSign className="w-4 h-4" />
                     <span>Prijzen & BTW</span>
                   </button>
-                  <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors">
+                  <button
+                    onClick={() => setManageModal('Factuur export')}
+                    className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors"
+                  >
                     <Download className="w-4 h-4" />
                     <span>Factuur export</span>
                   </button>
@@ -782,15 +840,24 @@ export default function ComputerMock() {
             <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Snelle acties</h3>
               <div className="grid grid-cols-3 gap-3">
-                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                <button
+                  onClick={() => setManageModal('Alles schoonmaken')}
+                  className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2"
+                >
                   <AlertCircle className="w-4 h-4" />
                   <span>Alles schoonmaken</span>
                 </button>
-                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                <button
+                  onClick={() => setManageModal('Dag afsluiten')}
+                  className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2"
+                >
                   <BarChart3 className="w-4 h-4" />
                   <span>Dag afsluiten</span>
                 </button>
-                <button className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2">
+                <button
+                  onClick={() => setManageModal('Backup maken')}
+                  className="bg-white text-gray-700 py-3 px-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center space-x-2"
+                >
                   <Download className="w-4 h-4" />
                   <span>Backup maken</span>
                 </button>
@@ -894,6 +961,38 @@ export default function ComputerMock() {
       {/* Laptop Base */}
       <div className="w-[1600px] h-5 bg-gray-400 rounded-b-2xl -mt-1 shadow-lg mx-auto"></div>
       <div className="w-[1700px] h-3 bg-gray-500 rounded-full -mt-1 shadow-xl mx-auto"></div>
+
+      {selectedItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
+            <h3 className="text-xl font-semibold mb-2 text-gray-900">{selectedItem.name}</h3>
+            <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-40 object-cover rounded-lg" />
+            <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
+            <p className="mt-2 font-bold text-amber-600">€{selectedItem.price.toFixed(2)}</p>
+            <button
+              onClick={() => setSelectedItem(null)}
+              className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
+
+      {manageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-80 shadow-lg text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{manageModal}</h3>
+            <p className="text-sm text-gray-600">Deze functionaliteit kan hier uitgebreid worden.</p>
+            <button
+              onClick={() => setManageModal(null)}
+              className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
