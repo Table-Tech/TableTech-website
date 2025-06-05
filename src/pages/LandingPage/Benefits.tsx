@@ -682,7 +682,7 @@ export const BenefitsOne: React.FC = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-20" />
 
-              <div className="scale-90">
+              <div className="scale-[0.85]">
                 <motion.div
                   className="relative w-64 h-80 bg-black rounded-3xl p-2 shadow-2xl"
                   animate={{
@@ -700,9 +700,9 @@ export const BenefitsOne: React.FC = () => {
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentScreen}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 0.85 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
                         transition={{ duration: 0.8 }}
                         className="absolute inset-0 p-1"
                       >
@@ -733,7 +733,7 @@ export const BenefitsOne: React.FC = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-800 rounded-2xl blur-3xl scale-110 opacity-30" />
 
-              <div className="scale-90">
+              <div className="scale-[0.85]">
                 <motion.div
                   className="relative w-96 h-72 bg-black rounded-2xl p-1 shadow-2xl"
                   animate={{
@@ -749,9 +749,9 @@ export const BenefitsOne: React.FC = () => {
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentDashboard}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 0.85 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
                         transition={{ duration: 1 }}
                         className="absolute inset-0"
                       >
