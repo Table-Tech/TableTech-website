@@ -42,7 +42,7 @@ export default function BenefitsOne() {
               <img
                 src="/menu/menu1.jpg"
                 alt="Prawn Raisukaree"
-                className="w-full h-5 object-cover rounded mb-0.5"
+                className="w-full h-8 object-contain rounded mb-0.5"
               />
               <h4 className="text-xs font-bold mb-0.5 text-gray-800">Prawn Raisukaree</h4>
               <p className="text-xs text-gray-600 mb-0.5">Verse garnalen, rijst</p>
@@ -58,7 +58,7 @@ export default function BenefitsOne() {
               <img
                 src="/menu/menu3.jpg"
                 alt="Chicken Katsu Curry"
-                className="w-full h-5 object-cover rounded mb-0.5"
+                className="w-full h-8 object-contain rounded mb-0.5"
               />
               <h4 className="text-xs font-bold mb-0.5 text-gray-800">Chicken Katsu Curry</h4>
               <p className="text-xs text-gray-600 mb-0.5">Krokante kip, curry</p>
@@ -74,7 +74,7 @@ export default function BenefitsOne() {
               <img
                 src="/menu/menu2.jpg"
                 alt="Firecracker Prawn"
-                className="w-full h-5 object-cover rounded mb-0.5"
+                className="w-full h-8 object-contain rounded mb-0.5"
               />
               <h4 className="text-xs font-bold mb-0.5 text-gray-800">Firecracker Prawn</h4>
               <p className="text-xs text-gray-600 mb-0.5">Pittige garnalen</p>
@@ -90,7 +90,7 @@ export default function BenefitsOne() {
               <img
                 src="/menu/menu5.jpg"
                 alt="Fresh Lemonade"
-                className="w-full h-5 object-cover rounded mb-0.5"
+                className="w-full h-8 object-contain rounded mb-0.5"
               />
               <h4 className="text-xs font-bold mb-0.5 text-gray-800">Fresh Lemonade</h4>
               <p className="text-xs text-gray-600 mb-0.5">Verse citroen, munt</p>
@@ -229,7 +229,7 @@ export default function BenefitsOne() {
           
           {/* Payment Method */}
           <div className="bg-purple-500 rounded-lg p-2 text-center text-white">
-            <p className="font-bold text-sm">💳 Betalen met iDEAL</p>
+            <p className="font-bold text-sm">Betalen met iDEAL</p>
           </div>
         </div>
       )
@@ -270,7 +270,7 @@ export default function BenefitsOne() {
           
           {/* Submit Button - much smaller */}
           <div className="bg-orange-500 rounded-lg p-1 text-center text-white">
-            <p className="font-bold text-xs">📝 Feedback Versturen</p>
+            <p className="font-bold text-xs">Feedback Versturen</p>
           </div>
         </div>
       )
@@ -621,106 +621,10 @@ export default function BenefitsOne() {
 
       {/* Main content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-          
-          {/* Left side - Interactive Phone */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-20" />
-              
-              <motion.div
-                className="relative w-64 h-80 bg-black rounded-3xl p-2 shadow-2xl"
-                animate={{
-                  y: [0, -8, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gray-600 rounded-full z-30" />
-                
-                <div className="w-full h-full bg-gray-900 rounded-2xl overflow-hidden relative">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentScreen}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 0.8 }}
-                      className="absolute inset-0 p-1"
-                    >
-                      {appScreens[currentScreen].content}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {appScreens.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentScreen(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentScreen === index ? 'bg-white scale-125' : 'bg-white/50'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Center - Tablet Dashboard */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-800 rounded-2xl blur-3xl scale-110 opacity-30" />
-              
-              <motion.div
-                className="relative w-96 h-72 bg-black rounded-2xl p-1 shadow-2xl"
-                animate={{
-                  y: [0, -6, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <div className="w-full h-full bg-gray-900 rounded-xl overflow-hidden relative">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentDashboard}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 1 }}
-                      className="absolute inset-0"
-                    >
-                      {dashboardScreens[currentDashboard].content}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {dashboardScreens.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentDashboard(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentDashboard === index ? 'bg-white scale-125' : 'bg-white/50'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right side - Description */}
-          <div className="space-y-6">
+          {/* Left side - Description */}
+          <div className="space-y-6 order-1 lg:order-none">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -770,6 +674,105 @@ export default function BenefitsOne() {
                   </p>
                 </motion.div>
               </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right side - Screens */}
+          <div className="flex flex-col lg:flex-row items-center justify-center space-y-8 lg:space-y-0 lg:space-x-8 order-2 lg:order-none">
+            {/* Tablet Dashboard */}
+            <div className="relative flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-800 rounded-2xl blur-3xl scale-110 opacity-30" />
+
+                <motion.div
+                  className="relative w-96 h-72 bg-black rounded-2xl p-1 shadow-2xl"
+                  animate={{
+                    y: [0, -6, 0],
+                  }}
+                  transition={{
+                    duration: 7,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <div className="w-full h-full bg-gray-900 rounded-xl overflow-hidden relative">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentDashboard}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
+                        transition={{ duration: 1 }}
+                        className="absolute inset-0"
+                      >
+                        {dashboardScreens[currentDashboard].content}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {dashboardScreens.map((_, index) => (
+                    <motion.button
+                      key={index}
+                      onClick={() => setCurrentDashboard(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentDashboard === index ? 'bg-white scale-125' : 'bg-white/50'
+                      }`}
+                      whileHover={{ scale: 1.2 }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Phone */}
+            <div className="relative flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-20" />
+
+                <motion.div
+                  className="relative w-64 h-80 bg-black rounded-3xl p-2 shadow-2xl"
+                  animate={{
+                    y: [0, -8, 0],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gray-600 rounded-full z-30" />
+
+                  <div className="w-full h-full bg-gray-900 rounded-2xl overflow-hidden relative">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentScreen}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
+                        transition={{ duration: 0.8 }}
+                        className="absolute inset-0 p-1"
+                      >
+                        {appScreens[currentScreen].content}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {appScreens.map((_, index) => (
+                    <motion.button
+                      key={index}
+                      onClick={() => setCurrentScreen(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentScreen === index ? 'bg-white scale-125' : 'bg-white/50'
+                      }`}
+                      whileHover={{ scale: 1.2 }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
