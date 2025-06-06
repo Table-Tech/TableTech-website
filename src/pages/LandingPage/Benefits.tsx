@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import plantenBg from "../../assets/afbeeldingen/optie4.png";
 import pastaImg from "../../assets/afbeeldingen/pasta.jpeg";
@@ -31,6 +31,25 @@ export const BenefitsOne: React.FC = () => {
             </div>
           </div>
           
+          {/* Categories - Moved to top */}
+          <div className="flex justify-start gap-1.5 px-2 pt-2 pb-1 overflow-x-auto">
+            <div className="bg-red-100 px-2 py-0.5 rounded-full border border-red-200 whitespace-nowrap">
+              <span className="text-[10px] font-semibold text-red-600">Populair</span>
+            </div>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Pizza</span>
+            </div>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Curry</span>
+            </div>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Drinks</span>
+            </div>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Pasta</span>
+            </div>
+          </div>
+
           {/* Menu Items Grid - 4 items */}
           <div className="grid grid-cols-2 gap-1.5 p-2">
             <div className="bg-white rounded-lg p-1.5 shadow-sm border border-gray-100">
@@ -95,25 +114,6 @@ export const BenefitsOne: React.FC = () => {
                   <span className="text-white text-[10px] font-bold">+</span>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Categories */}
-          <div className="flex justify-start gap-1.5 px-2 pb-2 overflow-x-auto">
-            <div className="bg-red-100 px-2 py-0.5 rounded-full border border-red-200 whitespace-nowrap">
-              <span className="text-[10px] font-semibold text-red-600">Populair</span>
-            </div>
-            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
-              <span className="text-[10px] text-gray-600">Pizza</span>
-            </div>
-            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
-              <span className="text-[10px] text-gray-600">Curry</span>
-            </div>
-            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
-              <span className="text-[10px] text-gray-600">Drinks</span>
-            </div>
-            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
-              <span className="text-[10px] text-gray-600">Pasta</span>
             </div>
           </div>
         </div>
@@ -300,7 +300,7 @@ export const BenefitsOne: React.FC = () => {
           {/* Payment Button */}
           <div className="p-2 bg-white border-t border-gray-200">
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg py-2 text-center shadow-lg">
-              <p className="text-white font-bold text-xs">💳 Betalen met iDEAL</p>
+              <p className="text-white font-bold text-xs">Betalen met iDEAL</p>
             </div>
           </div>
         </div>
@@ -401,14 +401,14 @@ export const BenefitsOne: React.FC = () => {
     }
   ];
 
-  const startAutoSlide = () => {
+  const startAutoSlide = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
     intervalRef.current = setInterval(() => {
       setCurrentScreen((prev) => (prev + 1) % appScreens.length);
     }, 8000); // 8 seconden per slide
-  };
+  }, [appScreens.length]);
 
   const handleManualClick = (index: number) => {
     setCurrentScreen(index);
@@ -435,7 +435,7 @@ export const BenefitsOne: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isManualMode, appScreens.length]);
+  }, [isManualMode, appScreens.length, startAutoSlide]);
 
   return (
     <section
@@ -534,7 +534,7 @@ export const BenefitsOne: React.FC = () => {
             </div>
           </div>
 
-          {/* Right side - Interactive Phone */}
+          {/* Right side - Interactive Phone with 3D effect */}
           <div className="relative flex items-center justify-center order-1 lg:order-2">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-30" />
@@ -548,6 +548,12 @@ export const BenefitsOne: React.FC = () => {
                   duration: 6,
                   repeat: Infinity,
                   ease: "easeInOut",
+                }}
+                style={{
+                  background: 'linear-gradient(145deg, #1a1a1a, #000000)',
+                  boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
+                  transform: 'perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)',
+                  transformStyle: 'preserve-3d'
                 }}
               >
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-30" />
