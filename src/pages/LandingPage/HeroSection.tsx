@@ -59,7 +59,7 @@ export const HeroSection: React.FC = () => {
         {/* Inhoud */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 2xl:px-20 3xl:px-40 pt-40 pb-20 text-white">
           <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 3xl:text-7xl font-bold mb-6 leading-snug drop-shadow-md">
-            De nieuwe manier van bestellen in jouw restaurant
+            De toekomst van bestellen.
           </h1>
           <p className="text-base sm:text-lg text-white/90 mb-10 max-w-3xl mx-auto 2xl:text-xl">
             Laat gasten bestellen & betalen via QR – sneller, veiliger, slimmer.
