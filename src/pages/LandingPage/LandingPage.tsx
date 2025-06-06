@@ -1,4 +1,4 @@
-// src/pages/LandingPage.tsx
+// src/pages/LandingPage/LandingPage.tsx
 import React from "react";
 import { HeroSection } from "./HeroSection";
 import { DashboardPreview } from "./DashboardPreview";
@@ -9,6 +9,7 @@ import { HorizontalScroll } from "../../components/HorizontalScroll";
 import { PricingSection } from "./Pricing";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
+import RestaurantThemesPage from "../../pages/LandingPage/restaurant-themes";
 
 const LandingPage: React.FC = () => {
   useLenisScroll();
@@ -26,6 +27,11 @@ const LandingPage: React.FC = () => {
       {/* Benefits Horizontal Scroll Section */}
       <section id="benefits" className="w-full">
         <HorizontalScroll />
+      </section>
+
+      {/* Restaurant Themes Section */}
+      <section id="themes" className="w-full">
+        <RestaurantThemesPage />
       </section>
 
       {/* Pricing Section */}
