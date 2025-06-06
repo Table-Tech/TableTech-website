@@ -2,7 +2,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-
 import LandingPage from "./pages/LandingPage/LandingPage";
 import { FeaturePage } from "./pages/FeaturePage";
 import { PricingPage } from "./pages/PricingPage";
@@ -17,20 +16,20 @@ import KlantDemoPage from "./pages/KlantDemoPage";
 import "./index.css";
 
 const App: React.FC = () => {
-
   return (
     <>
       <ScrollToTop />
       <ScrollDots />
       <SupportChat />
+      
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/demo/klant" element={<KlantDemoPage />} />
         <Route path="/features" element={<FeaturePage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/demo" element={<KlantDemoPage />} />
       </Routes>
     </>
   );
