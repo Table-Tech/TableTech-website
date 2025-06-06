@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import plantenBg from "../../assets/afbeeldingen/optie4.png";
+import pastaImg from "../../assets/afbeeldingen/pasta.jpeg";
 
 type AppScreen = {
   id: string;
@@ -9,16 +10,10 @@ type AppScreen = {
   content: JSX.Element;
 };
 
-type DashboardScreen = {
-  id: string;
-  title: string;
-  description: string;
-  content: JSX.Element;
-};
-
 export const BenefitsOne: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState(0);
-  const [currentDashboard, setCurrentDashboard] = useState(0);
+  const [isManualMode, setIsManualMode] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const appScreens: AppScreen[] = [
     {
@@ -26,96 +21,99 @@ export const BenefitsOne: React.FC = () => {
       title: "Digitaal Menu Bekijken",
       description: "Gasten scannen de QR code en bekijken direct het volledige menu op hun telefoon",
       content: (
-        <div className="p-1.5 h-full bg-white text-gray-800 rounded-2xl overflow-hidden">
+        <div className="h-full bg-white text-gray-800 overflow-hidden">
           {/* Header */}
-          <div className="text-center mb-1.5">
-            <h3 className="text-sm font-bold text-gray-800 mb-0.5">TableTech</h3>
-            <p className="text-xs text-gray-500 mb-1">Tafel 12 • Restaurant Menu</p>
-            <div className="flex justify-center">
-              <span className="bg-red-100 px-2 py-0.5 rounded-full text-xs font-semibold text-red-600 border border-red-200">Populair</span>
+          <div className="text-center p-2 bg-gradient-to-b from-red-50 to-white">
+            <h3 className="text-sm font-bold text-gray-800">TableTech</h3>
+            <p className="text-[10px] text-gray-500">Tafel 12 • Restaurant Menu</p>
+            <div className="flex justify-center mt-1">
+              <span className="bg-red-100 px-2 py-0.5 rounded-full text-[10px] font-semibold text-red-600 border border-red-200">Populair</span>
             </div>
           </div>
           
           {/* Menu Items Grid - 4 items */}
-          <div className="grid grid-cols-2 gap-1 mb-1.5">
-            <div className="bg-white rounded-lg p-1 shadow-sm border border-gray-200">
+          <div className="grid grid-cols-2 gap-1.5 p-2">
+            <div className="bg-white rounded-lg p-1.5 shadow-sm border border-gray-100">
               <img
                 src="/menu/menu1.jpg"
                 alt="Prawn Raisukaree"
-                className="w-full h-8 object-cover rounded mb-1"
+                className="w-full h-16 object-cover rounded mb-1"
               />
-              <h4 className="text-xs font-bold mb-0.5 text-gray-800">Prawn Raisukaree</h4>
-              <p className="text-xs text-gray-600 mb-1">Verse garnalen, rijst</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-800">€12.00</span>
-                <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center shadow-sm">
-                  <span className="text-white text-xs font-bold">+</span>
+              <h4 className="text-[10px] font-bold text-gray-800 leading-tight">Prawn Raisukaree</h4>
+              <p className="text-[9px] text-gray-600">Verse garnalen, rijst</p>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[10px] font-bold text-gray-800">€12.00</span>
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="text-white text-[10px] font-bold">+</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-lg p-1 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-lg p-1.5 shadow-sm border border-gray-100">
               <img
                 src="/menu/menu3.jpg"
-                alt="Chicken Katsu Curry"
-                className="w-full h-8 object-cover rounded mb-1"
+                alt="Chicken Katsu"
+                className="w-full h-16 object-cover rounded mb-1"
               />
-              <h4 className="text-xs font-bold mb-0.5 text-gray-800">Chicken Katsu Curry</h4>
-              <p className="text-xs text-gray-600 mb-1">Krokante kip, curry</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-800">€10.50</span>
-                <div className="w-4 h-4 bg-amber-600 rounded-full flex items-center justify-center shadow-sm">
-                  <span className="text-white text-xs font-bold">+</span>
+              <h4 className="text-[10px] font-bold text-gray-800 leading-tight">Chicken Katsu</h4>
+              <p className="text-[9px] text-gray-600">Krokante kip, curry</p>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[10px] font-bold text-gray-800">€10.50</span>
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="text-white text-[10px] font-bold">+</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-lg p-1 shadow-sm border border-gray-200">
-              <img
-                src="/menu/menu2.jpg"
-                alt="Firecracker Prawn"
-                className="w-full h-8 object-cover rounded mb-1"
-              />
-              <h4 className="text-xs font-bold mb-0.5 text-gray-800">Firecracker Prawn</h4>
-              <p className="text-xs text-gray-600 mb-1">Pittige garnalen</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-800">€11.00</span>
-                <div className="w-4 h-4 bg-orange-600 rounded-full flex items-center justify-center shadow-sm">
-                  <span className="text-white text-xs font-bold">+</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg p-1 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-lg p-1.5 shadow-sm border border-gray-100">
               <img
                 src="/menu/menu5.jpg"
                 alt="Fresh Lemonade"
-                className="w-full h-8 object-cover rounded mb-1"
+                className="w-full h-16 object-cover rounded mb-1"
               />
-              <h4 className="text-xs font-bold mb-0.5 text-gray-800">Fresh Lemonade</h4>
-              <p className="text-xs text-gray-600 mb-1">Verse citroen, munt</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-800">€3.50</span>
-                <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
-                  <span className="text-white text-xs font-bold">+</span>
+              <h4 className="text-[10px] font-bold text-gray-800 leading-tight">Fresh Lemonade</h4>
+              <p className="text-[9px] text-gray-600">Verse citroen, munt</p>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[10px] font-bold text-gray-800">€3.50</span>
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="text-white text-[10px] font-bold">+</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-lg p-1.5 shadow-sm border border-gray-100">
+              <img
+                src={pastaImg}
+                alt="Pasta Carbonara"
+                className="w-full h-16 object-cover rounded mb-1"
+              />
+              <h4 className="text-[10px] font-bold text-gray-800 leading-tight">Pasta Carbonara</h4>
+              <p className="text-[9px] text-gray-600">Romige pasta</p>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[10px] font-bold text-gray-800">€11.50</span>
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="text-white text-[10px] font-bold">+</span>
                 </div>
               </div>
             </div>
           </div>
           
           {/* Categories */}
-          <div className="flex justify-center space-x-1">
-            <div className="bg-red-100 px-1.5 py-0.5 rounded-full border border-red-200">
-              <span className="text-xs font-semibold text-red-600">Populair</span>
+          <div className="flex justify-start gap-1.5 px-2 pb-2 overflow-x-auto">
+            <div className="bg-red-100 px-2 py-0.5 rounded-full border border-red-200 whitespace-nowrap">
+              <span className="text-[10px] font-semibold text-red-600">Populair</span>
             </div>
-            <div className="bg-gray-100 px-1.5 py-0.5 rounded-full border border-gray-200">
-              <span className="text-xs text-gray-600">Pizza</span>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Pizza</span>
             </div>
-            <div className="bg-gray-100 px-1.5 py-0.5 rounded-full border border-gray-200">
-              <span className="text-xs text-gray-600">Curry</span>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Curry</span>
             </div>
-            <div className="bg-gray-100 px-1.5 py-0.5 rounded-full border border-gray-200">
-              <span className="text-xs text-gray-600">Drinks</span>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Drinks</span>
+            </div>
+            <div className="bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 whitespace-nowrap">
+              <span className="text-[10px] text-gray-600">Pasta</span>
             </div>
           </div>
         </div>
@@ -126,63 +124,110 @@ export const BenefitsOne: React.FC = () => {
       title: "Bestelling Plaatsen",
       description: "Eenvoudig items toevoegen aan winkelwagentje zonder wachten op personeel",
       content: (
-        <div className="p-1 h-full bg-white text-gray-800 rounded-2xl overflow-hidden">
+        <div className="h-full bg-white text-gray-800 overflow-hidden">
           {/* Header */}
-          <div className="text-center mb-1">
-            <h3 className="text-xs font-bold text-gray-800 mb-0.5">TableTech</h3>
-            <p className="text-xs text-gray-500 mb-0.5">Jouw Bestelling</p>
-            <div className="bg-green-100 rounded p-0.5">
-              <p className="text-xs text-green-700 font-semibold">2 items toegevoegd</p>
+          <div className="text-center p-2 bg-gradient-to-b from-green-50 to-white border-b border-green-100">
+            <h3 className="text-sm font-bold text-gray-800">TableTech</h3>
+            <p className="text-[10px] text-gray-500">Jouw Bestelling • Tafel 12</p>
+            <div className="bg-green-100 rounded-full px-3 py-0.5 mt-1 inline-block">
+              <p className="text-[10px] text-green-700 font-semibold">✓ 4 items toegevoegd</p>
             </div>
           </div>
           
           {/* Cart Items */}
-          <div className="space-y-1 mb-1">
-            <div className="bg-green-50 rounded p-1 border border-green-200">
+          <div className="p-2 space-y-1.5 max-h-[60%] overflow-y-auto">
+            <div className="bg-green-50 rounded-lg p-2 border border-green-200">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   <img
                     src="/menu/menu1.jpg"
                     alt="Prawn Raisukaree"
-                    className="w-5 h-5 object-cover rounded"
+                    className="w-10 h-10 object-cover rounded"
                   />
                   <div>
-                    <h4 className="text-xs font-bold">2x Prawn Raisukaree</h4>
-                    <p className="text-xs text-gray-600">Extra garnalen</p>
+                    <h4 className="text-[11px] font-bold text-gray-800">2x Prawn Raisukaree</h4>
+                    <p className="text-[9px] text-gray-600">Extra garnalen</p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-green-600">€24.00</span>
               </div>
             </div>
             
-            <div className="bg-blue-50 rounded p-1 border border-blue-200">
+            <div className="bg-blue-50 rounded-lg p-2 border border-blue-200">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   <img
                     src="/menu/menu5.jpg"
                     alt="Fresh Lemonade"
-                    className="w-5 h-5 object-cover rounded"
+                    className="w-10 h-10 object-cover rounded"
                   />
                   <div>
-                    <h4 className="text-xs font-bold">2x Fresh Lemonade</h4>
-                    <p className="text-xs text-gray-600">Extra ijs</p>
+                    <h4 className="text-[11px] font-bold text-gray-800">2x Fresh Lemonade</h4>
+                    <p className="text-[9px] text-gray-600">Extra ijs</p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-blue-600">€7.00</span>
               </div>
             </div>
+            
+            <div className="bg-amber-50 rounded-lg p-2 border border-amber-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <img
+                    src="/menu/menu3.jpg"
+                    alt="Chicken Katsu"
+                    className="w-10 h-10 object-cover rounded"
+                  />
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-800">1x Chicken Katsu</h4>
+                    <p className="text-[9px] text-gray-600">Medium spicy</p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-amber-600">€10.50</span>
+              </div>
+            </div>
+            
+            <div className="bg-purple-50 rounded-lg p-2 border border-purple-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={pastaImg}
+                    alt="Pasta Carbonara"
+                    className="w-10 h-10 object-cover rounded"
+                  />
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-800">1x Pasta Carbonara</h4>
+                    <p className="text-[9px] text-gray-600">Extra kaas</p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-purple-600">€11.50</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Special request */}
+          <div className="px-2">
+            <div className="bg-gray-50 rounded-lg p-2 border border-gray-200">
+              <p className="text-[10px] text-gray-600">
+                <span className="font-semibold">Opmerking:</span> Graag alles tegelijk serveren
+              </p>
+            </div>
           </div>
           
           {/* Total & Order Button */}
-          <div className="space-y-1">
-            <div className="bg-gray-100 rounded p-1">
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2">
+            <div className="bg-gray-100 rounded-lg p-2 mb-2">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold">Totaal:</span>
-                <span className="text-sm font-bold text-gray-800">€31.00</span>
+                <span className="text-xs text-gray-600">Subtotaal:</span>
+                <span className="text-xs text-gray-800">€53.00</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-semibold text-gray-800">Totaal:</span>
+                <span className="text-sm font-bold text-gray-800">€53.00</span>
               </div>
             </div>
-            <div className="bg-green-500 rounded p-1.5 text-center">
-              <p className="text-white font-bold text-xs">Bestelling Plaatsen</p>
+            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg py-3 text-center shadow-sm">
+              <p className="text-white font-bold text-sm">🛒 Bestelling Plaatsen</p>
             </div>
           </div>
         </div>
@@ -193,402 +238,162 @@ export const BenefitsOne: React.FC = () => {
       title: "Veilig Betalen",
       description: "Betaling via iDEAL, creditcard of andere betaalmethoden zonder kassarij",
       content: (
-        <div className="p-2 h-full bg-white text-gray-800 rounded-2xl overflow-hidden">
+        <div className="h-full bg-white text-gray-800 flex flex-col">
           {/* Header */}
-          <div className="text-center mb-2">
-            <h3 className="text-base font-bold text-red-600 mb-1">TableTech.</h3>
-            <p className="text-xs text-gray-500 mb-1">Betaling • Tafel 12</p>
+          <div className="text-center p-2 bg-gradient-to-b from-purple-50 to-white">
+            <h3 className="text-sm font-bold text-purple-600">TableTech</h3>
+            <p className="text-[10px] text-gray-500">Betaling • Tafel 12</p>
           </div>
           
           {/* Order Summary */}
-          <div className="bg-gray-50 rounded-lg p-2 shadow-sm mb-2 border">
-            <h4 className="font-bold text-sm mb-1.5 text-center">Bestellingsoverzicht</h4>
-            <div className="space-y-0.5 text-xs">
-              <div className="flex justify-between py-0.5 border-b border-gray-200">
-                <span>2x Pizza Margherita</span>
-                <span className="font-semibold">€25.00</span>
-              </div>
-              <div className="flex justify-between py-0.5 border-b border-gray-200">
-                <span>2x Fresh Lemonade</span>
-                <span className="font-semibold">€7.00</span>
-              </div>
-              <div className="flex justify-between py-0.5 border-b border-gray-200">
-                <span>Subtotaal</span>
-                <span className="font-semibold">€32.00</span>
-              </div>
-              <div className="flex justify-between py-0.5 border-b border-gray-200 text-gray-600">
-                <span>Fooi (15%)</span>
-                <span>€4.80</span>
-              </div>
-              <div className="flex justify-between pt-1 text-sm font-bold">
-                <span>Totaal</span>
-                <span className="text-purple-600">€36.80</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Payment Method */}
-          <div className="bg-purple-500 rounded-lg p-2 text-center text-white">
-            <p className="font-bold text-sm">💳 Betalen met iDEAL</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: "feedback",
-      title: "Feedback Geven",
-      description: "Gasten kunnen direct hun ervaring delen voor continue verbetering",
-      content: (
-        <div className="p-2 h-full bg-white text-gray-800 rounded-2xl overflow-hidden">
-          {/* Header */}
-          <div className="text-center mb-2">
-            <h3 className="text-base font-bold text-red-600 mb-1">TableTech.</h3>
-            <p className="text-xs text-gray-500 mb-1">Feedback • Tafel 12</p>
-          </div>
-          
-          {/* Success Message */}
-          <div className="bg-green-100 rounded-lg p-2 mb-2 text-center border border-green-200">
-            <div className="text-xl mb-1">✅</div>
-            <h4 className="font-bold text-green-800 text-xs mb-0.5">Betaling Gelukt!</h4>
-            <p className="text-xs text-green-600">Bestelling naar keuken</p>
-          </div>
-          
-          {/* Rating */}
-          <div className="bg-gray-50 rounded-lg p-2 shadow-sm mb-2 border">
-            <h4 className="font-bold text-xs mb-1.5 text-center">Hoe was je ervaring?</h4>
-            <div className="flex justify-center space-x-0.5 mb-1.5">
-              {[1,2,3,4,5].map(star => (
-                <span key={star} className="text-lg text-yellow-500">⭐</span>
-              ))}
-            </div>
-            <div className="bg-white rounded-lg p-1.5 border">
-              <p className="text-xs text-gray-700 leading-relaxed">
-                "Geweldige service! Het bestellen ging super makkelijk en het eten was heerlijk. Aanrader! 👍"
-              </p>
-            </div>
-          </div>
-          
-          {/* Submit Button */}
-          <div className="bg-orange-500 rounded-lg p-2 text-center text-white">
-            <p className="font-bold text-sm">📝 Feedback Versturen</p>
-          </div>
-        </div>
-      )
-    }
-  ];
-
-  const dashboardScreens: DashboardScreen[] = [
-    {
-      id: "live-orders",
-      title: "Live Bestelling Management",
-      description: "Realtime overzicht van alle inkomende bestellingen met status tracking",
-      content: (
-        <div className="h-full bg-gradient-to-br from-slate-800/80 via-slate-700/80 to-slate-800/80 backdrop-blur-sm p-3 rounded-xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
-              <h2 className="text-white font-bold text-base">Live Bestellingen</h2>
-            </div>
-            <div className="bg-green-500/30 backdrop-blur-sm px-2 py-1 rounded-full border border-green-400/30">
-              <span className="text-green-300 text-xs font-semibold">3 actief</span>
-            </div>
-          </div>
-          
-          {/* Orders */}
-          <div className="space-y-2 mb-3">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-gradient-to-r from-yellow-600/20 to-orange-700/20 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-2"
-            >
-              <div className="flex items-start justify-between mb-1.5">
-                <div className="flex items-center space-x-1.5">
-                  <div className="w-6 h-6 bg-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                    7
-                  </div>
-                  <div>
-                    <div className="text-white font-semibold text-xs">Tafel 7</div>
-                    <div className="text-gray-300 text-xs">2 items • 4m</div>
-                  </div>
+          <div className="flex-1 px-2 pb-2">
+            <div className="bg-gray-50 rounded-lg p-2 shadow-sm border border-gray-200 mb-2">
+              <h4 className="font-bold text-xs mb-2 text-center text-gray-800">Bestellingsoverzicht</h4>
+              <div className="space-y-0.5 text-[10px]">
+                <div className="flex justify-between py-0.5">
+                  <span className="text-gray-700">2x Prawn Raisukaree</span>
+                  <span className="font-semibold text-gray-800">€24.00</span>
                 </div>
-                <div className="bg-yellow-600 text-black px-1.5 py-0.5 rounded text-xs font-bold">
-                  BEREIDEN
+                <div className="flex justify-between py-0.5">
+                  <span className="text-gray-700">2x Fresh Lemonade</span>
+                  <span className="font-semibold text-gray-800">€7.00</span>
                 </div>
-              </div>
-              
-              <div className="space-y-1">
-                <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-xs">2x Pizza Margherita</div>
-                  <div className="text-gray-400 text-xs">Extra basilicum</div>
+                <div className="flex justify-between py-0.5">
+                  <span className="text-gray-700">1x Chicken Katsu</span>
+                  <span className="font-semibold text-gray-800">€10.50</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-xs">1x Caesar Salade</div>
-                  <div className="text-gray-400 text-xs">Geen croutons</div>
+                <div className="flex justify-between py-0.5">
+                  <span className="text-gray-700">1x Pasta Carbonara</span>
+                  <span className="font-semibold text-gray-800">€11.50</span>
                 </div>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-gradient-to-r from-green-600/20 to-green-700/20 backdrop-blur-sm border border-green-500/30 rounded-lg p-2"
-            >
-              <div className="flex items-start justify-between mb-1.5">
-                <div className="flex items-center space-x-1.5">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                    3
-                  </div>
-                  <div>
-                    <div className="text-white font-semibold text-xs">Tafel 3</div>
-                    <div className="text-gray-300 text-xs">1 item • 7m</div>
-                  </div>
-                </div>
-                <div className="bg-green-600 text-white px-1.5 py-0.5 rounded text-xs font-bold">
-                  KLAAR
-                </div>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-xs">1x Chicken Katsu Curry</div>
-                <div className="text-gray-400 text-xs">Medium spicy</div>
-              </div>
-            </motion.div>
-          </div>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-1.5">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">24</div>
-              <div className="text-gray-300 text-xs">Vandaag</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">8m</div>
-              <div className="text-gray-300 text-xs">Gem. tijd</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">€547</div>
-              <div className="text-gray-300 text-xs">Omzet</div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: "analytics",
-      title: "Business Intelligence Dashboard",
-      description: "Geavanceerde analytics met realtime inzichten in verkoop, trends en KPI's",
-      content: (
-        <div className="h-full bg-gradient-to-br from-indigo-800/80 via-purple-700/80 to-indigo-800/80 backdrop-blur-sm p-3 rounded-xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white font-bold text-base">Business Analytics</h2>
-            <div className="bg-purple-500/30 backdrop-blur-sm px-2 py-1 rounded-full border border-purple-400/30">
-              <span className="text-purple-300 text-xs font-semibold">Real-time</span>
-            </div>
-          </div>
-          
-          {/* Revenue Chart */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 mb-3 border border-white/20">
-            <h3 className="text-white font-semibold mb-1.5 text-xs">Omzet Deze Week</h3>
-            <div className="space-y-1.5">
-              <div className="flex items-end space-x-0.5 h-12">
-                {[65, 45, 80, 55, 90, 70, 85].map((height, i) => (
-                  <motion.div
-                    key={i}
-                    className="bg-gradient-to-t from-purple-500 to-pink-400 rounded-t flex-1"
-                    style={{ height: `${height}%` }}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{ delay: i * 0.2, duration: 1 }}
-                  />
-                ))}
-              </div>
-              <div className="flex justify-between text-xs text-gray-300">
-                <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span><span>Za</span><span>Zo</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* KPIs */}
-          <div className="grid grid-cols-2 gap-1.5">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-              <div className="flex items-center space-x-1 mb-0.5">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                <span className="text-gray-300 text-xs">Dagomzet</span>
-              </div>
-              <div className="text-white font-bold text-base">€1,847</div>
-              <div className="text-green-400 text-xs">+18% vs gisteren</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-              <div className="flex items-center space-x-1 mb-0.5">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                <span className="text-gray-300 text-xs">Bestellingen</span>
-              </div>
-              <div className="text-white font-bold text-base">73</div>
-              <div className="text-blue-400 text-xs">+12% vs gisteren</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-              <div className="flex items-center space-x-1 mb-0.5">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
-                <span className="text-gray-300 text-xs">Gem. bestelling</span>
-              </div>
-              <div className="text-white font-bold text-base">€25.30</div>
-              <div className="text-yellow-400 text-xs">+5% vs gisteren</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-              <div className="flex items-center space-x-1 mb-0.5">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
-                <span className="text-gray-300 text-xs">Rating</span>
-              </div>
-              <div className="text-white font-bold text-base">4.9⭐</div>
-              <div className="text-purple-400 text-xs">+0.2 vs week</div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: "kitchen",
-      title: "Kitchen Display System",
-      description: "Professioneel keuken display voor efficiënte order management en timing",
-      content: (
-        <div className="h-full bg-gradient-to-br from-red-800/80 via-orange-700/80 to-red-800/80 backdrop-blur-sm p-3 rounded-xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white font-bold text-base">Keuken Display</h2>
-            <div className="flex items-center space-x-1.5">
-              <div className="w-2.5 h-2.5 bg-orange-400 rounded-full animate-pulse"></div>
-              <span className="text-orange-300 text-xs font-semibold">3 orders</span>
-            </div>
-          </div>
-          
-          {/* Kitchen Orders */}
-          <div className="space-y-2 mb-3">
-            <div className="bg-white/15 backdrop-blur-sm rounded-lg p-2 border-l-4 border-red-500">
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center space-x-1.5">
-                  <span className="text-white font-bold text-sm">Tafel 7</span>
-                  <span className="bg-red-600 text-white px-1.5 py-0.5 rounded-full text-xs font-bold">URGENT</span>
-                </div>
-                <span className="bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">12m</span>
-              </div>
-              <div className="space-y-1">
-                <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-xs">2x Pizza Margherita</div>
-                  <div className="text-gray-400 text-xs">Extra basilicum, dunne bodem</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-xs">1x Caesar Salade</div>
-                  <div className="text-gray-400 text-xs">Geen croutons, extra parmezaan</div>
+                <div className="flex justify-between pt-1 text-xs font-bold border-t">
+                  <span>Totaal</span>
+                  <span className="text-purple-600">€53.00</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white/15 backdrop-blur-sm rounded-lg p-2 border-l-4 border-yellow-500">
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center space-x-1.5">
-                  <span className="text-white font-bold text-sm">Tafel 12</span>
-                  <span className="bg-yellow-600 text-black px-1.5 py-0.5 rounded-full text-xs font-bold">BEREIDEN</span>
+            {/* Payment Methods */}
+            <div className="space-y-1">
+              <h5 className="text-[10px] font-semibold text-gray-700">Kies betaalmethode:</h5>
+              <div className="grid grid-cols-2 gap-1.5">
+                <div className="bg-blue-50 border-2 border-blue-500 rounded-lg p-1.5 text-center">
+                  <div className="text-sm mb-0.5">💳</div>
+                  <p className="text-[9px] font-semibold text-blue-700">iDEAL</p>
                 </div>
-                <span className="bg-yellow-600 text-black px-2 py-1 rounded-lg text-xs font-bold">5m</span>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded p-1.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-xs">1x Chicken Katsu Curry</div>
-                <div className="text-gray-400 text-xs">Medium spicy, extra rijst</div>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-center">
+                  <div className="text-sm mb-0.5">💰</div>
+                  <p className="text-[9px] font-semibold text-gray-600">Contant</p>
+                </div>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-center">
+                  <div className="text-sm mb-0.5">📱</div>
+                  <p className="text-[9px] font-semibold text-gray-600">Apple Pay</p>
+                </div>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-center">
+                  <div className="text-sm mb-0.5">💳</div>
+                  <p className="text-[9px] font-semibold text-gray-600">Creditcard</p>
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Performance */}
-          <div className="grid grid-cols-3 gap-1.5">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">7</div>
-              <div className="text-gray-300 text-xs">Wachtrij</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">9.5m</div>
-              <div className="text-gray-300 text-xs">Gem. tijd</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1.5 text-center border border-white/20">
-              <div className="text-white font-bold text-base">96%</div>
-              <div className="text-gray-300 text-xs">On-time</div>
+          {/* Payment Button */}
+          <div className="p-2 bg-white border-t border-gray-200">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg py-2 text-center shadow-lg">
+              <p className="text-white font-bold text-xs">💳 Betalen met iDEAL</p>
             </div>
           </div>
         </div>
       )
     },
     {
-      id: "management",
-      title: "Restaurant Management Hub",
-      description: "Centraal beheercentrum voor menu's, personeel, instellingen en systeem monitoring",
+      id: "order-status",
+      title: "Bestelling Volgen",
+      description: "Realtime updates over de status van je bestelling, van keuken tot tafel",
       content: (
-        <div className="h-full bg-gradient-to-br from-gray-800/80 via-slate-700/80 to-gray-800/80 backdrop-blur-sm p-3 rounded-xl overflow-hidden">
+        <div className="h-full bg-white text-gray-800 flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white font-bold text-base">Management Dashboard</h2>
-            <div className="bg-gray-600/30 backdrop-blur-sm px-2 py-1 rounded-full border border-gray-500/30">
-              <span className="text-gray-300 text-xs font-semibold">Admin Panel</span>
-            </div>
+          <div className="text-center p-2 bg-gradient-to-b from-green-50 to-white">
+            <h3 className="text-sm font-bold text-green-600">TableTech</h3>
+            <p className="text-[10px] text-gray-500">Bestelling Status • Tafel 12</p>
           </div>
           
-          {/* Management Modules */}
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            <div className="bg-white/10 backdrop-blur-sm hover:bg-white/15 rounded-lg p-2 transition-colors border border-white/20">
-              <div className="text-xl mb-1">📋</div>
-              <div className="text-white font-semibold text-xs mb-0.5">Menu Beheer</div>
-              <div className="text-gray-300 text-xs">47 items • 6 categorieën</div>
+          <div className="flex-1 px-2 pb-2">
+            {/* Success Message */}
+            <div className="bg-green-100 rounded-lg p-2 mb-2 text-center border border-green-200">
+              <div className="text-lg mb-0.5">✅</div>
+              <h4 className="font-bold text-green-800 text-xs mb-0.5">Bestelling Bevestigd!</h4>
+              <p className="text-[9px] text-green-600">Je eten wordt nu bereid</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm hover:bg-white/15 rounded-lg p-2 transition-colors border border-white/20">
-              <div className="text-xl mb-1">👥</div>
-              <div className="text-white font-semibold text-xs mb-0.5">Personeel</div>
-              <div className="text-gray-300 text-xs">8 actieve gebruikers</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm hover:bg-white/15 rounded-lg p-2 transition-colors border border-white/20">
-              <div className="text-xl mb-1">🏪</div>
-              <div className="text-white font-semibold text-xs mb-0.5">Tafelbeheer</div>
-              <div className="text-gray-300 text-xs">24 tafels • 18 bezet</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm hover:bg-white/15 rounded-lg p-2 transition-colors border border-white/20">
-              <div className="text-xl mb-1">⚙️</div>
-              <div className="text-white font-semibold text-xs mb-0.5">Instellingen</div>
-              <div className="text-gray-300 text-xs">Systeem configuratie</div>
-            </div>
-          </div>
-          
-          {/* System Status */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-            <h3 className="text-white font-semibold mb-2 text-xs">Systeem Status</h3>
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300 text-xs">QR Code System</span>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                  <span className="text-green-300 text-xs font-semibold">Online</span>
+            
+            {/* Order Progress */}
+            <div className="bg-gray-50 rounded-lg p-2 shadow-sm border border-gray-200 mb-2">
+              <h4 className="font-bold text-xs mb-2 text-center text-gray-800">Voortgang</h4>
+              
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-[10px]">✓</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[9px] font-semibold text-gray-800">Bestelling Ontvangen</div>
+                    <div className="text-[8px] text-gray-600">14:23 - Betaling verwerkt</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center animate-pulse">
+                    <span className="text-white text-[10px]">🍳</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[9px] font-semibold text-gray-800">In de Keuken</div>
+                    <div className="text-[8px] text-gray-600">Nu bezig - geschatte tijd: 8 min</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 text-[10px]">🚶</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[9px] font-semibold text-gray-600">Onderweg naar Tafel</div>
+                    <div className="text-[8px] text-gray-500">Volgt snel...</div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300 text-xs">Payment Gateway</span>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                  <span className="text-green-300 text-xs font-semibold">Actief</span>
+            </div>
+            
+            {/* Order Details */}
+            <div className="bg-blue-50 rounded-lg p-2 border border-blue-200 mb-2">
+              <h4 className="font-bold text-xs mb-1 text-blue-800">Jouw Bestelling</h4>
+              <div className="space-y-0.5 text-[9px]">
+                <div className="flex justify-between">
+                  <span className="text-gray-700">2x Prawn Raisukaree</span>
+                  <span className="font-semibold">€24.00</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-700">2x Fresh Lemonade</span>
+                  <span className="font-semibold">€7.00</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-700">1x Chicken Katsu</span>
+                  <span className="font-semibold">€10.50</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-700">1x Pasta Carbonara</span>
+                  <span className="font-semibold">€11.50</span>
+                </div>
+                <div className="border-t border-blue-300 pt-0.5 flex justify-between font-bold">
+                  <span>Totaal</span>
+                  <span>€53.00</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300 text-xs">Kitchen Display</span>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                  <span className="text-green-300 text-xs font-semibold">Verbonden</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300 text-xs">Analytics Engine</span>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                  <span className="text-green-300 text-xs font-semibold">Tracking</span>
-                </div>
-              </div>
+            </div>
+            
+            {/* Estimated time */}
+            <div className="bg-yellow-50 rounded-lg p-1.5 text-center border border-yellow-200">
+              <div className="text-sm mb-0.5">⏱️</div>
+              <p className="text-[9px] font-semibold text-yellow-800">Geschatte levertijd: 6-8 minuten</p>
             </div>
           </div>
         </div>
@@ -596,19 +401,41 @@ export const BenefitsOne: React.FC = () => {
     }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  const startAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(() => {
       setCurrentScreen((prev) => (prev + 1) % appScreens.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [appScreens.length]);
+    }, 8000); // 8 seconden per slide
+  };
+
+  const handleManualClick = (index: number) => {
+    setCurrentScreen(index);
+    setIsManualMode(true);
+    
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    
+    // Na 8 seconden weer automatisch laten doorgaan
+    setTimeout(() => {
+      setIsManualMode(false);
+      startAutoSlide();
+    }, 8000);
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDashboard((prev) => (prev + 1) % dashboardScreens.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, [dashboardScreens.length]);
+    if (!isManualMode) {
+      startAutoSlide();
+    }
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isManualMode, appScreens.length]);
 
   return (
     <section
@@ -620,25 +447,25 @@ export const BenefitsOne: React.FC = () => {
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
 
       {/* Main content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
 
           {/* Left side - Description */}
-          <div className="space-y-6 order-first lg:order-none">
+          <div className="space-y-4 order-2 lg:order-1 max-h-full overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg">
-                TableTech Ecosysteem
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg">
+                Mobiele Restaurantervaring
               </h2>
-              <p className="text-white/90 text-lg drop-shadow-md mb-6">
-                Van QR-code scan tot keuken management - een complete restaurantoplossing
+              <p className="text-white/90 text-lg drop-shadow-md mb-4">
+                Van QR-scan tot betaling - alles op de smartphone van je gasten
               </p>
             </motion.div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 max-h-[calc(100vh-280px)] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentScreen}
@@ -646,131 +473,111 @@ export const BenefitsOne: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
-                  className="bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl p-5"
+                  className="bg-white/80 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
                 >
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
                     📱 {appScreens[currentScreen].title}
                   </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-800 text-base leading-relaxed">
                     {appScreens[currentScreen].description}
                   </p>
                 </motion.div>
               </AnimatePresence>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentDashboard}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6 }}
-                  className="bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl p-5"
-                >
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">
-                    💻 {dashboardScreens[currentDashboard].title}
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {dashboardScreens[currentDashboard].description}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
+              {/* Mobile Benefits */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="bg-white/75 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
+              >
+                <h3 className="text-lg font-bold text-gray-900 mb-3">Waarom mobiel bestellen?</h3>
+                <div className="space-y-2.5">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-sm font-bold">⚡</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Geen wachttijden</p>
+                      <p className="text-xs text-gray-700">Direct bestellen zonder personeel</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-sm font-bold">📱</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Live order tracking</p>
+                      <p className="text-xs text-gray-700">Volg je bestelling realtime</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-sm font-bold">💳</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Contactloos betalen</p>
+                      <p className="text-xs text-gray-700">iDEAL, Apple Pay en meer</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-sm font-bold">🎯</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Precisie bestellen</p>
+                      <p className="text-xs text-gray-700">Geen miscommunicatie meer</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
 
-          {/* Center - Interactive Phone */}
-          <div className="relative flex items-center justify-center">
+          {/* Right side - Interactive Phone */}
+          <div className="relative flex items-center justify-center order-1 lg:order-2">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-20" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-30" />
 
-              <div className="scale-90">
-                <motion.div
-                  className="relative w-64 h-80 bg-black rounded-3xl p-2 shadow-2xl"
-                  animate={{
-                    y: [0, -8, 0],
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gray-600 rounded-full z-30" />
+              <motion.div
+                className="relative w-72 h-[510px] bg-black rounded-3xl p-2 shadow-2xl"
+                animate={{
+                  y: [0, -8, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-30" />
 
-                  <div className="w-full h-full bg-gray-900 rounded-2xl overflow-hidden relative">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentScreen}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 0.85 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.8 }}
-                        className="absolute inset-0 p-1"
-                      >
-                        {appScreens[currentScreen].content}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              </div>
+                <div className="w-full h-full bg-gray-900 rounded-[1.5rem] overflow-hidden relative">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentScreen}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.05 }}
+                      transition={{ duration: 0.8 }}
+                      className="absolute inset-0"
+                    >
+                      {appScreens[currentScreen].content}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </motion.div>
 
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-3">
                 {appScreens.map((_, index) => (
                   <motion.button
                     key={index}
-                    onClick={() => setCurrentScreen(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentScreen === index ? 'bg-white scale-125' : 'bg-white/50'
+                    onClick={() => handleManualClick(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      currentScreen === index ? 'bg-white scale-125 shadow-lg' : 'bg-white/60'
                     }`}
                     whileHover={{ scale: 1.2 }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right - Tablet Dashboard */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-800 rounded-2xl blur-3xl scale-110 opacity-30" />
-
-              <div className="scale-90">
-                <motion.div
-                  className="relative w-96 h-72 bg-black rounded-2xl p-1 shadow-2xl"
-                  animate={{
-                    y: [0, -6, 0],
-                  }}
-                  transition={{
-                    duration: 7,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <div className="w-full h-full bg-gray-900 rounded-xl overflow-hidden relative">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentDashboard}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 0.85 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 1 }}
-                        className="absolute inset-0"
-                      >
-                        {dashboardScreens[currentDashboard].content}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {dashboardScreens.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentDashboard(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentDashboard === index ? 'bg-white scale-125' : 'bg-white/50'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
                   />
                 ))}
               </div>
