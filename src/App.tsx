@@ -10,7 +10,7 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const SupportChat = lazy(() => import("./pages/SupportChat"));
 const KlantDemoPage = lazy(() => import("./pages/KlantDemoPage"));
-const RestaurantThemesPage = lazy(() => import("./pages/LandingPage/restaurant-themes"));
+const RestaurantThemesPage = lazy(() => import("./pages/LandingPage/restaurant-themes")); // ✅ Correcte import
 
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
@@ -23,7 +23,7 @@ const App: React.FC = () => {
       <ScrollToTop />
       <ScrollDots />
       <SupportChat />
-      
+
       <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
