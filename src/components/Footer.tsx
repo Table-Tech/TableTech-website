@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { prefetch } from "../utils/prefetch";
 
 export const Footer: React.FC = () => (
   <footer id="footer" className="bg-[#2C1E1A] text-[#FFD382] py-12 w-full">
@@ -14,8 +15,24 @@ export const Footer: React.FC = () => (
           <h3 className="text-lg font-semibold mb-4 text-white">Info</h3>
           <ul className="space-y-2">
             <li><Link to="/integraties" className="hover:text-white transition">Integraties</Link></li>
-            <li><Link to="/pricing" className="hover:text-white transition">Prijzen</Link></li>
-            <li><Link to="/demo" className="hover:text-white transition">Demo</Link></li>
+            <li>
+              <Link
+                to="/pricing"
+                onMouseEnter={() => prefetch(() => import("../pages/PricingPage"))}
+                className="hover:text-white transition"
+              >
+                Prijzen
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/demo"
+                onMouseEnter={() => prefetch(() => import("../pages/KlantDemoPage"))}
+                className="hover:text-white transition"
+              >
+                Demo
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
@@ -30,9 +47,33 @@ export const Footer: React.FC = () => (
         <div>
           <h3 className="text-lg font-semibold mb-4 text-white">Bedrijf</h3>
           <ul className="space-y-2">
-            <li><Link to="/about" className="hover:text-white transition">Over ons</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition">Contact</Link></li>
-            <li><Link to="/privacy" className="hover:text-white transition">Privacybeleid</Link></li>
+            <li>
+              <Link
+                to="/about"
+                onMouseEnter={() => prefetch(() => import("../pages/AboutPage"))}
+                className="hover:text-white transition"
+              >
+                Over ons
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                onMouseEnter={() => prefetch(() => import("../pages/ContactPage"))}
+                className="hover:text-white transition"
+              >
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/privacy"
+                onMouseEnter={() => prefetch(() => import("../pages/PrivacyPolicyPage"))}
+                className="hover:text-white transition"
+              >
+                Privacybeleid
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -42,7 +83,13 @@ export const Footer: React.FC = () => (
           &copy; {new Date().getFullYear()} <span className="font-semibold text-white">TableTech</span>. Alle rechten voorbehouden.
         </p>
         <div className="flex space-x-4 mt-4 md:mt-0">
-          <Link to="/privacy" className="hover:text-white transition">Privacy</Link>
+          <Link
+            to="/privacy"
+            onMouseEnter={() => prefetch(() => import("../pages/PrivacyPolicyPage"))}
+            className="hover:text-white transition"
+          >
+            Privacy
+          </Link>
           <Link to="/voorwaarden" className="hover:text-white transition">Algemene voorwaarden</Link>
           <Link to="/cookies" className="hover:text-white transition">Cookies</Link>
         </div>
