@@ -1,6 +1,12 @@
-import React, { useState } from "react";
-import { DemoOverlay as CustomerDemoOverlay } from "../../components/DemoOverlay";
-import { DemoOverlay as EmployeeDemoOverlay } from "../../components/DemoOverlay-laptop";
+import React, { useState, lazy, Suspense, useEffect } from "react";
+import { prefetch } from "../../utils/prefetch";
+
+const CustomerDemoOverlay = lazy(() =>
+  import("../../components/DemoOverlay").then((m) => ({ default: m.DemoOverlay }))
+);
+const EmployeeDemoOverlay = lazy(() =>
+  import("../../components/DemoOverlay-laptop").then((m) => ({ default: m.DemoOverlay }))
+);
 
 export const HeroSection: React.FC = () => {
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
@@ -33,6 +39,13 @@ export const HeroSection: React.FC = () => {
     setIsEmployeeDemoOpen(false);
     setIsCustomerDemoOpen(true);
   };
+
+  // Prefetch heavy demo components for smoother opening
+  useEffect(() => {
+    prefetch(() => import("../../components/DemoOverlay"));
+    prefetch(() => import("../../components/DemoOverlay-laptop"));
+    prefetch(() => import("../../components/PhoneMock"));
+  }, []);
 
   return (
     <>
@@ -114,19 +127,21 @@ export const HeroSection: React.FC = () => {
         </div>
       </section>
 
-      {/* Customer Demo Overlay */}
-      <CustomerDemoOverlay
-        isOpen={isCustomerDemoOpen}
-        onClose={handleCloseAllDemos}
-        onSwitchToEmployee={handleSwitchToEmployee}
-      />
+      <Suspense fallback={null}>
+        {/* Customer Demo Overlay */}
+        <CustomerDemoOverlay
+          isOpen={isCustomerDemoOpen}
+          onClose={handleCloseAllDemos}
+          onSwitchToEmployee={handleSwitchToEmployee}
+        />
 
-      {/* Employee Demo Overlay */}
-      <EmployeeDemoOverlay
-        isOpen={isEmployeeDemoOpen}
-        onClose={handleCloseAllDemos}
-        onSwitchToCustomer={handleSwitchToCustomer}
-      />
+        {/* Employee Demo Overlay */}
+        <EmployeeDemoOverlay
+          isOpen={isEmployeeDemoOpen}
+          onClose={handleCloseAllDemos}
+          onSwitchToCustomer={handleSwitchToCustomer}
+        />
+      </Suspense>
     </>
   );
 };
