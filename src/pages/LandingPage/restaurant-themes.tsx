@@ -873,53 +873,41 @@ const RestaurantThemesPage: React.FC = () => {
                   }}
                 ></div>
                 {/* Title overlay */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h2 className="text-3xl font-bold text-white drop-shadow-lg text-center">
+                <div className="absolute top-4 left-4 right-4">
+                  <h2 className="text-2xl font-bold text-white drop-shadow-lg text-center whitespace-nowrap overflow-hidden text-ellipsis">
                     {language === "nl" ? theme.name : theme.nameEn}
                   </h2>
                 </div>
               </div>
               
-              {/* Categories - 4 White Circles */}
-              <div className="px-4 py-4">
+              {/* Categories - 4 Very Small White Rounded Squares */}
+              <div className="px-4 py-1">
                 <div className="flex justify-between">
                   {theme.categories.map((category: ThemeCategory, index: number) => (
                     <div key={index} className="flex flex-col items-center">
-                      <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg mb-2">
-                        <span className="text-2xl">{renderIcon(category.icon, "w-6 h-6") || category.icon}</span>
+                      <div className="bg-white rounded-xl w-10 h-10 flex items-center justify-center shadow-lg mb-1">
+                        <span className="text-base">{renderIcon(category.icon, "w-4 h-4") || category.icon}</span>
                       </div>
-                      <div className="text-green-800 text-sm font-semibold">{category[language]}</div>
+                      <div className="text-green-800 text-xs font-medium">{category[language]}</div>
                     </div>
                   ))}
                 </div>
               </div>
               
-              {/* Menu Items - White Cards with ratings */}
-              <div className="px-4 space-y-3 mb-4 flex-1">
+              {/* Menu Items - Very Compact Cards */}
+              <div className="px-4 space-y-1.5 mb-2 flex-1">
                 {theme.items.slice(0, 3).map((item: ThemeItem, index: number) => (
-                  <div key={index} className="bg-white rounded-2xl p-4 shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-12 h-12 bg-gray-200 rounded-full bg-cover bg-center shadow-sm"
-                          style={{ backgroundImage: `url(${item.image})` }}
-                        ></div>
-                        <div>
-                          <div className="text-lg font-bold text-gray-800 leading-tight">
-                            {item.name[language]}
-                          </div>
-                          <div className="text-xl font-bold text-green-600">{item.price}</div>
+                  <div key={index} className="bg-white rounded-lg p-2.5 shadow-lg">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 bg-gray-200 rounded-full bg-cover bg-center shadow-sm flex-shrink-0"
+                        style={{ backgroundImage: `url(${item.image})` }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-bold text-gray-800 leading-tight">
+                          {item.name[language]}
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 mb-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">{item.rating}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm">{item.prepTime}m</span>
-                        </div>
+                        <div className="text-sm font-bold text-green-600">{item.price}</div>
                       </div>
                     </div>
                   </div>
