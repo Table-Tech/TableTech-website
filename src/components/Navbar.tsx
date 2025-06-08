@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { prefetch } from "../utils/prefetch";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import "../i18n";
@@ -127,7 +128,13 @@ export const Navbar: React.FC = () => {
             <>
               <Link to="/" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("home")}</Link>
               <Link to="/#benefits" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("features")}</Link>
-              <Link to="/pricing" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("pricing")}</Link>
+              <Link
+                to="/pricing"
+                onMouseEnter={() => prefetch(() => import("../pages/PricingPage"))}
+                className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+              >
+                {t("pricing")}
+              </Link>
               <Link to="/#dashboard" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">Dashboard</Link>
             </>
           )}
@@ -210,7 +217,14 @@ export const Navbar: React.FC = () => {
               <>
                 <Link to="/" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("home")}</Link>
                 <Link to="/#benefits" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("features")}</Link>
-                <Link to="/pricing" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("pricing")}</Link>
+                <Link
+                  to="/pricing"
+                  onClick={() => setOpen(false)}
+                  onMouseEnter={() => prefetch(() => import("../pages/PricingPage"))}
+                  className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                >
+                  {t("pricing")}
+                </Link>
                 <Link to="/#dashboard" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">Dashboard</Link>
               </>
             )}
