@@ -131,3 +131,4 @@ export const SupportChat: React.FC = () => {
     </div>
   );
 };
+export default SupportChat;
