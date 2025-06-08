@@ -273,7 +273,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Sashimi Selectie", en: "Sashimi Selection" },
         price: "€32.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grilled-fish-u3U1XCADVetX66E1cJIh5czogYn2Je.png",
+        image: "src/assets/afbeeldingen/Sashimi-Selection.webp",
         rating: 4.8,
         popular: true,
         calories: 280,
@@ -282,7 +282,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Tonkotsu Ramen", en: "Tonkotsu Ramen" },
         price: "€16.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shrimp-0LmDnJVOiwfP8YBrEiLnRmW4dr6I6w.png",
+        image: "src/assets/afbeeldingen/Tonkotsu-Ramen.webp",
         rating: 4.7,
         calories: 520,
         prepTime: 20
@@ -290,7 +290,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Dim Sum Platter", en: "Dim Sum Platter" },
         price: "€22.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paella-HHvXuGM9E700Wa0JA98VDUELzTfB55.png",
+        image: "src/assets/afbeeldingen/Dim-Sum-Platter.webp",
         rating: 4.6,
         calories: 410,
         prepTime: 25
@@ -334,6 +334,14 @@ const themes: Theme[] = [
         rating: 4.4,
         calories: 180,
         prepTime: 5
+      },
+      {
+        name: { nl: "Jackfruit Curry", en: "Jackfruit Curry" },
+        price: "€18.00",
+        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paella-HHvXuGM9E700Wa0JA98VDUELzTfB55.png",
+        rating: 4.5,
+        calories: 380,
+        prepTime: 18
       },
       {
         name: { nl: "Raw Zucchini Pasta", en: "Raw Zucchini Pasta" },
@@ -850,66 +858,68 @@ const RestaurantThemesPage: React.FC = () => {
                 </div>
               </div>
               
-              {/* Restaurant Image Container with title overlay */}
+              {/* Restaurant Image Container - Much larger and extending down */}
               <div className="relative">
-                <div 
-                  className="w-full h-48 bg-cover bg-center"
-                  style={{ 
-                    backgroundImage: "url(src/assets/afbeeldingen/greenkitchen.png)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center"
-                  }}
-                ></div>
+                <div className="relative">
+                  <div 
+                    className="w-full h-56 bg-cover bg-center"
+                    style={{ 
+                      backgroundImage: "url(src/assets/afbeeldingen/greenkitchen.png)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center"
+                    }}
+                  ></div>
+                  {/* Extended smooth curved bottom transition */}
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-green-100 to-green-200"
+                    style={{
+                      clipPath: "ellipse(100% 100% at 50% 100%)"
+                    }}
+                  ></div>
+                </div>
                 {/* Title overlay */}
-                <div className="absolute top-4 left-4 right-4">
-                  <h2 className="text-2xl font-bold text-white drop-shadow-lg text-center whitespace-nowrap overflow-hidden text-ellipsis">
+                <div className="absolute top-8 left-4 right-4">
+                  <h2 className="text-xl font-bold text-white drop-shadow-lg text-center">
                     {language === "nl" ? theme.name : theme.nameEn}
                   </h2>
                 </div>
               </div>
               
-              {/* Categories - 4 Very Small White Rounded Squares */}
-              <div className="px-4 py-1">
+              {/* Categories - positioned over the curved transition with more space */}
+              <div className="px-8 -mt-8 mb-6 relative z-10">
                 <div className="flex justify-between">
                   {theme.categories.map((category: ThemeCategory, index: number) => (
                     <div key={index} className="flex flex-col items-center">
-                      <div className="bg-white rounded-xl w-10 h-10 flex items-center justify-center shadow-lg mb-1">
-                        <span className="text-base">{renderIcon(category.icon, "w-4 h-4") || category.icon}</span>
+                      <div className="bg-white rounded-xl w-14 h-14 flex items-center justify-center shadow-lg mb-2 border-2 border-green-200">
+                        <span className="text-xl">{renderIcon(category.icon, "w-6 h-6") || category.icon}</span>
                       </div>
-                      <div className="text-green-800 text-xs font-medium">{category[language]}</div>
+                      <div className="text-green-800 text-xs font-semibold text-center leading-tight">{category[language]}</div>
                     </div>
                   ))}
                 </div>
               </div>
               
-              {/* Menu Items - Very Compact Cards */}
-              <div className="px-4 space-y-1.5 mb-2 flex-1">
-                {theme.items.slice(0, 3).map((item: ThemeItem, index: number) => (
-                  <div key={index} className="bg-white rounded-lg p-2.5 shadow-lg">
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-8 h-8 bg-gray-200 rounded-full bg-cover bg-center shadow-sm flex-shrink-0"
-                        style={{ backgroundImage: `url(${item.image})` }}
-                      ></div>
+              {/* Menu Items - Compact and small */}
+              <div className="px-4 space-y-1.5 flex-1">
+                {theme.items.slice(0, 4).map((item: ThemeItem, index: number) => (
+                  <div key={index} className="bg-white rounded-lg p-2.5 shadow-sm border border-green-100">
+                    <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="text-xs font-bold text-gray-800 leading-tight">
+                        <div className="text-sm font-bold text-gray-800 mb-1">
                           {item.name[language]}
                         </div>
-                        <div className="text-sm font-bold text-green-600">{item.price}</div>
+                        <div className="text-base font-bold text-green-600">{item.price}</div>
                       </div>
+                      <button className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm transition-colors">
+                        Order
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
               
-              {/* Bestel Nu Button */}
-              <div className="px-4 pb-4">
-                <div className="bg-green-600 hover:bg-green-700 text-white text-center py-4 rounded-2xl shadow-lg">
-                  <span className="text-xl font-bold">
-                    {language === "nl" ? "Bestel Nu" : "Order Now"}
-                  </span>
-                </div>
-              </div>
+              {/* Bottom spacing */}
+              <div className="h-4"></div>
             </div>
           </div>
         </div>
