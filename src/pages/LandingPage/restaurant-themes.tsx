@@ -369,7 +369,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Opera Taart", en: "Opera Cake" },
         price: "€28.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/croissants-xaPRIimoQpXVqpcbFZa35MUzmKuBJY.png",
+        image: "src/assets/afbeeldingen/Opera-taart.webp",
         rating: 4.9,
         popular: true,
         calories: 450,
@@ -378,7 +378,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Macaron Box 12st", en: "Macaron Box 12pcs" },
         price: "€24.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/latte-art-4ERbYE98xd9x4m7767Q1Dw5jTQMlWh.png",
+        image: "src/assets/afbeeldingen/macaron.webp",
         rating: 4.7,
         calories: 85,
         prepTime: 15
@@ -386,7 +386,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Chocolate Eclair", en: "Chocolate Eclair" },
         price: "€6.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/coffee-pour-ymlWAw9FjlnZHlOrPTHNGcoGwAJvR0.png",
+        image: "src/assets/afbeeldingen/Chocolate-Eclair.webp",
         rating: 4.6,
         calories: 320,
         prepTime: 20
@@ -394,7 +394,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Mille-feuille", en: "Mille-feuille" },
         price: "€8.90",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/croissants-xaPRIimoQpXVqpcbFZa35MUzmKuBJY.png",
+        image: "src/assets/afbeeldingen/MILLE-FEULLIE.webp",
         rating: 4.5,
         calories: 380,
         prepTime: 25
@@ -425,7 +425,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Margherita DOC", en: "Margherita DOC" },
         price: "€14.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paella-HHvXuGM9E700Wa0JA98VDUELzTfB55.png",
+        image: "src/assets/afbeeldingen/pizza.webp",
         rating: 4.9,
         popular: true,
         calories: 320,
@@ -434,15 +434,15 @@ const themes: Theme[] = [
       {
         name: { nl: "Quattro Stagioni", en: "Quattro Stagioni" },
         price: "€18.90",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grilled-fish-u3U1XCADVetX66E1cJIh5czogYn2Je.png",
+        image: "src/assets/afbeeldingen/Quattro-Stagioni.webp",
         rating: 4.8,
         calories: 420,
         prepTime: 15
       },
       {
-        name: { nl: "Burrata Antipasto", en: "Burrata Antipasto" },
+        name: { nl: "Burrata Antipasto", en: "BurrataAntipasto" },
         price: "€12.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shrimp-0LmDnJVOiwfP8YBrEiLnRmW4dr6I6w.png",
+        image: "src/assets/afbeeldingen/Burrata-Antipasto.webp",
         rating: 4.7,
         calories: 280,
         prepTime: 8
@@ -450,7 +450,7 @@ const themes: Theme[] = [
       {
         name: { nl: "Carbonara Classica", en: "Carbonara Classica" },
         price: "€16.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/coffee-pour-ymlWAw9FjlnZHlOrPTHNGcoGwAJvR0.png",
+        image: "src/assets/afbeeldingen/Carbonara-Classica.webp",
         rating: 4.8,
         calories: 450,
         prepTime: 18
@@ -482,35 +482,23 @@ const themes: Theme[] = [
       {
         name: { nl: "Pistachio Gelato", en: "Pistachio Gelato" },
         price: "€4.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cold-drink-M8CqnPx7HmM60XFEWdIciwA2F1coFu.png",
-        rating: 4.8,
-        popular: true,
-        calories: 180,
-        prepTime: 2
+        image: "src/assets/afbeeldingen/ijs.webp",
+        popular: true
       },
       {
         name: { nl: "Mango Sorbet", en: "Mango Sorbet" },
         price: "€4.00",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/latte-art-4ERbYE98xd9x4m7767Q1Dw5jTQMlWh.png",
-        rating: 4.6,
-        calories: 120,
-        prepTime: 2
+        image: "src/assets/afbeeldingen/mango-sorbet.webp"
       },
       {
         name: { nl: "Oreo Chocolate Milkshake", en: "Oreo Chocolate Milkshake" },
         price: "€6.50",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/coffee-pour-ymlWAw9FjlnZHlOrPTHNGcoGwAJvR0.png",
-        rating: 4.7,
-        calories: 350,
-        prepTime: 5
+        image: "src/assets/afbeeldingen/oreo-drink.webp"
       },
       {
         name: { nl: "Affogato", en: "Affogato" },
         price: "€6.90",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/macallan-ctNr7eJ3nbNAit2nRa8YOoHcHenaH3.png",
-        rating: 4.9,
-        calories: 220,
-        prepTime: 3
+        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/macallan-ctNr7eJ3nbNAit2nRa8YOoHcHenaH3.png"
       },
     ],
   }
@@ -1035,65 +1023,162 @@ const RestaurantThemesPage: React.FC = () => {
               </div>
               
               {/* App Header */}
-              <div className="text-white p-4 text-center">
-                <h2 className="text-xl font-bold leading-tight">
-                  {language === "nl" ? theme.name : theme.nameEn}
-                </h2>
+              <div className="text-white p-3 text-center">
+                <div className="bg-white/20 backdrop-blur-sm border border-white/40 rounded-lg px-8 py-2 inline-block">
+                  <h2 className="text-lg font-bold leading-tight tracking-wide">
+                    {language === "nl" ? theme.name : theme.nameEn}
+                  </h2>
+                </div>
               </div>
               
               {/* Categories - 2x2 Grid with rounded rectangles */}
               <div className="px-4 mb-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   {theme.categories.map((category: ThemeCategory, index: number) => (
-                    <div key={index} className="bg-white/90 rounded-2xl p-4 text-center shadow-sm">
-                      <div className="text-2xl mb-2">{renderIcon(category.icon, "w-6 h-6") || category.icon}</div>
-                      <div className="text-gray-800 text-sm font-semibold">{category[language]}</div>
+                    <div key={index} className="bg-white/90 rounded-xl p-3 text-center shadow-sm">
+                      <div className="text-lg mb-1">{renderIcon(category.icon, "w-4 h-4") || category.icon}</div>
+                      <div className="text-gray-800 text-xs font-semibold">{category[language]}</div>
                     </div>
                   ))}
                 </div>
               </div>
               
-              {/* Menu Items - Horizontal cards like in the image */}
-              <div className="px-4 space-y-3 mb-4 flex-1">
-                {theme.items.slice(0, 3).map((item: ThemeItem, index: number) => (
-                  <div key={index} className="bg-white/95 rounded-2xl p-3 shadow-lg">
-                    <div className="flex items-center gap-3">
+              {/* Menu Items - Horizontal cards with heart icons */}
+              <div className="px-4 space-y-2 flex-1">
+                {theme.items.slice(0, 4).map((item: ThemeItem, index: number) => (
+                  <div key={index} className="bg-white/95 rounded-xl p-2.5 shadow-lg">
+                    <div className="flex items-center gap-2">
                       <div 
-                        className="w-12 h-12 bg-gray-200 rounded-full bg-cover bg-center shadow-sm flex-shrink-0"
+                        className="w-9 h-9 bg-gray-200 rounded-full bg-cover bg-center shadow-sm flex-shrink-0"
                         style={{ backgroundImage: `url(${item.image})` }}
                       ></div>
                       <div className="flex-1">
-                        <div className="text-sm font-bold text-gray-800 leading-tight mb-1">
+                        <div className="text-xs font-bold text-gray-800 leading-tight mb-0.5">
                           {item.name[language]}
                         </div>
-                        <div className="text-lg font-bold text-green-600">{item.price}</div>
+                        <div className="text-sm font-bold text-green-600">{item.price}</div>
                       </div>
                       <div className="text-right">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">{item.rating}</span>
-                        </div>
+                        <button className="p-1 hover:bg-pink-50 rounded-full transition-colors">
+                          <span className="text-lg text-pink-500">♡</span>
+                        </button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
               
-              {/* Bestel Nu Button */}
-              <div className="px-4 pb-4">
-                <div className="bg-pink-600 hover:bg-pink-700 text-white text-center py-3 rounded-2xl shadow-lg">
-                  <span className="text-lg font-bold">
-                    {language === "nl" ? "Bestel Nu" : "Order Now"}
-                  </span>
-                </div>
-              </div>
+              {/* Empty space at bottom for clean look */}
+              <div className="h-8"></div>
             </div>
           </div>
         </div>
       )
     }
 
-    // Default layout for other themes
+    // Special layout for Neapolitan Pizzeria
+    if (theme.id === 7) {
+      return (
+        <div className="relative mx-3">
+          <div className="w-72 h-[560px] rounded-2xl shadow-2xl overflow-hidden border-3 border-gray-800 flex-shrink-0 relative transition-all duration-300 hover:scale-105 hover:shadow-3xl">
+            <div className="h-full flex flex-col bg-white">
+              {/* Phone Status Bar */}
+              <div className="bg-black text-white text-sm px-3 py-1.5 flex justify-between items-center">
+                <span className="text-sm font-medium">9:41</span>
+                <div className="flex gap-1">
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                </div>
+              </div>
+              
+              {/* App Header with Italian flag gradient */}
+              <div 
+                className="text-black p-4 text-center relative overflow-hidden"
+                style={{
+                  background: "linear-gradient(to right, #DC2626 0%, #EF4444 20%, #FFFFFF 40%, #FFFFFF 60%, #22C55E 80%, #16A34A 100%)"
+                }}
+              >
+                {/* Subtle overlay effect */}
+                <div 
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    background: "linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)",
+                    backgroundSize: "20px 20px"
+                  }}
+                ></div>
+                
+                <div className="relative z-10">
+                  <h2 className="text-lg font-bold leading-tight mb-1 text-black drop-shadow-sm">
+                    {language === "nl" ? theme.name : theme.nameEn}
+                  </h2>
+                  <p className="text-sm text-black/80 drop-shadow-sm">Autentica Napoletana</p>
+                </div>
+              </div>
+              
+              {/* Full width divider line */}
+              <div className="border-b border-gray-300"></div>
+              
+              {/* Categories - 4 Red squares in a row - better centered */}
+              <div className="px-4 my-4 bg-white">
+                <div className="flex gap-2 justify-center">
+                  {theme.categories.map((category: ThemeCategory, index: number) => (
+                    <div key={index} className="w-16 h-16 bg-red-600 rounded-lg p-2 flex flex-col items-center justify-center shadow-sm">
+                      <div className="text-white text-lg mb-1">{renderIcon(category.icon, "w-5 h-5") || category.icon}</div>
+                      <div className="text-white text-xs font-semibold text-center leading-tight">{category[language]}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Menu Items - 2x2 Grid with different ratings */}
+              <div className="px-4 flex-1 bg-white">
+                <div className="grid grid-cols-2 gap-3">
+                  {theme.items.slice(0, 4).map((item: ThemeItem, index: number) => {
+                    // Different ratings for each item: 5, 4.5, 3.5, 4
+                    const ratings = [5, 4.5, 3.5, 4];
+                    const itemRating = ratings[index] || 4;
+                    
+                    return (
+                      <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                        <div className="relative">
+                          <div 
+                            className="w-full h-16 bg-cover bg-center"
+                            style={{ backgroundImage: `url(${item.image})` }}
+                          ></div>
+                          <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                            {item.price}
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          <div className="text-xs font-bold text-gray-800 mb-1 leading-tight">
+                            {item.name[language]}
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex">
+                              {Array.from({ length: 5 }).map((_, starIndex) => (
+                                <Star 
+                                  key={starIndex} 
+                                  className={`w-2.5 h-2.5 ${starIndex < Math.floor(itemRating) ? 'fill-yellow-400 text-yellow-400' : starIndex === Math.floor(itemRating) && itemRating % 1 !== 0 ? 'fill-yellow-400/50 text-yellow-400' : 'text-gray-300'}`} 
+                                />
+                              ))}
+                            </div>
+                            <button className="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+              
+              {/* Empty space at bottom */}
+              <div className="h-8 bg-white"></div>
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="relative mx-3">
         <div className="w-72 h-[560px] rounded-2xl shadow-2xl overflow-hidden border-3 border-gray-800 flex-shrink-0 relative transition-all duration-300 hover:scale-105 hover:shadow-3xl">
