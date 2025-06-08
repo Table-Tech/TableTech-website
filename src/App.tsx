@@ -12,6 +12,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
 import { SupportChat } from "./pages/SupportChat";
 import KlantDemoPage from "./pages/KlantDemoPage";
+import RestaurantThemesPage from "./pages//LandingPage/restaurant-themes";
 
 import "./index.css";
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/demo" element={<KlantDemoPage />} />
+        <Route path="/themes" element={<RestaurantThemesPage />} />
       </Routes>
     </>
   );
