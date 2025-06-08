@@ -1015,6 +1015,84 @@ const RestaurantThemesPage: React.FC = () => {
       )
     }
 
+    // Special layout for French Patisserie
+    if (theme.id === 6) {
+      return (
+        <div className="relative mx-3">
+          <div className="w-72 h-[560px] rounded-2xl shadow-2xl overflow-hidden border-3 border-gray-800 flex-shrink-0 relative transition-all duration-300 hover:scale-105 hover:shadow-3xl">
+            <div 
+              className="h-full flex flex-col"
+              style={{
+                background: "linear-gradient(to bottom, #D42F7D, #F27DAA, #FFE6F0)"
+              }}
+            >
+              {/* Phone Status Bar */}
+              <div className="bg-black text-white text-sm px-3 py-1.5 flex justify-between items-center">
+                <span className="text-sm font-medium">9:41</span>
+                <div className="flex gap-1">
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                </div>
+              </div>
+              
+              {/* App Header */}
+              <div className="text-white p-4 text-center">
+                <h2 className="text-xl font-bold leading-tight">
+                  {language === "nl" ? theme.name : theme.nameEn}
+                </h2>
+              </div>
+              
+              {/* Categories - 2x2 Grid with rounded rectangles */}
+              <div className="px-4 mb-4">
+                <div className="grid grid-cols-2 gap-3">
+                  {theme.categories.map((category: ThemeCategory, index: number) => (
+                    <div key={index} className="bg-white/90 rounded-2xl p-4 text-center shadow-sm">
+                      <div className="text-2xl mb-2">{renderIcon(category.icon, "w-6 h-6") || category.icon}</div>
+                      <div className="text-gray-800 text-sm font-semibold">{category[language]}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Menu Items - Horizontal cards like in the image */}
+              <div className="px-4 space-y-3 mb-4 flex-1">
+                {theme.items.slice(0, 3).map((item: ThemeItem, index: number) => (
+                  <div key={index} className="bg-white/95 rounded-2xl p-3 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-12 h-12 bg-gray-200 rounded-full bg-cover bg-center shadow-sm flex-shrink-0"
+                        style={{ backgroundImage: `url(${item.image})` }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="text-sm font-bold text-gray-800 leading-tight mb-1">
+                          {item.name[language]}
+                        </div>
+                        <div className="text-lg font-bold text-green-600">{item.price}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-medium">{item.rating}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Bestel Nu Button */}
+              <div className="px-4 pb-4">
+                <div className="bg-pink-600 hover:bg-pink-700 text-white text-center py-3 rounded-2xl shadow-lg">
+                  <span className="text-lg font-bold">
+                    {language === "nl" ? "Bestel Nu" : "Order Now"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     // Default layout for other themes
     return (
       <div className="relative mx-3">
