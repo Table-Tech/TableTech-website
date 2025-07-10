@@ -504,7 +504,7 @@ export const BenefitsOne: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/30 via-gray-900/25 to-stone-900/35 z-0" />
 
       {/* Main content */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 h-full">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-16 lg:pt-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start lg:items-center min-h-0 py-8">
 
           {/* Left side - Enhanced Description with better glassmorphism */}
