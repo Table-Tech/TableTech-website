@@ -701,8 +701,8 @@ export const BenefitsThree: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/5 to-transparent pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
                   <div className="relative p-6 z-10">
-                    <h3 className="text-xl font-bold text-white mb-3 flex items-center drop-shadow-lg">
-                      💻 {dashboardScreens[currentDashboard].title}
+                    <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">
+                      {dashboardScreens[currentDashboard].title}
                     </h3>
                     <p className="text-white/90 text-base leading-relaxed drop-shadow-sm">
                       {dashboardScreens[currentDashboard].description}
@@ -731,8 +731,8 @@ export const BenefitsThree: React.FC = () => {
                   <h3 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Meer functies</h3>
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                        <span className="text-white text-lg font-bold">📱</span>
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30">
+                        <div className="w-4 h-4 bg-white rounded-sm"></div>
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-white drop-shadow-sm">Mobiele optimalisatie</p>
@@ -740,8 +740,8 @@ export const BenefitsThree: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                        <span className="text-white text-lg font-bold">📊</span>
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30">
+                        <div className="w-4 h-4 bg-white rounded-sm"></div>
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-white drop-shadow-sm">Dashboard analyse</p>
@@ -749,8 +749,8 @@ export const BenefitsThree: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                        <span className="text-white text-lg font-bold">🔄</span>
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30">
+                        <div className="w-4 h-4 bg-white rounded-sm"></div>
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-white drop-shadow-sm">Voorraadkoppeling</p>
@@ -758,8 +758,8 @@ export const BenefitsThree: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                        <span className="text-white text-lg font-bold">🛎️</span>
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30">
+                        <div className="w-4 h-4 bg-white rounded-sm"></div>
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-white drop-shadow-sm">Snelle service melding</p>
