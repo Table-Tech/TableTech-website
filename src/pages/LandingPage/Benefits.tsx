@@ -473,14 +473,24 @@ export const BenefitsOne: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
-                  className="bg-white/80 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
+                  className="relative overflow-hidden rounded-2xl shadow-xl"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                  }}
                 >
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                    📱 {appScreens[currentScreen].title}
-                  </h3>
-                  <p className="text-gray-800 text-base leading-relaxed">
-                    {appScreens[currentScreen].description}
-                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+                  <div className="relative p-6 z-10">
+                    <h3 className="text-xl font-bold text-white mb-3 flex items-center drop-shadow-lg">
+                      📱 {appScreens[currentScreen].title}
+                    </h3>
+                    <p className="text-white/90 text-base leading-relaxed drop-shadow-sm">
+                      {appScreens[currentScreen].description}
+                    </p>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
@@ -489,44 +499,54 @@ export const BenefitsOne: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="bg-white/75 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
+                className="relative overflow-hidden rounded-2xl shadow-xl"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(25px)',
+                  WebkitBackdropFilter: 'blur(25px)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
+                }}
               >
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Waarom mobiel bestellen?</h3>
-                <div className="space-y-2.5">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">⚡</span>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+                <div className="relative p-6 z-10">
+                  <h3 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Waarom mobiel bestellen?</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">⚡</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Geen wachttijden</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Direct bestellen zonder personeel</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Geen wachttijden</p>
-                      <p className="text-xs text-gray-700">Direct bestellen zonder personeel</p>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">📱</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Live order tracking</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Volg je bestelling realtime</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">📱</span>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">💳</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Contactloos betalen</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">iDEAL, Apple Pay en meer</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Live order tracking</p>
-                      <p className="text-xs text-gray-700">Volg je bestelling realtime</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">💳</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Contactloos betalen</p>
-                      <p className="text-xs text-gray-700">iDEAL, Apple Pay en meer</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">🎯</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Precisie bestellen</p>
-                      <p className="text-xs text-gray-700">Geen miscommunicatie meer</p>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">🎯</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Precisie bestellen</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Geen miscommunicatie meer</p>
+                      </div>
                     </div>
                   </div>
                 </div>

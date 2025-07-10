@@ -570,14 +570,14 @@ export const BenefitsThree: React.FC = () => {
     }
   ];
 
-  const startAutoSlide = () => {
+  const startAutoSlide = React.useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
     intervalRef.current = setInterval(() => {
       setCurrentDashboard((prev) => (prev + 1) % dashboardScreens.length);
     }, 9000); // 9 seconden per slide
-  };
+  }, [dashboardScreens.length]);
 
   const handleManualClick = (index: number) => {
     setCurrentDashboard(index);
@@ -598,13 +598,12 @@ export const BenefitsThree: React.FC = () => {
     if (!isManualMode) {
       startAutoSlide();
     }
-    
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isManualMode, dashboardScreens.length]);
+  }, [isManualMode, startAutoSlide]);
 
   return (
     <section
@@ -690,14 +689,25 @@ export const BenefitsThree: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
-                  className="bg-white/80 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
+                  className="relative overflow-hidden rounded-2xl shadow-xl"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.18)',
+                    backdropFilter: 'blur(25px)',
+                    WebkitBackdropFilter: 'blur(25px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.25)',
+                  }}
                 >
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                    💻 {dashboardScreens[currentDashboard].title}
-                  </h3>
-                  <p className="text-gray-800 text-base leading-relaxed">
-                    {dashboardScreens[currentDashboard].description}
-                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/5 to-transparent pointer-events-none"></div>
+                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+                  <div className="relative p-6 z-10">
+                    <h3 className="text-xl font-bold text-white mb-3 flex items-center drop-shadow-lg">
+                      💻 {dashboardScreens[currentDashboard].title}
+                    </h3>
+                    <p className="text-white/90 text-base leading-relaxed drop-shadow-sm">
+                      {dashboardScreens[currentDashboard].description}
+                    </p>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
@@ -706,44 +716,55 @@ export const BenefitsThree: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="bg-white/75 backdrop-blur-md border border-white/40 rounded-2xl p-5 shadow-lg"
+                className="relative overflow-hidden rounded-2xl shadow-xl"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  boxShadow: '0 10px 35px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                }}
               >
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Meer functies</h3>
-                <div className="space-y-2.5">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">📱</span>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-transparent pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/35 to-transparent"></div>
+                <div className="relative p-6 z-10">
+                  <h3 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Meer functies</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">📱</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Mobiele optimalisatie</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Direct bestellen vanaf elke smartphone</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Mobiele optimalisatie</p>
-                      <p className="text-xs text-gray-700">Direct bestellen vanaf elke smartphone</p>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">📊</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Dashboard analyse</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Realtime inzichten in verkoop en voorkeuren</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">📊</span>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">🔄</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Voorraadkoppeling</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Synchronisatie met je keukensysteem</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Dashboard analyse</p>
-                      <p className="text-xs text-gray-700">Realtime inzichten in verkoop en voorkeuren</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">🔄</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Voorraadkoppeling</p>
-                      <p className="text-xs text-gray-700">Synchronisatie met je keukensysteem</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
-                      <span className="text-white text-sm font-bold">🛎️</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Snelle service melding</p>
-                      <p className="text-xs text-gray-700">Gasten kunnen personeel oproepen</p>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                        <span className="text-white text-lg font-bold">🛎️</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white drop-shadow-sm">Snelle service melding</p>
+                        <p className="text-xs text-white/80 drop-shadow-sm">Gasten kunnen personeel oproepen</p>
+                      </div>
                     </div>
                   </div>
                 </div>
