@@ -72,7 +72,11 @@ export const Navbar: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-black/10 backdrop-blur-md border-b border-white/10 text-white transition-all duration-300 shadow-lg">
       <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 py-6 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold tracking-wide text-white drop-shadow-lg">
+        {/* Enhanced TableTech logo met hover effect */}
+        <Link 
+          to="/" 
+          className="text-2xl font-bold tracking-wide text-white drop-shadow-lg transition-all duration-300 transform hover:text-[#ffe7c3] hover:scale-105 hover:drop-shadow-2xl active:scale-95"
+        >
           TableTech
         </Link>
 
@@ -81,10 +85,10 @@ export const Navbar: React.FC = () => {
             <>
               <button 
                 onClick={() => scrollToSection('hero')} 
-                className={`px-3 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
+                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
                   activeSection === 'hero' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200'
+                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
+                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
                 }`}
                 type="button"
               >
@@ -92,10 +96,10 @@ export const Navbar: React.FC = () => {
               </button>
               <button 
                 onClick={() => scrollToSection('benefits')} 
-                className={`px-3 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
+                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
                   activeSection === 'benefits' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200'
+                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
+                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
                 }`}
                 type="button"
               >
@@ -103,10 +107,10 @@ export const Navbar: React.FC = () => {
               </button>
               <button 
                 onClick={() => scrollToSection('pricing')} 
-                className={`px-3 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
+                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
                   activeSection === 'pricing' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200'
+                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
+                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
                 }`}
                 type="button"
               >
@@ -114,10 +118,10 @@ export const Navbar: React.FC = () => {
               </button>
               <button 
                 onClick={() => scrollToSection('dashboard')} 
-                className={`px-3 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
+                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
                   activeSection === 'dashboard' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200'
+                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
+                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
                 }`}
                 type="button"
               >
@@ -126,16 +130,31 @@ export const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <Link to="/" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("home")}</Link>
-              <Link to="/#benefits" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("features")}</Link>
+              <Link 
+                to="/" 
+                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+              >
+                {t("home")}
+              </Link>
+              <Link 
+                to="/#benefits" 
+                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+              >
+                {t("features")}
+              </Link>
               <Link
                 to="/pricing"
                 onMouseEnter={() => prefetch(() => import("../pages/PricingPage"))}
-                className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
               >
                 {t("pricing")}
               </Link>
-              <Link to="/#dashboard" className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">Dashboard</Link>
+              <Link 
+                to="/#dashboard" 
+                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+              >
+                Dashboard
+              </Link>
             </>
           )}
 
@@ -144,7 +163,7 @@ export const Navbar: React.FC = () => {
 
           <button
             onClick={() => scrollToSection('cta')}
-            className="bg-[#7b4f35] hover:bg-[#5e3b29] hover:scale-105 text-white px-5 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95 shadow-lg"
+            className="bg-[#7b4f35] hover:bg-[#5e3b29] hover:scale-110 hover:shadow-xl text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95 shadow-lg"
             type="button"
           >
             {t("signup")}
@@ -153,11 +172,11 @@ export const Navbar: React.FC = () => {
 
         <button 
           onClick={() => setOpen(!open)} 
-          className="md:hidden focus:outline-none transform active:scale-95 transition-transform duration-150" 
+          className="md:hidden focus:outline-none transform active:scale-95 transition-transform duration-150 hover:scale-110 hover:text-[#ffe7c3]" 
           aria-label={open ? "Sluit menu" : "Open menu"}
           type="button"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
           </svg>
         </button>
@@ -170,10 +189,10 @@ export const Navbar: React.FC = () => {
               <>
                 <button 
                   onClick={() => scrollToSection('hero')} 
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
+                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
                     activeSection === 'hero' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10'
+                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
+                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
                   }`}
                   type="button"
                 >
@@ -181,10 +200,10 @@ export const Navbar: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => scrollToSection('benefits')} 
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
+                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
                     activeSection === 'benefits' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10'
+                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
+                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
                   }`}
                   type="button"
                 >
@@ -192,10 +211,10 @@ export const Navbar: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => scrollToSection('pricing')} 
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
+                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
                     activeSection === 'pricing' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10'
+                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
+                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
                   }`}
                   type="button"
                 >
@@ -203,10 +222,10 @@ export const Navbar: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => scrollToSection('dashboard')} 
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
+                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
                     activeSection === 'dashboard' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10'
+                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
+                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
                   }`}
                   type="button"
                 >
@@ -215,23 +234,41 @@ export const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("home")}</Link>
-                <Link to="/#benefits" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">{t("features")}</Link>
+                <Link 
+                  to="/" 
+                  onClick={() => setOpen(false)} 
+                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                >
+                  {t("home")}
+                </Link>
+                <Link 
+                  to="/#benefits" 
+                  onClick={() => setOpen(false)} 
+                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                >
+                  {t("features")}
+                </Link>
                 <Link
                   to="/pricing"
                   onClick={() => setOpen(false)}
                   onMouseEnter={() => prefetch(() => import("../pages/PricingPage"))}
-                  className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
                 >
                   {t("pricing")}
                 </Link>
-                <Link to="/#dashboard" onClick={() => setOpen(false)} className="px-3 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 transition-all duration-200 transform active:scale-95 drop-shadow-sm">Dashboard</Link>
+                <Link 
+                  to="/#dashboard" 
+                  onClick={() => setOpen(false)} 
+                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                >
+                  Dashboard
+                </Link>
               </>
             )}
             
             <button 
               onClick={() => scrollToSection('cta')} 
-              className="mt-4 bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-5 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95"
+              className="mt-4 bg-[#7b4f35] hover:bg-[#5e3b29] hover:scale-110 hover:shadow-xl text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform active:scale-95"
               type="button"
             >
               {t("signup")}
