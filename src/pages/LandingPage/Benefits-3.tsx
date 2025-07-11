@@ -615,7 +615,7 @@ export const BenefitsThree: React.FC = () => {
       <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
 
       {/* Main content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-20 lg:pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
 
           {/* Left side - Dashboard Tablet */}
@@ -667,7 +667,7 @@ export const BenefitsThree: React.FC = () => {
           </div>
 
           {/* Right side - Description & Features */}
-          <div className="space-y-4 order-2 lg:order-2 max-h-full overflow-hidden">
+          <div className="space-y-4 order-2 lg:order-2 max-h-full overflow-hidden lg:-mt-24">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -689,86 +689,185 @@ export const BenefitsThree: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
-                  className="relative overflow-hidden rounded-2xl shadow-xl"
+                  className="relative overflow-hidden rounded-2xl shadow-xl h-32"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.18)',
-                    backdropFilter: 'blur(25px)',
-                    WebkitBackdropFilter: 'blur(25px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.25)',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/5 to-transparent pointer-events-none"></div>
-                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
-                  <div className="relative p-6 z-10">
-                    <h3 className="text-xl font-bold text-white mb-3 drop-shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
+                  <div className="relative p-6 z-10 h-full flex flex-col justify-center">
+                    <h3 className="text-xl font-bold text-white mb-3"
+                        style={{
+                          textShadow: '0 2px 6px rgba(0,0,0,0.5)'
+                        }}>
                       {dashboardScreens[currentDashboard].title}
                     </h3>
-                    <p className="text-white/90 text-base leading-relaxed drop-shadow-sm">
+                    <p className="text-white/95 text-base leading-relaxed"
+                       style={{
+                         textShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                       }}>
                       {dashboardScreens[currentDashboard].description}
                     </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Meer functies sectie */}
+              {/* Enhanced Mobile Benefits with premium glassmorphism */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="relative overflow-hidden rounded-2xl shadow-xl"
+                className="relative overflow-hidden rounded-3xl shadow-2xl"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  boxShadow: '0 10px 35px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(30px)',
+                  WebkitBackdropFilter: 'blur(30px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 30px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-transparent pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/35 to-transparent"></div>
-                <div className="relative p-6 z-10">
-                  <h3 className="text-lg font-bold text-white mb-4 drop-shadow-lg">Meer functies</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30">
-                        <div className="w-4 h-4 bg-white rounded-sm"></div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white drop-shadow-sm">Mobiele optimalisatie</p>
-                        <p className="text-xs text-white/80 drop-shadow-sm">Direct bestellen vanaf elke smartphone</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30">
-                        <div className="w-4 h-4 bg-white rounded-sm"></div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white drop-shadow-sm">Dashboard analyse</p>
-                        <p className="text-xs text-white/80 drop-shadow-sm">Realtime inzichten in verkoop en voorkeuren</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30">
-                        <div className="w-4 h-4 bg-white rounded-sm"></div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white drop-shadow-sm">Voorraadkoppeling</p>
-                        <p className="text-xs text-white/80 drop-shadow-sm">Synchronisatie met je keukensysteem</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30">
-                        <div className="w-4 h-4 bg-white rounded-sm"></div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white drop-shadow-sm">Snelle service melding</p>
-                        <p className="text-xs text-white/80 drop-shadow-sm">Gasten kunnen personeel oproepen</p>
-                      </div>
-                    </div>
-                  </div>
+                {/* Gradient overlay for depth */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/3 to-transparent pointer-events-none"></div>
+                
+                {/* Subtle animated background pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-3xl animate-pulse"></div>
+                  <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
                 </div>
-              </motion.div>
+                
+                <div className="relative p-6 z-10">
+                  <div className="text-center mb-6">
+                    <h3 className="text-lg font-bold text-white mb-2"
+                        style={{
+                          textShadow: '0 2px 8px rgba(0,0,0,0.6)'
+                        }}>
+                      Meer functies
+                    </h3>
+                    <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <motion.div 
+                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-white group-hover:text-blue-100 transition-colors"
+                           style={{
+                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                           }}>
+                          Mobiele optimalisatie
+                        </p>
+                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                           style={{
+                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                           }}>
+                          Direct bestellen vanaf elke smartphone
+                        </p>
+                      </div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-white group-hover:text-green-100 transition-colors"
+                           style={{
+                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                           }}>
+                          Dashboard analyse
+                        </p>
+                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                           style={{
+                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                           }}>
+                          Realtime inzichten in verkoop en voorkeuren
+                        </p>
+                      </div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-white group-hover:text-purple-100 transition-colors"
+                           style={{
+                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                           }}>
+                          Voorraadkoppeling
+                        </p>
+                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                           style={{
+                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                           }}>
+                          Synchronisatie met je keukensysteem
+                        </p>
+                      </div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.07 14H2.72c-.18 0-.35-.07-.47-.2A.67.67 0 012 13.33c0-.18.08-.35.25-.47L9.93 6c.12-.12.3-.2.47-.2.18 0 .35.08.47.2l7.68 6.86c.17.12.25.3.25.47 0 .18-.08.35-.25.47-.12.13-.3.2-.47.2h-1.35" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-white group-hover:text-orange-100 transition-colors"
+                           style={{
+                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                           }}>
+                          Snelle service melding
+                        </p>
+                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                           style={{
+                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                           }}>
+                          Gasten kunnen personeel oproepen
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
+                  
+              </div>
+            </motion.div>
+            {/* Bottom accent line - moved outside card for correct alignment */}
+            <div className="flex flex-col items-center w-full mt-4">
+              <div className="w-2/3 border-t border-white/10 mb-2"></div>
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+              </div>
+            </div>
             </div>
           </div>
 
