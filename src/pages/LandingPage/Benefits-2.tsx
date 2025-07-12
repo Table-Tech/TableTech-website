@@ -142,7 +142,7 @@ export const BenefitsTwo: React.FC = () => {
   return (
     <section
       id="benefits-2"
-      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat snap-start shrink-0 overflow-hidden"
+      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
       {/* Enhanced overlay with subtle gradient */}

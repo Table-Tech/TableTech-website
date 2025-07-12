@@ -1278,7 +1278,7 @@ const RestaurantThemesPage: React.FC = () => {
     <div
       className="min-h-screen py-8 relative"
       style={{
-        backgroundImage: "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-4tHeJgli7dPFhLHhB0XT85YWyCoiD8.png)",
+        backgroundImage: "url(/src/assets/afbeeldingen/optie4.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
