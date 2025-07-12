@@ -19,14 +19,14 @@ export const HorizontalScroll: React.FC = () => {
     const ctx = gsap.context(() => {
       gsap.to(panels, {
         xPercent: -100 * (panels.length - 1),
-        ease: "none",
+        ease: "power1.out", // soepeler
         scrollTrigger: {
           trigger: container,
           start: "top top",
           pin: true,
-          scrub: 1,
+          scrub: 0.3, // sneller
           anticipatePin: 1, // 💡 voorkomt flitsen
-          snap: 1 / (panels.length - 1),
+          // snap verwijderd voor direct scrollen
           end: () => "+=" + container.offsetWidth,
         },
       });
