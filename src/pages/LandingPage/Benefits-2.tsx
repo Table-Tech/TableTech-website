@@ -33,7 +33,7 @@ const initialTables: Table[] = [
   // Zone B tables (2x2 grid, alle 4p) - groter, meer verspreid en meer naar rechts
   { id: 7, name: "T7", seats: 4, status: "vrij", duration: "0u 0m", shape: "square", position: { x: 70, y: 26 }, zone: "B", paid: false, bill: 0, hasOrder: false },
   { id: 8, name: "T8", seats: 4, status: "bezet", duration: "0u 45m", shape: "square", position: { x: 84, y: 26 }, zone: "B", customerType: "family", dish: "Voorgerecht", paid: false, bill: 28.5, hasOrder: true },
-  { id: 9, name: "T9", seats: 4, status: "bezet", duration: "0u 5m", shape: "square", position: { x: 70, y: 44 }, zone: "B", customerType: "business", paid: false, bill: 52.75, hasOrder: true },
+  { id: 9, name: "T9", seats: 4, status: "eten-geleverd", duration: "1u 4m", shape: "square", position: { x: 70, y: 44 }, zone: "B", dish: "Toetje", paid: true, bill: 52.75, hasOrder: true },
   { id: 10, name: "T10", seats: 4, status: "bezet", duration: "1u 20m", shape: "square", position: { x: 84, y: 44 }, zone: "B", customerType: "couple", dish: "Hoofdgerecht", paid: false, bill: 52.75, hasOrder: true },
 
   // Zone C tables (5 rectangles, alle 8p) - groter en beter gecentreerd
@@ -45,13 +45,13 @@ const initialTables: Table[] = [
 ];
 
 const statusColors = {
-  vrij: "bg-gray-500/60 border-gray-400/70",
-  bezet: "bg-orange-500/70 border-orange-400/80", 
-  "bijna-klaar": "bg-yellow-500/70 border-yellow-400/80",
-  "wacht-personeel": "bg-red-500/70 border-red-400/80",
-  "nog-niet-besteld": "bg-orange-500/70 border-orange-400/80",
-  "eten-geleverd": "bg-green-500/70 border-green-400/80",
-  gereserveerd: "bg-yellow-600/70 border-yellow-500/80",
+  vrij: "bg-slate-600/80 border border-slate-400/60 shadow-lg",
+  bezet: "bg-orange-500/85 border border-orange-400/70 shadow-lg", 
+  "bijna-klaar": "bg-yellow-500/85 border border-yellow-400/70 shadow-lg",
+  "wacht-personeel": "bg-red-500/85 border border-red-400/70 shadow-lg",
+  "nog-niet-besteld": "bg-orange-500/85 border border-orange-400/70 shadow-lg",
+  "eten-geleverd": "bg-emerald-500/85 border border-emerald-400/70 shadow-lg",
+  gereserveerd: "bg-purple-600/85 border border-purple-400/70 shadow-lg",
 };
 
 const statusLabels = {
@@ -181,7 +181,7 @@ export const BenefitsTwo: React.FC = () => {
             <div className="relative h-64 w-full bg-gray-800/60 backdrop-blur-xl rounded-xl border border-gray-600/40 p-3 shadow-xl mb-4">
               
               {/* Zone A Background - Groter */}
-              <div className="absolute top-4 left-4 w-48 h-32 bg-blue-900/30 border-2 border-blue-500/50 rounded-xl backdrop-blur-sm">
+              <div className="absolute top-4 left-4 w-48 h-32 bg-blue-900/25 border border-blue-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                   <span className="text-white text-xs font-medium">Zone A</span>
@@ -189,7 +189,7 @@ export const BenefitsTwo: React.FC = () => {
               </div>
 
               {/* Zone B Background - Groter */}
-              <div className="absolute top-4 right-4 w-48 h-32 bg-green-900/30 border-2 border-green-500/50 rounded-xl backdrop-blur-sm">
+              <div className="absolute top-4 right-4 w-48 h-32 bg-green-900/25 border border-green-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   <span className="text-white text-xs font-medium">Zone B</span>
@@ -197,7 +197,7 @@ export const BenefitsTwo: React.FC = () => {
               </div>
 
               {/* Zone C Background - Groter */}
-              <div className="absolute bottom-4 left-4 right-4 h-20 bg-purple-900/30 border-2 border-purple-500/50 rounded-xl backdrop-blur-sm">
+              <div className="absolute bottom-4 left-4 right-4 h-20 bg-purple-900/25 border border-purple-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
                   <span className="text-white text-xs font-medium">Zone C</span>
@@ -208,9 +208,11 @@ export const BenefitsTwo: React.FC = () => {
               {tables.map((table) => {
                 const { positionClasses, arrowClasses } = getTooltipPosition(table);
 
-                // Force T10 to always be orange
-                const tableColorClass = table.id === 10
-                  ? "bg-orange-500/70 border-orange-400/80"
+                // Zone C tables get special purple styling, T10 stays orange
+                const tableColorClass = table.zone === "C" && table.id !== 10
+                  ? "bg-purple-600/85 border border-purple-400/70 shadow-lg"
+                  : table.id === 10
+                  ? "bg-orange-500/85 border border-orange-400/70 shadow-lg"
                   : statusColors[table.status];
 
                 return (
@@ -230,7 +232,7 @@ export const BenefitsTwo: React.FC = () => {
                     <div
                       className={`
                         ${tableColorClass} 
-                        border-2 shadow-lg cursor-pointer transition-all duration-300 ease-out backdrop-blur-sm
+                        cursor-pointer transition-all duration-200 ease-out backdrop-blur-sm
                         hover:brightness-110 hover:shadow-xl hover:scale-105
                         ${
                           table.shape === "square"
@@ -248,11 +250,11 @@ export const BenefitsTwo: React.FC = () => {
                       {table.zone !== "C" && table.status !== "vrij" && table.status !== "nog-niet-besteld" && table.status !== "gereserveerd" && (
                         <div className="absolute -top-0.5 -right-0.5">
                           {table.paid ? (
-                            <div className="bg-green-500 rounded-full w-2 h-2 flex items-center justify-center">
+                            <div className="bg-green-500 rounded-full w-2 h-2 flex items-center justify-center shadow-sm">
                               <span className="text-white text-[8px]">💳</span>
                             </div>
                           ) : (
-                            <div className="bg-orange-500 rounded-full w-2 h-2 flex items-center justify-center">
+                            <div className="bg-orange-500 rounded-full w-2 h-2 flex items-center justify-center shadow-sm">
                               <span className="text-white text-[8px]">⚠️</span>
                             </div>
                           )}
@@ -261,19 +263,19 @@ export const BenefitsTwo: React.FC = () => {
 
                       {/* Status icons */}
                       {table.zone !== "C" && table.status === "nog-niet-besteld" && (
-                        <div className="absolute -top-1 -left-1 bg-orange-500 rounded-full w-3 h-3 flex items-center justify-center">
+                        <div className="absolute -top-1 -left-1 bg-orange-500 rounded-full w-3 h-3 flex items-center justify-center shadow-sm">
                           <span className="text-white text-[8px]">🍽️</span>
                         </div>
                       )}
 
                       {((table.zone !== "C" && table.status === "eten-geleverd" && table.id !== 10) || table.id === 10) && (
-                        <div className="absolute -top-1 -left-1 bg-green-500 rounded-full w-3 h-3 flex items-center justify-center">
+                        <div className="absolute -top-1 -left-1 bg-green-500 rounded-full w-3 h-3 flex items-center justify-center shadow-sm">
                           <span className="text-white text-[8px]">✅</span>
                         </div>
                       )}
                       {/* Extra: groen vinkje icoon bij T3 als bestelling geleverd */}
                       {table.id === 3 && (
-                        <div className="absolute -top-1 -left-1 bg-green-500 rounded-full w-3 h-3 flex items-center justify-center">
+                        <div className="absolute -top-1 -left-1 bg-green-500 rounded-full w-3 h-3 flex items-center justify-center shadow-sm">
                           <span className="text-white text-[8px]">✅</span>
                         </div>
                       )}
@@ -290,7 +292,11 @@ export const BenefitsTwo: React.FC = () => {
                         >
                           <div className="font-medium text-center mb-1 text-sm text-white">{table.name}</div>
                           <div className="text-gray-200 mb-1">
-                            Status: <span className="text-white font-medium">{statusLabels[table.status]}</span>
+                            Status: <span className="text-white font-medium">
+                              {(table.id === 5 || table.id === 9) && table.status === "eten-geleverd" 
+                                ? "Afgerond" 
+                                : statusLabels[table.status]}
+                            </span>
                           </div>
 
                           {table.status === "gereserveerd" && (
@@ -331,10 +337,15 @@ export const BenefitsTwo: React.FC = () => {
                             <div className="text-orange-300 font-medium text-xs mt-1">🍽️ Wacht op bestelling</div>
                           )}
 
-                          {/* Extra: Eten geleverd label onderaan bij T5 en T10 */}
-                          {(table.id === 5 && table.status === "eten-geleverd") || (table.id === 10 && hoveredTable === 10) ? (
+                          {/* Extra: Labels voor T5, T9 en T10 */}
+                          {(table.id === 5 && table.status === "eten-geleverd") || (table.id === 9 && table.status === "eten-geleverd") ? (
                             <div className="text-green-400 font-bold text-xs flex items-center justify-start mt-2">
                               <span className="mr-1">✅</span> Eten geleverd
+                            </div>
+                          ) : null}
+                          {table.id === 10 && hoveredTable === 10 ? (
+                            <div className="text-green-400 font-bold text-xs flex items-center justify-start mt-2">
+                              <span className="mr-1">✅</span> Bestelling geleverd
                             </div>
                           ) : null}
                           {/* Extra: Bestelling geleverd label bij T3, boven rekening */}
@@ -350,12 +361,7 @@ export const BenefitsTwo: React.FC = () => {
                               <span className="mr-1">🧑‍🍳</span> Bestelling nog niet geleverd
                             </div>
                           )}
-                          {/* Extra: Bestelling nog niet geleverd label bij T9, zoals T8 en T6 */}
-                          {table.id === 9 && table.status === "bezet" && (
-                            <div className="text-yellow-400 font-bold text-xs flex items-center justify-start mb-2">
-                              <span className="mr-1">🧑‍🍳</span> Bestelling nog niet geleverd
-                            </div>
-                          )}
+                          {/* Extra: Bestelling nog niet geleverd label bij T9 wordt niet meer getoond omdat T9 nu eten-geleverd status heeft */}
 
                           {/* Extra: Bestelling nog niet geleverd label onderaan bij T6 */}
                           {table.id === 6 && table.status === "bezet" && (
@@ -375,7 +381,7 @@ export const BenefitsTwo: React.FC = () => {
 
             {/* Zone status bars - binnen de frame */}
             <div className="grid grid-cols-3 gap-3 w-full">
-              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-gray-600/40 p-3">
+              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-blue-500/30 p-3 shadow-lg">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-300 font-medium text-sm">Zone A</span>
                   <div className="w-2 h-2 bg-blue-400 rounded-full" />
@@ -394,7 +400,7 @@ export const BenefitsTwo: React.FC = () => {
                 <div className="text-gray-300 text-xs">Gem. wachttijd: 6m</div>
               </div>
 
-              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-gray-600/40 p-3">
+              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-green-500/30 p-3 shadow-lg">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-300 font-medium text-sm">Zone B</span>
                   <div className="w-2 h-2 bg-green-400 rounded-full" />
@@ -413,7 +419,7 @@ export const BenefitsTwo: React.FC = () => {
                 <div className="text-gray-300 text-xs">Gem. 3m</div>
               </div>
 
-              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-gray-600/40 p-3">
+              <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-purple-500/30 p-3 shadow-lg">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-300 font-medium text-sm">Zone C</span>
                   <div className="w-2 h-2 bg-purple-400 rounded-full" />
