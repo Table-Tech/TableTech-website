@@ -21,6 +21,19 @@ export const HorizontalScroll: React.FC = () => {
     let isScrolling = false;
     let scrollTriggerInstance: ScrollTrigger | null = null;
 
+    // Extra wheel event listener voor perfecte controle
+    const handleWheelEnd = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (scrollTriggerInstance) {
+          snapToNearestSection(scrollTriggerInstance.progress);
+        }
+      }, 150);
+    };
+
+    window.addEventListener('wheel', handleWheelEnd, { passive: true });
+    window.addEventListener('touchend', handleWheelEnd, { passive: true });
+
     const ctx = gsap.context(() => {
       // Zeer snelle en soepele animatie voor alle secties
       gsap.to(panels, {
@@ -43,7 +56,7 @@ export const HorizontalScroll: React.FC = () => {
                 isScrolling = false;
                 snapToNearestSection(self.progress);
               }
-            }, 500); // Nog snellere timeout
+            }, 200); // Ultra snelle timeout voor directe snap
           },
         },
       });
@@ -53,30 +66,25 @@ export const HorizontalScroll: React.FC = () => {
         let targetProgress: number;
         let sectionName: string;
         
-        // Met gelijke verdeling: elke sectie krijgt precies 33.33% van de timeline
-        // Benefits 1 volledig zichtbaar bij progress 0
-        // Benefits 2 volledig zichtbaar bij progress 0.5  
-        // Benefits 3 volledig zichtbaar bij progress 1
+        // Perfecte sectie verdeling: 0, 0.5, 1.0
+        // Met strikte snap zones om perfecte uitlijning te garanderen
         
-        // Bereken zichtbaarheid voor gelijke sectie verdeling
-        const benefit1Visibility = Math.max(0, Math.min(1, 1 - (progress * 2))); // 100% bij 0, 0% bij 0.5
-        const benefit2Visibility = Math.max(0, Math.min(1, 1 - Math.abs(progress - 0.5) * 2)); // 100% bij 0.5
-        const benefit3Visibility = Math.max(0, Math.min(1, (progress - 0.5) * 2)); // 100% bij 1
-        
-        // Vind welke sectie het meest zichtbaar is
-        if (benefit1Visibility >= benefit2Visibility && benefit1Visibility >= benefit3Visibility) {
+        if (progress <= 0.25) {
+          // Zone 1: 0% - 25% snaps naar sectie 1 (0%)
           targetProgress = 0;
           sectionName = "Benefits 1";
-        } else if (benefit2Visibility >= benefit1Visibility && benefit2Visibility >= benefit3Visibility) {
+        } else if (progress <= 0.75) {
+          // Zone 2: 25% - 75% snaps naar sectie 2 (50%)
           targetProgress = 0.5;
           sectionName = "Benefits 2";
         } else {
-          targetProgress = 1;
+          // Zone 3: 75% - 100% snaps naar sectie 3 (100%)
+          targetProgress = 1.0;
           sectionName = "Benefits 3";
         }
         
-        // Alleen snappen als we niet al op de juiste plek zijn
-        const tolerance = 0.02;
+        // Ultra-strikte tolerantie: snap altijd als er ook maar een klein verschil is
+        const tolerance = 0.001; // 0.1% tolerantie
         const distance = Math.abs(progress - targetProgress);
         
         if (distance > tolerance) {
@@ -85,11 +93,18 @@ export const HorizontalScroll: React.FC = () => {
             const targetY = st.start + (targetProgress * (st.end - st.start));
             
             gsap.to(window, {
-              duration: 0.3,
+              duration: 0.4,
               ease: "power2.out",
               scrollTo: targetY,
               onComplete: () => {
-                console.log(`Snapped to ${sectionName} (${Math.round(targetProgress * 100)}%) - B1: ${Math.round(benefit1Visibility * 100)}%, B2: ${Math.round(benefit2Visibility * 100)}%, B3: ${Math.round(benefit3Visibility * 100)}%`);
+                console.log(`Perfect snap to ${sectionName} (${Math.round(targetProgress * 100)}%)`);
+                // Extra verificatie: forceer exacte positie
+                setTimeout(() => {
+                  if (scrollTriggerInstance) {
+                    const finalTargetY = scrollTriggerInstance.start + (targetProgress * (scrollTriggerInstance.end - scrollTriggerInstance.start));
+                    window.scrollTo(0, finalTargetY);
+                  }
+                }, 50);
               }
             });
           }
@@ -99,6 +114,8 @@ export const HorizontalScroll: React.FC = () => {
 
     return () => {
       clearTimeout(scrollTimeout);
+      window.removeEventListener('wheel', handleWheelEnd);
+      window.removeEventListener('touchend', handleWheelEnd);
       ctx.revert();
     };
   }, []);
