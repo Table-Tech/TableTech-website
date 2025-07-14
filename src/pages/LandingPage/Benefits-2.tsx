@@ -440,12 +440,11 @@ export const BenefitsTwo: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="bg-gray-700/80 backdrop-blur-xl border border-gray-600/40 rounded-xl p-4 shadow-2xl relative overflow-hidden"
+              className="bg-white/20 backdrop-blur-lg border border-white/40 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-white/25 transition-all duration-300"
             >
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-transparent to-gray-700/10 pointer-events-none"></div>
               <div className="flex items-start space-x-3 relative z-10">
-                <div className="w-10 h-10 bg-gray-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-lg">⚙️</span>
+                <div className="w-12 h-12 bg-gray-600/60 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-gray-400/60 hover:bg-gray-600/80 transition-all duration-300">
+                  <span className="text-xl">⚙️</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Slimme algoritmen</h3>
@@ -458,12 +457,11 @@ export const BenefitsTwo: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="bg-blue-600/80 backdrop-blur-xl border border-blue-500/40 rounded-xl p-4 shadow-2xl relative overflow-hidden"
+              className="bg-blue-500/20 backdrop-blur-lg border border-blue-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-blue-500/30 transition-all duration-300"
             >
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-transparent to-blue-600/10 pointer-events-none"></div>
               <div className="flex items-start space-x-3 relative z-10">
-                <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-lg">📊</span>
+                <div className="w-12 h-12 bg-blue-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-blue-200/60 hover:bg-blue-400/70 transition-all duration-300">
+                  <span className="text-xl">📊</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Capaciteit & wachttijd</h3>
@@ -476,12 +474,11 @@ export const BenefitsTwo: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-orange-600/80 backdrop-blur-xl border border-orange-500/40 rounded-xl p-4 shadow-2xl relative overflow-hidden"
+              className="bg-orange-500/20 backdrop-blur-lg border border-orange-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-orange-500/30 transition-all duration-300"
             >
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-transparent to-orange-600/10 pointer-events-none"></div>
               <div className="flex items-start space-x-3 relative z-10">
-                <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-lg">📍</span>
+                <div className="w-12 h-12 bg-orange-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-orange-200/60 hover:bg-orange-400/70 transition-all duration-300">
+                  <span className="text-xl">📍</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Locatie gebaseerde service</h3>
@@ -494,12 +491,11 @@ export const BenefitsTwo: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="bg-green-600/80 backdrop-blur-xl border border-green-500/40 rounded-xl p-4 shadow-2xl relative overflow-hidden"
+              className="bg-green-500/20 backdrop-blur-lg border border-green-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-green-500/30 transition-all duration-300"
             >
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-transparent to-green-600/10 pointer-events-none"></div>
               <div className="flex items-start space-x-3 relative z-10">
-                <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-lg">✅</span>
+                <div className="w-12 h-12 bg-green-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-green-200/60 hover:bg-green-400/70 transition-all duration-300">
+                  <span className="text-xl">✅</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Automatisch plannen</h3>
