@@ -6,6 +6,6 @@
   ],
   "include": ["src"],
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": []
   }
 }
