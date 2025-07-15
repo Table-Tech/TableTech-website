@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import PhoneMockup from "../components/PhoneMock";
@@ -21,6 +21,15 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
   onClose,
   onSwitchToEmployee,
 }) => {
+  const [activeTheme, setActiveTheme] = useState("tabletech");
+
+  const themes = [
+    { id: "tabletech", name: "TableTech", color: "bg-[#7b4f35]" },
+    { id: "spicepalace", name: "Spice Palace", color: "bg-red-500" },
+    { id: "sweetdelights", name: "Sweet Delights", color: "bg-pink-500" },
+    { id: "coffeecorner", name: "Coffee Corner", color: "bg-green-500" },
+  ];
+
   // Block/unblock body scroll when overlay opens/closes
   useEffect(() => {
     if (isOpen) {
@@ -279,7 +288,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
               className="absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white"
             >
               <h2 className="text-xl md:text-2xl font-bold mb-1">
-                Klant Demo - TableTech
+                Klant Demo - {themes.find(t => t.id === activeTheme)?.name}
               </h2>
               <p className="text-white/80 text-sm max-w-md">
                 Scroll om te navigeren - categorieën horizontaal, menu verticaal
@@ -300,6 +309,29 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                 }}
                 className="hidden lg:flex flex-col gap-4 w-80 pr-8"
               >
+                {/* Theme Selection - Horizontal */}
+                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white">
+                  <h3 className="text-sm font-semibold mb-3 text-center">
+                    Kies Thema:
+                  </h3>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {themes.map((theme) => (
+                      <button
+                        key={theme.id}
+                        onClick={() => setActiveTheme(theme.id)}
+                        className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
+                          activeTheme === theme.id
+                            ? `${theme.color} text-white`
+                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                        }`}
+                      >
+                        {theme.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Demo Features */}
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white">
                   <h3 className="text-lg font-semibold mb-3 flex items-center">
                     Demo Features:
@@ -309,6 +341,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                     <li>• Scroll door menu verticaal</li>
                     <li>• Volledige product details</li>
                     <li>• Interactieve winkelwagen</li>
+                    <li>• Verschillende thema's</li>
                   </ul>
                 </div>
               </motion.div>
@@ -325,7 +358,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                 }}
                 className="flex-shrink-0 transform"
               >
-                <PhoneMockup />
+                <PhoneMockup theme={activeTheme} />
               </motion.div>
 
               {/* Right action panel */}
@@ -362,7 +395,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                   </div>
 
                   <div className="text-xs text-white/60 mt-4 text-center">
-                    TableTech Demo Ervaring
+                    {themes.find(t => t.id === activeTheme)?.name} Demo Ervaring
                   </div>
                 </div>
               </motion.div>
@@ -376,23 +409,42 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
               className="lg:hidden absolute bottom-6 left-6 right-6"
             >
               <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white">
-                <div className="flex flex-col sm:flex-row gap-3 mb-3">
-                  <button
-                    onClick={onClose}
-                    className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium transition-all duration-200 border border-white/30 text-sm flex-1"
-                  >
-                    ← Terug naar homepage
-                  </button>
+                <div className="flex flex-col gap-3 mb-3">
+                  {/* Theme Selection for Mobile */}
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {themes.map((theme) => (
+                      <button
+                        key={theme.id}
+                        onClick={() => setActiveTheme(theme.id)}
+                        className={`px-2 py-1 rounded-lg font-medium transition-all duration-200 text-xs border border-white/30 ${
+                          activeTheme === theme.id
+                            ? `${theme.color} text-white`
+                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                        }`}
+                      >
+                        {theme.name}
+                      </button>
+                    ))}
+                  </div>
                   
-                  <button
-                    onClick={onSwitchToEmployee}
-                    className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-4 py-2 rounded-full font-medium transition-all duration-200 shadow-lg text-sm flex-1"
-                  >
-                    Demo werknemer →
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={onClose}
+                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium transition-all duration-200 border border-white/30 text-sm flex-1"
+                    >
+                      ← Terug naar homepage
+                    </button>
+                    
+                    <button
+                      onClick={onSwitchToEmployee}
+                      className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-4 py-2 rounded-full font-medium transition-all duration-200 shadow-lg text-sm flex-1"
+                    >
+                      Demo werknemer →
+                    </button>
+                  </div>
                 </div>
                 <div className="text-xs text-white/60 text-center">
-                  TableTech Demo • Volledige functionaliteit
+                  {themes.find(t => t.id === activeTheme)?.name} Demo • Volledige functionaliteit
                 </div>
               </div>
             </motion.div>
