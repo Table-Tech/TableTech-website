@@ -9,7 +9,6 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const SupportChat = lazy(() => import("./pages/SupportChat"));
-const KlantDemoPage = lazy(() => import("./pages/KlantDemoPage"));
 const RestaurantThemesPage = lazy(() => import("./pages/LandingPage/restaurant-themes")); // ✅ Correcte import
 
 import ScrollToTop from "./components/ScrollToTop";
@@ -32,7 +31,6 @@ const App: React.FC = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
-          <Route path="/demo" element={<KlantDemoPage />} />
           <Route path="/themes" element={<RestaurantThemesPage />} />
         </Routes>
       </Suspense>
