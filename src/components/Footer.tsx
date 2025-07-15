@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { prefetch } from "../utils/prefetch";
 
-export const Footer: React.FC = () => (
+interface FooterProps {
+  onOpenCustomerDemo?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenCustomerDemo }) => (
   <footer id="footer" className="bg-[#2C1E1A] text-[#FFD382] py-12 w-full">
     <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -14,7 +18,9 @@ export const Footer: React.FC = () => (
         <div>
           <h3 className="text-lg font-semibold mb-4 text-white">Info</h3>
           <ul className="space-y-2">
-            <li><Link to="/integraties" className="hover:text-white transition">Integraties</Link></li>
+            <li>
+              <Link to="/integraties" className="hover:text-white transition">Integraties</Link>
+            </li>
             <li>
               <Link
                 to="/pricing"
@@ -25,13 +31,12 @@ export const Footer: React.FC = () => (
               </Link>
             </li>
             <li>
-              <Link
-                to="/demo"
-                onMouseEnter={() => prefetch(() => import("../pages/KlantDemoPage"))}
-                className="hover:text-white transition"
+              <button
+                onClick={onOpenCustomerDemo}
+                className="hover:text-white transition text-left"
               >
                 Demo
-              </Link>
+              </button>
             </li>
           </ul>
         </div>
