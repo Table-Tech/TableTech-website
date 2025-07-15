@@ -257,7 +257,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
               duration: 0.5 
             }}
             className="flex items-center justify-center gap-8 max-w-7xl w-full px-4 h-full"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}
           >
             {/* Close button */}
             <motion.button

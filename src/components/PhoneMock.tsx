@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoArrowBack } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
@@ -210,13 +210,13 @@ const PhoneMockup: React.FC = () => {
     });
   };
 
-  const sectionRefs: Record<CategoryId, React.RefObject<HTMLDivElement>> = {
-    popular: useRef<HTMLDivElement>(null),
-    curry: useRef<HTMLDivElement>(null),
-    ramen: useRef<HTMLDivElement>(null),
-    pizza: useRef<HTMLDivElement>(null),
-    drinks: useRef<HTMLDivElement>(null),
-  };
+  const sectionRefs = React.useMemo(() => ({
+    popular: React.createRef<HTMLDivElement>(),
+    curry: React.createRef<HTMLDivElement>(),
+    ramen: React.createRef<HTMLDivElement>(),
+    pizza: React.createRef<HTMLDivElement>(),
+    drinks: React.createRef<HTMLDivElement>(),
+  }), []);
 
   const scrollToSection = (categoryId: CategoryId) => {
     setActiveCategory(categoryId);
@@ -451,7 +451,7 @@ const PhoneMockup: React.FC = () => {
           >
             <motion.div
               className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
