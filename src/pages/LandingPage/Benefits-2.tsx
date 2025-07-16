@@ -142,7 +142,7 @@ export const BenefitsTwo: React.FC = () => {
   return (
     <section
       id="benefits-2"
-      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
+      className="benefits-section relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
       {/* Enhanced overlay with subtle gradient */}
@@ -390,11 +390,9 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-white text-lg font-bold">83%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1 overflow-hidden">
-                  <motion.div
-                    className="bg-blue-500 h-1.5 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: "83%" }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                  <div
+                    className="bg-blue-500 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: "83%" }}
                   />
                 </div>
                 <div className="text-gray-300 text-xs">Gem. wachttijd: 6m</div>
@@ -409,11 +407,9 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-white text-lg font-bold">75%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1 overflow-hidden">
-                  <motion.div
-                    className="bg-green-500 h-1.5 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: "75%" }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                  <div
+                    className="bg-green-500 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: "75%" }}
                   />
                 </div>
                 <div className="text-gray-300 text-xs">Gem. 3m</div>
@@ -428,11 +424,9 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-white text-lg font-bold">100%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1 overflow-hidden">
-                  <motion.div
-                    className="bg-purple-500 h-1.5 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                  <div
+                    className="bg-purple-500 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: "100%" }}
                   />
                 </div>
                 <div className="text-gray-300 text-xs">Gereserveerd</div>
@@ -442,12 +436,7 @@ export const BenefitsTwo: React.FC = () => {
 
           {/* Right side - Features - Naar beneden verplaatst en transparant onderkant */}
           <div className="space-y-4 flex flex-col justify-start h-full pb-2">
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="bg-white/20 backdrop-blur-lg border border-white/40 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-white/25 transition-all duration-300"
-            >
+            <div className="bg-white/20 backdrop-blur-lg border border-white/40 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-white/25 transition-all duration-300">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-gray-600/60 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-gray-400/60 hover:bg-gray-600/80 transition-all duration-300">
                   <span className="text-xl">⚙️</span>
@@ -457,14 +446,9 @@ export const BenefitsTwo: React.FC = () => {
                   <p className="text-gray-200 text-sm leading-relaxed">AI berekent de beste tafelindeling, zelfs tijdens piekmomenten</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="bg-blue-500/20 backdrop-blur-lg border border-blue-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-blue-500/30 transition-all duration-300"
-            >
+            <div className="bg-blue-500/20 backdrop-blur-lg border border-blue-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-blue-500/30 transition-all duration-300">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-blue-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-blue-200/60 hover:bg-blue-400/70 transition-all duration-300">
                   <span className="text-xl">📊</span>
@@ -474,14 +458,9 @@ export const BenefitsTwo: React.FC = () => {
                   <p className="text-gray-200 text-sm leading-relaxed">Real-time voorspellingen op basis van bezetting en bestelhistoriek</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-orange-500/20 backdrop-blur-lg border border-orange-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-orange-500/30 transition-all duration-300"
-            >
+            <div className="bg-orange-500/20 backdrop-blur-lg border border-orange-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-orange-500/30 transition-all duration-300">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-orange-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-orange-200/60 hover:bg-orange-400/70 transition-all duration-300">
                   <span className="text-xl">📍</span>
@@ -491,14 +470,9 @@ export const BenefitsTwo: React.FC = () => {
                   <p className="text-gray-200 text-sm leading-relaxed">Personeel ziet exact welke tafel wat nodig heeft</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="bg-green-500/20 backdrop-blur-lg border border-green-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-green-500/30 transition-all duration-300"
-            >
+            <div className="bg-green-500/20 backdrop-blur-lg border border-green-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-green-500/30 transition-all duration-300">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-green-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-green-200/60 hover:bg-green-400/70 transition-all duration-300">
                   <span className="text-xl">✅</span>
@@ -508,7 +482,7 @@ export const BenefitsTwo: React.FC = () => {
                   <p className="text-gray-200 text-sm leading-relaxed">Reserveringen + walk-ins worden automatisch ingedeeld & bijgewerkt</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
         </div>

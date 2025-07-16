@@ -50,7 +50,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
             exit={{ scale: 0.8, opacity: 0, y: 50 }}
             transition={{ type: "spring", damping: 25, stiffness: 300, duration: 0.5 }}
             className="flex items-center justify-center w-full max-w-[98vw] h-full px-4 py-8"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
           >
             {/* Close button */}
             <motion.button
