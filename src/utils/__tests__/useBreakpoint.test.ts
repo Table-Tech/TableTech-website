@@ -1,6 +1,14 @@
-/// <reference types="vitest" />
 import { renderHook, act } from '@testing-library/react';
 import { useBreakpoint } from '../useBreakpoint';
+
+// Global test functions (provided by vitest)
+declare global {
+  function describe(name: string, fn: () => void): void;
+  function it(name: string, fn: () => void): void;
+  function expect(value: unknown): {
+    toBe(value: unknown): void;
+  };
+}
 
 
 describe('useBreakpoint', () => {

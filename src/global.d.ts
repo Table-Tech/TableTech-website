@@ -1,7 +1,9 @@
-import Lenis from "@studio-freight/lenis";
+// Global type declarations
 
 declare global {
   interface Window {
-    lenis?: Lenis;
+    lenis?: unknown;
   }
 }
+
+export {};
