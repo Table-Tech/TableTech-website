@@ -1,7 +1,6 @@
 // src/pages/LandingPage/LandingPage.tsx
 import React from "react";
 import { HeroSection } from "./HeroSection";
-import { DashboardPreview } from "./DashboardPreview";
 import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
 import { ScrollDots } from "../../components/ScrollDotss";
@@ -39,10 +38,6 @@ const LandingPage: React.FC = () => {
         <PricingSection />
       </section>
 
-      {/* Dashboard Preview Section */}
-      <section id="dashboard" className="w-full">
-        <DashboardPreview />
-      </section>
 
       {/* Call to Action Section */}
       <section id="cta" className="w-full">
