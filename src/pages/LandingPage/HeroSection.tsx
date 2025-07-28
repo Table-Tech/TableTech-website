@@ -1,18 +1,31 @@
-import React, { useState } from "react";
-import { DemoOverlay as CustomerDemoOverlay } from "../../components/DemoOverlay";
-import { DemoOverlay as EmployeeDemoOverlay } from "../../components/DemoOverlay-laptop";
+import React, { useState, lazy, Suspense } from "react";
+
+// Lazy load demo components for better performance
+const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay").then(module => ({ default: module.DemoOverlay })));
+const EmployeeDemoOverlay = lazy(() => import("../../components/DemoOverlay-laptop").then(module => ({ default: module.DemoOverlay })));
 
 export const HeroSection: React.FC = () => {
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(false);
 
-  const handleOpenCustomerDemo = () => {
+  const handleOpenCustomerDemo = async () => {
+    setIsPreloading(true);
+    // Faster preload with Promise.resolve for immediate loading
+    await Promise.resolve(import("../../components/DemoOverlay"));
+    setIsPreloading(false);
+    
     setIsCustomerDemoOpen(true);
     setIsEmployeeDemoOpen(false);
     document.body.style.overflow = 'hidden';
   };
 
-  const handleOpenEmployeeDemo = () => {
+  const handleOpenEmployeeDemo = async () => {
+    setIsPreloading(true);
+    // Faster preload with Promise.resolve for immediate loading
+    await Promise.resolve(import("../../components/DemoOverlay-laptop"));
+    setIsPreloading(false);
+    
     setIsEmployeeDemoOpen(true);
     setIsCustomerDemoOpen(false);
     document.body.style.overflow = 'hidden';
@@ -75,9 +88,17 @@ export const HeroSection: React.FC = () => {
               <button
                 onClick={handleOpenCustomerDemo}
                 type="button"
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer"
+                disabled={isPreloading}
+                className="inline-block bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Start klant demo
+                {isPreloading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Laden...
+                  </span>
+                ) : (
+                  "Start klant demo"
+                )}
               </button>
             </div>
 
@@ -92,9 +113,17 @@ export const HeroSection: React.FC = () => {
               <button
                 onClick={handleOpenEmployeeDemo}
                 type="button"
-                className="inline-block bg-white text-[#7b4f35] hover:bg-[#f5f0e6] px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer"
+                disabled={isPreloading}
+                className="inline-block bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Start dashboard demo
+                {isPreloading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Laden...
+                  </span>
+                ) : (
+                  "Start dashboard demo"
+                )}
               </button>
             </div>
           </div>
@@ -114,19 +143,41 @@ export const HeroSection: React.FC = () => {
         </div>
       </section>
 
-      {/* Customer Demo Overlay */}
-      <CustomerDemoOverlay
-        isOpen={isCustomerDemoOpen}
-        onClose={handleCloseAllDemos}
-        onSwitchToEmployee={handleSwitchToEmployee}
-      />
+      {/* Customer Demo Overlay with Loading */}
+      <Suspense fallback={
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-lg font-medium">Demo laden...</span>
+            </div>
+          </div>
+        </div>
+      }>
+        <CustomerDemoOverlay
+          isOpen={isCustomerDemoOpen}
+          onClose={handleCloseAllDemos}
+          onSwitchToEmployee={handleSwitchToEmployee}
+        />
+      </Suspense>
 
-      {/* Employee Demo Overlay */}
-      <EmployeeDemoOverlay
-        isOpen={isEmployeeDemoOpen}
-        onClose={handleCloseAllDemos}
-        onSwitchToCustomer={handleSwitchToCustomer}
-      />
+      {/* Employee Demo Overlay with Loading */}
+      <Suspense fallback={
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-lg font-medium">Dashboard demo laden...</span>
+            </div>
+          </div>
+        </div>
+      }>
+        <EmployeeDemoOverlay
+          isOpen={isEmployeeDemoOpen}
+          onClose={handleCloseAllDemos}
+          onSwitchToCustomer={handleSwitchToCustomer}
+        />
+      </Suspense>
     </>
   );
 };
