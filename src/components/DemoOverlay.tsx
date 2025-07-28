@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import PhoneMockup from "../components/PhoneMock";
@@ -16,21 +16,37 @@ declare global {
   }
 }
 
-export const DemoOverlay: React.FC<DemoOverlayProps> = ({
+type ThemeId = "tabletech" | "spicepalace" | "sweetdelights" | "coffeecorner";
+
+export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
   isOpen,
   onClose,
   onSwitchToEmployee,
 }) => {
-  const [activeTheme, setActiveTheme] = useState("tabletech");
+  const [activeTheme, setActiveTheme] = useState<ThemeId>("tabletech");
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const themes = [
-    { id: "tabletech", name: "TableTech", color: "bg-[#7b4f35]" },
-    { id: "spicepalace", name: "Spice Palace", color: "bg-red-500" },
-    { id: "sweetdelights", name: "Sweet Delights", color: "bg-pink-500" },
-    { id: "coffeecorner", name: "Coffee Corner", color: "bg-green-500" },
-  ];
+  // Memoized themes data for performance
+  const themes = useMemo(() => [
+    { id: "tabletech" as ThemeId, name: "TableTech", color: "bg-[#7b4f35]", hoverColor: "hover:bg-[#5e3b29]" },
+    { id: "spicepalace" as ThemeId, name: "Spice Palace", color: "bg-red-600", hoverColor: "hover:bg-red-700" },
+    { id: "sweetdelights" as ThemeId, name: "Sweet Delights", color: "bg-pink-500", hoverColor: "hover:bg-pink-600" },
+    { id: "coffeecorner" as ThemeId, name: "Coffee Corner", color: "bg-amber-600", hoverColor: "hover:bg-amber-700" },
+  ], []);
 
-  // Block/unblock body scroll when overlay opens/closes
+  // Memoized theme getter
+  const getCurrentTheme = useCallback(() => {
+    return themes.find(t => t.id === activeTheme) || themes[0];
+  }, [themes, activeTheme]);
+
+  // Initialize theme immediately when opened
+  useEffect(() => {
+    if (isOpen && !isInitialized) {
+      setIsInitialized(true);
+    }
+  }, [isOpen, isInitialized]);
+
+  // Block/unblock body scroll when overlay opens/closes with optimization
   useEffect(() => {
     if (isOpen) {
       // Save current scroll position
@@ -41,6 +57,26 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+
+      // Force disable all transitions temporarily to prevent color flashing
+      const style = document.createElement('style');
+      style.id = 'demo-disable-transitions';
+      style.textContent = `
+        *, *::before, *::after {
+          transition-duration: 0s !important;
+          animation-duration: 0s !important;
+          animation-delay: 0s !important;
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Re-enable transitions after initial render
+      setTimeout(() => {
+        const transitionStyle = document.getElementById('demo-disable-transitions');
+        if (transitionStyle) {
+          transitionStyle.remove();
+        }
+      }, 50); // Faster re-enable for smoother experience
       
       return () => {
         // Restore scroll when component unmounts or isOpen becomes false
@@ -48,6 +84,12 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
         document.body.style.top = '';
         document.body.style.width = '';
         document.body.style.overflow = '';
+        
+        // Clean up transition disable
+        const transitionStyle = document.getElementById('demo-disable-transitions');
+        if (transitionStyle) {
+          transitionStyle.remove();
+        }
         
         // Restore scroll position
         window.scrollTo(0, scrollY);
@@ -122,17 +164,17 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                                    element.hasAttribute('data-horizontal-scroll');
       
       if (isHorizontalContainer) {
-        // For horizontal containers, convert vertical scroll to horizontal - DIRECT SCROLL
+        // For horizontal containers, convert vertical scroll to horizontal - FASTER SCROLL
         const newScrollLeft = Math.max(0, Math.min(
           element.scrollWidth - element.clientWidth, 
-          element.scrollLeft + (deltaY * 1.2) // Convert vertical wheel to horizontal scroll
+          element.scrollLeft + (deltaY * 2.0) // Faster horizontal scroll
         ));
         element.scrollLeft = newScrollLeft;
       } else {
-        // For vertical containers, use direct vertical scrolling - NO ANIMATION
+        // For vertical containers, use direct vertical scrolling - FASTER SCROLL
         const newScrollTop = Math.max(0, Math.min(
           element.scrollHeight - element.clientHeight, 
-          element.scrollTop + deltaY
+          element.scrollTop + deltaY * 1.5 // Faster vertical scroll
         ));
         element.scrollTop = newScrollTop;
         
@@ -156,7 +198,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
         
         // Use deltaY for both vertical and horizontal scrolling
         // The directScrollTo function will determine the appropriate direction
-        directScrollTo(targetContainer, e.deltaX, e.deltaY * 3.0); // Even faster scroll response for better UX
+        directScrollTo(targetContainer, e.deltaX, e.deltaY * 4.0); // Much faster scroll response for better UX
       }
     };
 
@@ -182,12 +224,12 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
           // Check for product detail container first
           const productDetailContainer = phoneContainer.querySelector('[data-product-detail-scroll="true"]') as HTMLElement;
           if (productDetailContainer) {
-            directScrollTo(productDetailContainer, 0, deltaY * 4); // Fast product detail scroll
+            directScrollTo(productDetailContainer, 0, deltaY * 6); // Much faster product detail scroll
           } else {
             // Find main scroll container in phone
             const mainContainer = phoneContainer.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
             if (mainContainer) {
-              directScrollTo(mainContainer, 0, deltaY * 4); // Much faster touch response
+              directScrollTo(mainContainer, 0, deltaY * 6); // Much faster touch response
             }
           }
           
@@ -243,36 +285,58 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     };
   }, [isOpen]); // Only isOpen as dependency
 
+  const currentTheme = getCurrentTheme();
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ 
+            duration: 0.2, 
+            ease: "easeOut" 
+          }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
           onClick={onClose}
+          style={{ 
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}
         >
           {/* Main content container */}
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 50 }}
+            initial={{ 
+              scale: 0.95, 
+              opacity: 0, 
+              y: 20
+            }}
+            animate={{ 
+              scale: 1, 
+              opacity: 1, 
+              y: 0
+            }}
+            exit={{ 
+              scale: 0.95, 
+              opacity: 0, 
+              y: 20
+            }}
             transition={{ 
-              type: "spring", 
-              damping: 25, 
-              stiffness: 300,
-              duration: 0.5 
+              duration: 0.4, 
+              ease: [0.16, 1, 0.3, 1]
             }}
             className="flex items-center justify-center gap-8 max-w-7xl w-full px-4 h-full"
             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}
           >
             {/* Close button */}
             <motion.button
-              initial={{ opacity: 0, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ 
+                delay: 0.2, 
+                duration: 0.3
+              }}
               onClick={onClose}
               className="absolute top-6 right-6 z-60 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-200 hover:scale-110"
               aria-label="Demo sluiten"
@@ -282,9 +346,12 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
 
             {/* Demo title - positioned at top */}
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ 
+                delay: 0.1, 
+                duration: 0.3
+              }}
               className="absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white"
             >
               <h2 className="text-xl md:text-2xl font-bold mb-1">
@@ -299,40 +366,52 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
             <div className="flex items-center justify-center w-full h-full pt-20 pb-6">
               {/* Left info panel */}
               <motion.div
-                initial={{ x: -100, opacity: 0 }}
+                initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ 
-                  delay: 0.4, 
-                  type: "spring", 
-                  damping: 20, 
-                  stiffness: 300 
+                  delay: 0.3, 
+                  duration: 0.4
                 }}
                 className="hidden lg:flex flex-col gap-4 w-80 pr-8"
               >
                 {/* Theme Selection - Horizontal */}
-                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white">
+                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white border border-white/10">
                   <h3 className="text-sm font-semibold mb-3 text-center">
                     Kies Thema:
                   </h3>
                   <div className="flex flex-wrap gap-2 justify-center">
-                    {themes.map((theme) => (
-                      <button
+                    {themes.map((theme, index) => (
+                      <motion.button
                         key={theme.id}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          delay: 0.4 + (index * 0.05),
+                          duration: 0.2
+                        }}
                         onClick={() => setActiveTheme(theme.id)}
                         className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
                           activeTheme === theme.id
-                            ? `${theme.color} text-white`
+                            ? `${theme.color} text-white ring-2 ring-white/50`
                             : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
                         }`}
                       >
                         {theme.name}
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
                 </div>
 
                 {/* Demo Features */}
-                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    delay: 0.5, 
+                    duration: 0.3
+                  }}
+                  className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white border border-white/10"
+                >
                   <h3 className="text-lg font-semibold mb-3 flex items-center">
                     Demo Features:
                   </h3>
@@ -343,109 +422,158 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                     <li>• Interactieve winkelwagen</li>
                     <li>• Verschillende thema's</li>
                   </ul>
-                </div>
+                </motion.div>
               </motion.div>
 
               {/* Center - Phone mockup */}
               <motion.div
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 0.85, opacity: 1 }}
+                initial={{ 
+                  scale: 0.85, 
+                  opacity: 1
+                }}
+                animate={{ 
+                  scale: 0.85, 
+                  opacity: 1
+                }}
                 transition={{ 
-                  delay: 0.3, 
-                  type: "spring", 
-                  damping: 20, 
-                  stiffness: 300 
+                  duration: 0
                 }}
                 className="flex-shrink-0 transform"
+                style={{ 
+                  filter: 'none',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
+                }}
               >
-                <PhoneMockup theme={activeTheme} />
+                {isInitialized && <PhoneMockup theme={activeTheme} />}
               </motion.div>
 
               {/* Right action panel */}
               <motion.div
-                initial={{ x: 100, opacity: 0 }}
+                initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ 
-                  delay: 0.4, 
-                  type: "spring", 
-                  damping: 20, 
-                  stiffness: 300 
+                  delay: 0.3, 
+                  duration: 0.4
                 }}
                 className="hidden lg:flex flex-col gap-4 w-80 pl-8"
               >
-                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white">
+                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white border border-white/10">
                   <h3 className="text-lg font-semibold mb-4">
                     Demo navigatie
                   </h3>
                   
                   <div className="flex flex-col gap-3">
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ 
+                        delay: 0.6, 
+                        duration: 0.2
+                      }}
                       onClick={onClose}
-                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 border border-white/30 text-sm"
+                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 border border-white/30 text-sm"
                     >
                       ← Terug naar homepage
-                    </button>
+                    </motion.button>
                     
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ 
+                        delay: 0.7, 
+                        duration: 0.2
+                      }}
                       onClick={onSwitchToEmployee}
-                      className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-lg text-sm"
+                      className={`${currentTheme.color} ${currentTheme.hoverColor} text-white px-4 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 shadow-lg text-sm ring-2 ring-white/20`}
                     >
                       Demo werknemer →
-                    </button>
+                    </motion.button>
                   </div>
 
-                  <div className="text-xs text-white/60 mt-4 text-center">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.2 }}
+                    className="text-xs text-white/60 mt-4 text-center"
+                  >
                     {themes.find(t => t.id === activeTheme)?.name} Demo Ervaring
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
 
             {/* Mobile bottom controls */}
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ 
+                delay: 0.4, 
+                duration: 0.3
+              }}
               className="lg:hidden absolute bottom-6 left-6 right-6"
             >
-              <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white">
+              <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white border border-white/10">
                 <div className="flex flex-col gap-3 mb-3">
                   {/* Theme Selection for Mobile */}
                   <div className="flex flex-wrap gap-2 justify-center">
-                    {themes.map((theme) => (
-                      <button
+                    {themes.map((theme, index) => (
+                      <motion.button
                         key={theme.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ 
+                          delay: 0.5 + (index * 0.05),
+                          duration: 0.2
+                        }}
                         onClick={() => setActiveTheme(theme.id)}
-                        className={`px-2 py-1 rounded-lg font-medium transition-all duration-200 text-xs border border-white/30 ${
+                        className={`px-2 py-1 rounded-lg font-medium transition-all duration-300 text-xs border border-white/30 ${
                           activeTheme === theme.id
-                            ? `${theme.color} text-white`
+                            ? `${theme.color} text-white ring-2 ring-white/50`
                             : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
                         }`}
                       >
                         {theme.name}
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
                   
                   <div className="flex gap-3">
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ 
+                        delay: 0.7, 
+                        duration: 0.2
+                      }}
                       onClick={onClose}
-                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium transition-all duration-200 border border-white/30 text-sm flex-1"
+                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium transition-all duration-300 border border-white/30 text-sm flex-1"
                     >
                       ← Terug naar homepage
-                    </button>
+                    </motion.button>
                     
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ 
+                        delay: 0.8, 
+                        duration: 0.2
+                      }}
                       onClick={onSwitchToEmployee}
-                      className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-4 py-2 rounded-full font-medium transition-all duration-200 shadow-lg text-sm flex-1"
+                      className={`${currentTheme.color} ${currentTheme.hoverColor} text-white px-4 py-2 rounded-full font-medium transition-all duration-300 shadow-lg text-sm flex-1`}
                     >
                       Demo werknemer →
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
-                <div className="text-xs text-white/60 text-center">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9, duration: 0.2 }}
+                  className="text-xs text-white/60 text-center"
+                >
                   {themes.find(t => t.id === activeTheme)?.name} Demo • Volledige functionaliteit
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </motion.div>
@@ -453,4 +581,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
       )}
     </AnimatePresence>
   );
-};
+});
+
+// Set display name for debugging
+DemoOverlay.displayName = 'DemoOverlay';
