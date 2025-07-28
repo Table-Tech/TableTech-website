@@ -340,11 +340,11 @@ export default function ComputerMock() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Actieve tafels</p>
-                    <p className="text-2xl font-bold text-amber-600">6</p>
-                    <p className="text-sm text-amber-600">van 15 tafels</p>
+                    <p className="text-2xl font-bold text-[#7b4f35]">6</p>
+                    <p className="text-sm text-[#7b4f35]">van 15 tafels</p>
                   </div>
                   <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-amber-600" />
+                    <Users className="w-6 h-6 text-[#7b4f35]" />
                   </div>
                 </div>
               </motion.div>
@@ -483,7 +483,7 @@ export default function ComputerMock() {
               <h2 className="text-2xl font-bold text-gray-900">Tafel Management</h2>
               <button
                 onClick={() => setTableAction({ action: 'new' })}
-                className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
+                className="bg-[#7b4f35] text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#5e3b29] transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Nieuwe Tafel</span>
@@ -587,7 +587,7 @@ export default function ComputerMock() {
                       <>
                         <button
                           onClick={() => handleCheckIn(table.id)}
-                          className="flex-1 bg-amber-600 text-white py-2 px-3 rounded-lg text-sm hover:bg-amber-700 transition-colors"
+                          className="flex-1 bg-[#7b4f35] text-white py-2 px-3 rounded-lg text-sm hover:bg-[#5e3b29] transition-colors"
                         >
                           Check-in
                         </button>
@@ -624,7 +624,7 @@ export default function ComputerMock() {
                 </div>
                 <button
                   onClick={() => setNewItemModal(true)}
-                  className="bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-amber-700 transition-colors"
+                  className="bg-[#7b4f35] text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#5e3b29] transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Nieuw Gerecht</span>
@@ -653,7 +653,7 @@ export default function ComputerMock() {
                                 {getMenuIcon(item.image)}
                                 <div className="flex-1">
                                   <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                                  <p className="text-lg font-bold text-amber-600">€{item.price.toFixed(2)}</p>
+                                  <p className="text-lg font-bold text-[#7b4f35]">€{item.price.toFixed(2)}</p>
                                   <div className="flex items-center space-x-3 mt-1">
                                     <div className="flex items-center">
                                       <Star className="w-4 h-4 text-yellow-500 fill-current" />
@@ -807,7 +807,7 @@ export default function ComputerMock() {
                       .map((item, index) => (
                         <div key={item.id} className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <span className={`text-lg font-bold w-8 text-center ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-amber-600' : 'text-gray-400'}`}>
+                            <span className={`text-lg font-bold w-8 text-center ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-[#7b4f35]' : 'text-gray-400'}`}>
                               #{index + 1}
                             </span>
                             {getMenuIcon(item.image)}
@@ -890,7 +890,7 @@ export default function ComputerMock() {
               <motion.div whileHover={{ scale: 1.02 }} className="bg-white rounded-xl shadow-sm border border-gray-100">
                 <div className="p-4 border-b border-gray-100">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Menu className="w-5 h-5 mr-2 text-amber-600" />
+                    <Menu className="w-5 h-5 mr-2 text-[#7b4f35]" />
                     Menu Beheer
                   </h3>
                 </div>
@@ -911,7 +911,7 @@ export default function ComputerMock() {
                   </button>
                   <button
                     onClick={() => setManageModal('Preview klant menu')}
-                    className="w-full bg-amber-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-amber-700 transition-colors"
+                    className="w-full bg-[#7b4f35] text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-[#5e3b29] transition-colors"
                   >
                     <Eye className="w-4 h-4" />
                     <span>Preview klant menu</span>
@@ -1073,7 +1073,7 @@ export default function ComputerMock() {
 
           <div className="flex flex-1 bg-gray-50 overflow-hidden">
             <div className="w-56 bg-white border-r border-gray-200 flex flex-col">
-              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-amber-600 to-orange-600 text-white flex-shrink-0">
+              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-[#7b4f35] to-[#5e3b29] text-white flex-shrink-0">
                 <h1 className="text-lg font-bold">TableTech</h1>
                 <p className="text-sm opacity-90">Restaurant Dashboard</p>
               </div>
@@ -1090,7 +1090,7 @@ export default function ComputerMock() {
                         onClick={() => setActiveTab(tab.id)}
                         className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all ${
                           activeTab === tab.id
-                            ? 'bg-amber-600 text-white shadow-lg'
+                            ? 'bg-[#7b4f35] text-white shadow-lg'
                             : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
@@ -1104,7 +1104,7 @@ export default function ComputerMock() {
 
               <div className="p-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-[#7b4f35] to-[#5e3b29] rounded-full flex items-center justify-center">
                     <span className="text-sm font-semibold text-white">JD</span>
                   </div>
                   <div>
@@ -1141,10 +1141,10 @@ export default function ComputerMock() {
                 <h3 className="text-xl font-semibold mb-2 text-gray-900">{selectedItem.name}</h3>
                 <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-40 object-cover rounded-lg" />
                 <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
-                <p className="mt-2 font-bold text-amber-600">€{selectedItem.price.toFixed(2)}</p>
+                <p className="mt-2 font-bold text-[#7b4f35]">€{selectedItem.price.toFixed(2)}</p>
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+                  className="mt-4 bg-[#7b4f35] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5e3b29] transition-colors"
                 >
                   Sluiten
                 </button>
@@ -1163,7 +1163,7 @@ export default function ComputerMock() {
                 <p className="text-sm text-gray-600">Deze functionaliteit kan hier uitgebreid worden.</p>
                 <button
                   onClick={() => setManageModal(null)}
-                  className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+                  className="mt-4 bg-[#7b4f35] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5e3b29] transition-colors"
                 >
                   Sluiten
                 </button>
@@ -1189,7 +1189,7 @@ export default function ComputerMock() {
                 </div>
                 <button
                   onClick={() => setDetailsTable(null)}
-                  className="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg w-full hover:bg-amber-700 transition-colors"
+                  className="mt-4 bg-[#7b4f35] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5e3b29] transition-colors"
                 >
                   Sluiten
                 </button>
@@ -1287,7 +1287,7 @@ export default function ComputerMock() {
                   <div className="flex space-x-2">
                     <button
                       onClick={handleAddTable}
-                      className="flex-1 bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700"
+                      className="flex-1 bg-[#7b4f35] text-white py-2 rounded-lg hover:bg-[#5e3b29]"
                     >
                       Toevoegen
                     </button>
