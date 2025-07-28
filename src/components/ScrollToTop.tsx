@@ -7,11 +7,16 @@ const ScrollToTop: React.FC = () => {
   useEffect(() => {
     // Stap 1: kill eventuele animatie
     if (window.lenis) {
+      const lenis = window.lenis as Record<string, unknown>;
       // Forceer stoppen hierdoor gaat die ding niet onder beginnen bij nieuwe pagina als je snel scrolt en klikt op andere pagina
-      window.lenis.stop();
+      if (typeof lenis.stop === 'function') {
+        (lenis.stop as () => void)();
+      }
 
       // Scroll direct naar boven
-      window.lenis.scrollTo(0, { immediate: true });
+      if (typeof lenis.scrollTo === 'function') {
+        (lenis.scrollTo as (target: number, options?: Record<string, unknown>) => void)(0, { immediate: true });
+      }
 
       // ✨ EXTRA: forceer positie hard in DOM zelf
       document.documentElement.scrollTop = 0;
@@ -19,8 +24,11 @@ const ScrollToTop: React.FC = () => {
 
       // Start Lenis opnieuw, na render
       setTimeout(() => {
-        window.lenis?.start();
-      }, 100); // iets langere delay helpt hier
+        const lenis = window.lenis as Record<string, unknown>;
+        if (lenis && typeof lenis.start === 'function') {
+          (lenis.start as () => void)();
+        }
+      }, 50); // Faster restart for better responsiveness
     } else {
       // fallback zonder Lenis
       document.documentElement.scrollTop = 0;
