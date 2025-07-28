@@ -135,6 +135,27 @@ body.demo-overlay-open {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  8% {
+    transform: translateX(100%) skewX(-15deg);
+    opacity: 1;
+  }
+  10% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(100%) skewX(-15deg);
+    opacity: 0;
+  }
+}
+
 .animate-move-down {
   animation: move-down 3.5s linear infinite;
 }
@@ -208,7 +229,7 @@ body.demo-overlay-open {
 
 /* GPU acceleration voor smooth animaties */
 .gpu-accelerated {
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
   will-change: transform, opacity;
   backface-visibility: hidden;
   perspective: 1000px;
@@ -217,6 +238,18 @@ body.demo-overlay-open {
 /* Prevent layout shifts tijdens overlay transitions */
 .demo-container {
   contain: layout style paint;
+}
+
+/* Faster transitions for better responsiveness */
+.fast-transition {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimized scrolling containers */
+.optimized-scroll {
+  contain: strict;
+  overflow-anchor: none;
+  overscroll-behavior: contain;
 }
 
 /* =======================
