@@ -62,9 +62,9 @@ export const Navbar: React.FC = () => {
       });
 
       // Ook Lenis smooth scroll gebruiken indien beschikbaar
-      const lenis = window.lenis;
-      if (lenis?.scrollTo) {
-        lenis.scrollTo(element, { duration: 1.5 });
+      const lenis = window.lenis as Record<string, unknown>;
+      if (lenis?.scrollTo && typeof lenis.scrollTo === 'function') {
+        (lenis.scrollTo as (target: Element, options?: Record<string, unknown>) => void)(element, { duration: 1.0 }); // Faster navigation scroll
       }
     }
   };
@@ -163,7 +163,7 @@ export const Navbar: React.FC = () => {
 
           <button
             onClick={() => scrollToSection('cta')}
-            className="bg-[#7b4f35] hover:bg-[#5e3b29] hover:scale-110 hover:shadow-xl text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95 shadow-lg"
+            className="bg-gradient-to-r from-yellow-700 to-yellow-800 hover:from-yellow-800 hover:to-yellow-900 hover:scale-110 hover:shadow-xl text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95 shadow-lg"
             type="button"
           >
             {t("signup")}
@@ -268,7 +268,7 @@ export const Navbar: React.FC = () => {
             
             <button 
               onClick={() => scrollToSection('cta')} 
-              className="mt-4 bg-[#7b4f35] hover:bg-[#5e3b29] hover:scale-110 hover:shadow-xl text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform active:scale-95"
+              className="mt-4 bg-gradient-to-r from-yellow-700 to-yellow-800 hover:from-yellow-800 hover:to-yellow-900 hover:scale-110 hover:shadow-xl text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform active:scale-95"
               type="button"
             >
               {t("signup")}
