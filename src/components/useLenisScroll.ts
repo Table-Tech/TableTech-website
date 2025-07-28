@@ -15,8 +15,10 @@ export const useLenisScroll = () => {
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.07,
-      duration: 1.1,
+      lerp: 0.1, // Faster lerp for snappier scrolling
+      duration: 0.8, // Shorter duration for faster response
+      smoothWheel: true,
+      wheelMultiplier: 1.2, // Faster wheel scrolling
     });
 
     // ✅ Koppel Lenis aan window met juiste type
@@ -30,7 +32,7 @@ export const useLenisScroll = () => {
     requestAnimationFrame(raf);
 
     ScrollTrigger.scrollerProxy(document.body, {
-      scrollTop(value) {
+      scrollTop(value?: number) {
         if (typeof value === "number") {
           lenis.scrollTo(value, { immediate: true });
         }
@@ -48,7 +50,7 @@ export const useLenisScroll = () => {
 
     ScrollTrigger.refresh();
 
-    gsap.utils.toArray(".fade-in").forEach((el) => {
+    gsap.utils.toArray(".fade-in").forEach((el: unknown) => {
       if (el instanceof HTMLElement) {
         gsap.from(el, {
           opacity: 0,
@@ -65,7 +67,11 @@ export const useLenisScroll = () => {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger: Record<string, unknown>) => {
+        if (typeof trigger.kill === 'function') {
+          (trigger.kill as () => void)();
+        }
+      });
       lenis.destroy();
     };
   }, [location.pathname]);
