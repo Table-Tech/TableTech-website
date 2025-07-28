@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoArrowBack } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
-import { Flame, Coffee, Globe } from "lucide-react";
+import { FaPlus, FaFire, FaCoffee, FaGlobeAmericas } from "react-icons/fa";
 
 interface PhoneMockupProps {
-  theme?: string;
+  theme?: "tabletech" | "spicepalace" | "sweetdelights" | "coffeecorner";
 }
 
 type CategoryId = "all" | "popular" | "curry" | "ramen" | "pizza" | "drinks" | "handi" | "kebab" | "rice" | "bbq" | "karahi" | "tandoori" | "cakes" | "coffee-specialties" | "cold-drinks" | "hot-drinks" | "pastries";
@@ -342,7 +341,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       name: "Chocolade Taart",
       nameEn: "Chocolate Cake",
       price: 7.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/chocolate-cake.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/chocolate-cake.png",
       category: "popular",
     },
     {
@@ -350,7 +349,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       name: "Cheesecake",
       nameEn: "Cheesecake",
       price: 8.0,
-      image: "/src/assets/afbeeldingen/sweet-delights/cheesecake.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/cheesecake.png",
       category: "popular",
     },
   ],
@@ -360,50 +359,52 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       name: "Chocolade Taart",
       nameEn: "Chocolate Cake",
       price: 7.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/chocolate-cake.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/chocolate-cake.png",
       category: "cakes",
+      description: "Rijke chocoladetaart met zachte vulling",
+      descriptionEn: "Rich chocolate cake with soft filling",
     },
     {
       id: 204,
       name: "Cheesecake",
       nameEn: "Cheesecake",
       price: 8.0,
-      image: "/src/assets/afbeeldingen/sweet-delights/cheesecake.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/cheesecake.png",
       category: "cakes",
-    },
-    {
-      id: 205,
-      name: "Carrot Cake",
-      nameEn: "Carrot Cake",
-      price: 6.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/carrot-cake.jpg",
-      category: "cakes",
+      description: "Romige cheesecake met verse vruchten",
+      descriptionEn: "Creamy cheesecake with fresh fruits",
     },
   ],
   "coffee-specialties": [
     {
       id: 206,
-      name: "Cappuccino",
-      nameEn: "Cappuccino",
-      price: 3.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/cappuccino.jpg",
+      name: "Latte Art",
+      nameEn: "Latte Art",
+      price: 4.5,
+      image: "src/assets/afbeeldingen/sweet-delights/latte-art.png",
       category: "coffee-specialties",
+      description: "Artistieke latte met prachtige melkschuim kunst",
+      descriptionEn: "Artistic latte with beautiful milk foam art",
     },
     {
       id: 207,
       name: "Espresso",
       nameEn: "Espresso",
       price: 2.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/espresso.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/espresso-machine.png",
       category: "coffee-specialties",
+      description: "Intense en pure espresso shot",
+      descriptionEn: "Intense and pure espresso shot",
     },
     {
       id: 208,
-      name: "Latte",
-      nameEn: "Latte",
+      name: "Koffie Special",
+      nameEn: "Coffee Special",
       price: 4.0,
-      image: "/src/assets/afbeeldingen/sweet-delights/latte.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/coffee-splash.png",
       category: "coffee-specialties",
+      description: "Huisspecialiteit met unieke smaakcombinatie",
+      descriptionEn: "House specialty with unique flavor combination",
     },
   ],
   "cold-drinks": [
@@ -412,34 +413,62 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       name: "IJskoffie",
       nameEn: "Iced Coffee",
       price: 4.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/iced-coffee.jpg",
+      image: "src/assets/afbeeldingen/sweet-delights/iced-coffee.png",
       category: "cold-drinks",
+      description: "Verfrissende ijskoffie perfect voor warme dagen",
+      descriptionEn: "Refreshing iced coffee perfect for warm days",
     },
     {
       id: 210,
-      name: "Frappé",
-      nameEn: "Frappé",
-      price: 5.0,
-      image: "/src/assets/afbeeldingen/sweet-delights/frappe.jpg",
+      name: "Coca Cola",
+      nameEn: "Coca Cola",
+      price: 2.5,
+      image: "src/assets/afbeeldingen/sweet-delights/coca-cola.png",
       category: "cold-drinks",
+      description: "Klassieke frisdrank met bruisende smaak",
+      descriptionEn: "Classic soft drink with fizzy taste",
+    },
+    {
+      id: 211,
+      name: "Fanta",
+      nameEn: "Fanta",
+      price: 2.5,
+      image: "src/assets/afbeeldingen/sweet-delights/fanta.png",
+      category: "cold-drinks",
+      description: "Zoete sinaasappel frisdrank",
+      descriptionEn: "Sweet orange soft drink",
+    },
+    {
+      id: 212,
+      name: "Red Bull",
+      nameEn: "Red Bull",
+      price: 3.0,
+      image: "src/assets/afbeeldingen/sweet-delights/red-bull.png",
+      category: "cold-drinks",
+      description: "Energiedrank voor extra boost",
+      descriptionEn: "Energy drink for extra boost",
     },
   ],
   "hot-drinks": [
     {
-      id: 211,
+      id: 213,
+      name: "Groene Thee",
+      nameEn: "Green Tea",
+      price: 3.0,
+      image: "src/assets/afbeeldingen/sweet-delights/green-tea.png",
+      category: "hot-drinks",
+      description: "Gezonde groene thee vol antioxidanten",
+      descriptionEn: "Healthy green tea full of antioxidants",
+    },
+    {
+      id: 214,
       name: "Warme Chocolademelk",
       nameEn: "Hot Chocolate",
       price: 3.5,
-      image: "/src/assets/afbeeldingen/sweet-delights/hot-chocolate.jpg",
+      image: "src/assets/afbeeldingen/chocolade-melk.jpeg",
       category: "hot-drinks",
-    },
-    {
-      id: 212,
-      name: "Chai Latte",
-      nameEn: "Chai Latte",
-      price: 4.0,
-      image: "/src/assets/afbeeldingen/sweet-delights/chai-latte.jpg",
-      category: "hot-drinks",
+      description: "Romige warme chocolademelk met slagroom",
+      descriptionEn: "Creamy hot chocolate milk with whipped cream",
     },
   ],
   curry: [],
@@ -461,55 +490,45 @@ const coffeeCornerMenu: Record<CategoryId, MenuItem[]> = {
   popular: [
     {
       id: 301,
-      name: "Espresso",
-      nameEn: "Espresso",
-      price: 2.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/espresso.jpg",
+      name: "Latte Art",
+      nameEn: "Latte Art",
+      price: 4.5,
+      image: "src/assets/afbeeldingen/coffee-corner/latte-art1.png",
       category: "popular",
       description: "Australische Bonen",
       descriptionEn: "Australian Beans",
     },
     {
       id: 302,
-      name: "Cappuccino",
-      nameEn: "Cappuccino",
-      price: 3.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/cappuccino.jpg",
+      name: "Latte Art Special",
+      nameEn: "Latte Art Special", 
+      price: 5.0,
+      image: "src/assets/afbeeldingen/coffee-corner/latte-art2.png",
       category: "popular",
-      description: "Met melkschuim",
-      descriptionEn: "With milk foam",
+      description: "Premium koffie",
+      descriptionEn: "Premium coffee",
     },
   ],
   "coffee-specialties": [
     {
       id: 303,
-      name: "Espresso",
-      nameEn: "Espresso",
-      price: 2.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/espresso.jpg",
+      name: "Latte Art",
+      nameEn: "Latte Art",
+      price: 4.5,
+      image: "src/assets/afbeeldingen/coffee-corner/latte-art1.png",
       category: "coffee-specialties",
       description: "Australische Bonen",
       descriptionEn: "Australian Beans",
     },
     {
       id: 304,
-      name: "Cappuccino",
-      nameEn: "Cappuccino",
-      price: 3.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/cappuccino.jpg",
+      name: "Latte Art Special",
+      nameEn: "Latte Art Special",
+      price: 5.0,
+      image: "src/assets/afbeeldingen/coffee-corner/latte-art2.png",
       category: "coffee-specialties",
-      description: "Met melkschuim",
-      descriptionEn: "With milk foam",
-    },
-    {
-      id: 305,
-      name: "Americano",
-      nameEn: "Americano",
-      price: 3.0,
-      image: "/src/assets/afbeeldingen/coffee-corner/americano.jpg",
-      category: "coffee-specialties",
-      description: "Zwarte koffie",
-      descriptionEn: "Black coffee",
+      description: "Premium koffie",
+      descriptionEn: "Premium coffee",
     },
   ],
   "cold-drinks": [
@@ -518,16 +537,30 @@ const coffeeCornerMenu: Record<CategoryId, MenuItem[]> = {
       name: "IJskoffie",
       nameEn: "Iced Coffee",
       price: 4.0,
-      image: "/src/assets/afbeeldingen/coffee-corner/iced-coffee.jpg",
+      image: "src/assets/afbeeldingen/iceekoffie.png",
       category: "cold-drinks",
+      description: "Verfrissende ijskoffie perfect voor de zomer",
+      descriptionEn: "Refreshing iced coffee perfect for summer",
     },
     {
       id: 307,
       name: "Frappé",
       nameEn: "Frappé",
       price: 4.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/frappe.jpg",
+      image: "src/assets/afbeeldingen/caramelcoffee.webp",
       category: "cold-drinks",
+      description: "Romige ijskoffie met slagroom",
+      descriptionEn: "Creamy iced coffee with whipped cream",
+    },
+    {
+      id: 311,
+      name: "Iced Tea",
+      nameEn: "Iced Tea",
+      price: 3.0,
+      image: "src/assets/afbeeldingen/iced-tea.jpg",
+      category: "cold-drinks",
+      description: "Verfrissende ijsthee met citroen",
+      descriptionEn: "Refreshing iced tea with lemon",
     },
   ],
   "hot-drinks": [
@@ -536,16 +569,20 @@ const coffeeCornerMenu: Record<CategoryId, MenuItem[]> = {
       name: "Warme Chocolademelk",
       nameEn: "Hot Chocolate",
       price: 3.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/hot-chocolate.jpg",
+      image: "src/assets/afbeeldingen/Warme-chocolademelk-Gwenns-Bakery-2.webp",
       category: "hot-drinks",
+      description: "Rijke warme chocolademelk met marshmallows",
+      descriptionEn: "Rich hot chocolate milk with marshmallows",
     },
     {
       id: 309,
-      name: "Chai Latte",
-      nameEn: "Chai Latte",
+      name: "Cappuccino",
+      nameEn: "Cappuccino",
       price: 4.0,
-      image: "/src/assets/afbeeldingen/coffee-corner/chai-latte.jpg",
+      image: "src/assets/afbeeldingen/gingerbread-cappuccino.webp",
       category: "hot-drinks",
+      description: "Klassieke Italiaanse koffie met melkschuim",
+      descriptionEn: "Classic Italian coffee with milk foam",
     },
   ],
   pastries: [
@@ -554,16 +591,20 @@ const coffeeCornerMenu: Record<CategoryId, MenuItem[]> = {
       name: "Croissant",
       nameEn: "Croissant",
       price: 2.5,
-      image: "/src/assets/afbeeldingen/coffee-corner/croissant.jpg",
+      image: "src/assets/afbeeldingen/crossant-foto.jpeg",
       category: "pastries",
+      description: "Krokante Franse croissant vers uit de oven",
+      descriptionEn: "Crispy French croissant fresh from the oven",
     },
     {
-      id: 311,
+      id: 313,
       name: "Muffin",
       nameEn: "Muffin",
       price: 3.0,
-      image: "/src/assets/afbeeldingen/coffee-corner/muffin.jpg",
+      image: "src/assets/afbeeldingen/Sweet-Potato-Muffins-22.webp",
       category: "pastries",
+      description: "Verse muffin met blueberries",
+      descriptionEn: "Fresh muffin with blueberries",
     },
   ],
   curry: [],
@@ -629,17 +670,17 @@ const getCategoriesForTheme = (theme: string): CategoryItem[] => {
       ];
     case "sweetdelights":
       return [
-        { name: "Taarten", nameEn: "Cakes", icon: "/src/assets/afbeeldingen/sweet-delights/cake-icon.jpg", id: "cakes" },
-        { name: "Koffie", nameEn: "Coffee", icon: "/src/assets/afbeeldingen/sweet-delights/coffee-icon.jpg", id: "coffee-specialties" },
-        { name: "Koude Dranken", nameEn: "Cold Drinks", icon: "/src/assets/afbeeldingen/sweet-delights/cold-drink-icon.jpg", id: "cold-drinks" },
-        { name: "Warme Dranken", nameEn: "Hot Drinks", icon: "/src/assets/afbeeldingen/sweet-delights/hot-drink-icon.jpg", id: "hot-drinks" },
+        { name: "Taarten", nameEn: "Cakes", icon: "🍰", id: "cakes" },
+        { name: "Koffie Specialiteiten", nameEn: "Coffee Specialties", icon: "☕", id: "coffee-specialties" },
+        { name: "Koude Dranken", nameEn: "Cold Drinks", icon: "🧊", id: "cold-drinks" },
+        { name: "Warme Dranken", nameEn: "Hot Drinks", icon: "🔥", id: "hot-drinks" },
       ];
     case "coffeecorner":
       return [
-        { name: "Koffie", nameEn: "Coffee", icon: "/src/assets/afbeeldingen/coffee-corner/coffee-icon.jpg", id: "coffee-specialties" },
-        { name: "Koude Dranken", nameEn: "Cold Drinks", icon: "/src/assets/afbeeldingen/coffee-corner/cold-icon.jpg", id: "cold-drinks" },
-        { name: "Warme Dranken", nameEn: "Hot Drinks", icon: "/src/assets/afbeeldingen/coffee-corner/hot-icon.jpg", id: "hot-drinks" },
-        { name: "Gebak", nameEn: "Pastries", icon: "/src/assets/afbeeldingen/coffee-corner/pastry-icon.jpg", id: "pastries" },
+        { name: "Koffie", nameEn: "Coffee", icon: "☕", id: "coffee-specialties" },
+        { name: "Koude Dranken", nameEn: "Cold Drinks", icon: "🧊", id: "cold-drinks" },
+        { name: "Warme Dranken", nameEn: "Hot Drinks", icon: "🔥", id: "hot-drinks" },
+        { name: "Bakkerij", nameEn: "Bakery", icon: "🥐", id: "pastries" },
       ];
     default:
       return [
@@ -811,6 +852,95 @@ const defaultSpicePalaceToppings: ToppingItem[] = [
   { name: "extra naan", nameEn: "extra naan", price: 1.50 },
 ];
 
+// Sweet Delights toppings per category
+const sweetDelightsToppings: Record<CategoryId, ToppingItem[]> = {
+  cakes: [
+    { name: "extra room", nameEn: "extra cream", price: 1.00 },
+    { name: "verse aardbeien", nameEn: "fresh strawberries", price: 1.50 },
+    { name: "chocolade drizzle", nameEn: "chocolate drizzle", price: 0.75 },
+    { name: "poedersuiker", nameEn: "powdered sugar", price: 0.25 },
+  ],
+  "hot-drinks": [
+    { name: "extra suiker", nameEn: "extra sugar", price: 0.00 },
+    { name: "honing", nameEn: "honey", price: 0.50 },
+    { name: "slagroom", nameEn: "whipped cream", price: 0.75 },
+    { name: "kaneel", nameEn: "cinnamon", price: 0.25 },
+    { name: "marshmallows", nameEn: "marshmallows", price: 0.50 },
+  ],
+  all: [],
+  popular: [],
+  curry: [],
+  ramen: [],
+  pizza: [],
+  drinks: [],
+  handi: [],
+  kebab: [],
+  rice: [],
+  bbq: [],
+  karahi: [],
+  tandoori: [],
+  "coffee-specialties": [
+    { name: "extra room", nameEn: "extra cream", price: 1.00 },
+    { name: "verse aardbeien", nameEn: "fresh strawberries", price: 1.50 },
+    { name: "chocolade drizzle", nameEn: "chocolate drizzle", price: 0.75 },
+    { name: "slagroom", nameEn: "whipped cream", price: 0.75 },
+    { name: "kaneel", nameEn: "cinnamon", price: 0.25 },
+    { name: "vanille siroop", nameEn: "vanilla syrup", price: 0.50 },
+  ],
+  "cold-drinks": [],
+  pastries: [
+    { name: "boter", nameEn: "butter", price: 0.50 },
+    { name: "jam", nameEn: "jam", price: 0.75 },
+    { name: "verse room", nameEn: "fresh cream", price: 1.00 },
+  ],
+};
+
+// Coffee Corner toppings per category
+const coffeeCornerToppings: Record<CategoryId, ToppingItem[]> = {
+  "coffee-specialties": [
+    { name: "extra shot", nameEn: "extra shot", price: 0.75 },
+    { name: "sojamilk", nameEn: "soy milk", price: 0.50 },
+    { name: "havermelk", nameEn: "oat milk", price: 0.60 },
+    { name: "extra schuim", nameEn: "extra foam", price: 0.25 },
+    { name: "karamel siroop", nameEn: "caramel syrup", price: 0.50 },
+    { name: "vanille siroop", nameEn: "vanilla syrup", price: 0.50 },
+  ],
+  "hot-drinks": [
+    { name: "extra suiker", nameEn: "extra sugar", price: 0.00 },
+    { name: "honing", nameEn: "honey", price: 0.50 },
+    { name: "slagroom", nameEn: "whipped cream", price: 0.75 },
+    { name: "kaneel", nameEn: "cinnamon", price: 0.25 },
+    { name: "marshmallows", nameEn: "marshmallows", price: 0.50 },
+    { name: "chocolade vlokken", nameEn: "chocolate flakes", price: 0.75 },
+  ],
+  "cold-drinks": [
+    { name: "extra ijs", nameEn: "extra ice", price: 0.00 },
+    { name: "citroen", nameEn: "lemon", price: 0.25 },
+    { name: "munt", nameEn: "mint", price: 0.30 },
+    { name: "suiker siroop", nameEn: "sugar syrup", price: 0.25 },
+    { name: "slagroom", nameEn: "whipped cream", price: 0.75 },
+  ],
+  pastries: [
+    { name: "boter", nameEn: "butter", price: 0.50 },
+    { name: "jam", nameEn: "jam", price: 0.75 },
+    { name: "verse room", nameEn: "fresh cream", price: 1.00 },
+    { name: "honing", nameEn: "honey", price: 0.50 },
+  ],
+  all: [],
+  popular: [],
+  curry: [],
+  ramen: [],
+  pizza: [],
+  drinks: [],
+  handi: [],
+  kebab: [],
+  rice: [],
+  bbq: [],
+  karahi: [],
+  tandoori: [],
+  cakes: [],
+};
+
 // Translation object
 const translations = {
   nl: {
@@ -897,6 +1027,16 @@ const getToppingsForTheme = (theme: string, category?: CategoryId): ToppingItem[
         return tableTechToppings[category];
       }
       return toppingsData;
+    case "sweetdelights":
+      if (category && sweetDelightsToppings[category] && sweetDelightsToppings[category].length > 0) {
+        return sweetDelightsToppings[category];
+      }
+      return [];
+    case "coffeecorner":
+      if (category && coffeeCornerToppings[category] && coffeeCornerToppings[category].length > 0) {
+        return coffeeCornerToppings[category];
+      }
+      return [];
     default:
       return toppingsData;
   }
@@ -921,7 +1061,7 @@ const getThemeConfig = (theme: string): ThemeConfig => {
     case "spicepalace":
       return {
         name: "Spice Palace",
-        icon: <Flame className="w-5 h-5 text-white" />,
+        icon: <FaFire className="w-5 h-5 text-white" />,
         bgColor: "bg-gradient-to-b from-red-700 via-red-800 to-red-900",
         headerBg: "bg-gradient-to-r from-red-600 to-red-700",
         textColor: "text-white",
@@ -934,22 +1074,24 @@ const getThemeConfig = (theme: string): ThemeConfig => {
       };
     case "sweetdelights":
       return {
-        name: "Sweet Delights",
-        icon: <img src="/src/assets/afbeeldingen/sweet-delights/logo.png" alt="Sweet Delights Logo" className="w-5 h-5" />,
+        name: "SWEET DELIGHTS",
+        icon: <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
+          <div className="w-4 h-4 bg-pink-500 rounded"></div>
+        </div>,
         bgColor: "bg-gradient-to-b from-pink-100 to-pink-200",
         headerBg: "bg-pink-500",
-        textColor: "text-gray-800",
+        textColor: "text-pink-800",
         categoryBg: "bg-pink-400",
         categoryHoverBg: "bg-pink-500",
         categoryTextColor: "text-white",
         buttonColor: "bg-pink-500 hover:bg-pink-600",
         cardBg: "bg-white",
-        cardTextColor: "text-gray-800",
+        cardTextColor: "text-pink-800",
       };
     case "coffeecorner":
       return {
         name: "Coffee Corner",
-        icon: <Coffee className="w-5 h-5 text-white" />,
+        icon: <FaCoffee className="w-5 h-5 text-white" />,
         bgColor: "bg-gradient-to-b from-amber-100 to-amber-200",
         headerBg: "bg-amber-600",
         textColor: "text-amber-800",
@@ -958,7 +1100,7 @@ const getThemeConfig = (theme: string): ThemeConfig => {
         categoryTextColor: "text-white",
         buttonColor: "bg-green-600 hover:bg-green-700",
         cardBg: "bg-white",
-        cardTextColor: "text-gray-800",
+        cardTextColor: "text-amber-800",
       };
     default:
       return {
@@ -1006,7 +1148,49 @@ const ImageWithLoading: React.FC<{ src: string; alt: string; className: string }
   );
 };
 
-const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
+// Enhanced scroll utilities with performance optimization
+const createSmoothScroll = () => {
+  let isScrolling = false;
+  let animationId: number | null = null;
+  
+  const smoothScroll = (element: HTMLElement, targetY: number, duration: number = 200) => {
+    if (isScrolling) {
+      if (animationId) cancelAnimationFrame(animationId);
+    }
+    isScrolling = true;
+    
+    const startY = element.scrollTop;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+    
+    // Faster easing function for snappier feel
+    const easeOutQuart = (t: number): number => {
+      return 1 - (--t) * t * t * t;
+    };
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuart(progress);
+      
+      element.scrollTop = startY + (distance * easedProgress);
+      
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        isScrolling = false;
+        animationId = null;
+      }
+    };
+    
+    animationId = requestAnimationFrame(animate);
+  };
+  
+  return smoothScroll;
+};
+
+// Memoized PhoneMockup component for better performance with performance optimizations
+const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [hasCartAppeared, setHasCartAppeared] = useState(false);
   const [floaters, setFloaters] = useState<number[]>([]);
@@ -1016,13 +1200,21 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
   const [isEnglish, setIsEnglish] = useState(false);
 
-  const mockMenu = getMenuForTheme(theme);
-  const categories = getCategoriesForTheme(theme);
-  const themeConfig = getThemeConfig(theme);
+  // Memoized calculations for better performance with reduced recalculation
+  const mockMenu = useMemo(() => getMenuForTheme(theme), [theme]);
+  const categories = useMemo(() => getCategoriesForTheme(theme), [theme]);
+  const themeConfig = useMemo(() => getThemeConfig(theme), [theme]);
+  const smoothScroll = useMemo(() => createSmoothScroll(), []);
 
   // Set initial category based on theme
   useEffect(() => {
-    setActiveCategory("all");
+    if (theme === "sweetdelights") {
+      setActiveCategory("cakes");
+    } else if (theme === "coffeecorner") {
+      setActiveCategory("coffee-specialties");
+    } else {
+      setActiveCategory("all");
+    }
   }, [theme]);
 
   // Reset states when theme changes
@@ -1030,7 +1222,13 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
     setSelectedItem(null);
     setCartOpen(false);
     setSelectedToppings([]);
-    setActiveCategory("all");
+    if (theme === "sweetdelights") {
+      setActiveCategory("cakes");
+    } else if (theme === "coffeecorner") {
+      setActiveCategory("coffee-specialties");
+    } else {
+      setActiveCategory("all");
+    }
     setCart([]);
     setHasCartAppeared(false);
     setFloaters([]);
@@ -1039,7 +1237,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
     setTimeout(() => {
       const mainScrollContainer = document.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
       if (mainScrollContainer) {
-        mainScrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        mainScrollContainer.scrollTop = 0;
       }
     }, 100);
   }, [theme]);
@@ -1058,37 +1256,31 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
     const targetSection = sectionRefs[categoryId]?.current;
     
     if (mainScrollContainer) {
-      // For Spice Palace, always scroll to the very top to show header
       if (theme === "spicepalace") {
-        mainScrollContainer.style.scrollBehavior = 'auto';
-        mainScrollContainer.scrollTop = 0;
-        // Add a gentle easing effect
-        setTimeout(() => {
-          mainScrollContainer.style.scrollBehavior = 'smooth';
-        }, 50);
+        smoothScroll(mainScrollContainer, 0, 150); // Faster scroll for spicepalace
       } else if (targetSection) {
         const containerRect = mainScrollContainer.getBoundingClientRect();
         const sectionRect = targetSection.getBoundingClientRect();
         
-        const extraOffset = theme === "tabletech" ? 60 : 10;
+        const extraOffset = theme === "tabletech" ? 50 : 5; // Reduced offset for faster navigation
         const scrollOffset = sectionRect.top - containerRect.top + mainScrollContainer.scrollTop - extraOffset;
         
-        mainScrollContainer.scrollTo({
-          top: Math.max(0, scrollOffset),
-          behavior: 'smooth'
-        });
+        smoothScroll(mainScrollContainer, Math.max(0, scrollOffset), 150); // Faster scroll duration
       }
     }
-  }, [theme, sectionRefs]);
+  }, [theme, sectionRefs, smoothScroll]);
 
-  // Add scroll tracking for categories with throttling for better performance
+  // Enhanced scroll tracking with throttling and performance optimization
   useEffect(() => {
     const mainScrollContainer = document.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
     if (!mainScrollContainer) return;
 
     let ticking = false;
+    let isUserScrolling = false;
+    let scrollTimeout: NodeJS.Timeout;
+
     const updateActiveCategory = () => {
-      if (!ticking) {
+      if (!ticking && !isUserScrolling) {
         requestAnimationFrame(() => {
           for (const categoryId of categories.map(c => c.id)) {
             const section = sectionRefs[categoryId]?.current;
@@ -1096,8 +1288,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               const rect = section.getBoundingClientRect();
               const containerRect = mainScrollContainer.getBoundingClientRect();
               
-              const topOffset = theme === "tabletech" ? 120 : theme === "spicepalace" ? 60 : 100;
-              const bottomOffset = theme === "tabletech" ? 60 : theme === "spicepalace" ? 20 : 50;
+              const topOffset = theme === "tabletech" ? 100 : theme === "spicepalace" ? 50 : 80;
+              const bottomOffset = theme === "tabletech" ? 50 : theme === "spicepalace" ? 15 : 40;
               
               if (rect.top <= containerRect.top + topOffset && rect.bottom > containerRect.top + bottomOffset) {
                 if (activeCategory !== categoryId) {
@@ -1113,10 +1305,32 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
       }
     };
 
-    mainScrollContainer.addEventListener('scroll', updateActiveCategory, { passive: true });
+    const handleScroll = () => {
+      isUserScrolling = true;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isUserScrolling = false;
+      }, 50); // Faster timeout for more responsive updates
+      updateActiveCategory();
+    };
+
+    // Enhanced wheel event handling for better mouse scroll
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+      const scrollSpeed = 1.2; // Faster scroll speed for better responsiveness
+      const newScrollTop = mainScrollContainer.scrollTop + (delta * scrollSpeed);
+      
+      mainScrollContainer.scrollTop = Math.max(0, Math.min(newScrollTop, mainScrollContainer.scrollHeight - mainScrollContainer.clientHeight));
+    };
+
+    mainScrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    mainScrollContainer.addEventListener('wheel', handleWheel, { passive: false });
     
     return () => {
-      mainScrollContainer.removeEventListener('scroll', updateActiveCategory);
+      mainScrollContainer.removeEventListener('scroll', handleScroll);
+      mainScrollContainer.removeEventListener('wheel', handleWheel);
+      clearTimeout(scrollTimeout);
     };
   }, [activeCategory, sectionRefs, categories, theme]);
 
@@ -1142,7 +1356,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
     setFloaters((prev) => [...prev, id]);
     setTimeout(() => {
       setFloaters((prev) => prev.filter((f) => f !== id));
-    }, 500);
+    }, 300); // Faster floater cleanup
   }, [mockMenu, theme, isEnglish]);
 
   useEffect(() => {
@@ -1179,17 +1393,105 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
       }
     }
 
-    // TableTech gebruikt de originele compacte grid layout
+    // Sweet Delights & Coffee Corner get special horizontal card layout
+    if (theme === "sweetdelights" || theme === "coffeecorner") {
+      const isSweet = theme === "sweetdelights";
+      const isCoffee = theme === "coffeecorner";
+      
+      return (
+        <div ref={sectionRefs[categoryId]} className="mb-6" key={`section-${categoryId}`}>
+          <div className="px-4 space-y-3">
+            {items.map((item) => (
+              <div
+                key={`${item.id}-${item.category}-${theme}`}
+                onClick={() => setSelectedItem(item)}
+                className={`relative flex items-center rounded-2xl overflow-hidden shadow-md transform transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-105 ${
+                  isSweet 
+                    ? "bg-white" 
+                    : "bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200"
+                }`}
+              >
+                <ImageWithLoading
+                  src={item.image}
+                  alt={item.name}
+                  className={`w-20 h-20 object-cover flex-shrink-0 ${
+                    isSweet 
+                      ? "rounded-l-2xl" 
+                      : "rounded-l-2xl border-r border-amber-200"
+                  }`}
+                />
+                <div className="flex-1 p-3">
+                  <h3 className={`text-sm font-bold mb-1 ${
+                    isSweet 
+                      ? "text-pink-800" 
+                      : "text-amber-900"
+                  }`}>
+                    {isEnglish && item.nameEn ? item.nameEn : item.name}
+                  </h3>
+                  {item.description && (isSweet || isCoffee) && (
+                    <p className={`text-xs mb-2 italic ${
+                      isSweet ? "text-pink-700" : "text-amber-700"
+                    }`}>
+                      {isEnglish && item.descriptionEn ? item.descriptionEn : item.description}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className={`text-lg font-bold ${
+                      isSweet 
+                        ? "text-pink-600" 
+                        : "text-amber-800"
+                    }`}>
+                      €{item.price.toFixed(2)}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(item.id, item.category, []);
+                      }}
+                      className={`text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-all duration-200 relative z-10 transform hover:scale-110 ${
+                        isSweet 
+                          ? "bg-pink-500 hover:bg-pink-600" 
+                          : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg"
+                      }`}
+                      style={{ minWidth: '32px', minHeight: '32px' }}
+                    >
+                      <FaPlus size={14} className="text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                <AnimatePresence>
+                  {floaters.includes(item.id) && (
+                    <motion.div
+                      key={`floater-${item.id}`}
+                      initial={{ opacity: 1, y: 0 }}
+                      animate={{ opacity: 0, y: -4 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute text-sm font-semibold text-green-500 bottom-2 right-2 pointer-events-none z-20"
+                    >
+                      +1
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // TableTech uses the grid layout
     if (theme === "tabletech") {
       return (
         <div ref={sectionRefs[categoryId]} className="mb-6" key={`section-${categoryId}`}>
-          <h2 className="text-lg font-bold text-gray-800 mb-3 px-1 sticky -top-2 bg-white py-2 border-b border-gray-300 z-50 shadow-sm">
+          <h2 className="text-lg font-bold mb-3 px-1 sticky -top-2 py-2 border-b z-50 shadow-sm bg-white text-gray-800 border-gray-300">
             {categories.find((c) => c.id === categoryId)?.name}
           </h2>
           <div className="grid grid-cols-2 gap-2 px-1 pb-16">
             {items.map((item) => (
               <div
-                key={`${item.id}-${item.category}-tabletech`}
+                key={`${item.id}-${item.category}-${theme}`}
                 onClick={() => setSelectedItem(item)}
                 className="relative flex flex-col items-center bg-white ring-1 ring-gray-200 rounded-2xl overflow-hidden p-2 pb-2 transform transition hover:-translate-y-1 hover:shadow-lg cursor-pointer"
               >
@@ -1198,11 +1500,11 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                   alt={item.name}
                   className="w-full aspect-square object-cover rounded-lg mb-1"
                 />
-                <h3 className="text-sm font-semibold text-center leading-tight text-gray-800 mb-1">
+                <h3 className="text-sm font-semibold text-center leading-tight mb-1 text-gray-800">
                   {isEnglish && item.nameEn ? item.nameEn : item.name}
                 </h3>
                 <div className="flex items-center w-full mt-auto">
-                  <span className="text-base font-bold text-gray-600 flex-1">
+                  <span className="text-base font-bold flex-1 text-gray-600">
                     €{item.price.toFixed(2)}
                   </span>
                   <button
@@ -1222,9 +1524,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                     <motion.div
                       key={`floater-${item.id}`}
                       initial={{ opacity: 1, y: 0 }}
-                      animate={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 0, y: -8 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                       className="absolute text-sm font-semibold text-green-500 bottom-14 right-4 pointer-events-none z-20"
                     >
                       +1
@@ -1238,7 +1540,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
       );
     }
 
-    // Andere thema's gebruiken de grote kaart layout
+    // Spice Palace gebruikt de grote kaart layout
     return (
       <div ref={sectionRefs[categoryId]} className="mb-0" key={`section-${categoryId}`} style={{
         scrollMarginTop: theme === "spicepalace" ? "60px" : "0px"
@@ -1314,9 +1616,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                   <motion.div
                     key={`floater-${item.id}`}
                     initial={{ opacity: 1, y: 0 }}
-                    animate={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 0, y: -8 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                     className="absolute text-sm font-semibold text-green-500 bottom-14 right-4 pointer-events-none drop-shadow-lg z-40"
                   >
                     +1
@@ -1347,6 +1649,24 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
       );
     }
 
+    if (theme === "sweetdelights") {
+      return (
+        <div className={`flex items-center justify-between p-4 ${themeConfig.headerBg} text-white shadow-lg`}>
+          <div className="flex items-center gap-3">
+            {themeConfig.icon}
+            <h1 className="text-lg font-bold text-white">{themeConfig.name}</h1>
+          </div>
+          <button 
+            onClick={() => setIsEnglish(!isEnglish)}
+            className="text-xs border border-white text-white px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:bg-white hover:text-pink-500"
+          >
+            <FaGlobeAmericas className="w-3 h-3" />
+            {isEnglish ? 'Nederlands' : 'English'}
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className={`flex items-center justify-between p-4 ${themeConfig.headerBg} ${themeConfig.textColor} shadow-lg`}>
         <div className="flex items-center gap-3">
@@ -1363,7 +1683,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               : "border-amber-200 text-amber-100 hover:bg-amber-300 hover:text-red-800"
           }`}
         >
-          <Globe className="w-3 h-3" />
+          <FaGlobeAmericas className="w-3 h-3" />
           {isEnglish ? 'Nederlands' : 'English'}
         </button>
       </div>
@@ -1373,10 +1693,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
   return (
     <div 
       data-phone-container="true"
-      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
+      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans gpu-accelerated ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
       style={{
-        scrollBehavior: 'smooth',
-        WebkitOverflowScrolling: 'touch'
+        willChange: 'transform',
+        contain: 'layout style paint'
       }}
     >
       {renderHeader()}
@@ -1392,12 +1712,16 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
           }`}
           data-horizontal-scroll="true"
           style={{ 
-            scrollBehavior: 'smooth',
             overscrollBehavior: 'contain',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
             touchAction: 'pan-x'
+          }}
+          onWheel={(e) => {
+            e.preventDefault();
+            const container = e.currentTarget;
+            container.scrollLeft += e.deltaY * 0.3; // Slower horizontal scroll
           }}
         >
           {categories.map((cat) => (
@@ -1420,19 +1744,68 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
             </button>
           ))}
         </div>
+      ) : theme === "sweetdelights" || theme === "coffeecorner" ? (
+        // Sweet Delights & Coffee Corner: 2x2 Grid layout zoals in de afbeelding
+        <div className={`px-4 py-4 ${
+          theme === "sweetdelights" ? "border-b-2 border-pink-300" : "border-b-2 border-amber-300"
+        }`}>
+          <div className="grid grid-cols-2 gap-4">
+            {categories.map((cat) => (
+              <div
+                key={`category-${cat.id}`}
+                onClick={() => scrollToSection(cat.id)}
+                className="flex flex-col items-center cursor-pointer group"
+              >
+                <div
+                  className={`w-16 h-16 rounded-full mb-2 overflow-hidden border-2 transition-all duration-300 flex items-center justify-center ${
+                    theme === "sweetdelights" 
+                      ? activeCategory === cat.id
+                        ? "border-pink-400 shadow-xl scale-110 ring-2 ring-pink-300/50 bg-pink-400"
+                        : "border-pink-300 hover:border-pink-400 hover:shadow-lg hover:scale-105 bg-pink-400"
+                      : activeCategory === cat.id
+                        ? "border-amber-500 shadow-xl scale-110 ring-2 ring-amber-400/50 bg-gradient-to-br from-amber-500 to-amber-600"
+                        : "border-amber-400 hover:border-amber-500 hover:shadow-lg hover:scale-105 bg-gradient-to-br from-amber-500 to-amber-600"
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    theme === "sweetdelights" ? "bg-white" : "bg-white/95 backdrop-blur-sm"
+                  }`}>
+                    <span className={`text-lg ${
+                      theme === "coffeecorner" ? "text-amber-800" : ""
+                    }`}>{cat.icon}</span>
+                  </div>
+                </div>
+                <span className={`text-xs text-center font-medium transition-all duration-300 ${
+                  theme === "sweetdelights"
+                    ? activeCategory === cat.id 
+                      ? "text-pink-800 font-bold" 
+                      : "text-pink-700 group-hover:text-pink-800"
+                    : activeCategory === cat.id
+                      ? "text-amber-900 font-bold drop-shadow-sm"
+                      : "text-amber-800 group-hover:text-amber-900"
+                }`}>
+                  {isEnglish && cat.nameEn ? cat.nameEn : cat.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
-        // Andere thema's: Cirkelvormige scroll
+        // Spice Palace: Cirkelvormige scroll
         <div 
           className="flex overflow-x-auto px-4 py-4 gap-3 scrollbar-hide"
           data-horizontal-scroll="true"
           style={{ 
-            scrollBehavior: 'smooth',
             overscrollBehavior: 'contain',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-x',
-            scrollSnapType: 'none'
+            touchAction: 'pan-x'
+          }}
+          onWheel={(e) => {
+            e.preventDefault();
+            const container = e.currentTarget;
+            container.scrollLeft += e.deltaY * 0.3; // Slower horizontal scroll
           }}
         >
           {categories.map((cat) => (
@@ -1440,10 +1813,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               key={`category-${cat.id}`}
               onClick={() => scrollToSection(cat.id)}
               className="flex flex-col items-center min-w-[60px] cursor-pointer group flex-shrink-0"
-              style={{ scrollSnapAlign: 'none' }}
             >
               <div
-                className={`w-12 h-12 rounded-full mb-2 overflow-hidden border-2 transition-all duration-300 ${
+                className={`w-12 h-12 rounded-full mb-2 overflow-hidden border-2 transition-all duration-300 flex items-center justify-center ${
                   activeCategory === cat.id
                     ? "border-amber-300 shadow-xl scale-110 ring-2 ring-amber-400/50"
                     : "border-white/60 hover:border-amber-200/80 hover:shadow-lg hover:scale-105"
@@ -1463,11 +1835,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                 )}
               </div>
               <span className={`text-xs text-center font-medium transition-all duration-300 ${
-                theme === "spicepalace" 
-                  ? activeCategory === cat.id 
-                    ? "text-amber-200 drop-shadow-sm font-bold" 
-                    : "text-white/90 group-hover:text-amber-100"
-                  : themeConfig.textColor
+                activeCategory === cat.id 
+                  ? "text-amber-200 drop-shadow-sm font-bold" 
+                  : "text-white/90 group-hover:text-amber-100"
               }`}>
                 {isEnglish && cat.nameEn ? cat.nameEn : cat.name}
               </span>
@@ -1476,27 +1846,24 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
         </div>
       )}
 
-      {/* MAIN SCROLLABLE AREA - removed scroll-snap for TableTech */}
+      {/* MAIN SCROLLABLE AREA - Enhanced scrolling with performance optimization */}
       <div 
         data-phone-scroll-container="true"
         className={`flex-1 overflow-y-auto pt-2 ${
           theme === "tabletech" ? "pb-28" : "pb-40"
-        }`}
+        } gpu-accelerated optimized-scroll`}
         style={{ 
-          scrollBehavior: 'smooth',
           overscrollBehavior: 'contain',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
-          scrollSnapType: 'none',
           touchAction: 'pan-y',
+          contain: 'layout style paint',
+          willChange: 'scroll-position'
         }}
       >
         {/* Show content based on active category */}
-        {activeCategory === "all" ? 
-          renderMenuSection("all", false) :
-          renderMenuSection(activeCategory, false)
-        }
+        {renderMenuSection(activeCategory, false)}
       </div>
 
       <AnimatePresence>
@@ -1510,7 +1877,17 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className={`absolute bottom-5 left-4 right-4 z-50 ${theme === "tabletech" ? "bg-[#7b4f35]" : theme === "spicepalace" ? "bg-black" : "bg-gray-800"} text-white py-4 px-4 rounded-full text-sm font-bold text-center cursor-pointer shadow-xl transition-all duration-200 ${theme === "tabletech" ? "hover:bg-[#5e3b29]" : theme === "spicepalace" ? "hover:bg-gray-800" : "hover:bg-gray-900"} flex items-center justify-center gap-2 transform hover:scale-105`}
+              className={`absolute bottom-5 left-4 right-4 z-50 ${
+                theme === "tabletech" ? "bg-[#7b4f35]" : 
+                theme === "spicepalace" ? "bg-black" : 
+                theme === "sweetdelights" ? "bg-pink-500" :
+                theme === "coffeecorner" ? "bg-green-600" : "bg-gray-800"
+              } text-white py-4 px-4 rounded-full text-sm font-bold text-center cursor-pointer shadow-xl transition-all duration-200 ${
+                theme === "tabletech" ? "hover:bg-[#5e3b29]" : 
+                theme === "spicepalace" ? "hover:bg-gray-800" : 
+                theme === "sweetdelights" ? "hover:bg-pink-600" :
+                theme === "coffeecorner" ? "hover:bg-green-700" : "hover:bg-gray-900"
+              } flex items-center justify-center gap-2 transform hover:scale-105`}
             >
               {theme === "tabletech" ? (
                 // TableTech: Originele eenvoudige layout
@@ -1520,7 +1897,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                     key={total}
                     initial={{ opacity: 0.5, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }} // Faster price animation
                     className="inline-block"
                   >
                     €{total}
@@ -1537,7 +1914,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                     key={total}
                     initial={{ opacity: 0.5, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }} // Faster price animation
                     className="inline-block font-bold text-lg"
                   >
                     €{total}
@@ -1567,7 +1944,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               transition={{
                 type: "tween",
                 ease: [0.16, 1, 0.3, 1],
-                duration: 0.6,
+                duration: 0.4, // Faster cart animation
               }}
             >
               <div className="p-4 flex justify-between items-center border-b">
@@ -1588,10 +1965,15 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                 data-phone-scroll-container="true"
                 data-phone-cart-scroll="true"
                 style={{ 
-                  scrollBehavior: 'auto',
                   overscrollBehavior: 'contain',
                   WebkitOverflowScrolling: 'touch',
                   touchAction: 'pan-y'
+                }}
+                onWheel={(e) => {
+                  e.preventDefault();
+                  const container = e.currentTarget;
+                  const scrollSpeed = 1.1; // Faster cart scroll for better responsiveness
+                  container.scrollTop += e.deltaY * scrollSpeed;
                 }}
               >
                 {[...new Set(cart.map((i) => `${i.id}|||${JSON.stringify(i.toppings || [])}`))]
@@ -1690,7 +2072,12 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
               </div>
 
               <div className="p-4">
-                <button className={`w-full ${theme === "tabletech" ? "bg-[#7b4f35] hover:bg-[#5e3b29]" : theme === "spicepalace" ? "bg-black hover:bg-gray-800" : "bg-black hover:bg-gray-900"} text-white py-3 rounded-full font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95`}>
+                <button className={`w-full ${
+                  theme === "tabletech" ? "bg-[#7b4f35] hover:bg-[#5e3b29]" : 
+                  theme === "spicepalace" ? "bg-black hover:bg-gray-800" : 
+                  theme === "sweetdelights" ? "bg-pink-500 hover:bg-pink-600" :
+                  theme === "coffeecorner" ? "bg-green-600 hover:bg-green-700" : "bg-black hover:bg-gray-900"
+                } text-white py-3 rounded-full font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95`}>
                   {translationTexts.continue}
                 </button>
               </div>
@@ -1708,7 +2095,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
             transition={{
               type: "tween",
               ease: [0.16, 1, 0.3, 1],
-              duration: 0.6,
+              duration: 0.4, // Faster animation for better responsiveness
             }}
             className="absolute inset-0 z-60 bg-white flex flex-col"
             data-phone-container="true"
@@ -1734,11 +2121,16 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                 data-phone-scroll-container="true"
                 data-product-detail-scroll="true"
                 style={{ 
-                  scrollBehavior: 'auto',
                   overscrollBehavior: 'contain',
                   maxHeight: 'calc(100vh - 200px)',
                   WebkitOverflowScrolling: 'touch',
                   touchAction: 'pan-y'
+                }}
+                onWheel={(e) => {
+                  e.preventDefault();
+                  const container = e.currentTarget;
+                  const scrollSpeed = 1.2; // Faster detail scroll for better responsiveness
+                  container.scrollTop += e.deltaY * scrollSpeed;
                 }}
               >
                 <div>
@@ -1757,7 +2149,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                   )}
                 </p>
 
-                {theme === "tabletech" && (
+                {theme === "tabletech" && (selectedItem.category === "curry" || selectedItem.category === "ramen" || selectedItem.category === "popular") && (
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="text-sm font-semibold mb-2">
                       {translationTexts.chooseSpicy}
@@ -1781,13 +2173,24 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                   </div>
                 )}
 
-                {(theme === "tabletech" || theme === "spicepalace") && (
-                  <div className={`${theme === "spicepalace" ? "bg-red-50" : "bg-gray-50"} p-4 rounded-lg`}>
+                {(theme === "tabletech" || theme === "spicepalace" || theme === "sweetdelights" || theme === "coffeecorner") && selectedItemToppings.length > 0 && (
+                  <div className={`${
+                    theme === "spicepalace" ? "bg-red-50" : 
+                    theme === "sweetdelights" ? "bg-pink-50" :
+                    theme === "coffeecorner" ? "bg-amber-50" :
+                    "bg-gray-50"
+                  } p-4 rounded-lg`}>
                     <h4 className="text-sm font-semibold mb-2">
-                      {theme === "spicepalace" ? (isEnglish ? "Customize your dish" : "Personaliseer je gerecht") : translationTexts.addToppings}
+                      {theme === "spicepalace" ? (isEnglish ? "Customize your dish" : "Personaliseer je gerecht") : 
+                       theme === "sweetdelights" ? (isEnglish ? "Sweet extras" : "Zoete extra's") :
+                       theme === "coffeecorner" ? (isEnglish ? "Customize your drink" : "Personaliseer je drankje") :
+                       translationTexts.addToppings}
                     </h4>
                     <p className="text-xs text-gray-500 mb-3">
-                      {theme === "spicepalace" ? (isEnglish ? "Choose your preferred additions" : "Kies je gewenste toevoegingen") : translationTexts.chooseUpTo7}
+                      {theme === "spicepalace" ? (isEnglish ? "Choose your preferred additions" : "Kies je gewenste toevoegingen") : 
+                       theme === "sweetdelights" ? (isEnglish ? "Make it extra special" : "Maak het extra speciaal") :
+                       theme === "coffeecorner" ? (isEnglish ? "Perfect your drink" : "Perfectioneer je drankje") :
+                       translationTexts.chooseUpTo7}
                     </p>
                     <div className="flex flex-col gap-3">
                       {selectedItemToppings.map((top: ToppingItem) => (
@@ -1815,6 +2218,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                             className={`appearance-none w-5 h-5 border-2 rounded-full transition-colors duration-150 ${
                               theme === "spicepalace"
                                 ? "border-red-400 checked:bg-red-600 checked:border-red-600 hover:border-red-500"
+                                : theme === "sweetdelights"
+                                ? "border-pink-400 checked:bg-pink-500 checked:border-pink-500 hover:border-pink-500"
+                                : theme === "coffeecorner"
+                                ? "border-amber-500 checked:bg-green-600 checked:border-green-600 hover:border-amber-600"
                                 : "border-gray-400 checked:bg-black checked:border-black hover:border-gray-500 active:border-gray-600"
                             }`}
                           />
@@ -1834,7 +2241,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
             <div className="absolute bottom-4 left-4 right-4 z-70">
               <button
                 onClick={() => {
-                  if ((theme === "tabletech" || theme === "spicepalace") && selectedToppings.length > 0) {
+                  if ((theme === "tabletech" || theme === "spicepalace" || theme === "sweetdelights" || theme === "coffeecorner") && selectedToppings.length > 0) {
                     addToCart(selectedItem.id, selectedItem.category, selectedToppings);
                   } else {
                     addToCart(selectedItem.id, selectedItem.category);
@@ -1842,7 +2249,12 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
                   setSelectedItem(null);
                   setSelectedToppings([]);
                 }}
-                className={`w-full ${theme === "spicepalace" ? "bg-black hover:bg-gray-800" : theme === "tabletech" ? "bg-[#7b4f35] hover:bg-[#5e3b29]" : "bg-black hover:bg-gray-900"} text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95`}
+                className={`w-full ${
+                  theme === "spicepalace" ? "bg-black hover:bg-gray-800" : 
+                  theme === "tabletech" ? "bg-[#7b4f35] hover:bg-[#5e3b29]" : 
+                  theme === "sweetdelights" ? "bg-pink-500 hover:bg-pink-600" :
+                  theme === "coffeecorner" ? "bg-green-600 hover:bg-green-700" : "bg-black hover:bg-gray-900"
+                } text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95`}
               >
                 {translationTexts.addToOrder} • €{buttonTotal}
               </button>
@@ -1852,6 +2264,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ theme = "tabletech" }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
+
+// Set display name for debugging
+PhoneMockup.displayName = 'PhoneMockup';
 
 export default PhoneMockup;
