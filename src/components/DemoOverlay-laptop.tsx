@@ -128,7 +128,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={onSwitchToCustomer}
-                      className="bg-[#c49a7a] hover:bg-[#a67c52] text-white px-3 py-2 rounded-md font-medium transition-all duration-200 shadow-lg text-xs"
+                      className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-3 py-2 rounded-md font-medium transition-all duration-200 shadow-lg text-xs"
                     >
                       Demo klant →
                     </motion.button>
@@ -157,7 +157,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
                   </button>
                   <button
                     onClick={onSwitchToCustomer}
-                    className="bg-[#c49a7a] hover:bg-[#a67c52] text-white px-3 py-2 rounded-md font-medium transition-all duration-200 shadow-lg text-xs"
+                    className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white px-3 py-2 rounded-md font-medium transition-all duration-200 shadow-lg text-xs"
                   >
                     Demo klant →
                   </button>
