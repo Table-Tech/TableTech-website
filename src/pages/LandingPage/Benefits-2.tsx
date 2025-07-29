@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import plantenBg from "../../assets/afbeeldingen/optie4.png";
+import plantenBg from "../../assets/afbeeldingen/optie9.png";
 
 interface Table {
   id: number;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import plantenBg from "../../assets/afbeeldingen/optie4.png";
+import plantenBg from "../../assets/afbeeldingen/optie9.png";
 
 type DashboardScreen = {
   id: string;
@@ -607,7 +607,7 @@ export const BenefitsThree: React.FC = () => {
 
   return (
     <section
-      id="benefits-2"
+      id="benefits-3"
       className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
       style={{ backgroundImage: `url(${plantenBg})` }}
     >
