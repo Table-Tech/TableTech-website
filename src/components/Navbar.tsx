@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     if (!isHomePage) return;
 
-    const sections = ["hero", "benefits", "pricing", "dashboard", "cta"];
+    const sections = ["hero", "benefits", "pricing", "themes", "cta"];
     
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 150; // Offset voor navbar
@@ -117,15 +117,15 @@ export const Navbar: React.FC = () => {
                 {t("pricing")}
               </button>
               <button 
-                onClick={() => scrollToSection('dashboard')} 
+                onClick={() => scrollToSection('themes')} 
                 className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
-                  activeSection === 'dashboard' 
+                  activeSection === 'themes' 
                     ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
                     : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
                 }`}
                 type="button"
               >
-                Dashboard
+                Themes
               </button>
             </>
           ) : (
@@ -150,10 +150,10 @@ export const Navbar: React.FC = () => {
                 {t("pricing")}
               </Link>
               <Link 
-                to="/#dashboard" 
+                to="/#themes" 
                 className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
               >
-                Dashboard
+                Themes
               </Link>
             </>
           )}
@@ -221,15 +221,15 @@ export const Navbar: React.FC = () => {
                   {t("pricing")}
                 </button>
                 <button 
-                  onClick={() => scrollToSection('dashboard')} 
+                  onClick={() => scrollToSection('themes')} 
                   className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
-                    activeSection === 'dashboard' 
+                    activeSection === 'themes' 
                       ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
                       : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
                   }`}
                   type="button"
                 >
-                  Dashboard
+                  Themes
                 </button>
               </>
             ) : (
@@ -257,11 +257,11 @@ export const Navbar: React.FC = () => {
                   {t("pricing")}
                 </Link>
                 <Link 
-                  to="/#dashboard" 
+                  to="/#themes" 
                   onClick={() => setOpen(false)} 
                   className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
                 >
-                  Dashboard
+                  Themes
                 </Link>
               </>
             )}
