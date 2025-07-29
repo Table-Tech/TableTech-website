@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import plantenBg from "../../assets/afbeeldingen/optie4.png";
+import plantenBg from "../../assets/afbeeldingen/optie9.png";
 import pastaImg from "../../assets/afbeeldingen/pasta.jpeg";
 import idealLogo from "../../assets/afbeeldingen/ideal1.png";
 import applePayLogo from "../../assets/afbeeldingen/apple-pay.png";
