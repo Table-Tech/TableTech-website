@@ -1,3 +1,4 @@
+// src/components/HorizontalScroll.tsx
 import React, { useEffect, useRef } from "react";
 import { BenefitsOne } from "../pages/LandingPage/Benefits";
 import { BenefitsTwo } from "../pages/LandingPage/Benefits-2";
@@ -26,25 +27,18 @@ export const HorizontalScroll: React.FC = () => {
       let targetProgress: number;
       let sectionName: string;
 
-      // Perfecte sectie verdeling: 0, 0.5, 1.0
-      // Met strikte snap zones om perfecte uitlijning te garanderen
-
       if (progress <= 0.25) {
-        // Zone 1: 0% - 25% snaps naar sectie 1 (0%)
         targetProgress = 0;
         sectionName = "Benefits 1";
       } else if (progress <= 0.75) {
-        // Zone 2: 25% - 75% snaps naar sectie 2 (50%)
         targetProgress = 0.5;
         sectionName = "Benefits 2";
       } else {
-        // Zone 3: 75% - 100% snaps naar sectie 3 (100%)
         targetProgress = 1.0;
         sectionName = "Benefits 3";
       }
 
-      // Ultra-strikte tolerantie: snap altijd als er ook maar een klein verschil is
-      const tolerance = 0.001; // 0.1% tolerantie
+      const tolerance = 0.001;
       const distance = Math.abs(progress - targetProgress);
 
       if (distance > tolerance) {
@@ -58,7 +52,6 @@ export const HorizontalScroll: React.FC = () => {
             scrollTo: targetY,
             onComplete: () => {
               console.log(`Perfect snap to ${sectionName} (${Math.round(targetProgress * 100)}%)`);
-              // Extra verificatie: forceer exacte positie
               setTimeout(() => {
                 if (scrollTriggerInstance) {
                   const finalTargetY = scrollTriggerInstance.start + (targetProgress * (scrollTriggerInstance.end - scrollTriggerInstance.start));
@@ -71,7 +64,6 @@ export const HorizontalScroll: React.FC = () => {
       }
     };
 
-    // Extra wheel event listener voor perfecte controle
     const handleWheelEnd = () => {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
@@ -85,17 +77,16 @@ export const HorizontalScroll: React.FC = () => {
     window.addEventListener('touchend', handleWheelEnd, { passive: true });
 
     const ctx = gsap.context(() => {
-      // Zeer snelle en soepele animatie voor alle secties
       gsap.to(panels, {
         xPercent: -100 * (panels.length - 1),
-        ease: "none", // Geen easing voor smooth scrub
+        ease: "none",
         scrollTrigger: {
           trigger: container,
           start: "top top",
           pin: true,
-          scrub: 0.05, // Nog lagere scrub waarde voor zeer snelle scroll
+          scrub: 0.05,
           anticipatePin: 1,
-          end: () => "+=" + (container.offsetWidth * 0.8), // Nog kortere scroll afstand
+          end: () => "+=" + (container.offsetWidth * 0.8),
           onUpdate: (self) => {
             scrollTriggerInstance = self;
             isScrolling = true;
@@ -106,7 +97,7 @@ export const HorizontalScroll: React.FC = () => {
                 isScrolling = false;
                 snapToNearestSection(self.progress);
               }
-            }, 200); // Ultra snelle timeout voor directe snap
+            }, 200);
           },
         },
       });
@@ -124,15 +115,25 @@ export const HorizontalScroll: React.FC = () => {
     <div className="w-full overflow-hidden relative">
       <div
         ref={scrollRef}
-        className="horizontal-scroll relative flex w-[300vw] h-screen overflow-hidden bg-[#1e1208]"
+        className="horizontal-scroll relative flex w-[300vw] h-screen overflow-hidden"
+        style={{
+          backgroundImage: `url('/background-benefits.jpg')`, // Vervang met jouw afbeelding pad
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
       >
-        <div id="benefits1" className="panel w-screen h-screen shrink-0 overflow-hidden">
+        {/* Optionele overlay voor betere leesbaarheid */}
+        <div className="absolute inset-0 bg-black/30 z-0" />
+        
+        <div id="benefits1" className="panel w-screen h-screen shrink-0 overflow-hidden relative z-10">
           <BenefitsOne />
         </div>
-        <div id="benefits2" className="panel w-screen h-screen shrink-0 overflow-hidden">
+        <div id="benefits2" className="panel w-screen h-screen shrink-0 overflow-hidden relative z-10">
           <BenefitsTwo />
         </div>
-        <div id="benefits3" className="panel w-screen h-screen shrink-0 overflow-hidden">
+        <div id="benefits3" className="panel w-screen h-screen shrink-0 overflow-hidden relative z-10">
           <BenefitsThree />
         </div>
       </div>
