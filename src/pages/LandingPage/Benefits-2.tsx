@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import plantenBg from "../../assets/afbeeldingen/optie9.png";
-
 interface Table {
   id: number;
   name: string;
@@ -142,12 +140,8 @@ export const BenefitsTwo: React.FC = () => {
   return (
     <section
       id="benefits-2"
-      className="benefits-section relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
-      style={{ backgroundImage: `url(${plantenBg})` }}
+      className="relative w-full h-screen flex items-center justify-center shrink-0 overflow-hidden"
     >
-      {/* Enhanced overlay with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/30 via-gray-900/25 to-stone-900/35 z-0" />
-
       {/* Main content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 h-full flex items-center mt-10 md:mt-16 lg:mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start w-full">
