@@ -140,7 +140,7 @@ export const BenefitsTwo: React.FC = () => {
   return (
     <section
       id="benefits-2"
-      className="relative w-full h-screen flex items-center justify-center shrink-0 overflow-hidden"
+      className="relative w-full h-screen flex items-center justify-center shrink-0 overflow-hidden bg-transparent"
     >
       {/* Main content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 h-full flex items-center mt-10 md:mt-16 lg:mt-20">
