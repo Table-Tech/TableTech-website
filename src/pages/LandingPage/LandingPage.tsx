@@ -3,12 +3,11 @@ import React from "react";
 import { HeroSection } from "./HeroSection";
 import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
-import { ScrollDots } from "../../components/ScrollDotss";
 import { HorizontalScroll } from "../../components/HorizontalScroll";
 import { PricingSection } from "./Pricing";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
-import RestaurantThemesPage from "../../pages/LandingPage/restaurant-themes";
+import RestaurantThemesPage from "./restaurant-themes";
 
 const LandingPage: React.FC = () => {
   useLenisScroll();
@@ -16,8 +15,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-white overflow-x-hidden">
       <Navbar />
-      <ScrollDots />
-
+      
       {/* Hero Section */}
       <section id="hero" className="w-full">
         <HeroSection />
@@ -37,7 +35,6 @@ const LandingPage: React.FC = () => {
       <section id="pricing" className="w-full">
         <PricingSection />
       </section>
-
 
       {/* Call to Action Section */}
       <section id="cta" className="w-full">
