@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import plantenBg from "../../assets/afbeeldingen/optie9.png";
 import pastaImg from "../../assets/afbeeldingen/pasta.jpeg";
 import idealLogo from "../../assets/afbeeldingen/ideal1.png";
 import applePayLogo from "../../assets/afbeeldingen/apple-pay.png";
@@ -136,7 +135,6 @@ export const BenefitsOne: React.FC = () => {
             </div>
           </div>
           
-          {/* Cart Items */}
           {/* Cart Items */}
           <div className="relative flex-1 overflow-hidden">
             <div className="p-3 space-y-1.5 h-full overflow-y-auto scrollbar-hide">
@@ -497,15 +495,11 @@ export const BenefitsOne: React.FC = () => {
   return (
     <section
       id="benefits-1"
-      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
-      style={{ backgroundImage: `url(${plantenBg})` }}
+      className="relative w-full h-full flex items-center justify-center bg-transparent"
     >
-      {/* Enhanced overlay with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/30 via-gray-900/25 to-stone-900/35 z-0" />
-
-      {/* Main content */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-16 lg:pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start lg:items-center min-h-0 py-8">
+      {/* Main content - Beter gecentreerd */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* Left side - Enhanced Description with better glassmorphism */}
           <div className="space-y-4 order-2 lg:order-1 flex flex-col min-h-0">
