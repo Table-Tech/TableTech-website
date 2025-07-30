@@ -1,4 +1,4 @@
-// src/components/useLenisScroll.ts
+// src/hooks/useLenisScroll.ts
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Lenis from "@studio-freight/lenis";
@@ -15,13 +15,13 @@ export const useLenisScroll = () => {
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.1, // Faster lerp for snappier scrolling
-      duration: 0.8, // Shorter duration for faster response
+      lerp: 0.1,
+      duration: 0.8,
       smoothWheel: true,
-      wheelMultiplier: 1.2, // Faster wheel scrolling
+      wheelMultiplier: 1.2,
     });
 
-    // ✅ Koppel Lenis aan window met juiste type
+    // Koppel Lenis aan window
     window.lenis = lenis;
 
     const raf = (time: number) => {
@@ -67,12 +67,11 @@ export const useLenisScroll = () => {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger: Record<string, unknown>) => {
-        if (typeof trigger.kill === 'function') {
-          (trigger.kill as () => void)();
-        }
+      ScrollTrigger.getAll().forEach((trigger) => {
+        trigger.kill();
       });
       lenis.destroy();
+      window.lenis = undefined;
     };
   }, [location.pathname]);
 };
