@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import plantenBg from "../../assets/afbeeldingen/optie9.png";
 
 type DashboardScreen = {
   id: string;
@@ -608,15 +607,11 @@ export const BenefitsThree: React.FC = () => {
   return (
     <section
       id="benefits-3"
-      className="relative w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat shrink-0 overflow-hidden"
-      style={{ backgroundImage: `url(${plantenBg})` }}
+      className="relative w-full h-full flex items-center justify-center bg-transparent"
     >
-      {/* Donkere overlay */}
-      <div className="absolute inset-0 bg-[#3b2a1d]/20 z-0" />
-
-      {/* Main content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-20 lg:pt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
+      {/* Main content - Beter gecentreerd zonder eigen achtergrond */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* Left side - Dashboard Tablet */}
           <div className="relative flex items-center justify-center order-1 lg:order-1">
@@ -667,7 +662,7 @@ export const BenefitsThree: React.FC = () => {
           </div>
 
           {/* Right side - Description & Features */}
-          <div className="space-y-4 order-2 lg:order-2 max-h-full overflow-hidden lg:-mt-24">
+          <div className="space-y-4 order-2 lg:order-2">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -681,7 +676,7 @@ export const BenefitsThree: React.FC = () => {
               </p>
             </motion.div>
 
-            <div className="space-y-3 max-h-[calc(100vh-280px)] overflow-hidden">
+            <div className="space-y-3">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentDashboard}
@@ -856,18 +851,8 @@ export const BenefitsThree: React.FC = () => {
                     </motion.div>
                   </div>
                   
-              </div>
-            </motion.div>
-            {/* Bottom accent line - moved outside card for correct alignment */}
-            <div className="flex flex-col items-center w-full mt-4">
-              <div className="w-2/3 border-t border-white/10 mb-2"></div>
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-              </div>
-            </div>
+                </div>
+              </motion.div>
             </div>
           </div>
 
