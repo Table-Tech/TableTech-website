@@ -8,65 +8,65 @@ const pricingTiers = [
   {
     id: "starter",
     name: "Starter",
-    tagline: "Pay-as-you-grow",
+    tagline: "Betaal-naar-gebruik",
     monthlyFee: "€0",
     perTxnMarkup: "0.9% + €0.10",
     hardware: {
-      trial: "1 kitchen tablet loaned during trial",
-      afterTrial: "Bring Your Own tablet or rent via HaaS (€9/mo)"
+      trial: "1 keuken tablet geleend tijdens proefperiode",
+      afterTrial: "Eigen tablet of huur via HaaS (€9/mnd)"
     },
     features: [
-      "Basic menu editor",
-      "1 active device",
-      "Digital receipts",
-      "In-app support"
+      "Basis menu editor",
+      "1 actief apparaat",
+      "Digitale bonnen",
+      "In-app ondersteuning"
     ],
     popular: false,
     color: "blue",
-    expandedNote: "Markup is added on top of Mollie/PSP fees"
+    expandedNote: "Opslag wordt toegevoegd bovenop Mollie/PSP kosten"
   },
   {
     id: "growth",
     name: "Growth",
-    tagline: "Most Popular",
+    tagline: "Meest Populair",
     monthlyFee: "€49",
     annualFee: "€499",
     perTxnMarkup: "0.35% + €0.05",
     hardware: {
-      included: "Up to 3 tablets included via HaaS",
-      warranty: "Swap-out warranty"
+      included: "Tot 3 tablets inbegrepen via HaaS",
+      warranty: "Omruil garantie"
     },
     features: [
-      "Everything in Starter +",
-      "POS/printer integration²",
-      "Table tabs",
-      "Tipping prompts",
-      "Simple loyalty",
-      "Sales & tip analytics",
-      "Custom domain"
+      "Alles in Starter +",
+      "POS/printer integratie²",
+      "Tafel tabs",
+      "Fooi prompts",
+      "Eenvoudig loyaliteitsprogramma",
+      "Verkoop & fooi analyses",
+      "Eigen domein"
     ],
     popular: true,
     color: "green",
-    expandedNote: "²Venues supply their own printers (Epson/Star LAN or USB)"
+    expandedNote: "²Locaties leveren eigen printers (Epson/Star LAN of USB)"
   },
   {
     id: "pro",
     name: "Pro",
-    tagline: "Enterprise Ready",
+    tagline: "Enterprise Klaar",
     monthlyFee: "€99",
     annualFee: "€999",
     perTxnMarkup: "€0",
     hardware: {
-      included: "Unlimited tablets via HaaS",
-      warranty: "Priority replacements"
+      included: "Onbeperkt tablets via HaaS",
+      warranty: "Prioriteit vervangingen"
     },
     features: [
-      "Everything in Growth +",
-      "Advanced analytics",
-      "Multi-venue dashboard",
+      "Alles in Growth +",
+      "Geavanceerde analyses",
+      "Multi-locatie dashboard",
       "API & webhooks",
       "White-label branding",
-      "Priority SLA"
+      "Prioriteit SLA"
     ],
     popular: false,
     color: "purple"
@@ -77,38 +77,38 @@ const pricingTiers = [
 const trialSteps = [
   {
     step: 1,
-    title: "Sign-up",
-    description: "Venue enters SEPA mandate or card (no charge today)",
+    title: "Aanmelden",
+    description: "Locatie voert SEPA machtiging of kaart in (geen kosten vandaag)",
     icon: "📝"
   },
   {
     step: 2,
-    title: "Delivery",
-    description: "Receive 10″ Android tablet (preconfigured in kiosk mode) + QR stickers the next day",
+    title: "Levering",
+    description: "Ontvang 10″ Android tablet (vooraf ingesteld in kiosk modus) + QR stickers de volgende dag",
     icon: "📦"
   },
   {
     step: 3,
-    title: "Trial usage",
-    description: "Full access to Growth features during the 30 days",
+    title: "Proefperiode gebruik",
+    description: "Volledige toegang tot Growth functies gedurende 30 dagen",
     icon: "🚀"
   },
   {
     step: 4,
-    title: "Auto-convert on Day 31",
-    description: "Default to Growth unless downgraded to Starter",
+    title: "Automatisch overstappen op Dag 31",
+    description: "Standaard naar Growth tenzij gedowngraded naar Starter",
     icon: "✅"
   },
   {
     step: 5,
-    title: "Cancel & return",
-    description: "Cancel anytime from dashboard → prepaid return label auto-generated",
+    title: "Annuleren & retourneren",
+    description: "Annuleer op elk moment vanuit dashboard → vooraf betaald retourlabel automatisch gegenereerd",
     icon: "📮"
   },
   {
     step: 6,
-    title: "Keep tablet",
-    description: "Only if subscription continues or buy it out for €99",
+    title: "Tablet houden",
+    description: "Alleen als abonnement doorgaat of koop het voor €99",
     icon: "📱"
   }
 ];
@@ -129,10 +129,10 @@ const PricingCard: React.FC<{
   };
 
   const getBillingNote = () => {
-    if (tier.id === "starter") return "per location";
+    if (tier.id === "starter") return "per locatie";
     return isAnnual && tier.annualFee 
-      ? `Billed annually (${tier.annualFee}/year)` 
-      : "per month per location";
+      ? `Jaarlijks gefactureerd (${tier.annualFee}/jaar)` 
+      : "per maand per locatie";
   };
 
   const colorClasses = {
@@ -174,7 +174,7 @@ const PricingCard: React.FC<{
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
           <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5 shadow-lg">
             <Star className="w-4 h-4 fill-current" />
-            Most Popular
+            Meest Populair
           </div>
         </div>
       )}
@@ -191,7 +191,7 @@ const PricingCard: React.FC<{
           <div className="flex items-baseline justify-center mb-1">
             <span className="text-3xl font-bold text-gray-900">{getPrice()}</span>
             {tier.id !== "starter" && (
-              <span className="ml-1 text-sm text-gray-600 font-medium">/mo</span>
+              <span className="ml-1 text-sm text-gray-600 font-medium">/mnd</span>
             )}
           </div>
           <p className="text-xs text-gray-600 font-medium">{getBillingNote()}</p>
@@ -200,7 +200,7 @@ const PricingCard: React.FC<{
         {/* Transaction Fee */}
         <div className={`${colors.bg} rounded-lg p-3 mb-4`}>
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-800">Per-transaction:</span>
+            <span className="text-xs font-semibold text-gray-800">Per transactie:</span>
             <span className={`text-sm font-bold ${colors.text}`}>{tier.perTxnMarkup}</span>
           </div>
           {tier.expandedNote && (
@@ -224,7 +224,7 @@ const PricingCard: React.FC<{
                       onChange={(e) => setShowHaaSOption(e.target.checked)}
                       className="w-3 h-3 rounded border-gray-300 text-blue-600"
                     />
-                    <span className="text-xs text-gray-800">Add tablet (€9/mo)</span>
+                    <span className="text-xs text-gray-800">Voeg tablet toe (€9/mnd)</span>
                   </label>
                 </div>
               )}
@@ -239,7 +239,7 @@ const PricingCard: React.FC<{
 
         {/* Features */}
         <div className="mb-6">
-          <h4 className="text-xs font-bold text-gray-800 mb-2">Features:</h4>
+          <h4 className="text-xs font-bold text-gray-800 mb-2">Functies:</h4>
           <ul className="space-y-1.5">
             {tier.features.slice(0, 4).map((feature, index) => (
               <li key={index} className="flex items-start">
@@ -253,7 +253,7 @@ const PricingCard: React.FC<{
               onClick={onCompareFeatures}
               className="mt-2 text-xs text-blue-600 hover:text-blue-700 font-medium underline"
             >
-              + {tier.features.length - 4} more
+              + {tier.features.length - 4} meer
             </button>
           )}
         </div>
@@ -263,7 +263,7 @@ const PricingCard: React.FC<{
           onClick={() => onSelectPlan(tier.id)}
           className={`w-full py-3 px-4 rounded-lg font-bold text-white text-sm ${colors.button} transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg`}
         >
-          Select {tier.name}
+          Kies {tier.name}
         </button>
 
         {/* Compare link */}
@@ -272,7 +272,7 @@ const PricingCard: React.FC<{
           className="w-full mt-3 py-2 text-xs text-gray-600 hover:text-gray-800 font-medium flex items-center justify-center gap-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200"
         >
           <Info className="w-3 h-3" />
-          Compare Features
+          Vergelijk Functies
         </button>
       </div>
     </motion.div>
@@ -300,9 +300,9 @@ const FreeTrialSection: React.FC = () => {
           </div>
           <div>
             <h3 className="text-lg font-bold text-white drop-shadow-lg">
-              Risk-free 30-day trial – tablet & setup included
+              Risicovrije 30-dagen proefperiode – tablet & installatie inbegrepen
             </h3>
-            <p className="text-white/80 mt-0.5 text-sm">Learn how our free trial works</p>
+            <p className="text-white/80 mt-0.5 text-sm">Ontdek hoe onze gratis proefperiode werkt</p>
           </div>
         </div>
         {isExpanded ? (
@@ -333,7 +333,7 @@ const FreeTrialSection: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-semibold text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full">
-                            Step {step.step}
+                            Stap {step.step}
                           </span>
                         </div>
                         <h4 className="font-semibold text-gray-900 text-xs mb-1">
@@ -353,22 +353,22 @@ const FreeTrialSection: React.FC = () => {
               <div className="bg-green-500/20 backdrop-blur-sm rounded-lg p-3 flex items-center gap-2 border border-green-400/30">
                 <Truck className="w-6 h-6 text-green-300" />
                 <div>
-                  <p className="font-semibold text-white text-sm">Next-day delivery</p>
-                  <p className="text-xs text-white/80">Tablet arrives configured</p>
+                  <p className="font-semibold text-white text-sm">Volgende dag levering</p>
+                  <p className="text-xs text-white/80">Tablet komt geconfigureerd aan</p>
                 </div>
               </div>
               <div className="bg-green-500/20 backdrop-blur-sm rounded-lg p-3 flex items-center gap-2 border border-green-400/30">
                 <Shield className="w-6 h-6 text-green-300" />
                 <div>
-                  <p className="font-semibold text-white text-sm">No risk</p>
-                  <p className="text-xs text-white/80">Cancel anytime, free returns</p>
+                  <p className="font-semibold text-white text-sm">Geen risico</p>
+                  <p className="text-xs text-white/80">Annuleer op elk moment, gratis retour</p>
                 </div>
               </div>
               <div className="bg-green-500/20 backdrop-blur-sm rounded-lg p-3 flex items-center gap-2 border border-green-400/30">
                 <Clock className="w-6 h-6 text-green-300" />
                 <div>
-                  <p className="font-semibold text-white text-sm">30 full days</p>
-                  <p className="text-xs text-white/80">Experience all features</p>
+                  <p className="font-semibold text-white text-sm">30 volle dagen</p>
+                  <p className="text-xs text-white/80">Ervaar alle functies</p>
                 </div>
               </div>
             </div>
@@ -384,22 +384,22 @@ const FeatureComparisonModal: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const features = [
-    { feature: "Basic menu editor", starter: true, growth: true, pro: true },
-    { feature: "Digital receipts", starter: true, growth: true, pro: true },
-    { feature: "In-app support", starter: true, growth: true, pro: true },
-    { feature: "POS/printer integration", starter: false, growth: true, pro: true },
-    { feature: "Table tabs", starter: false, growth: true, pro: true },
-    { feature: "Tipping prompts", starter: false, growth: true, pro: true },
-    { feature: "Simple loyalty", starter: false, growth: true, pro: true },
-    { feature: "Sales & tip analytics", starter: false, growth: true, pro: true },
-    { feature: "Custom domain", starter: false, growth: true, pro: true },
-    { feature: "Advanced analytics", starter: false, growth: false, pro: true },
-    { feature: "Multi-venue dashboard", starter: false, growth: false, pro: true },
+    { feature: "Basis menu editor", starter: true, growth: true, pro: true },
+    { feature: "Digitale bonnen", starter: true, growth: true, pro: true },
+    { feature: "In-app ondersteuning", starter: true, growth: true, pro: true },
+    { feature: "POS/printer integratie", starter: false, growth: true, pro: true },
+    { feature: "Tafel tabs", starter: false, growth: true, pro: true },
+    { feature: "Fooi prompts", starter: false, growth: true, pro: true },
+    { feature: "Eenvoudig loyaliteitsprogramma", starter: false, growth: true, pro: true },
+    { feature: "Verkoop & fooi analyses", starter: false, growth: true, pro: true },
+    { feature: "Eigen domein", starter: false, growth: true, pro: true },
+    { feature: "Geavanceerde analyses", starter: false, growth: false, pro: true },
+    { feature: "Multi-locatie dashboard", starter: false, growth: false, pro: true },
     { feature: "API & webhooks", starter: false, growth: false, pro: true },
     { feature: "White-label branding", starter: false, growth: false, pro: true },
-    { feature: "Priority SLA", starter: false, growth: false, pro: true },
-    { feature: "Active devices", starter: "1", growth: "Up to 3", pro: "Unlimited" },
-    { feature: "Hardware warranty", starter: false, growth: "Swap-out", pro: "Priority" },
+    { feature: "Prioriteit SLA", starter: false, growth: false, pro: true },
+    { feature: "Actieve apparaten", starter: "1", growth: "Tot 3", pro: "Onbeperkt" },
+    { feature: "Hardware garantie", starter: false, growth: "Omruil", pro: "Prioriteit" },
   ];
 
   if (!isOpen) return null;
@@ -413,7 +413,7 @@ const FeatureComparisonModal: React.FC<{
       >
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Feature Comparison</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Functies Vergelijking</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -427,7 +427,7 @@ const FeatureComparisonModal: React.FC<{
           <table className="w-full">
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-4 px-4 font-bold text-gray-900 text-base">Features</th>
+                <th className="text-left py-4 px-4 font-bold text-gray-900 text-base">Functies</th>
                 <th className="text-center py-4 px-4 font-bold text-gray-900 text-base">
                   <div className="bg-blue-50 rounded-lg p-2">
                     Starter
@@ -509,10 +509,10 @@ const FeatureComparisonModal: React.FC<{
               onClick={onClose}
               className="px-8 py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-200 hover:scale-105"
             >
-              Close Comparison
+              Sluiten
             </button>
             <button className="px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-bold hover:from-green-700 hover:to-green-800 transition-all duration-200 hover:scale-105 shadow-lg">
-              Start 30-Day Free Trial
+              Start 30-Dagen Gratis Proefperiode
             </button>
           </div>
         </div>
@@ -550,10 +550,10 @@ export const PricingSectionB2B: React.FC = () => {
             }}
           />
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
-            Simple, transparent pricing
+            Eenvoudige, transparante prijzen
           </h1>
           <p className="text-base text-white/90 max-w-2xl mx-auto drop-shadow-md">
-            Choose the plan that fits your venue. All plans include tablet-based ordering.
+            Kies het plan dat bij uw locatie past. Alle plannen bevatten tablet-gebaseerd bestellen.
           </p>
         </div>
 
@@ -568,7 +568,7 @@ export const PricingSectionB2B: React.FC = () => {
           >
             <div className="flex items-center space-x-3">
               <span className={`text-sm font-semibold transition-all duration-200 ${!isAnnual ? 'text-white drop-shadow-lg' : 'text-white/60'}`}>
-                Monthly
+                Maandelijks
               </span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
@@ -583,9 +583,9 @@ export const PricingSectionB2B: React.FC = () => {
                 />
               </button>
               <span className={`text-sm font-semibold transition-all duration-200 ${isAnnual ? 'text-white drop-shadow-lg' : 'text-white/60'}`}>
-                Annual
+                Jaarlijks
                 <span className="ml-1 text-xs bg-green-400 text-green-900 px-1.5 py-0.5 rounded-full font-bold">
-                  Save 15%
+                  Bespaar 15%
                 </span>
               </span>
             </div>
@@ -610,53 +610,6 @@ export const PricingSectionB2B: React.FC = () => {
           <FreeTrialSection />
         </div>
 
-        {/* Which plan section */}
-        <div className="backdrop-blur-2xl border-2 border-[#A77B5D]/40 rounded-3xl shadow-[0_8px_32px_rgba(123,79,53,0.12)] backdrop-saturate-150 p-6"
-          style={{
-            background: 'linear-gradient(135deg, rgba(123,79,53,0.25) 0%, rgba(94,59,41,0.18) 100%)',
-            backdropFilter: 'blur(20px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(180%)'
-          }}
-        >
-          <h2 className="text-xl font-bold text-white text-center mb-6 drop-shadow-lg">
-            Not sure which plan is right?
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 border border-blue-400/30">
-                <Package className="w-6 h-6 text-blue-300" />
-              </div>
-              <h3 className="font-semibold text-white mb-1 text-sm">Starter</h3>
-              <p className="text-xs text-white/80">Perfect for pop-ups, food trucks, and small cafés testing digital ordering</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 border border-green-400/30">
-                <Zap className="w-6 h-6 text-green-300" />
-              </div>
-              <h3 className="font-semibold text-white mb-1 text-sm">Growth</h3>
-              <p className="text-xs text-white/80">Ideal for busy restaurants and cafés ready to scale operations</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-12 h-12 bg-purple-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 border border-purple-400/30">
-                <Shield className="w-6 h-6 text-purple-300" />
-              </div>
-              <h3 className="font-semibold text-white mb-1 text-sm">Pro</h3>
-              <p className="text-xs text-white/80">Built for chains, franchises, and venues needing advanced features</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="px-5 py-2.5 bg-white text-[#7b4f35] rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm">
-              Take our quiz
-            </button>
-            <button className="px-5 py-2.5 border-2 border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors text-sm">
-              Contact sales
-            </button>
-          </div>
-        </div>
 
         {/* Feature Comparison Modal */}
         <FeatureComparisonModal 
