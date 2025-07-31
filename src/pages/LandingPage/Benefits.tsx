@@ -495,11 +495,12 @@ export const BenefitsOne: React.FC = () => {
   return (
     <section
       id="benefits-1"
-      className="relative w-full h-full flex items-center justify-center bg-transparent"
+      className="relative w-full h-full flex items-center justify-center overflow-y-auto"
+      style={{ backgroundColor: 'transparent' }}
     >
       {/* Main content - Beter gecentreerd */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 min-h-0 flex-1 flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* Left side - Enhanced Description with better glassmorphism */}
           <div className="space-y-4 order-2 lg:order-1 flex flex-col min-h-0">
@@ -729,7 +730,7 @@ export const BenefitsOne: React.FC = () => {
                 style={{
                   background: 'linear-gradient(145deg, #1a1a1a, #000000)',
                   boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
-                  transform: 'perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)',
+                  transform: `perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)`,
                   transformStyle: 'preserve-3d'
                 }}
               >
