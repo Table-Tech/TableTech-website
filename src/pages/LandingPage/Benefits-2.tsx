@@ -140,38 +140,35 @@ export const BenefitsTwo: React.FC = () => {
   return (
     <section
       id="benefits-2"
-      className="relative w-full h-screen flex items-center justify-center shrink-0 overflow-hidden bg-transparent"
+      className="benefits-section relative w-full h-full flex items-center justify-center overflow-y-auto"
     >
-      {/* Main content */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 h-full flex items-center mt-10 md:mt-16 lg:mt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start w-full">
-          
-          {/* Titel bovenaan - buiten frame */}
-          <div className="lg:col-span-2 text-center mb-6">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-2 drop-shadow-lg tracking-tight">
-              Slim tafelbeheer in één oogopslag.
-            </h1>
-            {/* Hover instruction */}
-            <div className="flex items-center justify-center space-x-2 text-white/80 text-sm">
-              <span>▽</span>
-              <span>Beweeg de muis over de tafels</span>
-            </div>
-          </div>
-
-          {/* Left side - Restaurant Floor Plan - Alles in één frame zoals afbeelding 3 */}
-          <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border-2 border-gray-600/50 p-4 shadow-2xl">
-            {/* Tijd bovenaan in de frame */}
-            <div className="text-center mb-4">
-              <div className="text-white text-xl font-mono font-bold drop-shadow-lg">
-                {currentTime.toLocaleTimeString("nl-NL", {
-                  hour: "2-digit",
-                  minute: "2-digit", 
-                  second: "2-digit",
-                })}
+        {/* Main content */}
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 min-h-0 flex-1 flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start w-full">
+            {/* Titel bovenaan - buiten frame */}
+            <div className="lg:col-span-2 text-center mb-6">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-2 drop-shadow-lg tracking-tight">
+                Slim tafelbeheer in één oogopslag.
+              </h1>
+              {/* Hover instruction */}
+              <div className="flex items-center justify-center space-x-2 text-white/80 text-sm">
+                <span>▽</span>
+                <span>Beweeg de muis over de tafels</span>
               </div>
             </div>
-
-            {/* Restaurant Floor Plan */}
+            {/* Left side - Restaurant Floor Plan - Alles in één frame zoals afbeelding 3 */}
+            <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border-2 border-gray-600/50 p-4 shadow-2xl">
+              {/* Tijd bovenaan in de frame */}
+              <div className="text-center mb-4">
+                <div className="text-white text-xl font-mono font-bold drop-shadow-lg">
+                  {currentTime.toLocaleTimeString("nl-NL", {
+                    hour: "2-digit",
+                    minute: "2-digit", 
+                    second: "2-digit",
+                  })}
+                </div>
+              </div>
+              {/* Restaurant Floor Plan */}
             <div className="relative h-64 w-full bg-gray-800/60 backdrop-blur-xl rounded-xl border border-gray-600/40 p-3 shadow-xl mb-4">
               
               {/* Zone A Background - Groter */}
