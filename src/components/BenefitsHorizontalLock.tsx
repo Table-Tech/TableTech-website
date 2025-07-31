@@ -17,6 +17,7 @@ export const BenefitsHorizontalLock: React.FC = () => {
   const [hasSeenAllForward, setHasSeenAllForward] = useState(false);
   const [isCentering, setIsCentering] = useState(false);
   
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const lockPositionRef = useRef<number>(0);
   const scrollAccumulator = useRef<number>(0);
@@ -108,6 +109,11 @@ export const BenefitsHorizontalLock: React.FC = () => {
     const scrollY = window.scrollY;
     lockPositionRef.current = scrollY;
     
+    // Stop Lenis if it exists
+    if (window.lenis) {
+      window.lenis.stop();
+    }
+    
     // Store original styles
     originalBodyStyles.current = {
       position: document.body.style.position,
@@ -144,6 +150,11 @@ export const BenefitsHorizontalLock: React.FC = () => {
     
     // Restore scroll position
     window.scrollTo(0, lockPositionRef.current);
+    
+    // Restart Lenis if it exists
+    if (window.lenis) {
+      window.lenis.start();
+    }
   }, []);
 
   // Center benefits section in viewport before locking
@@ -155,21 +166,38 @@ export const BenefitsHorizontalLock: React.FC = () => {
     const rect = element.getBoundingClientRect();
     const scrollTop = window.pageYOffset + rect.top;
     
-    window.scrollTo({
-      top: scrollTop,
-      behavior: 'smooth'
-    });
-    
-    // Wait for smooth scroll to complete
-    if (centeringTimeout.current) {
-      clearTimeout(centeringTimeout.current);
+    // Check if Lenis is available and use it
+    if (window.lenis) {
+      // First stop Lenis to prepare for locking
+      window.lenis.stop();
+      
+      // Manually scroll to position
+      window.scrollTo(0, scrollTop);
+      
+      // Then lock after a short delay
+      setTimeout(() => {
+        setIsCentering(false);
+        lockBodyScroll();
+        setIsLocked(true);
+      }, 100);
+    } else {
+      window.scrollTo({
+        top: scrollTop,
+        behavior: 'smooth'
+      });
+      
+      // Clear any existing timeout
+      if (centeringTimeout.current) {
+        clearTimeout(centeringTimeout.current);
+      }
+      
+      // Set completion timeout
+      centeringTimeout.current = setTimeout(() => {
+        setIsCentering(false);
+        lockBodyScroll();
+        setIsLocked(true);
+      }, 800); // Allow time for smooth scroll
     }
-    
-    centeringTimeout.current = setTimeout(() => {
-      setIsCentering(false);
-      lockBodyScroll();
-      setIsLocked(true);
-    }, 800); // Allow time for smooth scroll
   }, [lockBodyScroll]);
 
   // Check if section is fully visible in viewport
@@ -179,6 +207,9 @@ export const BenefitsHorizontalLock: React.FC = () => {
     
     const rect = element.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
+    
+    // Get scroll position from Lenis if available, otherwise use window
+    const scrollY = window.lenis ? window.lenis.scroll : window.scrollY;
     
     // Check if section fills viewport with small threshold for float precision
     const isFullyInView = 
@@ -261,10 +292,14 @@ export const BenefitsHorizontalLock: React.FC = () => {
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.9 && !isLocked && !isCentering) {
-          // Only proceed if section is nearly fully visible
-          if (isFullyVisible()) {
-            // Section is already centered - lock immediately
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.85 && !isLocked && !isCentering && !hasUnlocked) {
+          const rect = entry.boundingClientRect;
+          const viewportHeight = window.innerHeight;
+          // Lock when the top of section is near the top of viewport (more strict)
+          const sectionNearTop = rect.top <= viewportHeight * 0.05 && rect.top >= -50; 
+          
+          if (sectionNearTop && entry.intersectionRatio >= 0.9) {
+            // Lock immediately without any centering
             setIsLocked(true);
             lockBodyScroll();
             
@@ -278,20 +313,8 @@ export const BenefitsHorizontalLock: React.FC = () => {
               setCurrentBenefit(0);
               setViewedBenefits(new Set([0]));
             }
-          } else {
-            // Section not centered - scroll to center first
-            scrollToCenter();
-            
-            // Set initial benefit for after centering
-            if (scrollDirection === 'reverse' && hasSeenAllForward) {
-              setCurrentBenefit(2);
-              setViewedBenefits(new Set([0, 1, 2]));
-            } else {
-              setCurrentBenefit(0);
-              setViewedBenefits(new Set([0]));
-            }
           }
-        } else if (!entry.isIntersecting && isLocked) {
+        } else if (!entry.isIntersecting && isLocked && !hasUnlocked) {
           // Left the section - unlock
           setIsLocked(false);
           setHasUnlocked(false);
@@ -307,7 +330,7 @@ export const BenefitsHorizontalLock: React.FC = () => {
     };
 
     const observer = new IntersectionObserver(handleIntersection, {
-      threshold: [0.9, 0.95, 1.0], // Monitor when nearly/fully visible
+      threshold: [0, 0.1, 0.25, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0], // More gradual thresholds
       rootMargin: "0px"
     });
 
@@ -322,7 +345,7 @@ export const BenefitsHorizontalLock: React.FC = () => {
         clearTimeout(centeringTimeout.current);
       }
     };
-  }, [isLocked, isCentering, scrollDirection, hasSeenAllForward, isFullyVisible, scrollToCenter, lockBodyScroll, unlockBodyScroll]);
+  }, [isLocked, isCentering, scrollDirection, hasSeenAllForward, hasUnlocked, isFullyVisible, scrollToCenter, lockBodyScroll, unlockBodyScroll]);
 
   useEffect(() => {
     if (!isLocked) return;
