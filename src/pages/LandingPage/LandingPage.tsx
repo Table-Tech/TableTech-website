@@ -3,8 +3,8 @@ import React from "react";
 import { HeroSection } from "./HeroSection";
 import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
-import { HorizontalScroll } from "../../components/HorizontalScroll";
-import { PricingSection } from "./Pricing";
+import { BenefitsHorizontalLock } from "../../components/BenefitsHorizontalLock";
+import { PricingSectionB2B } from "./PricingB2B";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
 import RestaurantThemesPage from "./restaurant-themes";
@@ -21,9 +21,9 @@ const LandingPage: React.FC = () => {
         <HeroSection />
       </section>
 
-      {/* Benefits Horizontal Scroll Section */}
-      <section id="benefits" className="w-full">
-        <HorizontalScroll />
+      {/* Benefits Horizontal Lock Section */}
+      <section id="benefits" className="w-full h-screen relative overflow-hidden" style={{ backgroundColor: 'transparent' }}>
+        <BenefitsHorizontalLock />
       </section>
 
       {/* Restaurant Themes Section */}
@@ -33,7 +33,7 @@ const LandingPage: React.FC = () => {
 
       {/* Pricing Section */}
       <section id="pricing" className="w-full">
-        <PricingSection />
+        <PricingSectionB2B />
       </section>
 
       {/* Call to Action Section */}
