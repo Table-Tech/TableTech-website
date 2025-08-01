@@ -25,6 +25,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
 }) => {
   const [activeTheme, setActiveTheme] = useState<ThemeId>("tabletech");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [phoneScale, setPhoneScale] = useState(1);
 
   // Memoized themes data for performance
   const themes = useMemo(() => [
@@ -45,6 +46,50 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
       setIsInitialized(true);
     }
   }, [isOpen, isInitialized]);
+
+  // Calculate dynamic phone scale based on viewport
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const calculatePhoneScale = () => {
+      // Only apply dynamic scaling on mobile
+      if (window.innerWidth >= 1024) return;
+
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      
+      // Phone mockup dimensions (approximate)
+      const phoneHeight = 740; // Approximate height of phone mockup
+      const phoneWidth = 360; // Approximate width of phone mockup
+      
+      // Available space (accounting for theme selector at top and padding)
+      const availableHeight = viewportHeight - 60; // Reduced to 60px for top bar
+      const availableWidth = viewportWidth - 20; // Minimal 10px padding each side
+      
+      // Calculate scale to fit
+      const scaleHeight = availableHeight / phoneHeight;
+      const scaleWidth = availableWidth / phoneWidth;
+      
+      // Use the smaller scale to ensure it fits both dimensions
+      const scale = Math.min(scaleHeight, scaleWidth, 2.5); // Increased max scale to 2.5
+      
+      // Set CSS variable for scale
+      document.documentElement.style.setProperty('--phone-scale', scale.toString());
+      setPhoneScale(scale);
+    };
+
+    calculatePhoneScale();
+    
+    // Recalculate on resize
+    window.addEventListener('resize', calculatePhoneScale);
+    window.addEventListener('orientationchange', calculatePhoneScale);
+    
+    return () => {
+      window.removeEventListener('resize', calculatePhoneScale);
+      window.removeEventListener('orientationchange', calculatePhoneScale);
+      document.documentElement.style.removeProperty('--phone-scale');
+    };
+  }, [isOpen]);
 
   // Block/unblock body scroll when overlay opens/closes with optimization
   useEffect(() => {
@@ -344,6 +389,42 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               <IoClose size={24} />
             </motion.button>
 
+            {/* Mobile Theme Selector - TOP RIGHT - MOBILE ONLY */}
+            <div className="lg:hidden absolute top-6 left-6 right-20 z-50">
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ 
+                  delay: 0.3, 
+                  duration: 0.4
+                }}
+              >
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-2 text-white border border-white/10">
+                  <div className="flex flex-wrap gap-1 justify-center">
+                    {themes.map((theme, index) => (
+                      <motion.button
+                        key={`mobile-top-${theme.id}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                          delay: 0.4 + (index * 0.05),
+                          duration: 0.2
+                        }}
+                        onClick={() => setActiveTheme(theme.id)}
+                        className={`px-2 py-1 rounded-md font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
+                          activeTheme === theme.id
+                            ? `${theme.color} text-white ring-1 ring-white/50`
+                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                        }`}
+                      >
+                        {theme.name}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
             {/* Demo title - positioned at top - DESKTOP ONLY */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -352,7 +433,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 delay: 0.1, 
                 duration: 0.3
               }}
-              className="hidden lg:block absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white max-lg:hidden"
+              className="hidden lg:block absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white max-lg:!hidden"
             >
               <h2 className="text-xl md:text-2xl font-bold mb-1">
                 Klant Demo - {themes.find(t => t.id === activeTheme)?.name}
@@ -363,7 +444,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
             </motion.div>
 
             {/* Main content area - responsive layout */}
-            <div className="flex flex-col lg:flex-row items-center justify-center w-full h-full pt-4 lg:pt-20 pb-6 lg:pb-6">
+            <div className="flex flex-col lg:flex-row items-center justify-center w-full h-full pt-20 lg:pt-20 pb-6 lg:pb-6">
               {/* Left info panel - DESKTOP ONLY */}
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
@@ -372,7 +453,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                   delay: 0.3, 
                   duration: 0.4
                 }}
-                className="hidden lg:flex flex-col gap-4 w-80 pr-8 order-1 lg:order-1 max-lg:hidden"
+                className="hidden lg:flex flex-col gap-4 w-80 pr-8 order-1 lg:order-1 max-lg:!hidden"
               >
                 {/* Theme Selection - Horizontal */}
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white border border-white/10">
@@ -425,7 +506,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 </motion.div>
               </motion.div>
 
-              {/* Center - Phone mockup - BIGGER ON MOBILE */}
+              {/* Center - Phone mockup - RESPONSIVE SCALING */}
               <motion.div
                 initial={{ 
                   scale: 0.85, 
@@ -438,50 +519,35 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 transition={{ 
                   duration: 0
                 }}
-                className="flex-shrink-0 transform scale-110 lg:scale-85 order-1 lg:order-2"
+                className="flex-shrink-0 transform order-1 lg:order-2 flex items-center justify-center w-full h-full lg:w-auto lg:h-auto"
                 style={{ 
                   filter: 'none',
                   backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden'
                 }}
               >
-                {isInitialized && <PhoneMockup theme={activeTheme} />}
-              </motion.div>
-
-              {/* Mobile Theme Selector - MOBILE ONLY */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ 
-                  delay: 0.3, 
-                  duration: 0.4
-                }}
-                className="lg:hidden w-full max-w-sm px-4 order-2 lg:order-2"
-              >
-                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 text-white border border-white/10">
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {themes.map((theme, index) => (
-                      <motion.button
-                        key={theme.id}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          delay: 0.4 + (index * 0.05),
-                          duration: 0.2
-                        }}
-                        onClick={() => setActiveTheme(theme.id)}
-                        className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
-                          activeTheme === theme.id
-                            ? `${theme.color} text-white ring-2 ring-white/50`
-                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
-                        }`}
-                      >
-                        {theme.name}
-                      </motion.button>
-                    ))}
+                {/* Mobile responsive wrapper */}
+                <div className="lg:hidden w-full h-full flex items-center justify-center" style={{
+                  maxHeight: 'calc(100vh - 40px)', // Even less for top bar
+                  paddingTop: '40px', // Tighter space for theme selector
+                  paddingBottom: '5px' // Minimal bottom padding
+                }}>
+                  <div style={{
+                    transform: 'scale(var(--phone-scale, 1))',
+                    transformOrigin: 'center'
+                  }}>
+                    {isInitialized && <PhoneMockup theme={activeTheme} />}
                   </div>
                 </div>
+                
+                {/* Desktop view */}
+                <div className="hidden lg:block" style={{
+                  transform: 'scale(0.85)'
+                }}>
+                  {isInitialized && <PhoneMockup theme={activeTheme} />}
+                </div>
               </motion.div>
+
 
               {/* Right action panel - DESKTOP ONLY */}
               <motion.div
@@ -491,7 +557,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                   delay: 0.3, 
                   duration: 0.4
                 }}
-                className="hidden lg:flex flex-col gap-4 w-80 pl-8 order-3 lg:order-3 max-lg:hidden"
+                className="hidden lg:flex flex-col gap-4 w-80 pl-8 order-3 lg:order-3 max-lg:!hidden"
               >
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white border border-white/10">
                   <h3 className="text-lg font-semibold mb-4">
@@ -538,79 +604,6 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               </motion.div>
             </div>
 
-            {/* Mobile bottom controls */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ 
-                delay: 0.4, 
-                duration: 0.3
-              }}
-              className="lg:hidden absolute bottom-6 left-6 right-6"
-            >
-              <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white border border-white/10">
-                <div className="flex flex-col gap-3 mb-3">
-                  {/* Theme Selection for Mobile */}
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {themes.map((theme, index) => (
-                      <motion.button
-                        key={theme.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ 
-                          delay: 0.5 + (index * 0.05),
-                          duration: 0.2
-                        }}
-                        onClick={() => setActiveTheme(theme.id)}
-                        className={`px-2 py-1 rounded-lg font-medium transition-all duration-300 text-xs border border-white/30 ${
-                          activeTheme === theme.id
-                            ? `${theme.color} text-white ring-2 ring-white/50`
-                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
-                        }`}
-                      >
-                        {theme.name}
-                      </motion.button>
-                    ))}
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ 
-                        delay: 0.7, 
-                        duration: 0.2
-                      }}
-                      onClick={onClose}
-                      className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium transition-all duration-300 border border-white/30 text-sm flex-1"
-                    >
-                      ← Terug naar homepage
-                    </motion.button>
-                    
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ 
-                        delay: 0.8, 
-                        duration: 0.2
-                      }}
-                      onClick={onSwitchToEmployee}
-                      className={`${currentTheme.color} ${currentTheme.hoverColor} text-white px-4 py-2 rounded-full font-medium transition-all duration-300 shadow-lg text-sm flex-1`}
-                    >
-                      Demo werknemer →
-                    </motion.button>
-                  </div>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9, duration: 0.2 }}
-                  className="text-xs text-white/60 text-center"
-                >
-                  {themes.find(t => t.id === activeTheme)?.name} Demo • Volledige functionaliteit
-                </motion.div>
-              </div>
-            </motion.div>
           </motion.div>
         </motion.div>
       )}
