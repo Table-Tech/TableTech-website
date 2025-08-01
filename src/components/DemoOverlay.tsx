@@ -344,7 +344,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               <IoClose size={24} />
             </motion.button>
 
-            {/* Demo title - positioned at top */}
+            {/* Demo title - positioned at top - DESKTOP ONLY */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -352,7 +352,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 delay: 0.1, 
                 duration: 0.3
               }}
-              className="absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white"
+              className="hidden lg:block absolute top-6 left-1/2 transform -translate-x-1/2 text-center text-white max-lg:hidden"
             >
               <h2 className="text-xl md:text-2xl font-bold mb-1">
                 Klant Demo - {themes.find(t => t.id === activeTheme)?.name}
@@ -362,9 +362,9 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               </p>
             </motion.div>
 
-            {/* Main content area - centered phone with side panels */}
-            <div className="flex items-center justify-center w-full h-full pt-20 pb-6">
-              {/* Left info panel */}
+            {/* Main content area - responsive layout */}
+            <div className="flex flex-col lg:flex-row items-center justify-center w-full h-full pt-4 lg:pt-20 pb-6 lg:pb-6">
+              {/* Left info panel - DESKTOP ONLY */}
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -372,7 +372,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                   delay: 0.3, 
                   duration: 0.4
                 }}
-                className="hidden lg:flex flex-col gap-4 w-80 pr-8"
+                className="hidden lg:flex flex-col gap-4 w-80 pr-8 order-1 lg:order-1 max-lg:hidden"
               >
                 {/* Theme Selection - Horizontal */}
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 text-white border border-white/10">
@@ -425,7 +425,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 </motion.div>
               </motion.div>
 
-              {/* Center - Phone mockup */}
+              {/* Center - Phone mockup - BIGGER ON MOBILE */}
               <motion.div
                 initial={{ 
                   scale: 0.85, 
@@ -438,7 +438,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 transition={{ 
                   duration: 0
                 }}
-                className="flex-shrink-0 transform"
+                className="flex-shrink-0 transform scale-110 lg:scale-85 order-1 lg:order-2"
                 style={{ 
                   filter: 'none',
                   backfaceVisibility: 'hidden',
@@ -448,7 +448,42 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 {isInitialized && <PhoneMockup theme={activeTheme} />}
               </motion.div>
 
-              {/* Right action panel */}
+              {/* Mobile Theme Selector - MOBILE ONLY */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ 
+                  delay: 0.3, 
+                  duration: 0.4
+                }}
+                className="lg:hidden w-full max-w-sm px-4 order-2 lg:order-2"
+              >
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 text-white border border-white/10">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {themes.map((theme, index) => (
+                      <motion.button
+                        key={theme.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                          delay: 0.4 + (index * 0.05),
+                          duration: 0.2
+                        }}
+                        onClick={() => setActiveTheme(theme.id)}
+                        className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
+                          activeTheme === theme.id
+                            ? `${theme.color} text-white ring-2 ring-white/50`
+                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                        }`}
+                      >
+                        {theme.name}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right action panel - DESKTOP ONLY */}
               <motion.div
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -456,7 +491,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                   delay: 0.3, 
                   duration: 0.4
                 }}
-                className="hidden lg:flex flex-col gap-4 w-80 pl-8"
+                className="hidden lg:flex flex-col gap-4 w-80 pl-8 order-3 lg:order-3 max-lg:hidden"
               >
                 <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-white border border-white/10">
                   <h3 className="text-lg font-semibold mb-4">

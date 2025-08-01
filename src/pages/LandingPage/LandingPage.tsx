@@ -4,7 +4,7 @@ import { HeroSection } from "./HeroSection";
 import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
 import { BenefitsHorizontalLock } from "../../components/BenefitsHorizontalLock";
-import { PricingSectionB2B } from "./PricingB2B";
+import { PricingNew } from "./PricingNew";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
 import RestaurantThemesPage from "./restaurant-themes";
@@ -33,7 +33,7 @@ const LandingPage: React.FC = () => {
 
       {/* Pricing Section */}
       <section id="pricing" className="w-full">
-        <PricingSectionB2B />
+        <PricingNew />
       </section>
 
       {/* Call to Action Section */}
