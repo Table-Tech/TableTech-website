@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEnvelope,
   FaWhatsapp,
@@ -13,6 +13,31 @@ export const SupportChat: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"form" | "email" | "whatsapp">("form");
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState("");
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  // Check if demo overlay is open
+  useEffect(() => {
+    const checkDemoOverlay = () => {
+      // Look for demo overlay in the DOM
+      const demoOverlay = document.querySelector('[class*="fixed inset-0 z-50"]');
+      const hasDemoOverlay = !!demoOverlay;
+      setIsDemoOpen(hasDemoOverlay);
+    };
+
+    // Check immediately
+    checkDemoOverlay();
+
+    // Set up observer to watch for DOM changes
+    const observer = new MutationObserver(checkDemoOverlay);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleAsk = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +46,11 @@ export const SupportChat: React.FC = () => {
     // Clear the input after submitting so the user can type a new question
     setQuestion("");
   };
+
+  // Hide chat when demo overlay is open
+  if (isDemoOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
