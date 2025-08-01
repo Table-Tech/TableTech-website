@@ -1,4 +1,6 @@
 import React, { useState, lazy, Suspense } from "react";
+import qrCodeImage from "../../assets/afbeeldingen/iyd.png";
+import laptopDemoImage from "../../assets/afbeeldingen/laptop-demo.png";
 
 // Lazy load demo components for better performance
 const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay").then(module => ({ default: module.DemoOverlay })));
@@ -83,8 +85,19 @@ export const HeroSection: React.FC = () => {
             <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20">
               <h3 className="text-base font-semibold mb-2">Probeer als Klant</h3>
               <p className="text-white/80 mb-4 text-sm leading-relaxed">
-                Bekijk hoe gasten eenvoudig bestellen via QR-code.
+                Scan QR-code of start klant demo om te bekijken hoe gasten het ervaren.
               </p>
+              
+              {/* QR Code Image - Desktop Only */}
+              <div className="hidden lg:block mb-4">
+                <img 
+                  src={qrCodeImage} 
+                  alt="Scan QR code voor menu demo" 
+                  className="w-66 h-auto mx-auto rounded-lg shadow-lg"
+                />
+                <p className="text-white/70 text-xs mt-2">Scan QR-code of</p>
+              </div>
+              
               <button
                 onClick={handleOpenCustomerDemo}
                 type="button"
@@ -110,6 +123,16 @@ export const HeroSection: React.FC = () => {
               <p className="text-white/80 mb-4 text-sm leading-relaxed">
                 Zie hoe het dashboard werkt voor personeel.
               </p>
+              
+              {/* Laptop Demo Image - Desktop Only */}
+              <div className="hidden lg:block mb-4">
+                <img 
+                  src={laptopDemoImage} 
+                  alt="Dashboard demo voor werknemers" 
+                  className="w-66 h-auto mx-auto rounded-lg shadow-lg"
+                />
+              </div>
+              
               <button
                 onClick={handleOpenEmployeeDemo}
                 type="button"
