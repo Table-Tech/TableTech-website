@@ -65,7 +65,7 @@ const pricingTiers = [
       "Bestellingen aanpassen in keuken": true,
       "Inzicht in verkoop & omzet": true,
       "Eigen themes": true,
-      "Gratis QR-standaards & tafelbordje": true,
+      "Aangepaste QR-standaards & tafelbordje": true,
       "Prioriteit bij support": false
     }
   },
@@ -87,7 +87,7 @@ const pricingTiers = [
       "Bestellingen aanpassen in keuken": true,
       "Inzicht in verkoop & omzet": true,
       "Eigen themes": true,
-      "Gratis QR-standaards & tafelbordje": true,
+      "Aangepaste QR-standaards & tafelbordje": true,
       "Prioriteit bij support": true
     }
   }
@@ -104,7 +104,7 @@ const featureOrder = [
   "Inzicht in verkoop & omzet",
   "Inclusief tablet voor keuken",
   "Eigen themes",
-  "Gratis QR-standaards & tafelbordje",
+  "Aangepaste QR-standaards & tafelbordje",
   "Prioriteit bij support"
 ];
 
@@ -206,6 +206,9 @@ export const PricingNew: React.FC = () => {
                                 <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
                                 {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
                               </div>
+                              {tier.monthlyFee === "€0" && (
+                                <div className="text-lg font-semibold text-[#D4B896] mt-1">Voor altijd gratis</div>
+                              )}
                               {tier.monthlyFee === "€49,99" && (
                                 <div className="text-lg font-semibold text-[#D4B896] mt-1">of €499 per jaar</div>
                               )}
@@ -278,6 +281,9 @@ export const PricingNew: React.FC = () => {
                               <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
                               {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
                             </div>
+                            {tier.monthlyFee === "€0" && (
+                              <div className="text-lg font-semibold text-[#D4B896] mt-1">Voor altijd gratis</div>
+                            )}
                             {tier.monthlyFee === "€49,99" && (
                               <div className="text-lg font-semibold text-[#D4B896] mt-1">of €499 per jaar</div>
                             )}
