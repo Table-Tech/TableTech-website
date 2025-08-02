@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 type DashboardScreen = {
   id: string;
@@ -9,25 +10,26 @@ type DashboardScreen = {
 };
 
 export const BenefitsThree: React.FC = () => {
+  const { t } = useTranslation();
   const [currentDashboard, setCurrentDashboard] = useState(0);
   const [isManualMode, setIsManualMode] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const dashboardScreens: DashboardScreen[] = [
+  const dashboardScreens: DashboardScreen[] = useMemo(() => [
     {
       id: "live-orders",
-      title: "Live Bestelling Management",
-      description: "Realtime overzicht van alle inkomende bestellingen met status tracking",
+      title: t('benefits3.screens.liveOrders.title'),
+      description: t('benefits3.screens.liveOrders.description'),
       content: (
         <div className="h-full bg-slate-900 p-2">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <h2 className="text-white font-bold text-sm">Live Bestellingen</h2>
+              <h2 className="text-white font-bold text-sm">{t('benefits3.screens.liveOrders.header')}</h2>
             </div>
             <div className="bg-green-500/30 px-2 py-0.5 rounded-full border border-green-400/50">
-              <span className="text-green-300 text-[10px] font-semibold">5 actief • 12 wachtrij</span>
+              <span className="text-green-300 text-[10px] font-semibold">{t('benefits3.screens.liveOrders.status')}</span>
             </div>
           </div>
           
@@ -44,21 +46,21 @@ export const BenefitsThree: React.FC = () => {
                     7
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-[9px]">Tafel 7</div>
-                    <div className="text-gray-300 text-[8px]">3 items • 14m</div>
+                    <div className="text-white font-semibold text-[9px]">{t('benefits3.screens.liveOrders.table')} 7</div>
+                    <div className="text-gray-300 text-[8px]">3 {t('benefits3.screens.liveOrders.items')} • 14m</div>
                   </div>
                 </div>
                 <div className="bg-red-600 text-white px-1 py-0.5 rounded text-[8px] font-bold animate-pulse">
-                  URGENT
+                  {t('benefits3.screens.liveOrders.urgent')}
                 </div>
               </div>
               
               <div className="space-y-0.5">
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">2x Pizza Margherita</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">2x {t('dashboard.menuItems.pizzaMargherita')}</div>
                 </div>
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">1x Caesar Salade</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.caesarSalad')}</div>
                 </div>
               </div>
             </motion.div>
@@ -75,21 +77,21 @@ export const BenefitsThree: React.FC = () => {
                     3
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-[9px]">Tafel 3</div>
-                    <div className="text-gray-300 text-[8px]">2 items • 4m</div>
+                    <div className="text-white font-semibold text-[9px]">{t('benefits3.screens.liveOrders.table')} 3</div>
+                    <div className="text-gray-300 text-[8px]">2 {t('benefits3.screens.liveOrders.items')} • 4m</div>
                   </div>
                 </div>
                 <div className="bg-yellow-600 text-black px-1 py-0.5 rounded text-[8px] font-bold">
-                  BEREIDEN
+                  {t('benefits3.screens.liveOrders.preparing')}
                 </div>
               </div>
               
               <div className="space-y-0.5">
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">1x Chicken Katsu</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.chickenKatsu')}</div>
                 </div>
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">2x Lemonade</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">2x {t('dashboard.menuItems.lemonade')}</div>
                 </div>
               </div>
             </motion.div>
@@ -106,17 +108,17 @@ export const BenefitsThree: React.FC = () => {
                     12
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-[9px]">Tafel 12</div>
+                    <div className="text-white font-semibold text-[9px]">{t('benefits3.screens.liveOrders.table')} 12</div>
                     <div className="text-gray-300 text-[8px]">1 item • 7m</div>
                   </div>
                 </div>
                 <div className="bg-green-600 text-white px-1 py-0.5 rounded text-[8px] font-bold">
-                  KLAAR
+                  {t('benefits3.screens.liveOrders.ready')}
                 </div>
               </div>
               
               <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-[8px]">1x Pasta Carbonara</div>
+                <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.pastaCarbonara')}</div>
               </div>
             </motion.div>
             
@@ -132,17 +134,17 @@ export const BenefitsThree: React.FC = () => {
                     15
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-[9px]">Tafel 15</div>
-                    <div className="text-gray-300 text-[8px]">4 items • 1m</div>
+                    <div className="text-white font-semibold text-[9px]">{t('benefits3.screens.liveOrders.table')} 15</div>
+                    <div className="text-gray-300 text-[8px]">4 {t('benefits3.screens.liveOrders.items')} • 1m</div>
                   </div>
                 </div>
                 <div className="bg-blue-600 text-white px-1 py-0.5 rounded text-[8px] font-bold">
-                  NIEUW
+                  {t('benefits3.screens.liveOrders.new')}
                 </div>
               </div>
               
               <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-[8px]">2x Burger Deluxe</div>
+                <div className="text-gray-200 font-semibold text-[8px]">2x {t('dashboard.menuItems.burgerDeluxe')}</div>
               </div>
             </motion.div>
           </div>
@@ -151,25 +153,25 @@ export const BenefitsThree: React.FC = () => {
           <div className="grid grid-cols-4 gap-1 mb-1">
             <div className="bg-white/20 rounded-lg p-1 text-center border border-white/30">
               <div className="text-white font-bold text-xs">47</div>
-              <div className="text-gray-300 text-[8px]">Vandaag</div>
+              <div className="text-gray-300 text-[8px]">{t('benefits3.screens.liveOrders.today')}</div>
             </div>
             <div className="bg-white/20 rounded-lg p-1 text-center border border-white/30">
               <div className="text-white font-bold text-xs">8.2m</div>
-              <div className="text-gray-300 text-[8px]">Gem. tijd</div>
+              <div className="text-gray-300 text-[8px]">{t('benefits3.screens.liveOrders.avgTime')}</div>
             </div>
             <div className="bg-white/20 rounded-lg p-1 text-center border border-white/30">
               <div className="text-white font-bold text-xs">€1,247</div>
-              <div className="text-gray-300 text-[8px]">Omzet</div>
+              <div className="text-gray-300 text-[8px]">{t('benefits3.screens.liveOrders.revenue')}</div>
             </div>
             <div className="bg-white/20 rounded-lg p-1 text-center border border-white/30">
               <div className="text-white font-bold text-xs">94%</div>
-              <div className="text-gray-300 text-[8px]">On-time</div>
+              <div className="text-gray-300 text-[8px]">{t('benefits3.screens.liveOrders.onTime')}</div>
             </div>
           </div>
           
           {/* Performance Chart */}
           <div className="bg-white/20 rounded-lg p-1.5 border border-white/30">
-            <h3 className="text-white font-semibold text-[9px] mb-1">Orders per uur</h3>
+            <h3 className="text-white font-semibold text-[9px] mb-1">{t('benefits3.screens.liveOrders.ordersPerHour')}</h3>
             <div className="flex items-end space-x-0.5 h-8">
               {[3, 5, 8, 12, 15, 18, 14, 16, 11, 7].map((height, i) => (
                 <motion.div
@@ -191,23 +193,23 @@ export const BenefitsThree: React.FC = () => {
     },
     {
       id: "analytics",
-      title: "Business Intelligence Dashboard",
-      description: "Geavanceerde analytics met realtime inzichten in verkoop, trends en KPI's",
+      title: t('benefits3.screens.analytics.title'),
+      description: t('benefits3.screens.analytics.description'),
       content: (
         <div className="h-full bg-indigo-900 p-2">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-white font-bold text-sm">Business Analytics</h2>
+            <h2 className="text-white font-bold text-sm">{t('benefits3.screens.analytics.header')}</h2>
             <div className="bg-purple-500/30 px-2 py-0.5 rounded-full border border-purple-400/50">
-              <span className="text-purple-300 text-[10px] font-semibold">Real-time • Auto-refresh</span>
+              <span className="text-purple-300 text-[10px] font-semibold">{t('benefits3.screens.analytics.status')}</span>
             </div>
           </div>
           
           {/* Revenue Chart */}
           <div className="bg-white/20 rounded-lg p-2 mb-2 border border-white/30">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-white font-semibold text-[10px]">Omzet Deze Week</h3>
-              <span className="text-green-400 text-[9px] font-semibold">+23% vs vorige week</span>
+              <h3 className="text-white font-semibold text-[10px]">{t('benefits3.screens.analytics.revenueWeek')}</h3>
+              <span className="text-green-400 text-[9px] font-semibold">+23% {t('benefits3.screens.analytics.vsLastWeek')}</span>
             </div>
             <div className="space-y-1">
               <div className="flex items-end space-x-0.5 h-16">
@@ -291,7 +293,7 @@ export const BenefitsThree: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   <div className="w-3 h-3 bg-red-500 rounded"></div>
-                  <span className="text-gray-200 text-[9px]">Pizza Margherita</span>
+                  <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.pizzaMargherita')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
@@ -303,7 +305,7 @@ export const BenefitsThree: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-                  <span className="text-gray-200 text-[9px]">Chicken Katsu</span>
+                  <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.chickenKatsu')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
@@ -315,7 +317,7 @@ export const BenefitsThree: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   <div className="w-3 h-3 bg-green-500 rounded"></div>
-                  <span className="text-gray-200 text-[9px]">Caesar Salade</span>
+                  <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.caesarSalad')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
@@ -343,8 +345,8 @@ export const BenefitsThree: React.FC = () => {
     },
     {
       id: "kitchen",
-      title: "Kitchen Display System",
-      description: "Professioneel keuken display voor efficiënte order management en timing",
+      title: t('benefits3.screens.kitchen.title'),
+      description: t('benefits3.screens.kitchen.description'),
       content: (
         <div className="h-full bg-red-900 p-2">
           {/* Header */}
@@ -368,10 +370,10 @@ export const BenefitsThree: React.FC = () => {
               </div>
               <div className="space-y-0.5">
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">2x Pizza Margherita</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">2x {t('dashboard.menuItems.pizzaMargherita')}</div>
                 </div>
                 <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                  <div className="text-gray-200 font-semibold text-[8px]">1x Caesar Salade</div>
+                  <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.caesarSalad')}</div>
                 </div>
               </div>
             </div>
@@ -385,7 +387,7 @@ export const BenefitsThree: React.FC = () => {
                 <span className="bg-yellow-600 text-black px-1 py-0.5 rounded text-[8px] font-bold">5m</span>
               </div>
               <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-[8px]">1x Chicken Katsu</div>
+                <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.chickenKatsu')}</div>
               </div>
             </div>
             
@@ -398,7 +400,7 @@ export const BenefitsThree: React.FC = () => {
                 <span className="bg-green-600 text-white px-1 py-0.5 rounded text-[8px] font-bold">✓</span>
               </div>
               <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-[8px]">1x Pasta Carbonara</div>
+                <div className="text-gray-200 font-semibold text-[8px]">1x {t('dashboard.menuItems.pastaCarbonara')}</div>
               </div>
             </div>
             
@@ -411,7 +413,7 @@ export const BenefitsThree: React.FC = () => {
                 <span className="bg-blue-600 text-white px-1 py-0.5 rounded text-[8px] font-bold">1m</span>
               </div>
               <div className="bg-white/10 rounded p-0.5 border border-white/20">
-                <div className="text-gray-200 font-semibold text-[8px]">2x Burger Deluxe</div>
+                <div className="text-gray-200 font-semibold text-[8px]">2x {t('dashboard.menuItems.burgerDeluxe')}</div>
               </div>
             </div>
           </div>
@@ -459,8 +461,8 @@ export const BenefitsThree: React.FC = () => {
     },
     {
       id: "management",
-      title: "Restaurant Management Hub",
-      description: "Centraal beheercentrum voor menu's, personeel, instellingen en systeem monitoring",
+      title: t('benefits3.screens.management.title'),
+      description: t('benefits3.screens.management.description'),
       content: (
         <div className="h-full bg-gray-900 p-2">
           {/* Header */}
@@ -567,7 +569,7 @@ export const BenefitsThree: React.FC = () => {
         </div>
       )
     }
-  ];
+  ], [t]);
 
   const startAutoSlide = React.useCallback(() => {
     if (intervalRef.current) {
@@ -669,10 +671,10 @@ export const BenefitsThree: React.FC = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg">
-                Krachtig Dashboard
+                {t('benefits3.title')}
               </h2>
               <p className="text-white/90 text-lg drop-shadow-md mb-4">
-                Beheer je restaurant met professionele analytics en realtime inzichten
+                {t('benefits3.subtitle')}
               </p>
             </motion.div>
 
@@ -740,7 +742,7 @@ export const BenefitsThree: React.FC = () => {
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
-                      Meer functies
+                      {t('benefits3.moreFeaturesTitle')}
                     </h3>
                     <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
                   </div>
@@ -761,13 +763,13 @@ export const BenefitsThree: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Mobiele optimalisatie
+                          {t('benefits3.features.mobileOptimization.title')}
                         </p>
                         <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Direct bestellen vanaf elke smartphone
+                          {t('benefits3.features.mobileOptimization.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -787,13 +789,13 @@ export const BenefitsThree: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Dashboard analyse
+                          {t('benefits3.features.dashboardAnalysis.title')}
                         </p>
                         <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Realtime inzichten in verkoop en voorkeuren
+                          {t('benefits3.features.dashboardAnalysis.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -813,13 +815,13 @@ export const BenefitsThree: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Voorraadkoppeling
+                          {t('benefits3.features.inventoryLink.title')}
                         </p>
                         <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Synchronisatie met je keukensysteem
+                          {t('benefits3.features.inventoryLink.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -839,13 +841,13 @@ export const BenefitsThree: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Snelle service melding
+                          {t('benefits3.features.serviceNotification.title')}
                         </p>
                         <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Gasten kunnen personeel oproepen
+                          {t('benefits3.features.serviceNotification.description')}
                         </p>
                       </div>
                     </motion.div>
