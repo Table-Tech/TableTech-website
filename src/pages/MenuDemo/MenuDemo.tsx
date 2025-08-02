@@ -1,354 +1,610 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  IoCart, 
-  IoClose, 
-  IoAdd, 
-  IoRemove,
-  IoChevronBack,
-  IoSearch,
-  IoFilter
-} from "react-icons/io5";
-import { tableTechMenu, tableTechCategories, MenuItem, CategoryId } from "../../data/menuData";
+import { IoArrowBack } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa";
 
-const MenuDemo: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId>("all");
-  const [cartItems, setCartItems] = useState<MenuItem[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [language, setLanguage] = useState<"nl" | "en">("nl");
+type CategoryId = "popular" | "curry" | "ramen" | "pizza" | "drinks";
 
-  // Filter menu items based on category and search
-  const filteredItems = tableTechMenu[selectedCategory].filter(item => {
-    const searchLower = searchQuery.toLowerCase();
-    return item.name.toLowerCase().includes(searchLower) || 
-           (item.nameEn && item.nameEn.toLowerCase().includes(searchLower));
-  });
+interface MenuItem {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: CategoryId;
+}
 
-  // Calculate total price
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
+interface CategoryItem {
+  name: string;
+  icon: string;
+  id: CategoryId;
+}
 
-  // Add to cart
-  const addToCart = (item: MenuItem) => {
-    setCartItems([...cartItems, item]);
-    // Show brief notification
-    const notification = document.createElement("div");
-    notification.className = "fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50";
-    notification.textContent = "Toegevoegd aan winkelwagen!";
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 2000);
+const mockMenu: Record<CategoryId, MenuItem[]> = {
+  popular: [
+    {
+      id: 1,
+      name: "Prawn Raisukaree",
+      price: 12.0,
+      image: "/menu/menu1.jpg",
+      category: "popular",
+    },
+    {
+      id: 2,
+      name: "Firecracker Prawn",
+      price: 11.0,
+      image: "/menu/menu2.jpg",
+      category: "popular",
+    },
+  ],
+  curry: [
+    {
+      id: 3,
+      name: "Chicken Katsu Curry",
+      price: 10.5,
+      image: "/menu/menu3.jpg",
+      category: "curry",
+    },
+    {
+      id: 4,
+      name: "Vegetable Curry",
+      price: 9.0,
+      image: "/menu/menu4.jpg",
+      category: "curry",
+    },
+  ],
+  ramen: [
+    {
+      id: 5,
+      name: "Tofu Firecracker Ramen",
+      price: 9.75,
+      image: "/menu/menu5.jpg",
+      category: "ramen",
+    },
+    {
+      id: 6,
+      name: "Chilli Steak Ramen",
+      price: 8.95,
+      image: "/menu/menu4.jpg",
+      category: "ramen",
+    },
+  ],
+  pizza: [
+    {
+      id: 7,
+      name: "Margherita Pizza",
+      price: 8.5,
+      image: "/menu/menu1.jpg",
+      category: "pizza",
+    },
+    {
+      id: 8,
+      name: "Pepperoni Pizza",
+      price: 9.5,
+      image: "/menu/menu2.jpg",
+      category: "pizza",
+    },
+  ],
+  drinks: [
+    {
+      id: 9,
+      name: "Fresh Lemonade",
+      price: 3.5,
+      image: "/menu/menu5.jpg",
+      category: "drinks",
+    },
+    {
+      id: 10,
+      name: "Iced Green Tea",
+      price: 2.95,
+      image: "/menu/menu3.jpg",
+      category: "drinks",
+    },
+  ],
+};
+
+const categories: CategoryItem[] = [
+  { name: "Popular", icon: "⭐", id: "popular" },
+  { name: "Curry", icon: "🍛", id: "curry" },
+  { name: "Ramen", icon: "🍜", id: "ramen" },
+  { name: "Pizza", icon: "🍕", id: "pizza" },
+  { name: "Drinks", icon: "🥤", id: "drinks" },
+];
+
+const toppingsData = [
+  { name: "extra kaas", price: 0.75 },
+  { name: "extra augurk", price: 0.75 },
+  { name: "extra jalopenos", price: 0.75 },
+];
+
+export default function App() {
+  const [cart, setCart] = useState<MenuItem[]>([]);
+  const [hasCartAppeared, setHasCartAppeared] = useState(false);
+  const [floaters, setFloaters] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("popular");
+  const [cartOpen, setCartOpen] = useState(false);
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+
+  const removeFromCart = (id: number) => {
+    setCart((prev) => {
+      const idx = prev.findIndex((i) => i.id === id);
+      if (idx < 0) return prev;
+      const copy = [...prev];
+      copy.splice(idx, 1);
+      return copy;
+    });
   };
 
-  // Remove from cart
-  const removeFromCart = (index: number) => {
-    setCartItems(cartItems.filter((_, i) => i !== index));
+  // Refs for section scrolling
+  const sectionRefs: Record<CategoryId, React.RefObject<HTMLDivElement>> = {
+    popular: useRef<HTMLDivElement>(null),
+    curry: useRef<HTMLDivElement>(null),
+    ramen: useRef<HTMLDivElement>(null),
+    pizza: useRef<HTMLDivElement>(null),
+    drinks: useRef<HTMLDivElement>(null),
   };
 
-  // Get cart count
-  const getItemCount = (itemId: number) => {
-    return cartItems.filter(item => item.id === itemId).length;
+  const scrollToSection = (categoryId: CategoryId) => {
+    setActiveCategory(categoryId);
+    sectionRefs[categoryId].current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[#7b4f35]">TableTech Menu</h1>
-            </div>
+  const addToCart = (id: number, category: CategoryId) => {
+    const item = mockMenu[category].find((i) => i.id === id);
+    if (!item) return;
+    setCart((prev) => [...prev, item]);
+    setFloaters((prev) => [...prev, id]);
+    setTimeout(() => {
+      setFloaters((prev) => prev.filter((f) => f !== id));
+    }, 500);
+  };
 
-            {/* Language Toggle & Cart */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setLanguage(language === "nl" ? "en" : "nl")}
-                className="text-sm px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-              >
-                {language === "nl" ? "EN" : "NL"}
-              </button>
+  useEffect(() => {
+    if (cart.length > 0 && !hasCartAppeared) {
+      setHasCartAppeared(true);
+    }
+  }, [cart.length, hasCartAppeared]);
 
-              {/* Cart Button */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 bg-[#7b4f35] text-white rounded-lg hover:bg-[#5e3b29] transition-colors"
-              >
-                <IoCart size={24} />
-                {cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                    {cartItems.length}
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+  const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
-      {/* Search Bar */}
-      <div className="sticky top-16 z-30 bg-white border-b">
-        <div className="container mx-auto px-4 py-3">
-          <div className="relative">
-            <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder={language === "nl" ? "Zoek gerechten..." : "Search dishes..."}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7b4f35]"
-            />
-          </div>
-        </div>
-      </div>
+  const extraTotal = selectedToppings
+    .map((t) => toppingsData.find((top) => top.name === t)?.price || 0)
+    .reduce((a, b) => a + b, 0);
 
-      {/* Categories */}
-      <div className="sticky top-32 z-20 bg-white border-b">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {tableTechCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                  selectedCategory === category.id
-                    ? "bg-[#7b4f35] text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                <span className="text-lg">{category.icon}</span>
-                <span className="text-sm font-medium">
-                  {language === "nl" ? category.name : (category.nameEn || category.name)}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+  const buttonTotal = selectedItem
+    ? (selectedItem.price + extraTotal).toFixed(2)
+    : "0.00";
 
-      {/* Menu Grid */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredItems.map((item) => {
-            const itemCount = getItemCount(item.id);
-            return (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
-                onClick={() => setSelectedProduct(item)}
-              >
-                {/* Image */}
-                <div className="relative h-48 bg-gray-200">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://via.placeholder.com/400x300/f3f4f6/6b7280?text=${encodeURIComponent(item.name)}`;
-                    }}
-                  />
-                  {itemCount > 0 && (
-                    <div className="absolute top-2 right-2 bg-green-500 text-white text-sm px-2 py-1 rounded-full">
-                      {itemCount}x
-                    </div>
-                  )}
-                </div>
+  const renderMenuSection = (categoryId: CategoryId) => {
+    const items = mockMenu[categoryId];
 
-                {/* Content */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-800 mb-1">
-                    {language === "nl" ? item.name : (item.nameEn || item.name)}
-                  </h3>
-                  {item.description && (
-                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                      {language === "nl" ? item.description : (item.descriptionEn || item.description)}
-                    </p>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-[#7b4f35]">
-                      €{item.price.toFixed(2)}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(item);
-                      }}
-                      className="bg-[#7b4f35] text-white p-2 rounded-lg hover:bg-[#5e3b29] transition-colors"
-                    >
-                      <IoAdd size={20} />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Product Detail Modal */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black bg-opacity-50"
-            onClick={() => setSelectedProduct(null)}
-          >
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+    return (
+      <div ref={sectionRefs[categoryId]} className="mb-6">
+        <h2 className="text-lg font-bold text-gray-800 mb-3 px-1 sticky -top-2 bg-white py-2 border-b z-10">
+          {categories.find((c) => c.id === categoryId)?.name}
+        </h2>
+        <div className="grid grid-cols-2 gap-3">
+          {items.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setSelectedItem(item)}
+              className="
+            relative flex flex-col items-center
+            bg-white ring-1 ring-gray-200
+            rounded-2xl overflow-hidden
+            p-3 pb-3 transform transition
+            hover:-translate-y-1 hover:shadow-lg
+            cursor-pointer
+          "
             >
-              {/* Image */}
-              <div className="relative h-64 md:h-80">
-                <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = `https://via.placeholder.com/800x400/f3f4f6/6b7280?text=${encodeURIComponent(selectedProduct.name)}`;
-                  }}
-                />
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full aspect-square object-cover rounded-lg mb-2"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://via.placeholder.com/300x300/f3f4f6/6b7280?text=${encodeURIComponent(item.name)}`;
+                }}
+              />
+              <h3 className="text-sm font-semibold text-center leading-tight">
+                {item.name}
+              </h3>
+              {/* Price + Button row */}
+              <div className="flex items-center w-full mt-2">
+                <span className="text-base font-bold text-gray-600 flex-1">
+                  €{item.price.toFixed(2)}
+                </span>
                 <button
-                  onClick={() => setSelectedProduct(null)}
-                  className="absolute top-4 right-4 bg-white/80 backdrop-blur p-2 rounded-full"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(item.id, item.category);
+                  }}
+                  className="
+                bg-green-500 hover:bg-green-600
+                text-white rounded-full
+                w-8 h-8 flex items-center justify-center
+                shadow-md transition-colors duration-150
+              "
                 >
-                  <IoClose size={24} />
+                  <FaPlus size={14} />
                 </button>
               </div>
 
-              {/* Content */}
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  {language === "nl" ? selectedProduct.name : (selectedProduct.nameEn || selectedProduct.name)}
-                </h2>
-                {selectedProduct.description && (
-                  <p className="text-gray-600 mb-4">
-                    {language === "nl" ? selectedProduct.description : (selectedProduct.descriptionEn || selectedProduct.description)}
-                  </p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold text-[#7b4f35]">
-                    €{selectedProduct.price.toFixed(2)}
-                  </span>
-                  <button
-                    onClick={() => {
-                      addToCart(selectedProduct);
-                      setSelectedProduct(null);
-                    }}
-                    className="bg-[#7b4f35] text-white px-6 py-3 rounded-lg hover:bg-[#5e3b29] transition-colors flex items-center gap-2"
+              {/* Floating +1 */}
+              <AnimatePresence>
+                {floaters.includes(item.id) && (
+                  <motion.div
+                    initial={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: 0, y: -4 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="
+                  absolute text-sm font-semibold text-green-500
+                  bottom-14 right-4 pointer-events-none
+                "
                   >
-                    <IoAdd size={24} />
-                    <span>{language === "nl" ? "Toevoegen" : "Add to cart"}</span>
-                  </button>
-                </div>
+                    +1
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 max-w-md mx-auto relative overflow-hidden bg-white flex flex-col font-sans">
+      {" "}
+      <div className="flex items-center justify-between p-4 border-b shadow-sm">
+        <div className="text-lg font-bold text-red-600 tracking-tight">
+          TableTech.
+        </div>
+        <button className="text-xs border px-3 py-1 rounded-full hover:bg-gray-100 transition">
+          English
+        </button>
+      </div>
+      {/* Categories */}
+      <div className="flex overflow-x-auto px-2 py-3 gap-3 border-b">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => scrollToSection(cat.id)}
+            className={`flex flex-col items-center min-w-[70px] text-xs rounded-xl px-3 py-2 transition shadow-sm ${
+              activeCategory === cat.id
+                ? "bg-yellow-300"
+                : "bg-orange-200 hover:bg-yellow-200"
+            }`}
+          >
+            <span className="text-xl mb-1">{cat.icon}</span>
+            {cat.name}
+          </button>
+        ))}
+      </div>
+      {/* Menu List with Sections */}
+      <div className="flex-1 overflow-y-auto px-3 pt-2 pb-40">
+        {categories.map((cat) => renderMenuSection(cat.id))}
+      </div>
+      {/* Order Bar */}
+      <AnimatePresence>
+        {cart.length > 0 && !selectedItem && !cartOpen && (
+          <>
+            {/* White gradient fade above button */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40" />
+
+            {/* Pill-shaped Order Button */}
+            <motion.div
+              onClick={() => setCartOpen(true)}
+              key={cart.length}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="
+          absolute bottom-5 left-4 right-4 z-50
+          bg-black text-white py-4 px-4 rounded-full
+          text-sm font-bold text-center cursor-pointer shadow-lg
+          transition hover:bg-gray-900
+        "
+            >
+              Bestel {cart.length} gerecht{cart.length === 1 ? "" : "en"} voor{" "}
+              <motion.span
+                key={total}
+                initial={{ opacity: 0.5, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="inline-block"
+              >
+                €{total}
+              </motion.span>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      {/* 2) Basket bottom‐sheet */}
+      <AnimatePresence>
+        {cartOpen && (
+          // backdrop
+          <motion.div
+            className="absolute inset-0 bg-black/50 z-50"
+            onClick={() => setCartOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* sheet panel */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{
+                type: "tween",
+                ease: [0.16, 1, 0.3, 1], // Custom cubic-bezier curve (nice spring-like feel with no bounce)
+                duration: 0.6,
+              }}
+            >
+              {/* header */}
+              <div className="p-4 flex justify-between items-center border-b">
+                <h2 className="text-lg font-bold">Jouw bestelling</h2>
+                <button
+                  onClick={() => setCartOpen(false)}
+                  aria-label="Close basket"
+                  className="
+            group
+            p-0
+            rounded-full
+            transition
+            hover:bg-gray-200
+            focus:outline-none
+          "
+                >
+                  <span className="text-3xl font-bold text-gray-700 group-hover:text-black leading-none">
+                    ×
+                  </span>
+                </button>
+              </div>
+
+              {/* list of unique cart items */}
+              <div className="flex-1 overflow-y-auto">
+                {[...new Set(cart.map((i) => i.id))].map((id) => {
+                  const item = cart.find((i) => i.id === id)!;
+                  const qty = cart.filter((i) => i.id === id).length;
+                  return (
+                    <div
+                      key={id}
+                      className="flex items-center justify-between p-3 pr-2 border-b"
+                    >
+                      {/* left: image + text */}
+                      <div className="flex items-center space-x-4">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = `https://via.placeholder.com/48x48/f3f4f6/6b7280?text=${encodeURIComponent(item.name.substring(0, 2))}`;
+                          }}
+                        />
+                        <div>
+                          <p className="text-sm font-medium mb-0.5">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            €{item.price.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* right: quantity controls */}
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => removeFromCart(id)}
+                          className="
+                    w-8 h-8
+                    bg-gray-100 rounded-full
+                    flex items-center justify-center
+                    hover:bg-gray-200 active:bg-gray-300
+                    transition-colors duration-150
+                  "
+                        >
+                          −
+                        </button>
+                        <span className="text-xl font-bold">{qty}</span>
+                        <button
+                          onClick={() => addToCart(id, item.category)}
+                          className="
+                    w-8 h-8
+                    bg-gray-100 rounded-full
+                    flex items-center justify-center
+                    hover:bg-gray-200 active:bg-gray-300
+                    transition-colors duration-150
+                  "
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
+                <span>Subtotal</span>
+                <span className="text-lg font-bold">€{total}</span>
+              </div>
+
+              {/* Continue button */}
+              <div className="p-4">
+                <button
+                  className="
+              w-full bg-black text-white py-3 rounded-full
+              font-semibold shadow-md transition hover:bg-gray-900
+            "
+                >
+                  Continue
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Cart Sidebar */}
+      {/* Modal View */}
       <AnimatePresence>
-        {isCartOpen && (
+        {selectedItem && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black bg-opacity-50"
-            onClick={() => setIsCartOpen(false)}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{
+              type: "tween",
+              ease: [0.16, 1, 0.3, 1], // Same custom cubic-bezier curve as bottom sheet
+              duration: 0.6,
+            }}
+            className="absolute inset-0 z-40 bg-white flex flex-col"
           >
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Cart Header */}
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-xl font-bold text-gray-800">
-                  {language === "nl" ? "Winkelwagen" : "Shopping Cart"}
-                </h2>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <IoClose size={24} />
-                </button>
-              </div>
+            {/* Header image + back */}
+            <div className="relative">
+              <img
+                src={selectedItem.image}
+                alt={selectedItem.name}
+                className="w-full h-44 object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://via.placeholder.com/400x200/f3f4f6/6b7280?text=${encodeURIComponent(selectedItem.name)}`;
+                }}
+              />
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="
+            absolute top-3 left-3
+            w-8 h-8
+            flex items-center justify-center
+            bg-white rounded-full shadow
+            hover:bg-gray-100 active:bg-gray-600
+            transition-colors duration-150
+          "
+              >
+                <IoArrowBack size={20} className="text-gray-800" />
+              </button>
+            </div>
 
-              {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto p-4">
-                {cartItems.length === 0 ? (
-                  <p className="text-center text-gray-500 mt-8">
-                    {language === "nl" ? "Je winkelwagen is leeg" : "Your cart is empty"}
+            {/* Content */}
+            <div className="relative flex-1 overflow-hidden">
+              <div className="p-4 h-full overflow-y-auto pb-[100px] flex flex-col gap-4">
+                {/* Title on top, price underneath */}
+                <div>
+                  <h2 className="text-2xl font-bold text-black">
+                    {selectedItem.name}
+                  </h2>
+                  <p className="text-xl font-semibold text-gray-500 mt-1">
+                    €{selectedItem.price.toFixed(2)}
                   </p>
-                ) : (
-                  <div className="space-y-4">
-                    {cartItems.map((item, index) => (
-                      <motion.div
-                        key={`${item.id}-${index}`}
-                        layout
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg"
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-gray-600">
+                  This is a delicious example dish with rich flavor and
+                  presentation.
+                </p>
+
+                {/* Flavor */}
+                <div>
+                  <h4 className="text-sm font-semibold mb-1">
+                    Keuze Original/Spicy
+                  </h4>
+                  <p className="text-xs text-gray-500 mb-2">Choose up to 1</p>
+                  <div className="flex flex-col gap-2">
+                    {["Spicy", "Original"].map((option) => (
+                      <label
+                        key={option}
+                        className="flex items-center gap-2 text-sm"
                       >
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-16 h-16 object-cover rounded-lg"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = `https://via.placeholder.com/64x64/f3f4f6/6b7280?text=${encodeURIComponent(item.name.substring(0, 2))}`;
-                          }}
+                        <input
+                          type="radio"
+                          name="flavor"
+                          className="accent-black"
                         />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-800">
-                            {language === "nl" ? item.name : (item.nameEn || item.name)}
-                          </h4>
-                          <p className="text-[#7b4f35] font-semibold">€{item.price.toFixed(2)}</p>
-                        </div>
-                        <button
-                          onClick={() => removeFromCart(index)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <IoRemove size={20} />
-                        </button>
-                      </motion.div>
+                        {option}
+                      </label>
                     ))}
                   </div>
-                )}
-              </div>
-
-              {/* Cart Footer */}
-              {cartItems.length > 0 && (
-                <div className="border-t p-4 space-y-4">
-                  <div className="flex items-center justify-between text-lg font-semibold">
-                    <span>{language === "nl" ? "Totaal" : "Total"}</span>
-                    <span className="text-[#7b4f35]">€{totalPrice.toFixed(2)}</span>
-                  </div>
-                  <button className="w-full bg-[#7b4f35] text-white py-3 rounded-lg hover:bg-[#5e3b29] transition-colors font-medium">
-                    {language === "nl" ? "Afrekenen" : "Checkout"}
-                  </button>
                 </div>
-              )}
-            </motion.div>
+
+                <hr className="border-gray-200 my-4" />
+
+                {/* Toppings */}
+                <div>
+                  <h4 className="text-sm font-semibold mb-1">
+                    Toppings toevoegen / Add Toppings
+                  </h4>
+                  <p className="text-xs text-gray-500 mb-2">Choose up to 7</p>
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { name: "extra kaas", price: 0.75 },
+                      { name: "extra augurk", price: 0.75 },
+                      { name: "extra jalopenos", price: 0.75 },
+                    ].map((top) => (
+                      <label
+                        key={top.name}
+                        className="flex justify-between items-center text-sm"
+                      >
+                        <div>
+                          <span className="block font-medium">{top.name}</span>
+                          <span className="text-xs text-gray-500">
+                            +€{top.price.toFixed(2)}
+                          </span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={selectedToppings.includes(top.name)}
+                          onChange={() => {
+                            setSelectedToppings((prev) =>
+                              prev.includes(top.name)
+                                ? prev.filter((t) => t !== top.name)
+                                : [...prev, top.name]
+                            );
+                          }}
+                          className="
+                      appearance-none
+                      w-5 h-5
+                      border-2 border-gray-400
+                      rounded-full
+                      checked:bg-black checked:border-black
+                      hover:border-gray-500 active:border-gray-600
+                      transition-colors duration-150
+                    "
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Solid white block under the button */}
+            <div className="absolute bottom-0 left-0 right-4 h-14 bg-white z-10" />
+
+            {/* Gradient fade‐out above that white block */}
+            <div className="pointer-events-none absolute bottom-12 left-0 right-4 h-24 bg-gradient-to-t from-white to-transparent z-10" />
+
+            {/* Add to Order */}
+            <div className="absolute bottom-4 left-4 right-4 z-50">
+              <button
+                onClick={() => {
+                  addToCart(selectedItem.id, selectedItem.category);
+                  setSelectedItem(null);
+                }}
+                className="w-full bg-black text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-gray-900 transition"
+              >
+                Toevoegen aan bestelling • €{buttonTotal}
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
-};
-
-export default MenuDemo;
+}

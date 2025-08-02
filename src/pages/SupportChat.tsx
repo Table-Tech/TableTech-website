@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   FaEnvelope,
   FaWhatsapp,
@@ -9,6 +10,7 @@ import {
 } from "react-icons/fa";
 
 export const SupportChat: React.FC = () => {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"form" | "email" | "whatsapp">("form");
   const [question, setQuestion] = useState("");
@@ -47,8 +49,8 @@ export const SupportChat: React.FC = () => {
     setQuestion("");
   };
 
-  // Hide chat when demo overlay is open
-  if (isDemoOpen) {
+  // Hide chat when demo overlay is open OR on menu-demo page
+  if (isDemoOpen || location.pathname === '/menu-demo') {
     return null;
   }
 
