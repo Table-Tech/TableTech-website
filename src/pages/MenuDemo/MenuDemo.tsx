@@ -204,7 +204,7 @@ export default function App() {
                 src={item.image}
                 alt={item.name}
                 className="w-full aspect-square object-cover rounded-lg mb-2"
-                onError={(e) => {
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                   (e.target as HTMLImageElement).src = `https://via.placeholder.com/300x300/f3f4f6/6b7280?text=${encodeURIComponent(item.name)}`;
                 }}
               />
@@ -257,7 +257,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-md mx-auto relative overflow-hidden bg-white flex flex-col font-sans">
+    <div className="min-h-screen max-w-md mx-auto relative overflow-hidden bg-white flex flex-col font-sans">
       {" "}
       <div className="flex items-center justify-between p-4 border-b shadow-sm">
         <div className="text-lg font-bold text-red-600 tracking-tight">
@@ -338,7 +338,7 @@ export default function App() {
             {/* sheet panel */}
             <motion.div
               className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl flex flex-col h-5/6 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -385,7 +385,7 @@ export default function App() {
                           src={item.image}
                           alt={item.name}
                           className="w-12 h-12 rounded object-cover"
-                          onError={(e) => {
+                          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                             (e.target as HTMLImageElement).src = `https://via.placeholder.com/48x48/f3f4f6/6b7280?text=${encodeURIComponent(item.name.substring(0, 2))}`;
                           }}
                         />
@@ -472,7 +472,7 @@ export default function App() {
                 src={selectedItem.image}
                 alt={selectedItem.name}
                 className="w-full h-44 object-cover"
-                onError={(e) => {
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                   (e.target as HTMLImageElement).src = `https://via.placeholder.com/400x200/f3f4f6/6b7280?text=${encodeURIComponent(selectedItem.name)}`;
                 }}
               />
