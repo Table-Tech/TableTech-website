@@ -11,6 +11,8 @@ export const useBreakpoint = () => {
     isMobile: w < 640,
     isTablet: w >= 640 && w < 1024,
     isDesktop: w >= 1024,
+    isLargeScreen: w >= 1440,
+    isXLargeScreen: w >= 1920,
   });
 
   useEffect(() => {
