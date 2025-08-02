@@ -1,4 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import qrCodeImage from "../../assets/afbeeldingen/iyd.png";
 import { LaptopMockup } from "../../components/LaptopMockup";
 
@@ -7,6 +8,7 @@ const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay").th
 const EmployeeDemoOverlay = lazy(() => import("../../components/DemoOverlay-laptop").then(module => ({ default: module.DemoOverlay })));
 
 export const HeroSection: React.FC = () => {
+  const { t } = useTranslation();
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
@@ -65,7 +67,7 @@ export const HeroSection: React.FC = () => {
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/videos/background-2.webm" type="video/webm" />
-          Je browser ondersteunt geen HTML5 video.
+          Your browser does not support HTML5 video.
         </video>
 
         {/* Donkere overlay */}
@@ -74,26 +76,23 @@ export const HeroSection: React.FC = () => {
         {/* Inhoud */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 2xl:px-20 3xl:px-40 pt-40 pb-20 text-white">
           <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 3xl:text-7xl font-bold mb-6 leading-snug drop-shadow-md">
-            De toekomst van bestellen.
+            {t('hero.title')}
           </h1>
           <p className="text-base sm:text-lg text-white/90 mb-10 max-w-3xl mx-auto 2xl:text-xl">
-            Laat gasten bestellen & betalen via QR – sneller, veiliger, slimmer.
+            {t('hero.subtitle')}
           </p>
 
           <div className="flex flex-col lg:flex-row justify-center gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
             {/* Customer Demo Card */}
             <div className="bg-white/10 backdrop-blur-md px-6 pl-8 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[250px] md:min-h-[280px] lg:min-h-[480px]">
               <div className="flex-1 flex flex-col">
-                <h3 className="text-base font-semibold mb-2">Probeer als Klant</h3>
+                <h3 className="text-base font-semibold mb-2">{t('hero.customerDemo.title')}</h3>
                 <p className="text-white/80 mb-4 text-sm leading-relaxed">
-                  Scan QR-code of start klant demo om te bekijken hoe gasten het ervaren.
+                  {t('hero.customerDemo.description')}
                 </p>
                 
                 {/* QR Code Component - Desktop Only */}
                 <div className="hidden lg:flex mb-3 flex-1 flex-col justify-center">
-                  <div className="text-center mb-4">
-                    <p className="text-white/80 text-sm font-medium">Scan QR-code of</p>
-                  </div>
                   <div className="relative w-full max-w-xs mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
                     <div className="relative w-full rounded-xl overflow-hidden shadow-2xl backdrop-blur-lg border border-white/30 p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
                       <div className="bg-white p-3 rounded-lg mx-auto w-fit shadow-2xl">
@@ -104,7 +103,7 @@ export const HeroSection: React.FC = () => {
                         />
                       </div>
                       <div className="text-center mt-4">
-                        <p className="text-white/90 text-xs font-medium">Scan the QR code or click the button below</p>
+                        <p className="text-white/90 text-xs font-medium">{t('hero.customerDemo.qrInstruction')}</p>
                       </div>
                     </div>
                   </div>
@@ -121,10 +120,10 @@ export const HeroSection: React.FC = () => {
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Laden...
+                    {t('loading')}
                   </span>
                 ) : (
-                  "Start klant demo"
+                  t('hero.customerDemo.button')
                 )}
                 </button>
               </div>
@@ -134,10 +133,10 @@ export const HeroSection: React.FC = () => {
             <div className="bg-white/10 backdrop-blur-md px-6 pr-8 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[250px] md:min-h-[280px] lg:min-h-[480px]">
               <div className="flex-1 flex flex-col">
                 <h3 className="text-base font-semibold mb-2">
-                  Probeer als Werknemer
+                  {t('hero.employeeDemo.title')}
                 </h3>
                 <p className="text-white/80 mb-4 text-sm leading-relaxed">
-                  Zie hoe het dashboard werkt voor personeel.
+                  {t('hero.employeeDemo.description')}
                 </p>
                 
                 {/* Laptop Mockup - Desktop Only */}
@@ -156,10 +155,10 @@ export const HeroSection: React.FC = () => {
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Laden...
+                    {t('loading')}
                   </span>
                 ) : (
-                  "Start dashboard demo"
+                  t('hero.employeeDemo.button')
                 )}
                 </button>
               </div>
@@ -187,7 +186,7 @@ export const HeroSection: React.FC = () => {
           <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-lg font-medium">Demo laden...</span>
+              <span className="text-lg font-medium">{t('demoLoading')}</span>
             </div>
           </div>
         </div>
@@ -205,7 +204,7 @@ export const HeroSection: React.FC = () => {
           <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-lg font-medium">Dashboard demo laden...</span>
+              <span className="text-lg font-medium">{t('dashboardDemoLoading')}</span>
             </div>
           </div>
         </div>
