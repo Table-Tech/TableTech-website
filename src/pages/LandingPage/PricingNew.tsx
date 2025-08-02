@@ -13,18 +13,15 @@ const pricingTiers = [
     transactionFee: "1,5%",
     color: "green",
     features: {
+      "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
       "Direct online betalen": true,
-      "Digitale bon voor klant": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": false,
       "Bestellingen aanpassen in keuken": false,
-      "Fooien aanzetten bij afrekenen": false,
       "Inzicht in verkoop & omzet": false,
       "Eigen themes": false,
-      "Factuur met je eigen BTW-gegevens": false,
-      "Instellingen aanpassen zelf": false,
       "Prioriteit bij support": false
     }
   },
@@ -38,18 +35,15 @@ const pricingTiers = [
     color: "blue",
     popular: true,
     features: {
+      "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
       "Direct online betalen": true,
-      "Digitale bon voor klant": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": false,
       "Bestellingen aanpassen in keuken": true,
-      "Fooien aanzetten bij afrekenen": true,
       "Inzicht in verkoop & omzet": true,
       "Eigen themes": false,
-      "Factuur met je eigen BTW-gegevens": false,
-      "Instellingen aanpassen zelf": false,
       "Prioriteit bij support": false
     }
   },
@@ -62,18 +56,16 @@ const pricingTiers = [
     transactionFee: "0%",
     color: "purple",
     features: {
+      "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
       "Direct online betalen": true,
-      "Digitale bon voor klant": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": true,
       "Bestellingen aanpassen in keuken": true,
-      "Fooien aanzetten bij afrekenen": true,
       "Inzicht in verkoop & omzet": true,
       "Eigen themes": true,
-      "Factuur met je eigen BTW-gegevens": true,
-      "Instellingen aanpassen zelf": true,
+      "Gratis QR-standaards & tafelbordje": true,
       "Prioriteit bij support": false
     }
   },
@@ -86,18 +78,16 @@ const pricingTiers = [
     transactionFee: "0%",
     color: "orange",
     features: {
+      "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
       "Direct online betalen": true,
-      "Digitale bon voor klant": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": true,
       "Bestellingen aanpassen in keuken": true,
-      "Fooien aanzetten bij afrekenen": true,
       "Inzicht in verkoop & omzet": true,
       "Eigen themes": true,
-      "Factuur met je eigen BTW-gegevens": true,
-      "Instellingen aanpassen zelf": true,
+      "Gratis QR-standaards & tafelbordje": true,
       "Prioriteit bij support": true
     }
   }
@@ -105,18 +95,16 @@ const pricingTiers = [
 
 // Feature list order
 const featureOrder = [
+  "Complete menu-inrichting eenmalig",
   "Bestellen via QR",
   "Direct online betalen",
-  "Digitale bon voor klant",
   "Keuken ontvangt bestellingen live",
   "Eigen menukaart, foto's & logo",
   "Bestellingen aanpassen in keuken",
-  "Fooien aanzetten bij afrekenen",
   "Inzicht in verkoop & omzet",
   "Inclusief tablet voor keuken",
   "Eigen themes",
-  "Factuur met je eigen BTW-gegevens",
-  "Instellingen aanpassen zelf",
+  "Gratis QR-standaards & tafelbordje",
   "Prioriteit bij support"
 ];
 
@@ -214,8 +202,19 @@ export const PricingNew: React.FC = () => {
                             <h3 className="text-2xl font-bold text-white mb-1">{tier.name}</h3>
                             <p className={`text-sm ${colors.text}`}>{tier.tagline}</p>
                             <div className="mt-4">
-                              <div className="text-3xl font-bold text-white">{tier.monthlyFee}</div>
-                              <div className="text-sm text-[#D4B896]">/maand</div>
+                              <div className="flex items-baseline justify-center gap-1">
+                                <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
+                                {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
+                              </div>
+                              {tier.monthlyFee === "€49,99" && (
+                                <div className="text-lg font-semibold text-[#D4B896] mt-1">of €499 per jaar</div>
+                              )}
+                              {tier.monthlyFee === "€99" && (
+                                <div className="text-lg font-semibold text-[#D4B896] mt-1">of €999 per jaar</div>
+                              )}
+                              {tier.monthlyFee === "€199" && (
+                                <div className="text-lg font-semibold text-[#D4B896] mt-1">of €1999 per jaar</div>
+                              )}
                               <div className={`text-xs mt-1 ${colors.text} font-medium`}>
                                 + {tier.transactionFee} per transactie
                               </div>
@@ -275,8 +274,19 @@ export const PricingNew: React.FC = () => {
                           <h3 className="text-2xl font-bold text-white mb-1">{tier.name}</h3>
                           <p className={`text-sm ${colors.text}`}>{tier.tagline}</p>
                           <div className="mt-4">
-                            <div className="text-3xl font-bold text-white">{tier.monthlyFee}</div>
-                            <div className="text-sm text-[#D4B896]">/maand</div>
+                            <div className="flex items-baseline justify-center gap-1">
+                              <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
+                              {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
+                            </div>
+                            {tier.monthlyFee === "€49,99" && (
+                              <div className="text-lg font-semibold text-[#D4B896] mt-1">of €499 per jaar</div>
+                            )}
+                            {tier.monthlyFee === "€99" && (
+                              <div className="text-lg font-semibold text-[#D4B896] mt-1">of €999 per jaar</div>
+                            )}
+                            {tier.monthlyFee === "€199" && (
+                              <div className="text-lg font-semibold text-[#D4B896] mt-1">of €1999 per jaar</div>
+                            )}
                             <div className={`text-xs mt-1 ${colors.text} font-medium`}>
                               + {tier.transactionFee} per transactie
                             </div>
