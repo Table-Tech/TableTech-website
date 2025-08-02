@@ -3,5 +3,175 @@
   "features": "Functies",
   "pricing": "Prijzen",
   "about": "Over ons",
-  "signup": "Probeer gratis"
+  "signup": "Probeer gratis",
+  "hero": {
+    "title": "De toekomst van bestellen.",
+    "subtitle": "Laat gasten bestellen & betalen via QR – sneller, veiliger, slimmer.",
+    "customerDemo": {
+      "title": "Probeer als Klant",
+      "description": "Scan QR-code of start klant demo om te bekijken hoe gasten het ervaren.",
+      "scanText": "Scan QR-code of",
+      "button": "Start klant demo",
+      "qrInstruction": "Scan de QR-code of klik op de knop hieronder"
+    },
+    "employeeDemo": {
+      "title": "Probeer als Werknemer",
+      "description": "Zie hoe het dashboard werkt voor personeel.",
+      "button": "Start dashboard demo"
+    }
+  },
+  "dashboard": {
+    "tabletech": "TableTech",
+    "home": "Home",
+    "tables": "Tafels",
+    "menu": "Menu",
+    "data": "Data",
+    "liveOrders": "Live Bestellingen",
+    "revenueToday": "Omzet vandaag",
+    "activeTables": "Actieve tafels",
+    "occupied": "bezet",
+    "orders": "Bestellingen",
+    "today": "Vandaag",
+    "revenueTrend": "Omzet Trend",
+    "quickActions": "Snelle Acties",
+    "newOrder": "Nieuwe Bestelling",
+    "reserveTable": "Tafel Reserveren",
+    "closeDay": "Dag Afsluiten",
+    "preparing": "Bereiding",
+    "ready": "Klaar",
+    "waiting": "Wacht",
+    "margheritaPizza": "Margherita Pizza, Cola",
+    "pepperoniPizza": "Pepperoni Pizza",
+    "chickenKatsuCurry": "Chicken Katsu Curry",
+    "menuItems": {
+      "pizzaMargherita": "Pizza Margherita",
+      "caesarSalad": "Caesar Salade", 
+      "chickenKatsu": "Chicken Katsu",
+      "lemonade": "Lemonade",
+      "pastaCarbonara": "Pasta Carbonara",
+      "burgerDeluxe": "Burger Deluxe"
+    }
+  },
+  "benefits3": {
+    "title": "Krachtig Dashboard",
+    "subtitle": "Beheer je restaurant met professionele analytics en realtime inzichten",
+    "moreFeaturesTitle": "Meer functies",
+    "screens": {
+      "liveOrders": {
+        "title": "Live Bestelling Management",
+        "description": "Realtime overzicht van alle inkomende bestellingen met status tracking",
+        "header": "Live Bestellingen",
+        "status": "5 actief • 12 wachtrij",
+        "urgent": "URGENT",
+        "preparing": "BEREIDEN",
+        "ready": "KLAAR",
+        "new": "NIEUW",
+        "table": "Tafel",
+        "items": "items",
+        "today": "Vandaag",
+        "avgTime": "Gem. tijd",
+        "revenue": "Omzet",
+        "onTime": "On-time",
+        "ordersPerHour": "Orders per uur"
+      },
+      "analytics": {
+        "title": "Business Intelligence Dashboard",
+        "description": "Geavanceerde analytics met realtime inzichten in verkoop, trends en KPI's",
+        "header": "Business Analytics",
+        "status": "Real-time • Auto-refresh",
+        "revenueWeek": "Omzet Deze Week",
+        "vsLastWeek": "vs vorige week",
+        "dailyRevenue": "Dagomzet",
+        "orders": "Orders",
+        "avgOrder": "Gem. order",
+        "rating": "Rating",
+        "occupancy": "Bezetting",
+        "waitTime": "Wachttijd",
+        "topProducts": "Top Producten Vandaag",
+        "liveGuests": "Live Gasten",
+        "activeOrders": "Actieve Orders"
+      },
+      "kitchen": {
+        "title": "Kitchen Display System",
+        "description": "Professioneel keuken display voor efficiënte order management en timing",
+        "header": "Keuken Display",
+        "status": "7 orders • 3 urgent",
+        "table": "Tafel",
+        "urgent": "URGENT",
+        "preparing": "BEREIDEN",
+        "ready": "KLAAR",
+        "new": "NIEUW",
+        "queue": "Wachtrij",
+        "avgTime": "Gem. tijd",
+        "onTime": "On-time",
+        "today": "Vandaag",
+        "stationStatus": "Station Status",
+        "grill": "Grill",
+        "pizza": "Pizza",
+        "salads": "Salades",
+        "orders": "orders"
+      },
+      "management": {
+        "title": "Restaurant Management Hub",
+        "description": "Centraal beheercentrum voor menu's, personeel, instellingen en systeem monitoring",
+        "header": "Management Dashboard",
+        "status": "Admin Panel • Restaurant Manager",
+        "menuManagement": "Menu Beheer",
+        "staff": "Personeel",
+        "tableManagement": "Tafelbeheer",
+        "settings": "Instellingen",
+        "finances": "Financiën",
+        "reports": "Rapporten",
+        "quickActions": "Snelle Acties",
+        "systemStatus": "Systeem Status",
+        "recentActivity": "Recent Activity",
+        "menuItems": "items",
+        "categories": "cat.",
+        "updatesToday": "updates vandaag",
+        "active": "actief",
+        "break": "pauze",
+        "shiftUntil": "Shift tot",
+        "tables": "tafels",
+        "occupied": "bezet",
+        "occupancyRate": "bezetting",
+        "systemConfig": "Systeem config",
+        "thisWeek": "deze week",
+        "vsLast": "vs vorige",
+        "export": "Export",
+        "analytics": "Analytics",
+        "newReport": "Nieuw rapport",
+        "addMenu": "+ Menu",
+        "qrCodes": "QR Codes",
+        "promotions": "Promoties",
+        "reservations": "Reserv.",
+        "online": "Online",
+        "connected": "Connected",
+        "menuUpdate": "Menu update: Pizza prijzen",
+        "minAgo": "min geleden",
+        "newReservation": "Nieuwe reservering:",
+        "pizzaPrices": "Pizza prijzen"
+      }
+    },
+    "features": {
+      "mobileOptimization": {
+        "title": "Mobiele optimalisatie",
+        "description": "Direct bestellen vanaf elke smartphone"
+      },
+      "dashboardAnalysis": {
+        "title": "Dashboard analyse",
+        "description": "Realtime inzichten in verkoop en voorkeuren"
+      },
+      "inventoryLink": {
+        "title": "Voorraadkoppeling",
+        "description": "Synchronisatie met je keukensysteem"
+      },
+      "serviceNotification": {
+        "title": "Snelle service melding",
+        "description": "Gasten kunnen personeel oproepen"
+      }
+    }
+  },
+  "loading": "Laden...",
+  "demoLoading": "Demo laden...",
+  "dashboardDemoLoading": "Dashboard demo laden..."
 }
