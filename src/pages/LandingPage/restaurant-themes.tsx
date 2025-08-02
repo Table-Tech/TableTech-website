@@ -107,11 +107,46 @@ const RestaurantThemesPage: React.FC = () => {
       }}
     >
       
-      {/* Background Elements */}
+      {/* Background Elements with gentle candlelight pulse */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-orange-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-amber-200/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-200/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.2, 0.3, 0.2]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-20 left-10 w-72 h-72 bg-amber-200/20 rounded-full mix-blend-multiply filter blur-3xl"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.15, 1],
+            opacity: [0.15, 0.25, 0.15]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+          className="absolute bottom-20 right-10 w-72 h-72 bg-amber-200/25 rounded-full mix-blend-multiply filter blur-3xl"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.2, 0.1]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-200/15 rounded-full mix-blend-multiply filter blur-3xl"
+        />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,13 +171,40 @@ const RestaurantThemesPage: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center justify-center gap-16">
           {/* Phone Mockup */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.7 }}
             animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1, delay: 0.3 }}
+            transition={{ 
+              duration: 1.5, 
+              delay: 0.3,
+              ease: [0.25, 0.46, 0.45, 0.94] // Gentle ease-out
+            }}
             className="relative flex-shrink-0"
           >
-            {/* Phone Frame */}
-            <div className="relative w-80 h-[600px] bg-black rounded-[3rem] p-2 shadow-2xl">
+            {/* Warm Glow Effect */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={isVisible ? { opacity: [0, 0.6, 0] } : {}}
+              transition={{ 
+                duration: 2,
+                delay: 0.5,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-0 -z-10"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-300 to-yellow-300 rounded-[4rem] blur-3xl"></div>
+            </motion.div>
+            {/* Phone Frame with subtle breathing animation */}
+            <motion.div 
+              animate={isVisible ? {
+                scale: [1, 1.02, 1],
+              } : {}}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="relative w-80 h-[600px] bg-black rounded-[3rem] p-2 shadow-2xl"
+            >
               <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
                 {/* Status Bar */}
                 <div className="absolute top-0 left-0 right-0 h-6 bg-black z-20 rounded-t-[2.5rem] flex items-center justify-between px-6 text-white text-xs">
@@ -154,10 +216,13 @@ const RestaurantThemesPage: React.FC = () => {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentTheme}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ 
+                      duration: 0.8,
+                      ease: "easeInOut"
+                    }}
                     className="pt-6 h-full"
                   >
                     <img
@@ -171,19 +236,37 @@ const RestaurantThemesPage: React.FC = () => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Floating Theme Selector */}
+            {/* Floating Theme Selector with subtle float */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              animate={isVisible ? { 
+                opacity: 1, 
+                y: [0, -5, 0] 
+              } : {}}
+              transition={{ 
+                opacity: { duration: 0.8, delay: 0.6 },
+                y: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }
+              }}
               className="absolute -bottom-16 left-1/2 transform -translate-x-1/2"
             >
               <div className="bg-white/10 backdrop-blur-xl rounded-2xl px-6 py-4 shadow-2xl border border-white/30 hover:border-white/50 transition-all duration-300">
                 <div className="flex items-center gap-4">
                   {themes.map((theme, index) => (
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+                      transition={{ 
+                        duration: 0.5,
+                        delay: 0.8 + (index * 0.1), // Staggered appearance
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                      }}
                       key={theme.id}
                       onClick={() => handleThemeChange(index)}
                       className={`w-5 h-5 rounded-full transition-all duration-300 relative shadow-lg hover:shadow-xl ${
@@ -200,7 +283,7 @@ const RestaurantThemesPage: React.FC = () => {
                           style={{ backgroundColor: theme.accentColor }}
                         />
                       )}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>
