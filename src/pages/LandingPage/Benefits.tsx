@@ -698,15 +698,6 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                   </div>
                   
-                  {/* Bottom accent line */}
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-                    </div>
-                  </div>
                 </div>
               </motion.div>
             </div>
@@ -751,20 +742,6 @@ export const BenefitsOne: React.FC = () => {
                   </AnimatePresence>
                 </div>
               </motion.div>
-
-              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-3">
-                {appScreens.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleManualClick(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      currentScreen === index ? 'bg-white scale-125 shadow-lg' : 'bg-white/60'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                  />
-                ))}
-              </div>
             </div>
           </div>
 
