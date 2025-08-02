@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Star, ChevronDown, ChevronUp, Info, ArrowRight, Zap, Shield, Clock, Truck, Package } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Check, X } from "lucide-react";
 
 // Pricing tiers data
 const pricingTiers = [

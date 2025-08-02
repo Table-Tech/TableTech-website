@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Star, ChevronDown, ChevronUp, Info, ArrowRight, Zap, Shield, Clock, Truck, Package } from "lucide-react";
+import { Check, X, Star, ChevronDown, ChevronUp, Info } from "lucide-react";
 import achtergrond2 from "../../assets/afbeeldingen/achtergrond2.png";
 
 // Pricing tiers data
