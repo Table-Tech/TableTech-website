@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Home, Users, Menu, BarChart3, Settings, Clock, CheckCircle, Euro, TrendingUp, AlertCircle, Coffee, Star } from 'lucide-react';
 
 export const LaptopMockup: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="relative w-full max-w-md mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
       {/* Laptop Frame */}
@@ -35,24 +37,24 @@ export const LaptopMockup: React.FC = () => {
                 {/* Sidebar */}
                 <div className="w-28 bg-white border-r border-gray-200 shadow-sm">
                   <div className="p-4 bg-gradient-to-br from-[#7b4f35] to-[#5e3b29] text-white text-center">
-                    <h1 className="text-sm font-bold tracking-wide">TableTech</h1>
+                    <h1 className="text-sm font-bold tracking-wide">{t('dashboard.tabletech')}</h1>
                   </div>
                   <nav className="p-2 space-y-1.5">
                     <div className="bg-gradient-to-r from-[#7b4f35] to-[#6d4530] text-white px-2 py-2 rounded-lg text-[10px] flex items-center shadow-sm">
                       <Home className="w-3 h-3 mr-1.5" />
-                      <span className="font-medium">Home</span>
+                      <span className="font-medium">{t('dashboard.home')}</span>
                     </div>
                     <div className="text-gray-700 px-2 py-2 rounded-lg text-[10px] flex items-center hover:bg-gray-50 transition-colors">
                       <Users className="w-3 h-3 mr-1.5 text-gray-500" />
-                      <span>Tafels</span>
+                      <span>{t('dashboard.tables')}</span>
                     </div>
                     <div className="text-gray-700 px-2 py-2 rounded-lg text-[10px] flex items-center hover:bg-gray-50 transition-colors">
                       <Menu className="w-3 h-3 mr-1.5 text-gray-500" />
-                      <span>Menu</span>
+                      <span>{t('dashboard.menu')}</span>
                     </div>
                     <div className="text-gray-700 px-2 py-2 rounded-lg text-[10px] flex items-center hover:bg-gray-50 transition-colors">
                       <BarChart3 className="w-3 h-3 mr-1.5 text-gray-500" />
-                      <span>Data</span>
+                      <span>{t('dashboard.data')}</span>
                     </div>
                   </nav>
                 </div>
@@ -66,7 +68,7 @@ export const LaptopMockup: React.FC = () => {
                         <div className="w-6 h-6 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg flex items-center justify-center mb-1">
                           <Euro className="w-3 h-3 text-emerald-600" />
                         </div>
-                        <p className="text-[9px] text-gray-500">Omzet vandaag</p>
+                        <p className="text-[9px] text-gray-500">{t('dashboard.revenueToday')}</p>
                         <p className="text-sm font-bold text-gray-900">€847.30</p>
                         <p className="text-[8px] text-emerald-600 flex items-center">
                           <TrendingUp className="w-2 h-2 mr-0.5" />
@@ -80,9 +82,9 @@ export const LaptopMockup: React.FC = () => {
                         <div className="w-6 h-6 bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg flex items-center justify-center mb-1">
                           <Users className="w-3 h-3 text-amber-600" />
                         </div>
-                        <p className="text-[9px] text-gray-500">Actieve tafels</p>
+                        <p className="text-[9px] text-gray-500">{t('dashboard.activeTables')}</p>
                         <p className="text-sm font-bold text-gray-900">6/15</p>
-                        <p className="text-[8px] text-amber-600">40% bezet</p>
+                        <p className="text-[8px] text-amber-600">40% {t('dashboard.occupied')}</p>
                       </div>
                     </div>
 
@@ -91,9 +93,9 @@ export const LaptopMockup: React.FC = () => {
                         <div className="w-6 h-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center mb-1">
                           <Coffee className="w-3 h-3 text-blue-600" />
                         </div>
-                        <p className="text-[9px] text-gray-500">Bestellingen</p>
+                        <p className="text-[9px] text-gray-500">{t('dashboard.orders')}</p>
                         <p className="text-sm font-bold text-gray-900">127</p>
-                        <p className="text-[8px] text-blue-600">Vandaag</p>
+                        <p className="text-[8px] text-blue-600">{t('dashboard.today')}</p>
                       </div>
                     </div>
                   </div>
@@ -101,7 +103,7 @@ export const LaptopMockup: React.FC = () => {
                   {/* Live Orders */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-3">
                     <div className="px-3 py-2 border-b border-gray-100 flex justify-between items-center">
-                      <h3 className="text-[11px] font-semibold text-gray-800">Live Bestellingen</h3>
+                      <h3 className="text-[11px] font-semibold text-gray-800">{t('dashboard.liveOrders')}</h3>
                       <div className="flex items-center text-[10px] text-gray-500">
                         <Clock className="w-3 h-3 mr-1" />
                         <span>17:27</span>
@@ -114,13 +116,13 @@ export const LaptopMockup: React.FC = () => {
                             T2
                           </div>
                           <div className="flex-1 min-w-0 pr-2">
-                            <div className="text-[10px] font-semibold text-gray-800 truncate">Margherita Pizza, Cola</div>
+                            <div className="text-[10px] font-semibold text-gray-800 truncate">{t('dashboard.margheritaPizza')}</div>
                             <div className="text-[9px] text-gray-500">17:23 • €12.45</div>
                           </div>
                         </div>
                         <div className="flex-shrink-0">
                           <span className="px-2 py-1 rounded-full text-[8px] font-medium bg-blue-100 text-blue-700 whitespace-nowrap">
-                            Bereiding
+                            {t('dashboard.preparing')}
                           </span>
                         </div>
                       </div>
@@ -131,13 +133,13 @@ export const LaptopMockup: React.FC = () => {
                             T4
                           </div>
                           <div className="flex-1 min-w-0 pr-2">
-                            <div className="text-[10px] font-semibold text-gray-800">Pepperoni Pizza</div>
+                            <div className="text-[10px] font-semibold text-gray-800">{t('dashboard.pepperoniPizza')}</div>
                             <div className="text-[9px] text-gray-500">17:15 • €11.50</div>
                           </div>
                         </div>
                         <div className="flex-shrink-0">
                           <span className="px-2 py-1 rounded-full text-[8px] font-medium bg-emerald-100 text-emerald-700 whitespace-nowrap">
-                            Klaar
+                            {t('dashboard.ready')}
                           </span>
                         </div>
                       </div>
@@ -150,13 +152,13 @@ export const LaptopMockup: React.FC = () => {
                             T8
                           </div>
                           <div className="flex-1 min-w-0 pr-2">
-                            <div className="text-[10px] font-semibold text-gray-800">Chicken Katsu Curry</div>
+                            <div className="text-[10px] font-semibold text-gray-800">{t('dashboard.chickenKatsuCurry')}</div>
                             <div className="text-[9px] text-gray-500">17:25 • €10.50</div>
                           </div>
                         </div>
                         <div className="flex-shrink-0">
                           <span className="px-2 py-1 rounded-full text-[8px] font-medium bg-amber-100 text-amber-700 whitespace-nowrap">
-                            Wacht
+                            {t('dashboard.waiting')}
                           </span>
                         </div>
                       </div>
@@ -167,7 +169,7 @@ export const LaptopMockup: React.FC = () => {
                   <div className="grid grid-cols-2 gap-3 mt-3 mb-3 mr-2">
                     {/* Mini Chart */}
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-2">
-                      <h4 className="text-[9px] font-semibold text-gray-700 mb-1">Omzet Trend</h4>
+                      <h4 className="text-[9px] font-semibold text-gray-700 mb-1">{t('dashboard.revenueTrend')}</h4>
                       <div className="h-12 bg-gradient-to-t from-emerald-50 to-white rounded flex items-end justify-around px-1">
                         <div className="w-2 bg-emerald-400 rounded-t" style={{height: '40%'}}></div>
                         <div className="w-2 bg-emerald-400 rounded-t" style={{height: '60%'}}></div>
@@ -185,19 +187,19 @@ export const LaptopMockup: React.FC = () => {
 
                     {/* Quick Actions */}
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-2">
-                      <h4 className="text-[9px] font-semibold text-gray-700 mb-1">Snelle Acties</h4>
+                      <h4 className="text-[9px] font-semibold text-gray-700 mb-1">{t('dashboard.quickActions')}</h4>
                       <div className="space-y-1">
                         <button className="w-full bg-[#7b4f35] text-white text-[8px] py-1 px-2 rounded flex items-center justify-center hover:bg-[#6d4530]">
                           <AlertCircle className="w-2.5 h-2.5 mr-1" />
-                          Nieuwe Bestelling
+                          {t('dashboard.newOrder')}
                         </button>
                         <button className="w-full bg-gray-100 text-gray-700 text-[8px] py-1 px-2 rounded flex items-center justify-center hover:bg-gray-200">
                           <Users className="w-2.5 h-2.5 mr-1" />
-                          Tafel Reserveren
+                          {t('dashboard.reserveTable')}
                         </button>
                         <button className="w-full bg-gray-100 text-gray-700 text-[8px] py-1 px-2 rounded flex items-center justify-center hover:bg-gray-200">
                           <CheckCircle className="w-2.5 h-2.5 mr-1" />
-                          Dag Afsluiten
+                          {t('dashboard.closeDay')}
                         </button>
                       </div>
                     </div>
