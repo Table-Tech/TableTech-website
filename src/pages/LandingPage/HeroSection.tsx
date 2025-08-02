@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from "react";
 import qrCodeImage from "../../assets/afbeeldingen/iyd.png";
-import laptopDemoImage from "../../assets/afbeeldingen/laptop-demo.png";
+import { LaptopMockup } from "../../components/LaptopMockup";
 
 // Lazy load demo components for better performance
 const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay").then(module => ({ default: module.DemoOverlay })));
@@ -80,30 +80,44 @@ export const HeroSection: React.FC = () => {
             Laat gasten bestellen & betalen via QR – sneller, veiliger, slimmer.
           </p>
 
-          <div className="flex flex-col md:flex-row justify-center gap-6">
+          <div className="flex flex-col lg:flex-row justify-center gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
             {/* Customer Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20">
-              <h3 className="text-base font-semibold mb-2">Probeer als Klant</h3>
-              <p className="text-white/80 mb-4 text-sm leading-relaxed">
-                Scan QR-code of start klant demo om te bekijken hoe gasten het ervaren.
-              </p>
-              
-              {/* QR Code Image - Desktop Only */}
-              <div className="hidden lg:block mb-4">
-                <img 
-                  src={qrCodeImage} 
-                  alt="Scan QR code voor menu demo" 
-                  className="w-66 h-auto mx-auto rounded-lg shadow-lg"
-                />
-                <p className="text-white/70 text-xs mt-2">Scan QR-code of</p>
+            <div className="bg-white/10 backdrop-blur-md px-6 pl-8 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[250px] md:min-h-[280px] lg:min-h-[480px]">
+              <div className="flex-1 flex flex-col">
+                <h3 className="text-base font-semibold mb-2">Probeer als Klant</h3>
+                <p className="text-white/80 mb-4 text-sm leading-relaxed">
+                  Scan QR-code of start klant demo om te bekijken hoe gasten het ervaren.
+                </p>
+                
+                {/* QR Code Component - Desktop Only */}
+                <div className="hidden lg:flex mb-3 flex-1 flex-col justify-center">
+                  <div className="text-center mb-4">
+                    <p className="text-white/80 text-sm font-medium">Scan QR-code of</p>
+                  </div>
+                  <div className="relative w-full max-w-xs mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
+                    <div className="relative w-full rounded-xl overflow-hidden shadow-2xl backdrop-blur-lg border border-white/30 p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
+                      <div className="bg-white p-3 rounded-lg mx-auto w-fit shadow-2xl">
+                        <img 
+                          src={qrCodeImage} 
+                          alt="Scan QR code voor menu demo" 
+                          className="w-36 h-36 mx-auto filter brightness-105 contrast-110"
+                        />
+                      </div>
+                      <div className="text-center mt-4">
+                        <p className="text-white/90 text-xs font-medium">Scan the QR code or click the button below</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <button
-                onClick={handleOpenCustomerDemo}
-                type="button"
-                disabled={isPreloading}
-                className="inline-block bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed"
-              >
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={handleOpenCustomerDemo}
+                  type="button"
+                  disabled={isPreloading}
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-10 py-3 h-[44px] rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[180px] ring-2 ring-yellow-400/20 hover:ring-yellow-400/40"
+                >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -112,33 +126,33 @@ export const HeroSection: React.FC = () => {
                 ) : (
                   "Start klant demo"
                 )}
-              </button>
+                </button>
+              </div>
             </div>
 
             {/* Employee Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-6 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20">
-              <h3 className="text-base font-semibold mb-2">
-                Probeer als Werknemer
-              </h3>
-              <p className="text-white/80 mb-4 text-sm leading-relaxed">
-                Zie hoe het dashboard werkt voor personeel.
-              </p>
-              
-              {/* Laptop Demo Image - Desktop Only */}
-              <div className="hidden lg:block mb-4">
-                <img 
-                  src={laptopDemoImage} 
-                  alt="Dashboard demo voor werknemers" 
-                  className="w-66 h-auto mx-auto rounded-lg shadow-lg"
-                />
+            <div className="bg-white/10 backdrop-blur-md px-6 pr-8 py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[250px] md:min-h-[280px] lg:min-h-[480px]">
+              <div className="flex-1 flex flex-col">
+                <h3 className="text-base font-semibold mb-2">
+                  Probeer als Werknemer
+                </h3>
+                <p className="text-white/80 mb-4 text-sm leading-relaxed">
+                  Zie hoe het dashboard werkt voor personeel.
+                </p>
+                
+                {/* Laptop Mockup - Desktop Only */}
+                <div className="hidden lg:flex mb-3 flex-1 flex-col justify-center">
+                  <LaptopMockup />
+                </div>
               </div>
               
-              <button
-                onClick={handleOpenEmployeeDemo}
-                type="button"
-                disabled={isPreloading}
-                className="inline-block bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-lg hover:shadow-xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed"
-              >
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={handleOpenEmployeeDemo}
+                  type="button"
+                  disabled={isPreloading}
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-10 py-3 h-[44px] rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[180px] ring-2 ring-yellow-400/20 hover:ring-yellow-400/40"
+                >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -147,7 +161,8 @@ export const HeroSection: React.FC = () => {
                 ) : (
                   "Start dashboard demo"
                 )}
-              </button>
+                </button>
+              </div>
             </div>
           </div>
 
