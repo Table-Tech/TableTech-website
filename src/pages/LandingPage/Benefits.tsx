@@ -465,20 +465,6 @@ export const BenefitsOne: React.FC = () => {
     }, 8000); // 8 seconden per slide
   }, [appScreens.length]);
 
-  const handleManualClick = (index: number) => {
-    setCurrentScreen(index);
-    setIsManualMode(true);
-    
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    
-    // Na 8 seconden weer automatisch laten doorgaan
-    setTimeout(() => {
-      setIsManualMode(false);
-      startAutoSlide();
-    }, 8000);
-  };
 
   useEffect(() => {
     if (!isManualMode) {
@@ -499,8 +485,8 @@ export const BenefitsOne: React.FC = () => {
       style={{ backgroundColor: 'transparent' }}
     >
       {/* Main content - Beter gecentreerd */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 min-h-0 flex-1 flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
 
           {/* Left side - Enhanced Description with better glassmorphism */}
           <div className="space-y-4 order-2 lg:order-1 flex flex-col min-h-0">
@@ -509,13 +495,13 @@ export const BenefitsOne: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3"
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold text-white mb-3"
                   style={{
                     textShadow: '0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4)'
                   }}>
                 Mobiele Restaurantervaring
               </h2>
-              <p className="text-white/95 text-lg mb-4 leading-relaxed"
+              <p className="text-white/95 text-base sm:text-lg lg:text-xl mb-4 leading-relaxed"
                  style={{
                    textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                  }}>
@@ -541,14 +527,14 @@ export const BenefitsOne: React.FC = () => {
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
-                  <div className="relative p-6 z-10">
-                    <h3 className="text-xl font-bold text-white mb-3"
+                  <div className="relative p-4 sm:p-6 z-10">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3"
                         style={{
                           textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                         }}>
                       {appScreens[currentScreen].title}
                     </h3>
-                    <p className="text-white/95 text-base leading-relaxed"
+                    <p className="text-white/95 text-sm sm:text-base lg:text-lg leading-relaxed"
                        style={{
                          textShadow: '0 1px 4px rgba(0,0,0,0.4)'
                        }}>
@@ -581,30 +567,30 @@ export const BenefitsOne: React.FC = () => {
                   <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
                 </div>
                 
-                <div className="relative p-6 z-10">
-                  <div className="text-center mb-6">
-                    <h3 className="text-lg font-bold text-white mb-2"
+                <div className="relative p-4 sm:p-6 lg:p-8 z-10">
+                  <div className="text-center mb-4 sm:mb-6">
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2"
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
                       Waarom mobiel bestellen?
                     </h3>
-                    <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+                    <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                     <motion.div 
-                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-white group-hover:text-blue-100 transition-colors"
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-blue-100 transition-colors"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
@@ -620,17 +606,17 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-white group-hover:text-green-100 transition-colors"
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-green-100 transition-colors"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
@@ -646,17 +632,17 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-white group-hover:text-purple-100 transition-colors"
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-purple-100 transition-colors"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
@@ -672,17 +658,17 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-white group-hover:text-orange-100 transition-colors"
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-orange-100 transition-colors"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
@@ -709,7 +695,7 @@ export const BenefitsOne: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-30" />
 
               <motion.div
-                className="relative w-72 h-[510px] bg-black rounded-3xl p-2 shadow-2xl"
+                className="relative w-64 h-[450px] sm:w-72 sm:h-[510px] lg:w-80 lg:h-[560px] bg-black rounded-3xl p-2 shadow-2xl"
                 animate={{
                   y: [0, -8, 0],
                 }}
@@ -721,7 +707,7 @@ export const BenefitsOne: React.FC = () => {
                 style={{
                   background: 'linear-gradient(145deg, #1a1a1a, #000000)',
                   boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
-                  transform: `perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)`,
+                  transform: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)` : 'none',
                   transformStyle: 'preserve-3d'
                 }}
               >

@@ -11,6 +11,7 @@ const SharedBackground: React.FC<{ children?: React.ReactNode }> = ({ children }
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',
         backgroundColor: 'transparent !important',
+        backgroundAttachment: typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'fixed' : 'scroll', // Fixed on desktop only
       }}
     >
       {/* Content that scrolls normally over the background */}

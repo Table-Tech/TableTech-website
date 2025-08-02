@@ -83,7 +83,7 @@ export const HorizontalScroll: React.FC = () => {
           }); 
         } else {
           gsap.set(panel, { 
-            x: "100vw", // Start completely off-screen to the right
+            x: typeof window !== 'undefined' && window.innerWidth < 768 ? "100%" : "100vw", // Use percentage on mobile for better performance
             autoAlpha: 0 // Other panels are hidden
           }); 
         }
@@ -94,7 +94,7 @@ export const HorizontalScroll: React.FC = () => {
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: () => `+=${window.innerHeight * 2}`, // 2 viewport heights for 3 sections
+          end: () => `+=${window.innerHeight * (typeof window !== 'undefined' && window.innerWidth < 768 ? 1.5 : 2)}`, // Shorter on mobile
           pin: true,
           scrub: 0.3,
           anticipatePin: 1,
@@ -142,7 +142,7 @@ export const HorizontalScroll: React.FC = () => {
         ease: "power2.inOut"
       }, 0)
       .to(panels[0], {
-        x: "-100vw", // Slide out to left
+        x: typeof window !== 'undefined' && window.innerWidth < 768 ? "-100%" : "-100vw", // Use percentage on mobile
         autoAlpha: 0,
         duration: 0.5,
         ease: "power2.inOut"
@@ -156,7 +156,7 @@ export const HorizontalScroll: React.FC = () => {
         ease: "power2.inOut"
       }, 0.5)
       .to(panels[1], {
-        x: "-100vw", // Slide out to left
+        x: typeof window !== 'undefined' && window.innerWidth < 768 ? "-100%" : "-100vw", // Use percentage on mobile
         autoAlpha: 0,
         duration: 0.5,
         ease: "power2.inOut"
