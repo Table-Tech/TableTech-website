@@ -542,7 +542,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 
                 {/* Desktop view */}
                 <div className="hidden lg:block" style={{
-                  transform: 'scale(0.85)'
+                  transform: 'scale(1.1)'
                 }}>
                   {isInitialized && <PhoneMockup theme={activeTheme} />}
                 </div>
