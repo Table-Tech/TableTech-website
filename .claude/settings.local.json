@@ -10,7 +10,8 @@
       "Bash(ls:*)",
       "Bash(npm install)",
       "Bash(python3:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }
