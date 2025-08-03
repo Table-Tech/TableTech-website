@@ -3,7 +3,7 @@ import React from "react";
 import { HeroSection } from "./HeroSection";
 import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
-import { BenefitsHorizontalLock } from "../../components/BenefitsHorizontalLock";
+import { BenefitsScrollLock } from "../../components/BenefitsScrollLock";
 import { PricingNew } from "./PricingNew";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
@@ -23,7 +23,7 @@ const LandingPage: React.FC = () => {
 
       {/* Benefits Horizontal Lock Section */}
       <section id="benefits" className="w-full h-screen relative overflow-hidden" style={{ backgroundColor: 'transparent' }}>
-        <BenefitsHorizontalLock />
+        <BenefitsScrollLock />
       </section>
 
       {/* Restaurant Themes Section */}
