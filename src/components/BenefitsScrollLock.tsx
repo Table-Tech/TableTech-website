@@ -1,305 +1,206 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BenefitsOne } from "../pages/LandingPage/Benefits";
-import { BenefitsTwo } from "../pages/LandingPage/Benefits-2";
-import { BenefitsThree } from "../pages/LandingPage/Benefits-3";
-import SharedBackground from "./SharedBackground";
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BenefitsOne } from '../pages/LandingPage/Benefits';
+import { BenefitsTwo } from '../pages/LandingPage/Benefits-2';
+import { BenefitsThree } from '../pages/LandingPage/Benefits-3';
+import SharedBackground from './SharedBackground';
 
 export const BenefitsScrollLock: React.FC = () => {
   const [currentBenefit, setCurrentBenefit] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const [hasCompletedSequence, setHasCompletedSequence] = useState(false);
+  const [direction, setDirection] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef<number>(0);
-  const scrollAccumulator = useRef<number>(0);
-  const isTransitioning = useRef<boolean>(false);
+  const isLockedRef = useRef(false);
+  const scrollAccumulator = useRef(0);
+  const lastScrollTime = useRef(0);
 
   const benefits = [
-    { component: BenefitsOne, id: "benefits-1" },
-    { component: BenefitsTwo, id: "benefits-2" },
-    { component: BenefitsThree, id: "benefits-3" }
+    { component: BenefitsOne, id: 'benefits-1' },
+    { component: BenefitsTwo, id: 'benefits-2' },
+    { component: BenefitsThree, id: 'benefits-3' }
   ];
 
   // Animation variants
   const slideVariants = {
-    enter: {
-      x: "100%",
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
       opacity: 0,
-    },
+      scale: 0.95,
+      filter: 'blur(4px)'
+    }),
     center: {
       x: 0,
       opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)',
       transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.3 }
+        type: 'spring',
+        stiffness: 400,
+        damping: 30,
+        mass: 0.8,
+        opacity: { duration: 0.3 },
+        scale: { duration: 0.4 },
+        filter: { duration: 0.3 }
       }
     },
-    exit: {
-      x: "-100%",
+    exit: (direction: number) => ({
+      x: direction < 0 ? '100%' : '-100%',
       opacity: 0,
+      scale: 0.95,
+      filter: 'blur(4px)',
       transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.3 }
+        type: 'spring',
+        stiffness: 400,
+        damping: 30,
+        mass: 0.8,
+        opacity: { duration: 0.2 },
+        scale: { duration: 0.3 },
+        filter: { duration: 0.2 }
       }
-    },
+    })
   };
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const checkAndLockScroll = () => {
+      const container = containerRef.current;
+      if (!container) return;
 
-    // Create intersection observer
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-            setIsInView(true);
-            // Save current scroll position
-            lastScrollY.current = window.scrollY;
-          } else {
-            setIsInView(false);
-            scrollAccumulator.current = 0;
+      const rect = container.getBoundingClientRect();
+      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
+
+      // Stop or start Lenis based on view state
+      if (window.lenis) {
+        if (isInView && !isLockedRef.current) {
+          // Entering benefits section - stop Lenis
+          window.lenis.stop();
+          isLockedRef.current = true;
+        } else if (!isInView && isLockedRef.current) {
+          // Leaving benefits section - start Lenis
+          window.lenis.start();
+          isLockedRef.current = false;
+        } else if (isInView && currentBenefit === 2) {
+          // At last benefit - check if we should unlock
+          const scrollY = window.scrollY;
+          const benefitsBottom = container.offsetTop + container.offsetHeight;
+          
+          // If we're at the last benefit and trying to scroll down
+          if (scrollY >= benefitsBottom - window.innerHeight) {
+            window.lenis.start();
+            isLockedRef.current = false;
           }
-        });
-      },
-      {
-        threshold: [0.3, 0.5, 0.7],
-        rootMargin: "-10% 0px -10% 0px",
+        }
       }
-    );
-
-    observer.observe(container);
-
-    return () => {
-      observer.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    if (!isInView || hasCompletedSequence) return;
 
     const handleWheel = (e: WheelEvent) => {
-      if (!isInView || hasCompletedSequence || isTransitioning.current) return;
+      const container = containerRef.current;
+      if (!container) return;
 
-      // Prevent default scrolling
+      const rect = container.getBoundingClientRect();
+      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
+
+      if (!isInView) return;
+
+      // Prevent default scroll
       e.preventDefault();
       e.stopPropagation();
 
-      // Accumulate scroll delta
+      const now = Date.now();
+      if (now - lastScrollTime.current > 100) {
+        scrollAccumulator.current = 0;
+      }
+      lastScrollTime.current = now;
+
       scrollAccumulator.current += e.deltaY;
 
-      // Threshold for triggering transition (adjust for sensitivity)
-      const threshold = 100;
-
-      if (Math.abs(scrollAccumulator.current) > threshold) {
-        if (scrollAccumulator.current > 0 && currentBenefit < benefits.length - 1) {
-          // Scroll down - next benefit
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev + 1);
-          scrollAccumulator.current = 0;
-          
-          setTimeout(() => {
-            isTransitioning.current = false;
-          }, 500);
-        } else if (scrollAccumulator.current < 0 && currentBenefit > 0) {
-          // Scroll up - previous benefit
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev - 1);
-          scrollAccumulator.current = 0;
-          
-          setTimeout(() => {
-            isTransitioning.current = false;
-          }, 500);
-        } else if (scrollAccumulator.current > 0 && currentBenefit === benefits.length - 1) {
-          // Completed viewing all benefits
-          setHasCompletedSequence(true);
-          scrollAccumulator.current = 0;
+      if (Math.abs(scrollAccumulator.current) > 50) {
+        if (scrollAccumulator.current > 0) {
+          // Scrolling down
+          if (currentBenefit < benefits.length - 1) {
+            setDirection(1);
+            setCurrentBenefit(prev => prev + 1);
+          } else {
+            // At last benefit, unlock and continue scroll
+            if (window.lenis) {
+              window.lenis.start();
+              isLockedRef.current = false;
+              // Scroll to next section
+              const nextSection = document.getElementById('themes');
+              if (nextSection) {
+                setTimeout(() => {
+                  window.lenis?.scrollTo(nextSection.offsetTop);
+                }, 100);
+              }
+            }
+          }
+        } else {
+          // Scrolling up
+          if (currentBenefit > 0) {
+            setDirection(-1);
+            setCurrentBenefit(prev => prev - 1);
+          } else {
+            // At first benefit, unlock and scroll to hero
+            if (window.lenis) {
+              window.lenis.start();
+              isLockedRef.current = false;
+              const heroSection = document.getElementById('hero');
+              if (heroSection) {
+                setTimeout(() => {
+                  window.lenis?.scrollTo(heroSection.offsetTop);
+                }, 100);
+              }
+            }
+          }
         }
-      }
-
-      // Keep the page locked at the same position
-      window.scrollTo(0, lastScrollY.current);
-    };
-
-    const handleScroll = (e: Event) => {
-      if (!isInView || hasCompletedSequence) return;
-      
-      // Force scroll position to stay locked
-      e.preventDefault();
-      window.scrollTo(0, lastScrollY.current);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isInView || hasCompletedSequence || isTransitioning.current) return;
-
-      const scrollKeys = ['ArrowDown', 'PageDown', 'End', ' ', 'ArrowUp', 'PageUp', 'Home'];
-      
-      if (scrollKeys.includes(e.key)) {
-        e.preventDefault();
-        
-        if ((e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') && currentBenefit < benefits.length - 1) {
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev + 1);
-          setTimeout(() => { isTransitioning.current = false; }, 500);
-        } else if ((e.key === 'ArrowUp' || e.key === 'PageUp') && currentBenefit > 0) {
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev - 1);
-          setTimeout(() => { isTransitioning.current = false; }, 500);
-        } else if ((e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') && currentBenefit === benefits.length - 1) {
-          setHasCompletedSequence(true);
-        }
+        scrollAccumulator.current = 0;
       }
     };
 
-    // Touch handling for mobile
-    let touchStartY = 0;
-    const handleTouchStart = (e: TouchEvent) => {
-      if (!isInView || hasCompletedSequence) return;
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isInView || hasCompletedSequence || isTransitioning.current) return;
-      e.preventDefault();
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (!isInView || hasCompletedSequence || isTransitioning.current) return;
-      
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY - touchEndY;
-
-      if (Math.abs(deltaY) > 50) {
-        if (deltaY > 0 && currentBenefit < benefits.length - 1) {
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev + 1);
-          setTimeout(() => { isTransitioning.current = false; }, 500);
-        } else if (deltaY < 0 && currentBenefit > 0) {
-          isTransitioning.current = true;
-          setCurrentBenefit(prev => prev - 1);
-          setTimeout(() => { isTransitioning.current = false; }, 500);
-        } else if (deltaY > 0 && currentBenefit === benefits.length - 1) {
-          setHasCompletedSequence(true);
-        }
-      }
-    };
-
-    // Add all event listeners
+    // Check on mount and scroll
+    checkAndLockScroll();
+    window.addEventListener('scroll', checkAndLockScroll);
     window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('scroll', handleScroll, { passive: false });
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('touchstart', handleTouchStart, { passive: false });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd, { passive: false });
-
-    // Lock body scroll
-    if (isInView && !hasCompletedSequence) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-    }
 
     return () => {
+      window.removeEventListener('scroll', checkAndLockScroll);
       window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-      
-      // Restore body scroll
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
+      // Ensure Lenis is started when component unmounts
+      if (window.lenis && isLockedRef.current) {
+        window.lenis.start();
+      }
     };
-  }, [isInView, currentBenefit, hasCompletedSequence, benefits.length]);
-
-  // Reset when out of view
-  useEffect(() => {
-    if (!isInView) {
-      setCurrentBenefit(0);
-      setHasCompletedSequence(false);
-    }
-  }, [isInView]);
+  }, [currentBenefit]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="w-full h-screen relative overflow-hidden"
-      style={{ 
-        position: isInView && !hasCompletedSequence ? 'sticky' : 'relative',
-        top: isInView && !hasCompletedSequence ? '0' : 'auto'
+      id="benefits-section"
+      className="w-full h-screen flex items-center justify-center"
+      style={{
+        backgroundColor: 'transparent',
+        position: 'relative',
+        willChange: 'transform'
       }}
     >
       <SharedBackground>
-        <div className="w-full h-full relative">
-          <AnimatePresence mode="wait">
+        <div className="w-full h-full relative overflow-hidden">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={benefits[currentBenefit].id}
+              custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
               className="absolute inset-0 w-full h-full"
+              style={{ 
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
+                perspective: 1000
+              }}
             >
               {React.createElement(benefits[currentBenefit].component)}
             </motion.div>
           </AnimatePresence>
-
-          {/* Progress indicators */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-50">
-            {benefits.map((_, index) => (
-              <motion.button
-                key={index}
-                onClick={() => {
-                  if (!isTransitioning.current) {
-                    isTransitioning.current = true;
-                    setCurrentBenefit(index);
-                    setTimeout(() => { isTransitioning.current = false; }, 500);
-                  }
-                }}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  currentBenefit === index 
-                    ? 'bg-white scale-125 shadow-lg' 
-                    : 'bg-white/40 hover:bg-white/60'
-                }`}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label={`Go to benefit ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Scroll hint */}
-          {isInView && !hasCompletedSequence && currentBenefit < benefits.length - 1 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white/70 text-sm flex flex-col items-center"
-            >
-              <span>Scroll voor meer</span>
-              <motion.svg
-                animate={{ y: [0, 5, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                className="w-6 h-6 mt-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </motion.svg>
-            </motion.div>
-          )}
-
-          {/* Completion message */}
-          {hasCompletedSequence && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute top-8 right-8 bg-green-500/20 backdrop-blur-sm border border-green-400/50 rounded-lg px-4 py-2"
-            >
-              <span className="text-green-300 text-sm">✓ Je kunt nu verder scrollen</span>
-            </motion.div>
-          )}
         </div>
       </SharedBackground>
     </div>
