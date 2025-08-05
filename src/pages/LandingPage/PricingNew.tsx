@@ -108,9 +108,9 @@ const featureOrder = [
   "Prioriteit bij support"
 ];
 
-export const PricingNew: React.FC = () => {
+export const PricingNew = () => {
   const [hoveredTier, setHoveredTier] = useState<string | null>(null);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef(null);
 
   const colorClasses = {
     green: {
@@ -144,7 +144,7 @@ export const PricingNew: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] py-16 px-4 relative overflow-hidden">
+    <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] py-16 px-4 overflow-hidden">
       {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
@@ -231,7 +231,7 @@ export const PricingNew: React.FC = () => {
               </thead>
               <tbody>
                 {featureOrder.map((feature, index) => (
-                  <tr key={feature} className={`border-b border-[#4A372E]/20 ${index % 2 === 0 ? 'bg-[#3A2B24]/10' : ''}`}>
+                  <tr key={feature} className="border-b border-[#4A372E]/20">
                     <td className="sticky left-0 z-10 px-4 py-4 text-sm font-medium text-[#D4B896] backdrop-blur-xl bg-[#2C1E1A]/80 border-r border-[#4A372E]/30 w-48">
                       {feature}
                     </td>
@@ -323,7 +323,14 @@ export const PricingNew: React.FC = () => {
 
         </motion.div>
 
-
+      </div>
+      
+      {/* VERBETERDE overgang naar ContactSection - Perfect naadloos */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none">
+        {/* Meerdere lagen voor een perfecte overgang */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2C1E1A]/30 to-[#2C1E1A]/80"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#2C1E1A]"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
       </div>
 
       <style>{`
