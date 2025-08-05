@@ -9,9 +9,9 @@ export const BenefitsScrollLock: React.FC = () => {
   const [currentBenefit, setCurrentBenefit] = useState(0);
   const [direction, setDirection] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isLockedRef = useRef(false);
   const scrollAccumulator = useRef(0);
   const lastScrollTime = useRef(0);
+  const isTransitioning = useRef(false);
 
   const benefits = [
     { component: BenefitsOne, id: 'benefits-1' },
@@ -60,115 +60,161 @@ export const BenefitsScrollLock: React.FC = () => {
   };
 
   useEffect(() => {
-    const checkAndLockScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const rect = container.getBoundingClientRect();
-      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
-
-      // Stop or start Lenis based on view state
-      if (window.lenis) {
-        if (isInView && !isLockedRef.current) {
-          // Entering benefits section - stop Lenis
-          window.lenis.stop();
-          isLockedRef.current = true;
-        } else if (!isInView && isLockedRef.current) {
-          // Leaving benefits section - start Lenis
-          window.lenis.start();
-          isLockedRef.current = false;
-        } else if (isInView && currentBenefit === 2) {
-          // At last benefit - check if we should unlock
-          const scrollY = window.scrollY;
-          const benefitsBottom = container.offsetTop + container.offsetHeight;
-          
-          // If we're at the last benefit and trying to scroll down
-          if (scrollY >= benefitsBottom - window.innerHeight) {
-            window.lenis.start();
-            isLockedRef.current = false;
-          }
-        }
-      }
-    };
-
     const handleWheel = (e: WheelEvent) => {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container || isTransitioning.current) return;
 
       const rect = container.getBoundingClientRect();
-      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
+      const viewportHeight = window.innerHeight;
+      
+      // Check if section is reasonably centered in viewport
+      const sectionCenter = rect.top + rect.height / 2;
+      const viewportCenter = viewportHeight / 2;
+      const isInActiveZone = Math.abs(sectionCenter - viewportCenter) < viewportHeight * 0.4;
+      
+      // Only handle horizontal scroll when in active zone
+      if (!isInActiveZone) {
+        return; // Let normal vertical scroll work
+      }
 
-      if (!isInView) return;
+      // CRITICAL FIX: Always allow escape routes
+      // Allow scrolling up from first benefit if section is moving up
+      if (e.deltaY < 0 && currentBenefit === 0 && rect.top < -50) {
+        console.log('Allowing scroll up to hero');
+        return; // Don't prevent default
+      }
+      
+      // Allow scrolling down from last benefit if section is moving up
+      if (e.deltaY > 0 && currentBenefit === benefits.length - 1 && rect.top < -50) {
+        console.log('Allowing scroll down to next section');
+        return; // Don't prevent default
+      }
 
-      // Prevent default scroll
-      e.preventDefault();
-      e.stopPropagation();
-
+      // Now we can safely handle horizontal scrolling
       const now = Date.now();
-      if (now - lastScrollTime.current > 100) {
+      const timeDelta = now - lastScrollTime.current;
+      
+      if (timeDelta > 150) {
         scrollAccumulator.current = 0;
       }
       lastScrollTime.current = now;
 
-      scrollAccumulator.current += e.deltaY;
+      scrollAccumulator.current += e.deltaY * 0.5;
+      const threshold = 80;
 
-      if (Math.abs(scrollAccumulator.current) > 50) {
+      if (Math.abs(scrollAccumulator.current) > threshold) {
+        // Only prevent default when actually changing slides
+        e.preventDefault();
+        e.stopPropagation();
+        
+        isTransitioning.current = true;
+
         if (scrollAccumulator.current > 0) {
           // Scrolling down
           if (currentBenefit < benefits.length - 1) {
             setDirection(1);
-            setCurrentBenefit(prev => Math.min(prev + 1, benefits.length - 1));
+            setCurrentBenefit(prev => prev + 1);
+            console.log(`Moving to benefit ${currentBenefit + 2} of ${benefits.length}`);
           } else {
-            // At last benefit, unlock and continue scroll
-            if (window.lenis) {
-              window.lenis.start();
-              isLockedRef.current = false;
-              // Scroll to next section
-              const nextSection = document.getElementById('themes');
-              if (nextSection) {
-                setTimeout(() => {
-                  window.lenis?.scrollTo(nextSection.offsetTop);
-                }, 100);
-              }
+            // At last benefit - navigate to next section
+            console.log('At last benefit, moving to themes section');
+            const nextSection = document.getElementById('themes');
+            if (nextSection) {
+              // Use native scroll for reliability
+              setTimeout(() => {
+                nextSection.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
             }
           }
         } else {
           // Scrolling up
           if (currentBenefit > 0) {
             setDirection(-1);
-            setCurrentBenefit(prev => Math.max(prev - 1, 0));
+            setCurrentBenefit(prev => prev - 1);
+            console.log(`Moving to benefit ${currentBenefit} of ${benefits.length}`);
           } else {
-            // At first benefit, unlock and scroll to hero
-            if (window.lenis) {
-              window.lenis.start();
-              isLockedRef.current = false;
-              const heroSection = document.getElementById('hero');
-              if (heroSection) {
-                setTimeout(() => {
-                  window.lenis?.scrollTo(heroSection.offsetTop);
-                }, 100);
-              }
+            // At first benefit - navigate to hero
+            console.log('At first benefit, moving to hero section');
+            const heroSection = document.getElementById('hero');
+            if (heroSection) {
+              setTimeout(() => {
+                heroSection.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
             }
           }
         }
+        
         scrollAccumulator.current = 0;
+        setTimeout(() => {
+          isTransitioning.current = false;
+        }, 500);
       }
     };
 
-    // Check on mount and scroll
-    checkAndLockScroll();
-    window.addEventListener('scroll', checkAndLockScroll);
+    // Touch support
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      
+      if (Math.abs(deltaY) > 50) {
+        handleWheel(new WheelEvent('wheel', { deltaY }));
+      }
+    };
+
+    // Keyboard navigation
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const container = containerRef.current;
+      if (!container) return;
+      
+      const rect = container.getBoundingClientRect();
+      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
+      
+      if (!isInView) return;
+
+      if (e.key === 'ArrowRight' && currentBenefit < benefits.length - 1) {
+        e.preventDefault();
+        setDirection(1);
+        setCurrentBenefit(prev => prev + 1);
+      } else if (e.key === 'ArrowLeft' && currentBenefit > 0) {
+        e.preventDefault();
+        setDirection(-1);
+        setCurrentBenefit(prev => prev - 1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentBenefit < benefits.length - 1) {
+          setDirection(1);
+          setCurrentBenefit(prev => prev + 1);
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentBenefit > 0) {
+          setDirection(-1);
+          setCurrentBenefit(prev => prev - 1);
+        }
+      }
+    };
+
+    // Add listeners
     window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+
+    console.log('BenefitsScrollLock initialized');
 
     return () => {
-      window.removeEventListener('scroll', checkAndLockScroll);
       window.removeEventListener('wheel', handleWheel);
-      // Ensure Lenis is started when component unmounts
-      if (window.lenis && isLockedRef.current) {
-        window.lenis.start();
-      }
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentBenefit]);
+  }, [currentBenefit, benefits.length]);
 
   return (
     <div
@@ -194,7 +240,7 @@ export const BenefitsScrollLock: React.FC = () => {
                 exit="exit"
                 className="absolute inset-0 w-full h-full"
                 style={{ 
-                  willChange: 'transform',
+                  willChange: 'transform, opacity',
                   backfaceVisibility: 'hidden',
                   perspective: 1000
                 }}
@@ -203,6 +249,27 @@ export const BenefitsScrollLock: React.FC = () => {
               </motion.div>
             )}
           </AnimatePresence>
+          
+          {/* Progress dots */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+            {benefits.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (!isTransitioning.current) {
+                    setDirection(index > currentBenefit ? 1 : -1);
+                    setCurrentBenefit(index);
+                  }
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentBenefit 
+                    ? 'bg-white w-8 shadow-lg' 
+                    : 'bg-white/40 hover:bg-white/60'
+                }`}
+                aria-label={`Go to benefit ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </SharedBackground>
     </div>
