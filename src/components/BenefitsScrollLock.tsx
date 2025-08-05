@@ -117,7 +117,7 @@ export const BenefitsScrollLock: React.FC = () => {
           // Scrolling down
           if (currentBenefit < benefits.length - 1) {
             setDirection(1);
-            setCurrentBenefit(prev => prev + 1);
+            setCurrentBenefit(prev => Math.min(prev + 1, benefits.length - 1));
           } else {
             // At last benefit, unlock and continue scroll
             if (window.lenis) {
@@ -136,7 +136,7 @@ export const BenefitsScrollLock: React.FC = () => {
           // Scrolling up
           if (currentBenefit > 0) {
             setDirection(-1);
-            setCurrentBenefit(prev => prev - 1);
+            setCurrentBenefit(prev => Math.max(prev - 1, 0));
           } else {
             // At first benefit, unlock and scroll to hero
             if (window.lenis) {
@@ -184,22 +184,24 @@ export const BenefitsScrollLock: React.FC = () => {
       <SharedBackground>
         <div className="w-full h-full relative overflow-hidden">
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={benefits[currentBenefit].id}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="absolute inset-0 w-full h-full"
-              style={{ 
-                willChange: 'transform',
-                backfaceVisibility: 'hidden',
-                perspective: 1000
-              }}
-            >
-              {React.createElement(benefits[currentBenefit].component)}
-            </motion.div>
+            {benefits[currentBenefit] && (
+              <motion.div
+                key={benefits[currentBenefit].id}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute inset-0 w-full h-full"
+                style={{ 
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
+                  perspective: 1000
+                }}
+              >
+                {React.createElement(benefits[currentBenefit].component)}
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </SharedBackground>
