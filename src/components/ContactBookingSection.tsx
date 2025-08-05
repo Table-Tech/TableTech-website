@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building } from 'lucide-react';
-import GlareHover from './GlareHover';
 // Define types for ClickSpark
 interface Spark {
   id: number;
@@ -190,66 +189,70 @@ const ContactSection = () => {
     'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'
   ];
   const dayNames = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
+
   return (
-    <section className="relative bg-[#2C1E1A] py-12 px-4 overflow-hidden flex items-center min-h-[80vh]">
-      {/* VERBETERDE overgang van PricingNew - Perfect naadloos */}
-      <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
-        {/* Meerdere lagen voor een perfecte overgang */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>
-        <div className="absolute top-0 left-0 right-0 h-32 bg-[#2C1E1A]"></div>
-        <div className="absolute top-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
-      </div>
-      {/* Decorative background elements */}
-      <div className="absolute top-20 right-10 w-64 h-64 bg-[#D4A574]/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-[#C19660]/10 rounded-full blur-3xl"></div>
-      <div className="relative z-10 max-w-7xl mx-auto w-full">
-        {/* Main content - 2 columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left column - Slideshow */}
-          <div className="order-2 lg:order-1">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
-              Plan een Gratis Adviesgesprek
-            </h1>
-            {/* Slideshow container */}
-            <div className="relative h-40 mb-6">
-              <div className="absolute inset-0">
-                {rotatingTexts.map((text, index) => (
-                  <div
-                    key={index}
-                    className={`absolute inset-0 transition-all duration-1000 ${
-                      index === currentTextIndex 
-                        ? 'opacity-100 transform translate-y-0' 
-                        : 'opacity-0 transform translate-y-4'
-                    }`}
-                  >
-                    <h2 className="text-xl md:text-2xl font-bold text-[#D4A574] mb-3">
-                      {text.title}
-                    </h2>
-                    <p className="text-base text-white/80 leading-relaxed">
-                      {text.description}
-                    </p>
-                  </div>
-                ))}
+    <>
+      <style>{`
+        @keyframes sparkAnimation {
+          0% {
+            opacity: 1;
+            transform: rotate(var(--angle)) translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: rotate(var(--angle)) translateY(-20px);
+          }
+        }
+      `}</style>
+      
+      <section className="relative bg-[#2C1E1A] py-12 px-4 overflow-hidden flex items-center min-h-[80vh]">
+        {/* VERBETERDE overgang van PricingNew - Perfect naadloos */}
+        <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
+          {/* Meerdere lagen voor een perfecte overgang */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>
+          <div className="absolute top-0 left-0 right-0 h-32 bg-[#2C1E1A]"></div>
+          <div className="absolute top-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
+        </div>
+        
+        {/* Decorative background elements */}
+        <div className="absolute top-20 right-10 w-64 h-64 bg-[#D4A574]/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-[#C19660]/10 rounded-full blur-3xl"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto w-full">
+          {/* Main content - 2 columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Left column - Slideshow */}
+            <div className="order-2 lg:order-1">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
+                Plan een Gratis Adviesgesprek
+              </h1>
+              {/* Slideshow container */}
+              <div className="relative h-40 mb-6">
+                <div className="absolute inset-0">
+                  {rotatingTexts.map((text, index) => (
+                    <div
+                      key={index}
+                      className={`absolute inset-0 transition-all duration-1000 ${
+                        index === currentTextIndex 
+                          ? 'opacity-100 transform translate-y-0' 
+                          : 'opacity-0 transform translate-y-4'
+                      }`}
+                    >
+                      <h2 className="text-xl md:text-2xl font-bold text-[#D4A574] mb-3">
+                        {text.title}
+                      </h2>
+                      <p className="text-base text-white/80 leading-relaxed">
+                        {text.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-          {/* Right column - Clean glassmorphism booking card */}
-          <div className="order-1 lg:order-2">
-            <GlareHover
-              width="100%"
-              height="auto"
-              background="transparent"
-              borderRadius="24px"
-              borderColor="rgba(255, 255, 255, 0.2)"
-              glareColor="#ffffff"
-              glareOpacity={0.15}
-              glareAngle={45}
-              glareSize={150}
-              transitionDuration={800}
-              className="max-w-sm mx-auto border-0"
-              style={{ border: 'none' }}
-            >
-              <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl w-full rounded-3xl overflow-hidden">
+            
+            {/* Right column - Clean glassmorphism booking card */}
+            <div className="order-1 lg:order-2">
+              <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl w-full max-w-sm mx-auto rounded-3xl overflow-hidden">
                 <div className="p-6 lg:p-8">
                   {/* Subtle gradient overlay for depth */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 rounded-3xl pointer-events-none"></div>
@@ -295,10 +298,11 @@ const ContactSection = () => {
                   </div>
                 </div>
               </div>
-            </GlareHover>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+      
       {/* Booking Modal */}
       {showBookingModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -606,25 +610,7 @@ const ContactSection = () => {
           </div>
         </div>
       )}
-      {/* VERBETERDE overgang naar CallToAction - Perfect naadloos */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none">
-        {/* Zeer geleidelijke overgang zonder harde lijnen */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2C1E1A]/40 to-[#2C1E1A]"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
-      </div>
-      <style>{`
-        @keyframes sparkAnimation {
-          0% {
-            opacity: 1;
-            transform: rotate(var(--angle)) translateY(0);
-          }
-          100% {
-            opacity: 0;
-            transform: rotate(var(--angle)) translateY(-20px);
-          }
-        }
-      `}</style>
-    </section>
+    </>
   );
 };
 export default ContactSection;
