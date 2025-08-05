@@ -16,6 +16,7 @@ export const SupportChat: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState("");
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [isNearFooter, setIsNearFooter] = useState(false);
 
   // Check if demo overlay is open
   useEffect(() => {
@@ -41,6 +42,24 @@ export const SupportChat: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Check scroll position for footer proximity
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const footerThreshold = 400; // Hide when 400px from bottom
+      
+      const distanceFromBottom = documentHeight - (scrollTop + windowHeight);
+      setIsNearFooter(distanceFromBottom < footerThreshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleAsk = (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
@@ -49,24 +68,24 @@ export const SupportChat: React.FC = () => {
     setQuestion("");
   };
 
-  // Hide chat when demo overlay is open OR on menu-demo page
-  if (isDemoOpen || location.pathname === '/menu-demo') {
+  // Hide chat when demo overlay is open OR on menu-demo page OR when user scrolls near footer
+  if (isDemoOpen || location.pathname === '/menu-demo' || isNearFooter) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-40">
       {open ? (
-        <div className="w-[340px] bg-[#f5efe7]/90 backdrop-blur-lg border border-[#d4c0ac] shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
+        <div className="w-[340px] bg-[#2C1E1A]/95 backdrop-blur-xl border border-[#FFD382]/30 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#d4c0ac] bg-[#f5efe7] text-[#4e3323] font-semibold text-sm">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#FFD382]/30 bg-[#2C1E1A] text-[#FFD382] font-semibold text-sm">
             <div className="flex items-center gap-2">
               <FaRobot />
               Klantenservice
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-[#4e3323] hover:text-red-500 transition"
+              className="text-[#FFD382] hover:text-red-400 transition"
               aria-label="Sluit"
             >
               <FaTimes />
@@ -74,7 +93,7 @@ export const SupportChat: React.FC = () => {
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-around border-b border-[#d4c0ac] text-sm font-medium bg-[#f5efe7]/70">
+          <div className="flex justify-around border-b border-[#FFD382]/30 text-sm font-medium bg-[#2C1E1A]/70">
             {[
               { id: "form", icon: <FaQuestionCircle />, label: "Vraag" },
               { id: "email", icon: <FaEnvelope />, label: "E-mail" },
@@ -84,8 +103,8 @@ export const SupportChat: React.FC = () => {
                 key={tab.id}
                 className={`flex-1 py-2 flex items-center justify-center gap-1 transition ${
                   activeTab === tab.id
-                    ? "text-[#7b4f35] bg-white"
-                    : "text-[#5f4534]"
+                    ? "text-[#2C1E1A] bg-[#FFD382]"
+                    : "text-[#FFD382]/80"
                 }`}
                 onClick={() => {
                   setActiveTab(tab.id as typeof activeTab);
@@ -99,7 +118,7 @@ export const SupportChat: React.FC = () => {
           </div>
 
           {/* Inhoud */}
-          <div className="p-4 text-sm text-[#3b2a1d] bg-[#fffdfb]">
+          <div className="p-4 text-sm text-[#FFD382] bg-[#2C1E1A]/90">
             {activeTab === "form" && (
               <form onSubmit={handleAsk} className="space-y-3">
                 <textarea
@@ -107,16 +126,16 @@ export const SupportChat: React.FC = () => {
                   rows={3}
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
-                  className="w-full px-4 py-2 rounded-md border border-[#d8c4b1] bg-white placeholder:text-gray-500 resize-none"
+                  className="w-full px-4 py-2 rounded-md border border-[#FFD382]/30 bg-[#3A2B24] text-[#FFD382] placeholder:text-[#FFD382]/60 resize-none"
                 />
                 <button
                   type="submit"
-                  className="w-full bg-[#7b4f35] hover:bg-[#5e3b29] text-white py-2 rounded-md font-medium transition"
+                  className="w-full bg-[#FFD382] hover:bg-[#E6C26B] text-[#2C1E1A] py-2 rounded-md font-medium transition"
                 >
                   Verstuur
                 </button>
                 {response && (
-                  <div className="bg-[#fff8f3] mt-3 p-3 rounded-md text-[#4e3a2e] border border-[#e4d4c2] shadow-inner animate-fade-in">
+                  <div className="bg-[#3A2B24] mt-3 p-3 rounded-md text-[#FFD382] border border-[#FFD382]/30 shadow-inner animate-fade-in">
                     <strong>AI antwoord:</strong>
                     <p className="mt-1">{response}</p>
                   </div>
@@ -129,7 +148,7 @@ export const SupportChat: React.FC = () => {
                 <p className="mb-2">Stuur ons een e-mail:</p>
                 <a
                   href="mailto:info@tabletech.nl"
-                  className="text-[#7b4f35] font-medium underline hover:text-[#5e3b29]"
+                  className="text-[#FFD382] font-medium underline hover:text-[#E6C26B]"
                 >
                   info@tabletech.nl
                 </a>
@@ -140,12 +159,12 @@ export const SupportChat: React.FC = () => {
               <div className="text-center py-6">
                 <p className="mb-2">WhatsApp ons op:</p>
                 <a
-                  href="https://wa.me/31612345678"
+                  href="https://wa.me/31853030723"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600 font-semibold underline hover:text-green-700"
+                  className="text-green-400 font-semibold underline hover:text-green-300"
                 >
-                  +31 6 12345678
+                  +31 85 303 07 23
                 </a>
               </div>
             )}
@@ -154,10 +173,10 @@ export const SupportChat: React.FC = () => {
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="bg-[#7b4f35] hover:bg-[#5e3b29] text-white rounded-full p-4 shadow-lg flex items-center justify-center transition"
+          className="bg-[#2C1E1A]/90 hover:bg-[#2C1E1A] border border-[#FFD382]/30 text-[#FFD382] rounded-full p-3 shadow-lg flex items-center justify-center transition backdrop-blur-sm"
           aria-label="Open support"
         >
-          <FaComments size={20} />
+          <FaComments size={18} />
         </button>
       )}
     </div>

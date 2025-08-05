@@ -29,11 +29,11 @@ export const HorizontalScroll: React.FC = () => {
       let targetProgress: number;
       let sectionName: string;
 
-      // Adjusted for 3 sections with equal spacing
-      if (progress < 0.33) {
+      // Adjusted for 3 sections with more conservative spacing
+      if (progress < 0.25) {
         targetProgress = 0;
         sectionName = "Benefits 1";
-      } else if (progress < 0.67) {
+      } else if (progress < 0.75) {
         targetProgress = 0.5;
         sectionName = "Benefits 2";
       } else {
@@ -50,7 +50,7 @@ export const HorizontalScroll: React.FC = () => {
           const targetY = st.start + (targetProgress * (st.end - st.start));
 
           gsap.to(window, {
-            duration: 0.6,
+            duration: 1.2,
             ease: "power2.inOut",
             scrollTo: targetY,
             onComplete: () => {
@@ -67,7 +67,7 @@ export const HorizontalScroll: React.FC = () => {
         if (scrollTriggerInstance) {
           snapToNearestSection(scrollTriggerInstance.progress);
         }
-      }, 150);
+      }, 300);
     };
 
     window.addEventListener('wheel', handleWheelEnd, { passive: true });
@@ -94,9 +94,9 @@ export const HorizontalScroll: React.FC = () => {
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: () => `+=${window.innerHeight * (typeof window !== 'undefined' && window.innerWidth < 768 ? 1.5 : 2)}`, // Shorter on mobile
+          end: () => `+=${window.innerHeight * (typeof window !== 'undefined' && window.innerWidth < 768 ? 3 : 4)}`, // Much longer scroll distance
           pin: true,
-          scrub: 0.3,
+          scrub: 1.5, // Higher scrub value for slower, more controlled scrolling
           anticipatePin: 1,
           pinSpacing: false, // Prevent extra space after pinned section
           invalidateOnRefresh: true,
@@ -108,14 +108,14 @@ export const HorizontalScroll: React.FC = () => {
             const progress = self.progress;
             panels.forEach((panel, i) => {
               if (i === 0) {
-                // First panel visible from start to 0.33
-                gsap.set(panel, { autoAlpha: progress < 0.33 ? 1 : 0 });
+                // First panel visible from start to 0.25
+                gsap.set(panel, { autoAlpha: progress < 0.25 ? 1 : 0 });
               } else if (i === 1) {
-                // Second panel visible from 0.33 to 0.67
-                gsap.set(panel, { autoAlpha: progress >= 0.33 && progress < 0.67 ? 1 : 0 });
+                // Second panel visible from 0.25 to 0.75
+                gsap.set(panel, { autoAlpha: progress >= 0.25 && progress < 0.75 ? 1 : 0 });
               } else if (i === 2) {
-                // Third panel visible from 0.67 to end
-                gsap.set(panel, { autoAlpha: progress >= 0.67 ? 1 : 0 });
+                // Third panel visible from 0.75 to end
+                gsap.set(panel, { autoAlpha: progress >= 0.75 ? 1 : 0 });
               }
             });
 
@@ -128,7 +128,7 @@ export const HorizontalScroll: React.FC = () => {
                 isScrolling = false;
                 snapToNearestSection(self.progress);
               }
-            }, 150);
+            }, 300);
           },
         },
       });

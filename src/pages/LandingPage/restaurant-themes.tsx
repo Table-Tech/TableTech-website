@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Globe } from "lucide-react"
+import ClickSpark from "../../components/ClickSpark"
 
 // Import theme images and background
 import theme1 from "../../assets/afbeeldingen/Themes/theme1.png"
@@ -100,7 +100,7 @@ const RestaurantThemesPage: React.FC = () => {
       ref={sectionRef}
       className="relative min-h-screen py-20"
       style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%), url(${backgroundImage})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(44,30,26,0.95) 0%, rgba(44,30,26,0.8) 20%, rgba(44,30,26,0.6) 40%, rgba(44,30,26,0.4) 70%, rgba(44,30,26,0.2) 100%), url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed'
@@ -259,22 +259,22 @@ const RestaurantThemesPage: React.FC = () => {
               <div className="bg-white/10 backdrop-blur-xl rounded-2xl px-6 py-4 shadow-2xl border border-white/30 hover:border-white/50 transition-all duration-300">
                 <div className="flex items-center gap-4">
                   {themes.map((theme, index) => (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ 
-                        duration: 0.5,
-                        delay: 0.8 + (index * 0.1), // Staggered appearance
-                        ease: [0.25, 0.46, 0.45, 0.94]
-                      }}
-                      key={theme.id}
-                      onClick={() => handleThemeChange(index)}
-                      className={`w-5 h-5 rounded-full transition-all duration-300 relative shadow-lg hover:shadow-xl ${
-                        currentTheme === index 
-                          ? 'scale-125 ring-2 ring-white/80 ring-offset-2 ring-offset-transparent' 
-                          : 'hover:scale-110'
-                      }`}
-                      style={{ backgroundColor: theme.accentColor }}
+                    <ClickSpark key={theme.id} sparkColor={theme.accentColor} sparkRadius={12} sparkCount={6} duration={300}>
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: 0.8 + (index * 0.1), // Staggered appearance
+                          ease: [0.25, 0.46, 0.45, 0.94]
+                        }}
+                        onClick={() => handleThemeChange(index)}
+                        className={`w-5 h-5 rounded-full transition-all duration-300 relative shadow-lg hover:shadow-xl ${
+                          currentTheme === index 
+                            ? 'scale-125 ring-2 ring-white/80 ring-offset-2 ring-offset-transparent' 
+                            : 'hover:scale-110'
+                        }`}
+                        style={{ backgroundColor: theme.accentColor }}
                     >
                       {currentTheme === index && (
                         <motion.div
@@ -283,7 +283,8 @@ const RestaurantThemesPage: React.FC = () => {
                           style={{ backgroundColor: theme.accentColor }}
                         />
                       )}
-                    </motion.button>
+                      </motion.button>
+                    </ClickSpark>
                   ))}
                 </div>
               </div>
@@ -348,12 +349,16 @@ const RestaurantThemesPage: React.FC = () => {
           </p>
           
           <div className="flex justify-center">
-            <button className="px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full hover:from-amber-700 hover:to-orange-700 transition-all transform hover:scale-105 shadow-lg">
-              {language === "nl" ? "Start je project" : "Start your project"}
-            </button>
+            <ClickSpark sparkColor="#FFD382" sparkRadius={25} sparkCount={10} duration={600}>
+              <button className="px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full hover:from-amber-700 hover:to-orange-700 transition-all transform hover:scale-105 shadow-lg">
+                {language === "nl" ? "Start je project" : "Start your project"}
+              </button>
+            </ClickSpark>
           </div>
         </motion.div>
       </div>
+      {/* Enhanced smooth transition to next section (pricing) */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-[#2C1E1A]/60 to-[#2C1E1A] z-10"></div>
     </section>
   )
 }

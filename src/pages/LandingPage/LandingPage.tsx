@@ -8,6 +8,7 @@ import { PricingNew } from "./PricingNew";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
 import RestaurantThemesPage from "./restaurant-themes";
+import ContactSection from "../../components/ContactBookingSection";
 
 const LandingPage: React.FC = () => {
   useLenisScroll();
@@ -34,6 +35,11 @@ const LandingPage: React.FC = () => {
       {/* Pricing Section */}
       <section id="pricing" className="w-full">
         <PricingNew />
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="w-full">
+        <ContactSection />
       </section>
 
       {/* Call to Action Section */}
