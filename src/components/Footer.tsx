@@ -28,11 +28,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCustomerDemo }) => {
         <div className="text-center mb-8">
           {/* Company Logo */}
           <div className="flex items-center justify-center gap-3 mb-6">
-            <img 
-              src="/assets/achtergrond-removebg-preview.png" 
-              alt="TableTech Logo" 
-              className="w-10 h-10 rounded-lg"
-            />
             <span className="text-2xl font-bold text-white">TableTech</span>
           </div>
           

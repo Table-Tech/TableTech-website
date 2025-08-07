@@ -367,11 +367,11 @@ const ContactSection = () => {
                     </div>
 
                     {/* Contact options */}
-                    <div className="space-y-4">
+                    <div className="flex items-center justify-center gap-8">
                       <ClickSpark sparkColor="#E86C28" sparkRadius={25} sparkCount={8} duration={600}>
                         <a 
                           href="tel:+31858883333" 
-                          className="w-full flex items-center justify-center space-x-3 bg-[#4A372E]/30 backdrop-blur-md border border-[#4A372E]/50 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-[#4A372E]/50 hover:scale-105 hover:border-[#E86C28]/30"
+                          className="flex items-center space-x-2 text-white font-semibold text-base transition-all duration-300 hover:text-[#E86C28]"
                         >
                           <Phone className="w-5 h-5 text-[#E86C28]" />
                           <span>+31 85 888 3333</span>
@@ -381,7 +381,7 @@ const ContactSection = () => {
                       <ClickSpark sparkColor="#E86C28" sparkRadius={25} sparkCount={8} duration={600}>
                         <a 
                           href="mailto:info@tabletech.nl" 
-                          className="w-full flex items-center justify-center space-x-3 bg-[#4A372E]/30 backdrop-blur-md border border-[#4A372E]/50 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-[#4A372E]/50 hover:scale-105 hover:border-[#E86C28]/30"
+                          className="flex items-center space-x-2 text-white font-semibold text-base transition-all duration-300 hover:text-[#E86C28]"
                         >
                           <Mail className="w-5 h-5 text-[#E86C28]" />
                           <span>info@tabletech.nl</span>
