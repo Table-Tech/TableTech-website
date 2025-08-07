@@ -1,52 +1,74 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
-export const Footer: React.FC = () => (
-  <footer id="footer" className="bg-[#2C1E1A] text-[#FFD382] py-12 w-full">
-    <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-        <div>
-          <span className="text-2xl font-bold text-white">TableTech</span>
-          <p className="mt-4">📞 +31 85 303 07 23</p>
-          <p>✉️ info@tabletech.nl</p>
-          <p>📍 Nederland</p>
+interface FooterProps {
+  onOpenCustomerDemo?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenCustomerDemo }) => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer id="footer" className="relative bg-[#2C1E1A] text-[#FFD382] py-12 w-full overflow-hidden">
+      {/* VERBETERDE overgang van CallToAction - Perfect naadloos */}
+      <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none">
+        {/* Perfect blend met CTA sectie */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/95 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
+      </div>
+
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#FFD382]/10 via-transparent to-[#E86C28]/5"></div>
+      </div>
+
+      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64">
+        
+        {/* Minimal Footer Content */}
+        <div className="text-center mb-8">
+          {/* Company Logo */}
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <img 
+              src="/assets/achtergrond-removebg-preview.png" 
+              alt="TableTech Logo" 
+              className="w-10 h-10 rounded-lg"
+            />
+            <span className="text-2xl font-bold text-white">TableTech</span>
+          </div>
+          
+          {/* Contact Info */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <Phone className="w-4 h-4" />
+              <a href="tel:+31853030723" className="hover:text-white transition-colors duration-300">
+                +31 85 303 07 23
+              </a>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              <a href="mailto:info@tabletech.nl" className="hover:text-white transition-colors duration-300">
+                info@tabletech.nl
+              </a>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              <span>Nederland</span>
+            </div>
+          </div>
         </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-4 text-white">Info</h3>
-          <ul className="space-y-2">
-            <li><Link to="/integraties" className="hover:text-white transition">Integraties</Link></li>
-            <li><Link to="/pricing" className="hover:text-white transition">Prijzen</Link></li>
-            <li><Link to="/demo" className="hover:text-white transition">Demo</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-4 text-white">Type horeca</h3>
-          <ul className="space-y-2">
-            <li><Link to="#" className="hover:text-white transition">Cafés</Link></li>
-            <li><Link to="#" className="hover:text-white transition">Hotels</Link></li>
-            <li><Link to="#" className="hover:text-white transition">Restaurants</Link></li>
-            <li><Link to="#" className="hover:text-white transition">Festivals</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-4 text-white">Bedrijf</h3>
-          <ul className="space-y-2">
-            <li><Link to="/about" className="hover:text-white transition">Over ons</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition">Contact</Link></li>
-            <li><Link to="/privacy" className="hover:text-white transition">Privacybeleid</Link></li>
-          </ul>
+
+        {/* Simple Bottom Section */}
+        <div className="pt-6 border-t border-[#3B2A1D] text-center text-sm">
+          <p className="text-[#FFD382]/80">
+            &copy; {currentYear} <span className="font-semibold text-white">TableTech</span>. Alle rechten voorbehouden.
+          </p>
         </div>
       </div>
 
-      <div className="mt-12 pt-6 border-t border-[#3B2A1D] flex flex-col md:flex-row justify-between items-center text-sm text-[#FFD382]">
-        <p>
-          &copy; {new Date().getFullYear()} <span className="font-semibold text-white">TableTech</span>. Alle rechten voorbehouden.
-        </p>
-        <div className="flex space-x-4 mt-4 md:mt-0">
-          <Link to="/privacy" className="hover:text-white transition">Privacy</Link>
-          <Link to="/voorwaarden" className="hover:text-white transition">Algemene voorwaarden</Link>
-          <Link to="/cookies" className="hover:text-white transition">Cookies</Link>
-        </div>
-      </div>
-    </div>
-  </footer>
-);
+      {/* Bottom fade for extra smoothness */}
+      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-transparent to-[#2C1E1A]"></div>
+    </footer>
+  );
+};

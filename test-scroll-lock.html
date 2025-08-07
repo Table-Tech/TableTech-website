@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Scroll Lock</title>
+    <script>
+        // Test script to verify scroll lock is working
+        window.addEventListener('DOMContentLoaded', () => {
+            let lastScroll = window.scrollY;
+            let scrollBlocked = false;
+            
+            // Monitor scroll changes
+            setInterval(() => {
+                const currentScroll = window.scrollY;
+                const benefitsSection = document.getElementById('benefits-section');
+                
+                if (benefitsSection) {
+                    const rect = benefitsSection.getBoundingClientRect();
+                    const shouldBeLocked = rect.top <= 50 && rect.top > -100;
+                    
+                    if (shouldBeLocked && !scrollBlocked) {
+                        console.log('🔒 SCROLL SHOULD BE LOCKED NOW');
+                        scrollBlocked = true;
+                    }
+                    
+                    if (currentScroll !== lastScroll) {
+                        if (scrollBlocked) {
+                            console.error('⚠️ SCROLL CHANGED WHILE LOCKED!', {
+                                delta: currentScroll - lastScroll,
+                                current: currentScroll,
+                                benefitsTop: rect.top
+                            });
+                        } else {
+                            console.log('Scroll changed:', currentScroll - lastScroll);
+                        }
+                        lastScroll = currentScroll;
+                    }
+                }
+            }, 100);
+            
+            // Test forced scroll
+            window.testScrollLock = () => {
+                console.log('Testing scroll lock...');
+                const before = window.scrollY;
+                window.scrollBy(0, 1000);
+                setTimeout(() => {
+                    const after = window.scrollY;
+                    if (after === before) {
+                        console.log('✅ SCROLL IS LOCKED - Cannot scroll past benefits');
+                    } else {
+                        console.error('❌ SCROLL NOT LOCKED - Scrolled', after - before, 'pixels');
+                    }
+                }, 100);
+            };
+            
+            // Check body styles
+            window.checkLockStatus = () => {
+                console.log('Body styles:', {
+                    overflow: document.body.style.overflow,
+                    position: document.body.style.position,
+                    top: document.body.style.top
+                });
+                
+                const benefitsSection = document.getElementById('benefits-section');
+                if (benefitsSection) {
+                    console.log('Benefits section:', {
+                        position: benefitsSection.style.position,
+                        top: benefitsSection.style.top,
+                        zIndex: benefitsSection.style.zIndex,
+                        rect: benefitsSection.getBoundingClientRect()
+                    });
+                }
+            };
+            
+            // Monitor wheel events
+            let wheelCount = 0;
+            window.addEventListener('wheel', (e) => {
+                wheelCount++;
+                console.log(`Wheel #${wheelCount}:`, {
+                    deltaY: e.deltaY,
+                    defaultPrevented: e.defaultPrevented,
+                    scrollY: window.scrollY
+                });
+            }, { passive: false, capture: true });
+            
+            console.log('🔍 Scroll Lock Test Loaded');
+            console.log('Commands:');
+            console.log('- testScrollLock() : Test if scroll is locked');
+            console.log('- checkLockStatus() : Check current lock status');
+        });
+    </script>
+</head>
+<body>
+    <div style="height: 100vh; background: linear-gradient(to bottom, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white;">
+        <h1>Hero Section - Scroll Down</h1>
+    </div>
+    
+    <div id="benefits-section" style="height: 100vh; background: linear-gradient(to bottom, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; color: white;">
+        <div>
+            <h1>Benefits Section</h1>
+            <p>This should lock scroll!</p>
+            <button onclick="testScrollLock()">Test Scroll Lock</button>
+            <button onclick="checkLockStatus()">Check Lock Status</button>
+        </div>
+    </div>
+    
+    <div style="height: 100vh; background: linear-gradient(to bottom, #4facfe, #00f2fe); display: flex; align-items: center; justify-content: center; color: white;">
+        <h1>Next Section - Should not be reachable until benefits viewed</h1>
+    </div>
+</body>
+</html>

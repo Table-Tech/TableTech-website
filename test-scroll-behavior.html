@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Behavior Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .section {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-family: Arial, sans-serif;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .benefits {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            position: relative;
+        }
+        
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .status div {
+            margin: 5px 0;
+        }
+        
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .active {
+            background: #4ade80;
+        }
+        
+        .inactive {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="status">
+        <h3>Scroll Status</h3>
+        <div>Scroll Position: <span id="scrollPos">0</span>px</div>
+        <div>Benefits Top: <span id="benefitsTop">0</span>px</div>
+        <div>Benefits Bottom: <span id="benefitsBottom">0</span>px</div>
+        <div>Viewport Height: <span id="viewportHeight">0</span>px</div>
+        <div>
+            <span id="indicator" class="indicator inactive"></span>
+            Horizontal Scroll: <span id="scrollStatus">Inactive</span>
+        </div>
+        <div>Condition Met: <span id="condition">No</span></div>
+    </div>
+
+    <div class="section hero">
+        <div>
+            <h1>Hero Section</h1>
+            <p>Scroll down to reach benefits</p>
+        </div>
+    </div>
+
+    <div class="section benefits" id="benefits">
+        <div>
+            <h1>Benefits Section</h1>
+            <p>Horizontal scroll should activate here</p>
+            <p>when fully in viewport</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h1>Next Section</h1>
+    </div>
+
+    <script>
+        const benefits = document.getElementById('benefits');
+        const scrollPosEl = document.getElementById('scrollPos');
+        const benefitsTopEl = document.getElementById('benefitsTop');
+        const benefitsBottomEl = document.getElementById('benefitsBottom');
+        const viewportHeightEl = document.getElementById('viewportHeight');
+        const scrollStatusEl = document.getElementById('scrollStatus');
+        const indicatorEl = document.getElementById('indicator');
+        const conditionEl = document.getElementById('condition');
+        
+        let isHorizontalScrollActive = false;
+        
+        function updateStatus() {
+            const scrollY = window.scrollY;
+            const rect = benefits.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Same condition as in the React component
+            const isFullyInView = rect.top <= 0 && rect.bottom >= viewportHeight;
+            const shouldActivate = rect.top <= 0 && rect.bottom > viewportHeight * 0.5;
+            
+            scrollPosEl.textContent = scrollY.toFixed(0);
+            benefitsTopEl.textContent = rect.top.toFixed(0);
+            benefitsBottomEl.textContent = rect.bottom.toFixed(0);
+            viewportHeightEl.textContent = viewportHeight;
+            
+            // Check if horizontal scroll should be active
+            if (shouldActivate && !isHorizontalScrollActive) {
+                isHorizontalScrollActive = true;
+                scrollStatusEl.textContent = 'ACTIVE';
+                indicatorEl.classList.remove('inactive');
+                indicatorEl.classList.add('active');
+                conditionEl.textContent = 'Yes - Section fully visible';
+                conditionEl.style.color = '#4ade80';
+            } else if (!isFullyInView && isHorizontalScrollActive) {
+                isHorizontalScrollActive = false;
+                scrollStatusEl.textContent = 'Inactive';
+                indicatorEl.classList.remove('active');
+                indicatorEl.classList.add('inactive');
+                conditionEl.textContent = 'No - Section not fully visible';
+                conditionEl.style.color = '#ef4444';
+            } else if (!shouldActivate) {
+                conditionEl.textContent = `No - Top: ${rect.top.toFixed(0)}px (needs ≤ 0)`;
+                conditionEl.style.color = '#ef4444';
+            }
+        }
+        
+        window.addEventListener('scroll', updateStatus);
+        window.addEventListener('resize', updateStatus);
+        
+        // Initial update
+        updateStatus();
+        
+        // Smooth scroll on arrow key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                window.scrollBy({ top: 100, behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp') {
+                window.scrollBy({ top: -100, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

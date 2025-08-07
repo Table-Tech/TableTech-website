@@ -1,37 +1,32 @@
 // src/App.tsx
-import React from "react";
+import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
+const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const SupportChat = lazy(() => import("./pages/SupportChat"));
+const MenuDemo = lazy(() => import("./pages/MenuDemo/MenuDemo"));
 
-import LandingPage from "./pages/LandingPage/LandingPage";
-import { FeaturePage } from "./pages/FeaturePage";
-import { PricingPage } from "./pages/PricingPage";
-import { AboutPage } from "./pages/AboutPage";
-import { ContactPage } from "./pages/ContactPage";
-import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDotss";
-import { SupportChat } from "./pages/SupportChat";
-import KlantDemoPage from "./pages/KlantDemoPage";
 
 import "./index.css";
 
 const App: React.FC = () => {
-
   return (
     <>
       <ScrollToTop />
       <ScrollDots />
-      <SupportChat />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/demo/klant" element={<KlantDemoPage />} />
-        <Route path="/features" element={<FeaturePage />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
-      </Routes>
+      <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/menu-demo" element={<MenuDemo />} />
+        </Routes>
+      </Suspense>
+      <Suspense fallback={null}>
+        <SupportChat />
+      </Suspense>
     </>
   );
 };
