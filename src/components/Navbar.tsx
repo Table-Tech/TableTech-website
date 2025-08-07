@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { prefetch } from "../utils/prefetch";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import "../i18n";
@@ -62,9 +61,8 @@ export const Navbar: React.FC = () => {
       });
 
       // Ook Lenis smooth scroll gebruiken indien beschikbaar
-      const lenis = window.lenis as Record<string, unknown>;
-      if (lenis?.scrollTo && typeof lenis.scrollTo === 'function') {
-        (lenis.scrollTo as (target: Element, options?: Record<string, unknown>) => void)(element, { duration: 1.0 }); // Faster navigation scroll
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { duration: 1.0 }); // Faster navigation scroll
       }
     }
   };
@@ -144,7 +142,6 @@ export const Navbar: React.FC = () => {
               </Link>
               <Link
                 to="/pricing"
-                onMouseEnter={() => prefetch(() => import("../pages/LandingPage/PricingNew"))}
                 className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
               >
                 {t("pricing")}
@@ -251,7 +248,6 @@ export const Navbar: React.FC = () => {
                 <Link
                   to="/pricing"
                   onClick={() => setOpen(false)}
-                  onMouseEnter={() => prefetch(() => import("../pages/LandingPage/PricingNew"))}
                   className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
                 >
                   {t("pricing")}
