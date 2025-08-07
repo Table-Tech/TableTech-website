@@ -1,4 +1,4 @@
-// src/components/useLenisScroll.ts
+// src/hooks/useLenisScroll.ts
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
@@ -15,11 +15,13 @@ export const useLenisScroll = () => {
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.07,
-      duration: 1.1,
+      lerp: 0.1,
+      duration: 0.8,
+      smoothWheel: true,
+      wheelMultiplier: 1.2,
     });
 
-    // ✅ Koppel Lenis aan window met juiste type
+    // Koppel Lenis aan window
     window.lenis = lenis;
 
     const raf = (time: number) => {
@@ -30,7 +32,7 @@ export const useLenisScroll = () => {
     requestAnimationFrame(raf);
 
     ScrollTrigger.scrollerProxy(document.body, {
-      scrollTop(value) {
+      scrollTop(value?: number) {
         if (typeof value === "number") {
           lenis.scrollTo(value, { immediate: true });
         }
@@ -48,7 +50,7 @@ export const useLenisScroll = () => {
 
     ScrollTrigger.refresh();
 
-    gsap.utils.toArray(".fade-in").forEach((el) => {
+    gsap.utils.toArray(".fade-in").forEach((el: unknown) => {
       if (el instanceof HTMLElement) {
         gsap.from(el, {
           opacity: 0,
@@ -65,8 +67,11 @@ export const useLenisScroll = () => {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => {
+        trigger.kill();
+      });
       lenis.destroy();
+      window.lenis = undefined;
     };
   }, [location.pathname]);
 };

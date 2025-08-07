@@ -11,16 +11,27 @@ export const useBreakpoint = () => {
     isMobile: w < 640,
     isTablet: w >= 640 && w < 1024,
     isDesktop: w >= 1024,
+    isLargeScreen: w >= 1440,
+    isXLargeScreen: w >= 1920,
   });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      let timeoutId: NodeJS.Timeout;
+      
       const handleResize = () => {
-        setWidth(window.innerWidth);
+        // Debounce resize events for better performance
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          setWidth(window.innerWidth);
+        }, 100);
       };
 
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize, { passive: true });
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        clearTimeout(timeoutId);
+      };
     }
   }, []);
 

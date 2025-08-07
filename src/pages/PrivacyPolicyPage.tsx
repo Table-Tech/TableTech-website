@@ -14,7 +14,12 @@ export const PrivacyPolicyPage: React.FC = () => {
 
       {/* Hero */}
       <div className="relative w-full h-[60vh] overflow-hidden">
-        <img src={planten2} alt="Privacy Hero" className="w-full h-full object-cover object-center" />
+        <img
+          src={planten2}
+          alt="Privacy Hero"
+          loading="lazy"
+          className="w-full h-full object-cover object-center"
+        />
         <div className="absolute inset-0 bg-[#2C1E1A]/20 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
             Privacybeleid

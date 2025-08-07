@@ -3,5 +3,174 @@
   "features": "Features",
   "pricing": "Pricing",
   "about": "About us",
-  "signup": "Try for free"
+  "signup": "Try for free",
+  "hero": {
+    "title": "The future of ordering.",
+    "subtitle": "Let guests order & pay via QR – faster, safer, smarter.",
+    "customerDemo": {
+      "title": "Try as Customer",
+      "description": "Scan QR code or start customer demo to see how guests experience it.",
+      "button": "Start customer demo",
+      "qrInstruction": "Scan the QR code or click the button below"
+    },
+    "employeeDemo": {
+      "title": "Try as Employee",
+      "description": "See how the dashboard works for staff.",
+      "button": "Start dashboard demo"
+    }
+  },
+  "dashboard": {
+    "tabletech": "TableTech",
+    "home": "Home",
+    "tables": "Tables",
+    "menu": "Menu",
+    "data": "Data",
+    "liveOrders": "Live Orders",
+    "revenueToday": "Revenue today",
+    "activeTables": "Active tables",
+    "occupied": "occupied",
+    "orders": "Orders",
+    "today": "Today",
+    "revenueTrend": "Revenue Trend",
+    "quickActions": "Quick Actions",
+    "newOrder": "New Order",
+    "reserveTable": "Reserve Table",
+    "closeDay": "Close Day",
+    "preparing": "Preparing",
+    "ready": "Ready",
+    "waiting": "Waiting",
+    "margheritaPizza": "Margherita Pizza, Cola",
+    "pepperoniPizza": "Pepperoni Pizza", 
+    "chickenKatsuCurry": "Chicken Katsu Curry",
+    "menuItems": {
+      "pizzaMargherita": "Pizza Margherita",
+      "caesarSalad": "Caesar Salad",
+      "chickenKatsu": "Chicken Katsu",
+      "lemonade": "Lemonade",
+      "pastaCarbonara": "Pasta Carbonara",
+      "burgerDeluxe": "Burger Deluxe"
+    }
+  },
+  "benefits3": {
+    "title": "Powerful Dashboard",
+    "subtitle": "Manage your restaurant with professional analytics and real-time insights",
+    "moreFeaturesTitle": "More features",
+    "screens": {
+      "liveOrders": {
+        "title": "Live Order Management",
+        "description": "Real-time overview of all incoming orders with status tracking",
+        "header": "Live Orders",
+        "status": "5 active • 12 queue",
+        "urgent": "URGENT",
+        "preparing": "PREPARING",
+        "ready": "READY",
+        "new": "NEW",
+        "table": "Table",
+        "items": "items",
+        "today": "Today",
+        "avgTime": "Avg. time",
+        "revenue": "Revenue",
+        "onTime": "On-time",
+        "ordersPerHour": "Orders per hour"
+      },
+      "analytics": {
+        "title": "Business Intelligence Dashboard", 
+        "description": "Advanced analytics with real-time insights into sales, trends and KPIs",
+        "header": "Business Analytics",
+        "status": "Real-time • Auto-refresh",
+        "revenueWeek": "Revenue This Week",
+        "vsLastWeek": "vs last week",
+        "dailyRevenue": "Daily revenue",
+        "orders": "Orders",
+        "avgOrder": "Avg. order",
+        "rating": "Rating",
+        "occupancy": "Occupancy",
+        "waitTime": "Wait time",
+        "topProducts": "Top Products Today",
+        "liveGuests": "Live Guests",
+        "activeOrders": "Active Orders"
+      },
+      "kitchen": {
+        "title": "Kitchen Display System",
+        "description": "Professional kitchen display for efficient order management and timing",
+        "header": "Kitchen Display",
+        "status": "7 orders • 3 urgent",
+        "table": "Table",
+        "urgent": "URGENT",
+        "preparing": "PREPARING", 
+        "ready": "READY",
+        "new": "NEW",
+        "queue": "Queue",
+        "avgTime": "Avg. time",
+        "onTime": "On-time",
+        "today": "Today",
+        "stationStatus": "Station Status",
+        "grill": "Grill",
+        "pizza": "Pizza", 
+        "salads": "Salads",
+        "orders": "orders"
+      },
+      "management": {
+        "title": "Restaurant Management Hub",
+        "description": "Central management center for menus, staff, settings and system monitoring",
+        "header": "Management Dashboard",
+        "status": "Admin Panel • Restaurant Manager",
+        "menuManagement": "Menu Management",
+        "staff": "Staff",
+        "tableManagement": "Table Management",
+        "settings": "Settings",
+        "finances": "Finances",
+        "reports": "Reports",
+        "quickActions": "Quick Actions",
+        "systemStatus": "System Status",
+        "recentActivity": "Recent Activity",
+        "menuItems": "items",
+        "categories": "cat.",
+        "updatesToday": "updates today",
+        "active": "active",
+        "break": "break",
+        "shiftUntil": "Shift until",
+        "tables": "tables",
+        "occupied": "occupied",
+        "occupancyRate": "occupancy",
+        "systemConfig": "System config",
+        "thisWeek": "this week",
+        "vsLast": "vs last",
+        "export": "Export",
+        "analytics": "Analytics",
+        "newReport": "New report",
+        "addMenu": "+ Menu",
+        "qrCodes": "QR Codes", 
+        "promotions": "Promotions",
+        "reservations": "Reserv.",
+        "online": "Online",
+        "connected": "Connected",
+        "menuUpdate": "Menu update: Pizza prices",
+        "minAgo": "min ago",
+        "newReservation": "New reservation:",
+        "pizzaPrices": "Pizza prices"
+      }
+    },
+    "features": {
+      "mobileOptimization": {
+        "title": "Mobile optimization",
+        "description": "Order directly from any smartphone"
+      },
+      "dashboardAnalysis": {
+        "title": "Dashboard analysis", 
+        "description": "Real-time insights into sales and preferences"
+      },
+      "inventoryLink": {
+        "title": "Inventory link",
+        "description": "Sync with your kitchen system"
+      },
+      "serviceNotification": {
+        "title": "Quick service notification",
+        "description": "Guests can call staff"
+      }
+    }
+  },
+  "loading": "Loading...",
+  "demoLoading": "Loading demo...",
+  "dashboardDemoLoading": "Loading dashboard demo..."
 }

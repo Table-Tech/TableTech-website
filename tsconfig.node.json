@@ -5,8 +5,26 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "composite": true,
+    "noEmit": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": false,
+    "types": []
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "postcss.config.js",
+    "Tailwindconfig.js"
+  ],
+  "exclude": [
+    "src/**/*",
+    "node_modules",
+    "dist"
+  ]
 }
