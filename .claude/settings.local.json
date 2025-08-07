@@ -13,7 +13,9 @@
       "Bash(grep:*)",
       "Bash(npm run lint)",
       "Bash(touch:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(cp:*)",
+      "Bash(timeout 10s npm run dev)"
     ],
     "deny": []
   }
