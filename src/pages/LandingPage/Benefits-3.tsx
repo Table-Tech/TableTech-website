@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useMemo } from "react";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 type DashboardScreen = {
@@ -11,9 +11,6 @@ type DashboardScreen = {
 
 export const BenefitsThree: React.FC = () => {
   const { t } = useTranslation();
-  const [currentDashboard, setCurrentDashboard] = useState(0);
-  const [isManualMode, setIsManualMode] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const dashboardScreens: DashboardScreen[] = useMemo(() => [
     {
@@ -571,41 +568,6 @@ export const BenefitsThree: React.FC = () => {
     }
   ], [t]);
 
-  const startAutoSlide = React.useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    intervalRef.current = setInterval(() => {
-      setCurrentDashboard((prev) => (prev + 1) % dashboardScreens.length);
-    }, 9000); // 9 seconden per slide
-  }, [dashboardScreens.length]);
-
-  const handleManualClick = (index: number) => {
-    setCurrentDashboard(index);
-    setIsManualMode(true);
-    
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    
-    // Na 8 seconden weer automatisch laten doorgaan
-    setTimeout(() => {
-      setIsManualMode(false);
-      startAutoSlide();
-    }, 8000);
-  };
-
-  useEffect(() => {
-    if (!isManualMode) {
-      startAutoSlide();
-    }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isManualMode, startAutoSlide]);
-
   return (
     <section
       id="benefits-3"
@@ -615,52 +577,50 @@ export const BenefitsThree: React.FC = () => {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-20 lg:pt-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
 
-          {/* Left side - Dashboard Tablet */}
-          <div className="relative flex items-center justify-center order-1 lg:order-1">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-800 rounded-2xl blur-3xl scale-110 opacity-40" />
-
-              <motion.div
-                className="relative w-[500px] h-[340px] bg-black rounded-2xl p-1.5 shadow-2xl"
-                animate={{
-                  y: [0, -6, 0],
+          {/* Left side - Video */}
+          <div className="relative flex items-center justify-start order-1 lg:order-1">
+            <motion.div
+              className="relative"
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{
+                transform: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)` : 'none',
+                transformStyle: 'preserve-3d'
+              }}
+            >
+              <video 
+                autoPlay
+                muted
+                playsInline
+                controls={false}
+                className="w-full h-full object-contain rounded-lg shadow-lg"
+                style={{ 
+                  width: '700px', 
+                  height: '560px',
+                  maxWidth: '100%',
+                  minWidth: '400px',
+                  minHeight: '320px',
+                  background: 'transparent'
                 }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                onLoadStart={() => console.log('Video loading started')}
+                onCanPlay={() => console.log('Video can play')}
+                onError={(e) => console.error('Video error:', e)}
+                onEnded={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  video.currentTime = video.duration - 0.1;
+                  video.pause();
                 }}
               >
-                <div className="w-full h-full bg-gray-900 rounded-xl overflow-hidden relative">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentDashboard}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 1 }}
-                      className="absolute inset-0"
-                    >
-                      {dashboardScreens[currentDashboard].content}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-
-              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {dashboardScreens.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleManualClick(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      currentDashboard === index ? 'bg-white scale-125 shadow-lg' : 'bg-white/60'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                  />
-                ))}
-              </div>
-            </div>
+                <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
+            </motion.div>
           </div>
 
           {/* Right side - Description & Features */}
@@ -679,39 +639,35 @@ export const BenefitsThree: React.FC = () => {
             </motion.div>
 
             <div className="space-y-3 max-h-[calc(100vh-280px)] overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentDashboard}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6 }}
-                  className="relative overflow-hidden rounded-2xl shadow-xl h-32"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
-                  <div className="relative p-6 z-10 h-full flex flex-col justify-center">
-                    <h3 className="text-xl font-bold text-white mb-3"
-                        style={{
-                          textShadow: '0 2px 6px rgba(0,0,0,0.5)'
-                        }}>
-                      {dashboardScreens[currentDashboard].title}
-                    </h3>
-                    <p className="text-white/95 text-base leading-relaxed"
-                       style={{
-                         textShadow: '0 1px 4px rgba(0,0,0,0.4)'
-                       }}>
-                      {dashboardScreens[currentDashboard].description}
-                    </p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="relative overflow-hidden rounded-2xl shadow-xl h-32"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
+                <div className="relative p-6 z-10 h-full flex flex-col justify-center">
+                  <h3 className="text-xl font-bold text-white mb-3"
+                      style={{
+                        textShadow: '0 2px 6px rgba(0,0,0,0.5)'
+                      }}>
+                    Alles-in-één dashboard voor restaurantbeheer
+                  </h3>
+                  <p className="text-white/95 text-base leading-relaxed"
+                     style={{
+                       textShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                     }}>
+                    Live bestellingen, analytics, keuken management en meer in één overzichtelijk systeem
+                  </p>
+                </div>
+              </motion.div>
 
               {/* Enhanced Mobile Benefits with premium glassmorphism */}
               <motion.div

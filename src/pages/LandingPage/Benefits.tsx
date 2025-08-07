@@ -488,8 +488,40 @@ export const BenefitsOne: React.FC = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
 
-          {/* Left side - Enhanced Description with better glassmorphism */}
-          <div className="space-y-4 order-2 lg:order-1 flex flex-col min-h-0">
+          {/* Left side - Video */}
+          <div className="relative flex items-end justify-start order-1 lg:order-1 -ml-40 mt-16">
+            <div className="relative">
+              <video 
+                autoPlay
+                muted
+                playsInline
+                controls={false}
+                className="w-full h-full object-contain rounded-lg shadow-lg"
+                style={{ 
+                  width: '1400px', 
+                  height: '1120px',
+                  maxWidth: '100%',
+                  minWidth: '800px',
+                  minHeight: '640px',
+                  background: 'transparent'
+                }}
+                onLoadStart={() => console.log('Video loading started')}
+                onCanPlay={() => console.log('Video can play')}
+                onError={(e) => console.error('Video error:', e)}
+                onEnded={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  video.currentTime = video.duration - 0.1;
+                  video.pause();
+                }}
+              >
+                <source src="/videos/Export_Video_2025-08-07-ultramax.webm" type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          {/* Right side - Content */}
+          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -689,50 +721,10 @@ export const BenefitsOne: React.FC = () => {
             </div>
           </div>
 
-          {/* Right side - Interactive Phone with 3D effect */}
-          <div className="relative flex items-center justify-center order-1 lg:order-2">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl scale-110 opacity-30" />
-
-              <motion.div
-                className="relative w-64 h-[450px] sm:w-72 sm:h-[510px] lg:w-80 lg:h-[560px] bg-black rounded-3xl p-2 shadow-2xl"
-                animate={{
-                  y: [0, -8, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  background: 'linear-gradient(145deg, #1a1a1a, #000000)',
-                  boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
-                  transform: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `perspective(1000px) rotateX(-5deg) rotateY(15deg) rotateZ(-3deg)` : 'none',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-30" />
-
-                <div className="w-full h-full bg-gray-900 rounded-[1.5rem] overflow-hidden relative">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentScreen}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 0.8 }}
-                      className="absolute inset-0"
-                    >
-                      {appScreens[currentScreen].content}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            </div>
-          </div>
 
         </div>
       </div>
     </section>
   );
 };
+
