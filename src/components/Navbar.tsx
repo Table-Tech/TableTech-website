@@ -62,9 +62,8 @@ export const Navbar: React.FC = () => {
       });
 
       // Ook Lenis smooth scroll gebruiken indien beschikbaar
-      const lenis = window.lenis as Record<string, unknown>;
-      if (lenis?.scrollTo && typeof lenis.scrollTo === 'function') {
-        (lenis.scrollTo as (target: Element, options?: Record<string, unknown>) => void)(element, { duration: 1.0 }); // Faster navigation scroll
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { duration: 1.0 }); // Faster navigation scroll
       }
     }
   };
