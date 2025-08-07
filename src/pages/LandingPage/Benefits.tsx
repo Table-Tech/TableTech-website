@@ -481,7 +481,7 @@ export const BenefitsOne: React.FC = () => {
   return (
     <section
       id="benefits-1"
-      className="relative w-full h-full flex items-center justify-center overflow-y-auto"
+      className="relative w-full h-full flex items-center justify-center overflow-hidden"
       style={{ backgroundColor: 'transparent' }}
     >
       {/* Main content - Beter gecentreerd */}
