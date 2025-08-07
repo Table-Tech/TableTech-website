@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2020",
     "module": "es2020",
-    "strict": true,
+    "lib": ["ES2020"],
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -10,7 +11,6 @@
     "moduleDetection": "force",
     "composite": true,
     "noEmit": true,
-    "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
