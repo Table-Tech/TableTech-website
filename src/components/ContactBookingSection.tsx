@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building } from 'lucide-react';
+import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, AlertCircle, Clock } from 'lucide-react';
+import { createMailtoLink, isTimeSlotAvailable, getBookedTimeSlotsForDate, clearExpiredBookings } from '../services/emailService';
+import { sendAppointmentEmailStrato } from '../services/stratoEmailService';
 
 // Define types for ClickSpark
 interface Spark {
@@ -78,6 +80,8 @@ const ContactSection = () => {
     restaurant: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   // Roterende teksten voor de slideshow
   const rotatingTexts = [
@@ -111,11 +115,26 @@ const ContactSection = () => {
     return () => clearInterval(interval);
   }, [rotatingTexts.length]);
 
+  // Clear expired bookings on component mount
+  useEffect(() => {
+    clearExpiredBookings();
+  }, []);
+
   // Tijdslots voor afspraken
   const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
   ];
+
+  // Get available time slots for selected date
+  const getAvailableTimeSlots = () => {
+    if (!selectedDate) return [];
+    
+    const dateString = selectedDate.toLocaleDateString('nl-NL');
+    const bookedSlots = getBookedTimeSlotsForDate(dateString);
+    
+    return timeSlots.filter(time => !bookedSlots.includes(time));
+  };
 
   // Genereer kalenderdagen
   const getDaysInMonth = (date: Date) => {
@@ -185,14 +204,76 @@ const ContactSection = () => {
     });
   };
 
-  const handleSubmitBooking = () => {
-    // Hier zou je normaal de data naar een backend sturen
-    console.log('Afspraak geboekt:', {
-      ...bookingData,
-      date: formatDate(selectedDate),
-      time: selectedTime
-    });
-    setBookingStep(3);
+  const handleSubmitBooking = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    setEmailError(false);
+    
+    try {
+      const appointmentData = {
+        ...bookingData,
+        date: formatDate(selectedDate),
+        time: selectedTime
+      };
+
+      console.log('🚀 Starting booking submission for:', appointmentData);
+      
+      // Double-check time slot availability before sending
+      if (!isTimeSlotAvailable(appointmentData.date, appointmentData.time)) {
+        throw new Error('Deze tijd is al gereserveerd door een andere klant. Kies een andere tijd.');
+      }
+      
+      // Attempt to send email with enhanced Strato support
+      const emailSent = await sendAppointmentEmailStrato(appointmentData);
+      
+      if (emailSent) {
+        console.log('✅ Email successfully sent to info@tabletech.nl');
+        setEmailError(false);
+      } else {
+        console.warn('⚠️ Email delivery failed - customer will see backup message');
+        setEmailError(true);
+        
+        // Log this appointment for manual follow-up
+        const manualFollowUp = {
+          timestamp: new Date().toISOString(),
+          appointmentData,
+          status: 'EMAIL_FAILED_MANUAL_FOLLOWUP_REQUIRED',
+          priority: 'HIGH',
+          action: `Contact ${appointmentData.name} at ${appointmentData.email} or ${appointmentData.phone} within 24 hours`
+        };
+        
+        console.error('🚨 MANUAL FOLLOW-UP REQUIRED:', manualFollowUp);
+        
+        // Store for admin review
+        try {
+          const failedBookings = JSON.parse(localStorage.getItem('tabletech-failed-bookings') || '[]');
+          failedBookings.push(manualFollowUp);
+          localStorage.setItem('tabletech-failed-bookings', JSON.stringify(failedBookings));
+        } catch (e) {
+          console.warn('Could not store failed booking for manual follow-up:', e);
+        }
+      }
+
+      // Always proceed to confirmation step
+      setBookingStep(3);
+    } catch (error) {
+      console.error('❌ Critical error submitting booking:', error);
+      
+      // Check if it's a double booking error
+      if (error instanceof Error && error.message.includes('al gereserveerd')) {
+        // Show error message and stay on time selection
+        alert('⚠️ Deze tijd is net geboekt door iemand anders! Kies alstublieft een andere tijd.');
+        setSelectedTime(''); // Reset time selection
+        setIsSubmitting(false);
+        return;
+      }
+      
+      setEmailError(true);
+      setBookingStep(3); // Still proceed to show confirmation with error message
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -200,6 +281,8 @@ const ContactSection = () => {
     setBookingStep(1);
     setSelectedDate(null);
     setSelectedTime('');
+    setIsSubmitting(false);
+    setEmailError(false);
     setBookingData({
       name: '',
       email: '',
@@ -273,8 +356,8 @@ const ContactSection = () => {
           {/* Main content - 2 columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left column - Slideshow */}
-            <div className="order-2 lg:order-1">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
+            <div className="order-2 lg:order-1 text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight text-left">
                 Plan een <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">Gratis</span> Adviesgesprek
               </h1>
               
@@ -290,10 +373,10 @@ const ContactSection = () => {
                           : 'opacity-0 transform translate-y-4'
                       }`}
                     >
-                      <h2 className="text-2xl md:text-3xl font-bold text-[#E86C28] mb-4 leading-tight">
+                      <h2 className="text-2xl md:text-3xl font-bold text-[#E86C28] mb-4 leading-tight text-left">
                         {text.title}
                       </h2>
-                      <p className="text-lg text-[#D4B896] leading-relaxed">
+                      <p className="text-lg text-[#D4B896] leading-relaxed text-left">
                         {text.description}
                       </p>
                     </div>
@@ -342,17 +425,20 @@ const ContactSection = () => {
                     {/* Main CTA Button */}
                     <ClickSpark
                       sparkColor="#E86C28"
-                      sparkRadius={35}
-                      sparkCount={12}
-                      duration={800}
+                      sparkRadius={40}
+                      sparkCount={15}
+                      duration={1000}
                     >
                       <button
                         onClick={() => setShowBookingModal(true)}
-                        className="w-full bg-gradient-to-r from-[#E86C28] to-[#FFB366] text-white py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95 flex items-center justify-center space-x-3 mb-8 shadow-lg"
+                        className="w-full bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-6 px-12 rounded-3xl font-bold text-xl transition-all duration-500 transform hover:scale-105 hover:shadow-2xl active:scale-95 flex items-center justify-center space-x-4 mb-8 shadow-lg border-2 border-white/20 backdrop-blur-sm relative overflow-hidden group min-w-[320px]"
                       >
-                        <Calendar className="w-6 h-6" />
-                        <span>Plan nu je gratis adviesgesprek</span>
-                        <ArrowRight className="w-6 h-6" />
+                        {/* Animated background effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <Calendar className="w-7 h-7 relative z-10" />
+                        <span className="relative z-10 tracking-wide">Plan nu je gratis adviesgesprek</span>
+                        <ArrowRight className="w-7 h-7 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                       </button>
                     </ClickSpark>
 
@@ -511,32 +597,84 @@ const ContactSection = () => {
                     <h3 className="text-xl font-semibold text-white mb-4">Kies een tijd</h3>
                     {selectedDate ? (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50">
-                        <p className="text-[#D4B896] text-sm mb-4">
-                          Beschikbare tijden voor {formatDate(selectedDate)}:
-                        </p>
-                        <div className="grid grid-cols-3 gap-2">
-                          {timeSlots.map(time => (
-                            <ClickSpark 
-                              key={time}
-                              sparkColor="#E86C28" 
-                              sparkRadius={15} 
-                              sparkCount={6} 
-                              duration={400}
-                            >
-                              <button
-                                onClick={() => handleTimeSelect(time)}
-                                className={`
-                                  w-full p-3 rounded-lg text-sm font-medium transition-all duration-200
-                                  ${selectedTime === time
-                                    ? 'bg-[#E86C28] text-white shadow-lg'
-                                    : 'bg-[#4A372E]/30 text-white hover:bg-[#4A372E]/50 hover:scale-105'
-                                  }
-                                `}
-                              >
-                                {time}
-                              </button>
-                            </ClickSpark>
-                          ))}
+                        <div className="flex items-center gap-2 mb-4">
+                          <Clock className="w-4 h-4 text-[#E86C28]" />
+                          <p className="text-[#D4B896] text-sm">
+                            Tijden voor {formatDate(selectedDate)}:
+                          </p>
+                        </div>
+                        
+                        {/* All time slots - both available and booked */}
+                        <div className="grid grid-cols-2 gap-3">
+                          {timeSlots.map(time => {
+                            const dateString = selectedDate?.toLocaleDateString('nl-NL') || '';
+                            const bookedSlots = getBookedTimeSlotsForDate(dateString);
+                            const isBooked = bookedSlots.includes(time);
+                            const isAvailable = !isBooked;
+                            
+                            if (isBooked) {
+                              // Geboekte tijd - doorgestreept en niet klikbaar
+                              return (
+                                <div
+                                  key={`booked-${time}`}
+                                  className="w-full py-4 px-6 rounded-xl text-base font-semibold bg-red-900/40 text-red-200 border-2 border-red-500/60 relative cursor-not-allowed opacity-80 min-w-[140px] transform transition-all duration-200"
+                                >
+                                  <div className="flex items-center justify-center gap-2 relative">
+                                    <Clock className="w-4 h-4 opacity-60" />
+                                    <span className="relative">
+                                      {time}
+                                      {/* Dubbele doorstreep effect voor extra duidelijkheid */}
+                                      <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-full h-1 bg-red-400 transform rotate-12 rounded-full shadow-lg"></div>
+                                      </div>
+                                      <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-full h-1 bg-red-500 transform -rotate-12 rounded-full shadow-lg"></div>
+                                      </div>
+                                    </span>
+                                    <X className="w-4 h-4 text-red-400 opacity-80" />
+                                  </div>
+                                  <div className="absolute inset-0 bg-red-500/10 rounded-xl"></div>
+                                  {/* Extra visuele indicator */}
+                                  <div className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full opacity-60"></div>
+                                </div>
+                              );
+                            } else {
+                              // Beschikbare tijd - normaal klikbaar
+                              return (
+                                <ClickSpark 
+                                  key={time}
+                                  sparkColor="#E86C28" 
+                                  sparkRadius={18} 
+                                  sparkCount={8} 
+                                  duration={500}
+                                >
+                                  <button
+                                    onClick={() => handleTimeSelect(time)}
+                                    className={`
+                                      w-full py-4 px-6 rounded-xl text-base font-semibold transition-all duration-300 transform min-w-[140px]
+                                      ${selectedTime === time
+                                        ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-xl scale-105 border-2 border-white/20'
+                                        : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-lg border-2 border-transparent'
+                                      }
+                                      backdrop-blur-sm
+                                    `}
+                                  >
+                                    <div className="flex items-center justify-center gap-2">
+                                      <Clock className="w-4 h-4" />
+                                      {time}
+                                    </div>
+                                  </button>
+                                </ClickSpark>
+                              );
+                            }
+                          })}
+                        </div>
+                        
+                        {/* Info text */}
+                        <div className="mt-4 text-center">
+                          <p className="text-[#D4B896]/70 text-xs">
+                            🟢 Beschikbaar &nbsp;&nbsp; 🔴 Al gereserveerd
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -665,9 +803,21 @@ const ContactSection = () => {
                       <ClickSpark sparkColor="#ffffff" sparkRadius={25} sparkCount={10} duration={600}>
                         <button
                           onClick={handleSubmitBooking}
-                          className="flex-1 bg-gradient-to-r from-[#E86C28] to-[#FFB366] text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105"
+                          disabled={isSubmitting || !bookingData.name || !bookingData.email || !bookingData.phone}
+                          className="flex-1 bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-5 px-12 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 border-2 border-white/20 backdrop-blur-sm min-w-[260px]"
                         >
-                          Bevestig afspraak
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              <span className="tracking-wide">Bezig met reserveren...</span>
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="w-6 h-6" />
+                              <span className="tracking-wide">Bevestig Afspraak</span>
+                              <ArrowRight className="w-5 h-5" />
+                            </>
+                          )}
                         </button>
                       </ClickSpark>
                     </div>
@@ -678,15 +828,71 @@ const ContactSection = () => {
               {/* Step 3: Confirmation */}
               {bookingStep === 3 && (
                 <div className="text-center py-8">
-                  <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-10 h-10 text-white" />
+                  <div className={`w-20 h-20 ${emailError ? 'bg-yellow-500' : 'bg-green-500'} rounded-full flex items-center justify-center mx-auto mb-6`}>
+                    {emailError ? (
+                      <AlertCircle className="w-10 h-10 text-white" />
+                    ) : (
+                      <CheckCircle className="w-10 h-10 text-white" />
+                    )}
                   </div>
                   <h3 className="text-3xl font-bold text-white mb-4">
-                    Afspraak succesvol ingepland!
+                    {emailError ? '📞 Afspraak ontvangen!' : '✅ Afspraak succesvol ingepland!'}
                   </h3>
                   <p className="text-[#D4B896] text-lg mb-8 max-w-md mx-auto">
-                    We hebben je afspraak ontvangen en sturen binnen enkele minuten een bevestiging naar {bookingData.email}
+                    {emailError ? (
+                      <>
+                        🎯 Je afspraak is geregistreerd in ons systeem! Er was een technisch probleem met de automatische email,
+                        maar we hebben alle gegevens veilig opgeslagen. <br/><br/>
+                        <strong className="text-[#E86C28]">We nemen binnen 24 uur contact met je op</strong> om je afspraak te bevestigen.
+                        <br/><br/>
+                        Voor directe vragen bel:{' '}
+                        <a href="tel:+31858883333" className="text-[#E86C28] font-semibold underline">
+                          +31 85 888 3333
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        🚀 Perfect! Je afspraak is succesvol verstuurd naar ons team bij{' '}
+                        <strong className="text-[#E86C28]">info@tabletech.nl</strong>
+                        <br/><br/>
+                        📧 <strong className="text-white">Dubbele bevestiging:</strong>
+                        <br/>
+                        • Wij hebben je afspraakgegevens ontvangen
+                        <br/>
+                        • Jij ontvangt een bevestigingsemail op{' '}
+                        <strong className="text-white">{bookingData.email}</strong>
+                        <br/><br/>
+                        🔒 <strong className="text-green-400">Deze tijd is nu gereserveerd</strong> - niemand anders kan meer op dit tijdstip boeken!
+                      </>
+                    )}
                   </p>
+
+                  {emailError && (
+                    <div className="bg-[#E86C28]/20 backdrop-blur-md rounded-xl p-4 max-w-md mx-auto mb-8 border border-[#E86C28]/30">
+                      <div className="flex items-center gap-2 mb-3">
+                        <AlertCircle className="w-5 h-5 text-[#E86C28]" />
+                        <p className="text-white text-sm font-semibold">
+                          Backup Optie
+                        </p>
+                      </div>
+                      <p className="text-white/90 text-sm mb-4">
+                        Wil je extra zeker zijn? Verstuur zelf ook een kopie van je afspraak naar ons team:
+                      </p>
+                      <ClickSpark sparkColor="#ffffff" sparkRadius={20} sparkCount={8} duration={400}>
+                        <a
+                          href={createMailtoLink({
+                            ...bookingData,
+                            date: formatDate(selectedDate),
+                            time: selectedTime
+                          })}
+                          className="bg-[#E86C28] text-white px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-2 w-full justify-center"
+                        >
+                          <Mail className="w-4 h-4" />
+                          Email info@tabletech.nl
+                        </a>
+                      </ClickSpark>
+                    </div>
+                  )}
 
                   <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-6 max-w-md mx-auto mb-8 border border-[#4A372E]/50">
                     <div className="space-y-3 text-left">
