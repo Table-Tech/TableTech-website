@@ -20,6 +20,24 @@ export const BenefitsScrollSequence: React.FC = () => {
     { component: BenefitsThree, id: "benefits-3" }
   ];
 
+  // Lock/unlock body scroll
+  const lockBodyScroll = useCallback(() => {
+    originalBodyOverflow.current = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = `-${window.scrollY}px`;
+  }, []);
+
+  const unlockBodyScroll = useCallback(() => {
+    const scrollY = document.body.style.top;
+    document.body.style.overflow = originalBodyOverflow.current;
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.top = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+  }, []);
+
   // Animations variants for slide-in effect
   const slideVariants = {
     enter: (direction: number) => ({
@@ -74,25 +92,7 @@ export const BenefitsScrollSequence: React.FC = () => {
         unlockBodyScroll();
       }, 800); // Give user time to see the last benefit
     }
-  }, [currentBenefit, isScrollLocked, benefits.length]);
-
-  // Lock/unlock body scroll
-  const lockBodyScroll = useCallback(() => {
-    originalBodyOverflow.current = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.top = `-${window.scrollY}px`;
-  }, []);
-
-  const unlockBodyScroll = useCallback(() => {
-    const scrollY = document.body.style.top;
-    document.body.style.overflow = originalBodyOverflow.current;
-    document.body.style.position = '';
-    document.body.style.width = '';
-    document.body.style.top = '';
-    window.scrollTo(0, parseInt(scrollY || '0') * -1);
-  }, []);
+  }, [currentBenefit, isScrollLocked, benefits.length, unlockBodyScroll]);
 
   // Setup intersection observer
   useEffect(() => {
