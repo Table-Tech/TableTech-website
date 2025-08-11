@@ -15,7 +15,9 @@
       "Bash(touch:*)",
       "Bash(npm install:*)",
       "Bash(cp:*)",
-      "Bash(timeout 10s npm run dev)"
+      "Bash(timeout 10s npm run dev)",
+      "Bash(cd:*)",
+      "Bash(cd:*)"
     ],
     "deny": []
   }
