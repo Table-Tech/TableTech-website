@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Home, Users, Menu, BarChart3, Settings, Clock, CheckCircle, Euro, TrendingUp, AlertCircle, Coffee, Star } from 'lucide-react';
+import { Home, Users, Menu, BarChart3, Clock, CheckCircle, Euro, TrendingUp, AlertCircle, Coffee } from 'lucide-react';
 
 export const LaptopMockup: React.FC = () => {
   const { t } = useTranslation();
