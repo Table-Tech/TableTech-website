@@ -67,6 +67,7 @@ const themes: Theme[] = [
 
 const RestaurantThemesPage: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [language, setLanguage] = useState<"nl" | "en">("nl")
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
