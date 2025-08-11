@@ -12,6 +12,7 @@ type DashboardScreen = {
 export const BenefitsThree: React.FC = () => {
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dashboardScreens: DashboardScreen[] = useMemo(() => [
     {
       id: "live-orders",
