@@ -13,6 +13,7 @@ type AppScreen = {
 
 export const BenefitsOne: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isManualMode, setIsManualMode] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
