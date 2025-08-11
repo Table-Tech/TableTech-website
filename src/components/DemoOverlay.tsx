@@ -25,7 +25,6 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
 }) => {
   const [activeTheme, setActiveTheme] = useState<ThemeId>("tabletech");
   const [isInitialized, setIsInitialized] = useState(false);
-  const [phoneScale, setPhoneScale] = useState(1);
 
   // Memoized themes data for performance
   const themes = useMemo(() => [
@@ -75,7 +74,6 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
       
       // Set CSS variable for scale
       document.documentElement.style.setProperty('--phone-scale', scale.toString());
-      setPhoneScale(scale);
     };
 
     calculatePhoneScale();
