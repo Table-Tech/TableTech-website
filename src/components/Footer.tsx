@@ -1,11 +1,7 @@
 import React from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 
-interface FooterProps {
-  onOpenCustomerDemo?: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onOpenCustomerDemo }) => {
+export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
