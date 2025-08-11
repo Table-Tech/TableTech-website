@@ -74,48 +74,52 @@ export const HeroSection: React.FC = () => {
         <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
 
         {/* Inhoud */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 pt-32 sm:pt-40 pb-16 sm:pb-20 text-white">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight sm:leading-snug drop-shadow-md">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 pt-32 sm:pt-40 pb-16 sm:pb-20 text-white text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight sm:leading-snug drop-shadow-md text-center">
             {t('hero.title')}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto xl:text-xl leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto xl:text-xl leading-relaxed text-center">
             {t('hero.subtitle')}
           </p>
 
-          <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 sm:gap-6 lg:gap-8 max-w-8xl mx-auto">
             {/* Customer Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-4 sm:py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[200px] sm:min-h-[250px] md:min-h-[280px] lg:min-h-[420px] xl:min-h-[480px]">
-              <div className="flex-1 flex flex-col">
-                <h3 className="text-sm sm:text-base lg:text-lg font-semibold mb-2">{t('hero.customerDemo.title')}</h3>
-                <p className="text-white/80 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
+            <div className="bg-white/10 backdrop-blur-md px-6 sm:px-8 lg:px-10 xl:px-12 py-6 sm:py-7 lg:py-8 xl:py-10 rounded-2xl text-center shadow-2xl w-full max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[500px] xl:min-h-[560px] 2xl:min-h-[600px]">
+              <div className="flex-1 flex flex-col h-full">
+                <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold mb-3 sm:mb-4 text-white">
+                  {t('hero.customerDemo.title')}
+                </h3>
+                <p className="text-white/90 mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg leading-relaxed flex-shrink-0">
                   {t('hero.customerDemo.description')}
                 </p>
                 
                 {/* QR Code Component - Desktop Only */}
-                <div className="hidden lg:flex mb-3 flex-1 flex-col justify-center">
-                  <div className="relative w-full max-w-xs mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
-                    <div className="relative w-full rounded-xl overflow-hidden shadow-2xl backdrop-blur-lg border border-white/30 p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
-                      <div className="bg-white p-3 rounded-lg mx-auto w-fit shadow-2xl">
+                <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
+                  <div className="relative w-full max-w-sm xl:max-w-md 2xl:max-w-lg mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
+                    <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-6 xl:p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
+                      <div className="bg-white p-4 xl:p-5 rounded-xl mx-auto w-fit shadow-2xl">
                         <img 
                           src={qrCodeImage} 
                           alt="Scan QR code voor menu demo" 
-                          className="w-36 h-36 mx-auto filter brightness-105 contrast-110"
+                          className="w-32 h-32 xl:w-40 xl:h-40 2xl:w-44 2xl:h-44 mx-auto filter brightness-105 contrast-110"
                         />
                       </div>
-                      <div className="text-center mt-4">
-                        <p className="text-white/90 text-xs font-medium">{t('hero.customerDemo.qrInstruction')}</p>
+                      <div className="text-center mt-4 xl:mt-5">
+                        <p className="text-white/95 text-sm xl:text-base font-medium">
+                          {t('hero.customerDemo.qrInstruction')}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-4 flex-shrink-0">
                 <button
                   onClick={handleOpenCustomerDemo}
                   type="button"
                   disabled={isPreloading}
-                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-10 py-3 h-[44px] rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[180px] ring-2 ring-yellow-400/20 hover:ring-yellow-400/40"
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-12 sm:px-14 lg:px-18 py-4 sm:py-5 h-[56px] sm:h-[60px] rounded-full text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[320px] lg:max-w-[360px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
                 >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
@@ -130,27 +134,29 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Employee Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-4 sm:py-5 rounded-xl text-center shadow-lg w-full max-w-sm md:max-w-md 2xl:max-w-lg hover:scale-105 transition-all duration-300 group border border-white/20 flex flex-col justify-between min-h-[200px] sm:min-h-[250px] md:min-h-[280px] lg:min-h-[420px] xl:min-h-[480px]">
-              <div className="flex-1 flex flex-col">
-                <h3 className="text-sm sm:text-base lg:text-lg font-semibold mb-2">
+            <div className="bg-white/10 backdrop-blur-md px-6 sm:px-8 lg:px-10 xl:px-12 py-6 sm:py-7 lg:py-8 xl:py-10 rounded-2xl text-center shadow-2xl w-full max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[500px] xl:min-h-[560px] 2xl:min-h-[600px]">
+              <div className="flex-1 flex flex-col h-full">
+                <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold mb-3 sm:mb-4 text-white">
                   {t('hero.employeeDemo.title')}
                 </h3>
-                <p className="text-white/80 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
+                <p className="text-white/90 mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg leading-relaxed flex-shrink-0">
                   {t('hero.employeeDemo.description')}
                 </p>
                 
                 {/* Laptop Mockup - Desktop Only */}
-                <div className="hidden lg:flex mb-3 flex-1 flex-col justify-center">
-                  <LaptopMockup />
+                <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
+                  <div className="w-full max-w-sm xl:max-w-md 2xl:max-w-lg mx-auto">
+                    <LaptopMockup />
+                  </div>
                 </div>
               </div>
               
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-4 flex-shrink-0">
                 <button
                   onClick={handleOpenEmployeeDemo}
                   type="button"
                   disabled={isPreloading}
-                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-10 py-3 h-[44px] rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[180px] ring-2 ring-yellow-400/20 hover:ring-yellow-400/40"
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-12 sm:px-14 lg:px-18 py-4 sm:py-5 h-[56px] sm:h-[60px] rounded-full text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[320px] lg:max-w-[360px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
                 >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
