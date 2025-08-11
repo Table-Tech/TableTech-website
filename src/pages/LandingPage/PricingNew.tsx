@@ -230,7 +230,7 @@ export const PricingNew = () => {
                 </tr>
               </thead>
               <tbody>
-                {featureOrder.map((feature, index) => (
+                {featureOrder.map((feature) => (
                   <tr key={feature} className="border-b border-[#4A372E]/20">
                     <td className="sticky left-0 z-10 px-4 py-4 text-sm font-medium text-[#D4B896] backdrop-blur-xl bg-[#2C1E1A]/80 border-r border-[#4A372E]/30 w-48">
                       {feature}
