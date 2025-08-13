@@ -17,7 +17,13 @@
       "Bash(cp:*)",
       "Bash(timeout 10s npm run dev)",
       "Bash(cd:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout 8s npm run dev)",
+      "Bash(curl:*)",
+      "Bash(npm test)",
+      "Bash(chmod:*)",
+      "Bash(./test-rate-limit.sh:*)"
     ],
     "deny": []
   }
