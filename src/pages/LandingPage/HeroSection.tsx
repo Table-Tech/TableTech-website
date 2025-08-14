@@ -4,8 +4,8 @@ import qrCodeImage from "../../assets/afbeeldingen/iyd.png";
 import { LaptopMockup } from "../../components/LaptopMockup";
 
 // Lazy load demo components for better performance
-const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay").then(module => ({ default: module.DemoOverlay })));
-const EmployeeDemoOverlay = lazy(() => import("../../components/DemoOverlay-laptop").then(module => ({ default: module.DemoOverlay })));
+const CustomerDemoOverlay = lazy(() => import("../../components/DemoOverlay"));
+const EmployeeDemoOverlay = lazy(() => import("../../components/DemoOverlay-laptop"));
 
 export const HeroSection: React.FC = () => {
   const { t } = useTranslation();
