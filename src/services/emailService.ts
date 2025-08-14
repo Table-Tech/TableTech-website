@@ -58,7 +58,6 @@ export const sendAppointmentEmail = async (appointmentData: AppointmentData): Pr
 
     // Try multiple email services for maximum reliability
     let emailSent = false;
-    let customerEmailSent = false;
     
     // Method 1: Try Strato email via FormSubmit with optimized settings
     try {
@@ -91,9 +90,9 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
 │ ${appointmentData.message.split('\n').join('\n│ ')}
 └────────────────────────────────────────┘` : ''}
 
-� SYSTEEM INFORMATIE:
+🔧 SYSTEEM INFORMATIE:
 ┌────────────────────────────────────────┐
-│ �🔗 Bron: TableTech Website
+│ 🔗 Bron: TableTech Website
 │ ⏰ Geboekt op: ${new Date().toLocaleString('nl-NL')}
 │ 🌐 IP Tracking: Enabled
 │ 🔐 Anti-dubbelboeking: Actief
@@ -201,7 +200,6 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
 
       if (customerResponse.ok) {
         console.log('✅ Customer confirmation email sent successfully');
-        customerEmailSent = true;
       } else {
         console.warn('⚠️ Customer email failed, but business email succeeded');
       }
@@ -346,12 +344,13 @@ export const clearExpiredBookings = (): void => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
-    const updatedBookings: Record<string, any> = {};
+    const updatedBookings: Record<string, { bookedAt: string; [key: string]: unknown }> = {};
     
-    Object.entries(existingBookings).forEach(([key, booking]: [string, any]) => {
-      const bookingDate = new Date(booking.bookedAt);
+    Object.entries(existingBookings).forEach(([key, booking]) => {
+      const typedBooking = booking as { bookedAt: string; [key: string]: unknown };
+      const bookingDate = new Date(typedBooking.bookedAt);
       if (bookingDate > sevenDaysAgo) {
-        updatedBookings[key] = booking;
+        updatedBookings[key] = typedBooking;
       }
     });
     
