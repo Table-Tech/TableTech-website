@@ -109,6 +109,60 @@ class AppointmentDatabaseService {
   }
 
   /**
+   * Check if a date is fully booked (no available slots)
+   */
+  async isDateFullyBooked(date: string): Promise<boolean> {
+    try {
+      const result = await query(
+        `SELECT COUNT(*) as available_count
+         FROM get_available_slots($1::date)
+         WHERE is_available = true`,
+        [date]
+      );
+
+      return parseInt(result.rows[0]?.available_count || '0') === 0;
+    } catch (error) {
+      console.error('Error checking if date is fully booked:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get available dates for a month (only dates with available slots)
+   */
+  async getAvailableDates(year: number, month: number): Promise<string[]> {
+    try {
+      // Generate all dates for the month
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const dates: string[] = [];
+      
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayOfWeek = new Date(date).getDay();
+        
+        // Skip weekends (Saturday = 6, Sunday = 0)
+        if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+        
+        // Skip past dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (new Date(date) < today) continue;
+        
+        // Check if date has available slots
+        const isFullyBooked = await this.isDateFullyBooked(date);
+        if (!isFullyBooked) {
+          dates.push(date);
+        }
+      }
+      
+      return dates;
+    } catch (error) {
+      console.error('Error getting available dates:', error);
+      return [];
+    }
+  }
+
+  /**
    * Get appointment by reference number (no personal data returned)
    */
   async getAppointmentByReference(referenceNumber: string): Promise<any> {

@@ -11,33 +11,32 @@ const pool = new Pool({
   }
 });
 
-async function addDefaultTimeSlots() {
+async function updateSlotDuration() {
   const client = await pool.connect();
   
   try {
-    console.log('⏰ Adding default time slots...\n');
+    console.log('⏰ Updating appointment duration from 60 to 30 minutes...\n');
     
-    // Check current time slots
-    const currentCount = await client.query('SELECT COUNT(*) as count FROM appointment_time_slots');
-    console.log(`Current time slots: ${currentCount.rows[0].count}`);
+    // Clear existing slots first
+    await client.query('DELETE FROM appointment_time_slots');
+    console.log('🗑️  Cleared existing time slots');
     
-    if (currentCount.rows[0].count > 0) {
-      console.log('⚠️  Time slots already exist. Skipping...');
-      return;
-    }
-    
-    // Define default time slots (Monday-Friday, 9 AM to 5 PM, lunch break 12-1 PM, 30-minute slots)
+    // Define new 30-minute time slots (Monday-Friday, 9 AM to 5 PM, with lunch break)
     const timeSlots = [
       '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',  // Morning
-      '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'  // Afternoon
+      '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'  // Afternoon (lunch break 12:00-13:00)
     ];
     
     console.log('📅 Adding 30-minute time slots for Monday-Friday:');
-    console.log('   Morning: 09:00-12:00, Afternoon: 13:00-17:00 (lunch break 12:00-13:00)');
+    console.log('   Morning: 09:00-12:00 (30-min slots)');
+    console.log('   Lunch break: 12:00-13:00');
+    console.log('   Afternoon: 13:00-17:00 (30-min slots)\n');
+    
+    let totalAdded = 0;
     
     for (let day = 1; day <= 5; day++) { // Monday (1) to Friday (5)
       const dayNames = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-      console.log(`\n   ${dayNames[day]}:`);
+      console.log(`   ${dayNames[day]}:`);
       
       for (const time of timeSlots) {
         const [hours, minutes] = time.split(':').map(Number);
@@ -51,12 +50,11 @@ async function addDefaultTimeSlots() {
         `, [day, time, endTime]);
         
         console.log(`     ${time} - ${endTime} ✅`);
+        totalAdded++;
       }
     }
     
-    // Verify insertion
-    const finalCount = await client.query('SELECT COUNT(*) as count FROM appointment_time_slots');
-    console.log(`\n✅ Added ${finalCount.rows[0].count} time slots successfully!`);
+    console.log(`\n✅ Added ${totalAdded} time slots (30 minutes each)!`);
     
     // Show summary by day
     console.log('\n📊 Time slots summary:');
@@ -69,32 +67,32 @@ async function addDefaultTimeSlots() {
     
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     summary.rows.forEach(row => {
-      console.log(`   ${dayNames[row.day_of_week]}: ${row.slot_count} slots`);
+      console.log(`   ${dayNames[row.day_of_week]}: ${row.slot_count} slots (30-min each)`);
     });
     
-    console.log('\n🎉 Default time slots configured!');
-    console.log('=================================');
+    console.log('\n🎉 Duration updated to 30 minutes!');
+    console.log('=====================================');
     console.log('✅ Monday-Friday: 14 slots each day');
     console.log('✅ Duration: 30 minutes per appointment');
     console.log('✅ Business hours: 9 AM - 5 PM');
     console.log('✅ Lunch break: 12 PM - 1 PM (no appointments)');
-    console.log('✅ Weekend: No appointments available');
+    console.log('✅ More availability with shorter slots!');
     
   } catch (error) {
-    console.error('❌ Error adding time slots:', error);
+    console.error('❌ Error updating time slots:', error);
     throw error;
   } finally {
     client.release();
   }
 }
 
-addDefaultTimeSlots()
+updateSlotDuration()
   .then(() => {
-    console.log('\n✨ Time slots are ready for appointments!');
+    console.log('\n✨ 30-minute appointments are now ready!');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('\n💥 Failed to add time slots:', error.message);
+    console.error('\n💥 Failed to update time slots:', error.message);
     process.exit(1);
   })
   .finally(() => pool.end());

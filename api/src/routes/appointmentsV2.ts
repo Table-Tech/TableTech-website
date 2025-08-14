@@ -318,6 +318,45 @@ router.get('/booked', async (req: Request, res: Response): Promise<void> => {
 });
 
 /**
+ * GET /api/v2/appointments/available-dates
+ * Get available dates for a specific month (only dates with available slots)
+ */
+router.get('/available-dates', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      res.status(400).json({
+        success: false,
+        error: 'Year and month are required'
+      });
+      return;
+    }
+
+    const availableDates = await appointmentDb.getAvailableDates(
+      parseInt(year as string),
+      parseInt(month as string)
+    );
+
+    res.json({
+      success: true,
+      year: parseInt(year as string),
+      month: parseInt(month as string),
+      availableDates,
+      count: availableDates.length
+    });
+
+  } catch (error) {
+    logger.error('Error fetching available dates:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch available dates'
+    });
+    return;
+  }
+});
+
+/**
  * GET /api/v2/appointments/blocked-dates
  * Get blocked dates for a specific month
  */

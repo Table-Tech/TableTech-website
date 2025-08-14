@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, AlertCircle, Clock } from 'lucide-react';
-import { submitAppointment, getAvailableSlots } from '../services/appointmentService';
+import { submitAppointment, getAvailableSlots, getAvailableDates } from '../services/appointmentService';
 
 // Define types for ClickSpark
 interface Spark {
@@ -86,6 +86,8 @@ const ContactSection = () => {
   const [requestId, setRequestId] = useState('');
   const [availableSlots, setAvailableSlots] = useState<{ time: string; isAvailable: boolean }[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [loadingDates, setLoadingDates] = useState(false);
 
   // Helper functions for booking management
   const clearExpiredBookings = () => {
@@ -175,13 +177,33 @@ ${data.firstName} ${data.lastName}
     clearExpiredBookings();
   }, []);
 
+  // Fetch available dates when month changes
+  useEffect(() => {
+    const fetchAvailableDates = async () => {
+      setLoadingDates(true);
+      try {
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth() + 1; // JavaScript months are 0-indexed
+        const dates = await getAvailableDates(year, month);
+        setAvailableDates(dates);
+      } catch (error) {
+        console.error('Error fetching available dates:', error);
+        setAvailableDates([]);
+      } finally {
+        setLoadingDates(false);
+      }
+    };
+
+    fetchAvailableDates();
+  }, [currentMonth]);
+
   // Fetch available slots when date changes
   useEffect(() => {
     if (selectedDate) {
       const fetchSlots = async () => {
         setLoadingSlots(true);
         try {
-          const dateString = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+          const dateString = formatDateString(selectedDate); // Use timezone-safe formatting
           const slots = await getAvailableSlots(dateString);
           setAvailableSlots(slots);
         } catch (error) {
@@ -239,9 +261,17 @@ ${data.firstName} ${data.lastName}
     if (!date) return false;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    // Alleen werkdagen en niet in het verleden
+    
+    // Check if date is in the past
+    if (date < today) return false;
+    
+    // Check if it's a weekend
     const dayOfWeek = date.getDay();
-    return date >= today && dayOfWeek !== 0 && dayOfWeek !== 6;
+    if (dayOfWeek === 0 || dayOfWeek === 6) return false;
+    
+    // Check if the date is in the available dates list
+    const dateString = formatDateString(date); // Use timezone-safe formatting
+    return availableDates.includes(dateString);
   };
 
   const formatDate = (date: Date | null) => {
@@ -299,7 +329,7 @@ ${data.firstName} ${data.lastName}
         email: bookingData.email,
         phone: bookingData.phone,
         restaurant: bookingData.restaurant,
-        preferredDate: selectedDate?.toISOString().split('T')[0],
+        preferredDate: selectedDate ? formatDateString(selectedDate) : undefined,
         preferredTime: selectedTime,
         message: bookingData.message || 'Ik wil graag meer informatie over TableTech en zou een adviesgesprek willen plannen.',
         formRenderTs,
@@ -319,7 +349,7 @@ ${data.firstName} ${data.lastName}
         
         // Refresh available slots to show the newly booked slot
         if (selectedDate) {
-          const dateString = selectedDate.toISOString().split('T')[0];
+          const dateString = formatDateString(selectedDate);
           const slots = await getAvailableSlots(dateString);
           setAvailableSlots(slots);
         }
@@ -407,6 +437,20 @@ ${data.firstName} ${data.lastName}
   ];
 
   const dayNames = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
+
+  // Helper function to convert Date to YYYY-MM-DD string without timezone issues
+  const formatDateString = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Helper function to create Date object from YYYY-MM-DD string
+  const parseDateString = (dateString: string): Date => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
 
   return (
     <>
@@ -666,7 +710,16 @@ ${data.firstName} ${data.lastName}
                       </div>
                       
                       {/* Calendar days */}
-                      <div className="grid grid-cols-7 gap-1">
+                      <div className="relative">
+                        {loadingDates && (
+                          <div className="absolute inset-0 bg-[#3A2B24]/80 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+                            <div className="flex items-center gap-2">
+                              <div className="w-4 h-4 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
+                              <span className="text-[#D4B896] text-sm">Beschikbare datums laden...</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-7 gap-1">
                         {getDaysInMonth(currentMonth).map((date, index) => (
                           <div key={index}>
                             {date ? (
@@ -697,6 +750,7 @@ ${data.firstName} ${data.lastName}
                             )}
                           </div>
                         ))}
+                        </div>
                       </div>
                     </div>
                   </div>

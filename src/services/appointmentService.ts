@@ -51,6 +51,14 @@ const getApiUrl = (): string => {
   return 'https://tabletech.nl/api';
 };
 
+// Helper function to format date without timezone issues
+const formatDateString = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 // Submit appointment to the secure V2 API
 export const submitAppointment = async (data: AppointmentData): Promise<AppointmentResponse> => {
   const apiUrl = getApiUrl();
@@ -150,6 +158,57 @@ export const renderTurnstile = (elementId: string, siteKey: string): Promise<str
       language: 'nl',
     });
   });
+};
+
+// Get available dates for a specific month (only dates with available slots)
+export const getAvailableDates = async (year: number, month: number): Promise<string[]> => {
+  const apiUrl = getApiUrl();
+  
+  try {
+    const response = await fetch(`${apiUrl}/v2/appointments/available-dates?year=${year}&month=${month}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      console.warn('API not available for available dates, using fallback');
+      // Fallback: generate weekdays for the month (excluding weekends)
+      const daysInMonth = new Date(year, month - 1, 0).getDate();
+      const dates: string[] = [];
+      
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month - 1, day);
+        const dayOfWeek = date.getDay();
+        
+        // Skip weekends and past dates
+        if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (date < today) continue;
+        
+        const dateString = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        dates.push(dateString);
+      }
+      
+      return dates;
+    }
+    
+    const result = await response.json();
+    return result.availableDates || [];
+    
+  } catch (error) {
+    console.error('Error fetching available dates:', error);
+    return [];
+  }
+};
+
+// Check if a specific date is fully booked
+export const isDateFullyBooked = async (date: string): Promise<boolean> => {
+  const slots = await getAvailableSlots(date);
+  return slots.every(slot => !slot.isAvailable);
 };
 
 // Get available time slots for a specific date
