@@ -53,7 +53,9 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
         source: 'TableTech Website',
         _template: 'box',
         _captcha: false,
-        _next: 'https://tabletech.nl/thanks'
+        _next: 'https://tabletech.nl/thanks',
+        _replyto: appointmentData.email,
+        _cc: appointmentData.email
       };
 
       const response = await fetch('https://formsubmit.co/ajax/info@tabletech.nl', {
@@ -74,12 +76,18 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
         try {
           const customerPayload = {
             _subject: `✅ Bevestiging TableTech afspraak - ${appointmentData.date}`,
+            to: appointmentData.email,
+            from: 'TableTech <info@tabletech.nl>',
             customer_name: appointmentData.name,
             appointment_date: appointmentData.date,
             appointment_time: appointmentData.time,
+            restaurant: appointmentData.restaurant || 'Niet opgegeven',
+            phone: appointmentData.phone,
             booking_reference: bookingId,
-            message: `Beste ${appointmentData.name}, je afspraak voor ${appointmentData.date} om ${appointmentData.time} is bevestigd. Referentie: ${bookingId}. We nemen binnen 24 uur contact op. Team TableTech`,
-            _replyto: 'info@tabletech.nl'
+            message: `Beste ${appointmentData.name},\n\nJe afspraak is bevestigd!\n\nDatum: ${appointmentData.date}\nTijd: ${appointmentData.time}\nReferentie: ${bookingId}\n\nWe nemen binnen 24 uur contact met je op.\n\nMet vriendelijke groet,\nTeam TableTech`,
+            _replyto: 'info@tabletech.nl',
+            _template: 'box',
+            _captcha: false
           };
 
           const customerResponse = await fetch(`https://formsubmit.co/ajax/${appointmentData.email}`, {
