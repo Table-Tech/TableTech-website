@@ -25,10 +25,10 @@ export const EmailDebugger = {
     try {
       const appointments = localStorage.getItem('tabletech-appointments');
       const parsed = appointments ? JSON.parse(appointments) : [];
-      console.log('📋 Stored Appointments:', parsed);
-      return parsed;
+      // Stored appointments retrieved
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-      console.error('Error reading stored appointments:', error);
+      // Error reading stored appointments
       return [];
     }
   },
@@ -38,10 +38,10 @@ export const EmailDebugger = {
     try {
       const failed = localStorage.getItem('tabletech-failed-emails');
       const parsed = failed ? JSON.parse(failed) : [];
-      console.log('❌ Failed Emails:', parsed);
-      return parsed;
+      // Failed emails retrieved
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-      console.error('Error reading failed emails:', error);
+      // Error reading failed emails
       return [];
     }
   },
@@ -51,17 +51,17 @@ export const EmailDebugger = {
     try {
       const failed = localStorage.getItem('tabletech-failed-bookings');
       const parsed = failed ? JSON.parse(failed) : [];
-      console.log('🚨 Failed Bookings requiring manual follow-up:', parsed);
-      return parsed;
+      // Failed bookings retrieved
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-      console.error('Error reading failed bookings:', error);
+      // Error reading failed bookings
       return [];
     }
   },
 
   // Test email functionaliteit
   testEmailService: async () => {
-    console.log('🧪 Testing email service...');
+    // Testing email service
     
     const testData: AppointmentData = {
       name: 'Test Gebruiker',
@@ -78,40 +78,30 @@ export const EmailDebugger = {
       const result = await sendAppointmentEmail(testData);
       
       if (result) {
-        console.log('✅ Email test successful!');
+        // Email test successful
       } else {
-        console.log('❌ Email test failed!');
+        // Email test failed
       }
       
       return result;
     } catch (error) {
-      console.error('🚨 Email test error:', error);
+      // Email test error
       return false;
     }
   },
 
   // Krijg een overzicht van alle logs
   getAllLogs: () => {
-    console.log('📊 Complete Email Debug Report:');
-    console.log('='.repeat(50));
+    // Generating complete email debug report
     
-    const appointments = EmailDebugger.getStoredAppointments();
-    const failedEmails = EmailDebugger.getFailedEmails();
-    const failedBookings = EmailDebugger.getFailedBookings();
+    const appointments = EmailDebugger.getStoredAppointments() || [];
+    const failedEmails = EmailDebugger.getFailedEmails() || [];
+    const failedBookings = EmailDebugger.getFailedBookings() || [];
     
-    console.log(`📈 Statistics:
-    - Total appointments: ${appointments.length}
-    - Failed emails: ${failedEmails.length}
-    - Failed bookings: ${failedBookings.length}
-    - Success rate: ${appointments.length > 0 ? ((appointments.length - failedEmails.length) / appointments.length * 100).toFixed(1) : 0}%`);
+    // Email statistics calculated
     
     if (failedBookings.length > 0) {
-      console.log('\n🚨 URGENT: Manual follow-up required for these customers:');
-      failedBookings.forEach((booking: FailedBooking, index: number) => {
-        console.log(`${index + 1}. ${booking.appointmentData.name} - ${booking.appointmentData.email} - ${booking.appointmentData.phone}`);
-        console.log(`   Appointment: ${booking.appointmentData.date} at ${booking.appointmentData.time}`);
-        console.log(`   Failed at: ${new Date(booking.timestamp).toLocaleString('nl-NL')}`);
-      });
+      // Manual follow-up required for failed bookings
     }
     
     return {
@@ -128,7 +118,7 @@ export const EmailDebugger = {
       localStorage.removeItem('tabletech-appointments');
       localStorage.removeItem('tabletech-failed-emails');
       localStorage.removeItem('tabletech-failed-bookings');
-      console.log('✅ All logs cleared!');
+      // All logs cleared
     }
   },
 
@@ -151,14 +141,14 @@ export const EmailDebugger = {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    console.log('📁 Logs exported successfully!');
+    // Logs exported successfully
   }
 };
 
 // Maak het globaal beschikbaar in de browser console
 if (typeof window !== 'undefined') {
   (window as unknown as Record<string, unknown>).EmailDebugger = EmailDebugger;
-  console.log('🔧 EmailDebugger loaded! Use EmailDebugger.getAllLogs() to see email statistics.');
+  // EmailDebugger loaded
 }
 
 export default EmailDebugger;
