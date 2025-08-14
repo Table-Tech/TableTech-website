@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
-import "../i18n";
 
 export const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
