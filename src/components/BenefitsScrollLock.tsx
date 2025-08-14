@@ -66,10 +66,10 @@ export const BenefitsScrollLock: React.FC = () => {
         if (currentBenefit < TOTAL_BENEFITS - 1) {
           setDirection(1);
           setCurrentBenefit(prev => prev + 1);
-          console.log(`⏭️ Auto advance to benefit ${currentBenefit + 2}/${TOTAL_BENEFITS}`);
+          // Auto advance to next benefit
         } else if (currentBenefit === TOTAL_BENEFITS - 1) {
           setBenefitsCompleted(true);
-          console.log('✅ All benefits viewed - down scroll now allowed!');
+          // All benefits viewed - scroll enabled
         }
       }, 6000); // 6 seconds per benefit
     }
@@ -97,18 +97,18 @@ export const BenefitsScrollLock: React.FC = () => {
         if (rect.top > window.innerHeight) {
           setCurrentBenefit(0);
           setBenefitsCompleted(false);
-          console.log('🔄 Left benefits area - reset state');
+          // Left benefits area - reset state
         }
         return; // Allow normal scrolling outside benefits
       }
 
       // SCROLLING UP - ALWAYS ALLOWED
       if (e.deltaY < 0) {
-        console.log('⬆️ Scrolling UP detected');
+        // Scrolling up detected
         
         // If at first benefit, allow normal scroll up to hero
         if (currentBenefit === 0) {
-          console.log('At first benefit, allowing scroll up to hero');
+          // At first benefit, allowing scroll to hero
           // DO NOT preventDefault - let them scroll up freely
           return;
         } else {
@@ -131,7 +131,7 @@ export const BenefitsScrollLock: React.FC = () => {
             isTransitioning.current = true;
             setDirection(-1);
             setCurrentBenefit(prev => prev - 1);
-            console.log(`⬅️ Going back to benefit ${currentBenefit}`);
+            // Going back to previous benefit
             scrollAccumulator.current = 0;
             setTimeout(() => { isTransitioning.current = false; }, 400);
           }
@@ -140,7 +140,7 @@ export const BenefitsScrollLock: React.FC = () => {
       
       // SCROLLING DOWN - CONDITIONAL BLOCKING
       if (e.deltaY > 0) {
-        console.log('⬇️ Scrolling DOWN detected');
+        // Scrolling down detected
         
         // Check if we've completed all benefits
         if (currentBenefit === TOTAL_BENEFITS - 1) {
@@ -149,11 +149,11 @@ export const BenefitsScrollLock: React.FC = () => {
             // Still viewing last benefit - BLOCK scroll down
             e.preventDefault();
             e.stopPropagation();
-            console.log('⏳ At last benefit - must stay until completed');
+            // At last benefit - must stay until completed
             return;
           } else {
             // Benefits completed - allow scroll to next section
-            console.log('✓ Benefits completed, allowing scroll to theme section');
+            // Benefits completed, allowing scroll to next section
             // DO NOT preventDefault - allow scroll to theme section
             return;
           }
@@ -177,7 +177,7 @@ export const BenefitsScrollLock: React.FC = () => {
             isTransitioning.current = true;
             setDirection(1);
             setCurrentBenefit(prev => prev + 1);
-            console.log(`➡️ Moving to benefit ${currentBenefit + 2}/${TOTAL_BENEFITS}`);
+            // Moving to next benefit
             scrollAccumulator.current = 0;
             setTimeout(() => { isTransitioning.current = false; }, 400);
           }
@@ -192,9 +192,9 @@ export const BenefitsScrollLock: React.FC = () => {
           isInBenefitsRef.current = entry.isIntersecting;
           
           if (entry.isIntersecting) {
-            console.log('📍 Entered benefits section');
+            // Entered benefits section
           } else {
-            console.log('👋 Left benefits section');
+            // Left benefits section
           }
         });
       },
@@ -267,7 +267,7 @@ export const BenefitsScrollLock: React.FC = () => {
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
-    console.log('🚀 One-Way Scroll Lock initialized - UP always allowed, DOWN controlled');
+    // One-way scroll lock initialized
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
@@ -291,7 +291,7 @@ export const BenefitsScrollLock: React.FC = () => {
         // Reset to first benefit for smooth return
         setCurrentBenefit(0);
         setBenefitsCompleted(false);
-        console.log('🔄 Reset to first benefit for smooth return');
+        // Reset to first benefit for smooth return
       }
     };
     
@@ -346,7 +346,7 @@ export const BenefitsScrollLock: React.FC = () => {
                       if (index === TOTAL_BENEFITS - 1) {
                         setTimeout(() => {
                           setBenefitsCompleted(true);
-                          console.log('✅ Last benefit auto-completed after manual navigation');
+                          // Last benefit auto-completed after manual navigation
                         }, 4000);
                       }
                     }
