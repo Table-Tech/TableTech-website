@@ -30,7 +30,7 @@ const hashBody = (body: unknown): string => {
 };
 
 // Check for duplicate request
-export const checkIdempotency = (
+export const checkIdempotencyRecord = (
   idempotencyKey: string,
   body: unknown
 ): { isDuplicate: boolean; requestId?: string; response?: unknown } => {
@@ -77,4 +77,23 @@ export const updateIdempotencyResponse = (idempotencyKey: string, response: unkn
   if (record) {
     record.response = response;
   }
+};
+
+// Express middleware for idempotency
+export const checkIdempotency = (req: any, res: any, next: any) => {
+  const idempotencyKey = req.headers['x-idempotency-key'] || req.headers['idempotency-key'];
+  
+  if (!idempotencyKey) {
+    return next(); // Not required, continue
+  }
+  
+  const result = checkIdempotencyRecord(idempotencyKey, req.body);
+  
+  if (result.isDuplicate && result.response) {
+    return res.json(result.response);
+  }
+  
+  // Store the key for later response storage
+  req.idempotencyKey = idempotencyKey;
+  next();
 };

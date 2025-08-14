@@ -5,6 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
+// Import i18n configuration
+import './i18n';
+
 // Import EmailDebugger for development purposes
 import './utils/emailDebugger';
 

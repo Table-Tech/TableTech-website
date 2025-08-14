@@ -3,9 +3,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { env } from './env';
 import { logger } from './lib/logging/logger';
-import { appointmentRateLimiter } from './lib/security/rateLimit';
-import appointmentRoutes from './routes/appointments';
+import appointmentRoutesV2 from './routes/appointmentsV2';
 import logoRoutes from './routes/logo';
+import appointmentDb from './services/appointmentDatabaseService';
 
 const app = express();
 
@@ -40,7 +40,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'X-Client-Version'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'X-Idempotency-Key', 'X-Client-Version', 'x-idempotency-key', 'x-client-version'],
   exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
 }));
 
@@ -75,8 +75,20 @@ app.get('/health', (_, res) => {
   });
 });
 
-// API routes with rate limiting
-app.use('/api', appointmentRateLimiter, appointmentRoutes);
+// V2 API routes with enhanced appointment system - PRIMARY
+app.use('/api/v2/appointments', appointmentRoutesV2);
+
+// Legacy V1 API routes (deprecated) - redirect to V2
+app.use('/api/appointments', (_req, res) => {
+  res.status(410).json({
+    ok: false,
+    error: {
+      code: 'DEPRECATED_ENDPOINT',
+      message: 'This endpoint has been deprecated. Please use /api/v2/appointments instead.',
+      migrationGuide: 'https://docs.tabletech.nl/api/v2/migration'
+    }
+  });
+});
 
 // Logo route (no rate limiting needed for static assets)
 app.use('/api', logoRoutes);
@@ -108,12 +120,24 @@ app.use((err: Error, _req: express.Request, res: express.Response) => {
   });
 });
 
+// Initialize database on startup
+const initializeServices = async () => {
+  try {
+    await appointmentDb.initializeDatabase();
+    logger.info('Database services initialized');
+  } catch (error) {
+    logger.error('Failed to initialize database:', error);
+  }
+};
+
 // Start server
 const PORT = env.PORT || 3001;
 
 if (env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    logger.info({ port: PORT }, `Server running on http://localhost:${PORT}`);
+  initializeServices().then(() => {
+    app.listen(PORT, () => {
+      logger.info({ port: PORT }, `Server running on http://localhost:${PORT}`);
+    });
   });
 }
 

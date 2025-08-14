@@ -68,11 +68,6 @@ export const CustomerConfirmationEmail = ({
               alt="TableTech"
               style={logo}
             />
-            <div style={brandingLine}>
-              <div style={brandingDot}></div>
-              <div style={brandingDot}></div>
-              <div style={brandingDot}></div>
-            </div>
           </Section>
 
           {/* Header */}
@@ -159,6 +154,13 @@ export const CustomerConfirmationEmail = ({
           <Hr style={hr} />
           
           <Section style={footer}>
+            <Img
+              src={logoSvg}
+              width="80"
+              height="27"
+              alt="TableTech"
+              style={footerLogo}
+            />
             <Text style={footerText}>
               TableTech | Biezelingeplein 32, 3086 SB Rotterdam, Nederland
             </Text>
@@ -333,6 +335,10 @@ const footer = {
   background: 'rgba(232, 108, 40, 0.05)',
   borderRadius: '12px',
   margin: '24px -32px -32px -32px',
+  display: 'flex' as const,
+  flexDirection: 'column' as const,
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
 };
 
 const footerText = {
@@ -350,20 +356,13 @@ const footerLink = {
   textDecoration: 'underline',
 };
 
-const brandingLine = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '8px',
-  marginTop: '12px',
-};
-
-const brandingDot = {
-  width: '6px',
-  height: '6px',
-  borderRadius: '50%',
-  background: 'linear-gradient(45deg, #E86C28, #FFB366)',
-  opacity: '0.6',
+const footerLogo = {
+  margin: '0 auto 16px auto',
+  borderRadius: '6px',
+  padding: '8px',
+  backgroundColor: '#ffffff',
+  boxShadow: '0 2px 8px rgba(232, 108, 40, 0.2)',
+  display: 'block',
 };
 
 const decorativeBar = {

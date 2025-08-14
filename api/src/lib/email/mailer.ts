@@ -257,10 +257,23 @@ export const sendAppointmentEmails = async (
   requestId: string,
   ipHash: string
 ): Promise<{ customer: boolean; internal: boolean }> => {
+  logger.info('🔧 sendAppointmentEmails called', { 
+    data: { ...data, email: data.email.substring(0, 3) + '***' }, 
+    requestId, 
+    ipHash 
+  });
+  
   const [customerResult, internalResult] = await Promise.allSettled([
     sendCustomerConfirmation(data, requestId),
     sendInternalNotification(data, requestId, ipHash),
   ]);
+
+  logger.info('📧 Email results', {
+    customerResult: customerResult.status,
+    internalResult: internalResult.status,
+    customerValue: customerResult.status === 'fulfilled' ? customerResult.value : 'failed',
+    internalValue: internalResult.status === 'fulfilled' ? internalResult.value : 'failed'
+  });
 
   return {
     customer: customerResult.status === 'fulfilled' && customerResult.value,
