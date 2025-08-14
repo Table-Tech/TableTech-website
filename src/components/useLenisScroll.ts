@@ -8,7 +8,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const useLenisScroll = () => {
-  const location = useLocation();
+  let location;
+  try {
+    location = useLocation();
+  } catch (error) {
+    // If useLocation fails (component not in Router context), use fallback
+    location = { pathname: "/" };
+  }
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
