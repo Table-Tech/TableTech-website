@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, AlertCircle, Clock } from 'lucide-react';
-import { submitAppointment } from '../services/appointmentService';
+import { submitAppointment, getAvailableSlots } from '../services/appointmentService';
 
 // Define types for ClickSpark
 interface Spark {
@@ -84,6 +84,8 @@ const ContactSection = () => {
   const [emailError, setEmailError] = useState(false);
   const [formRenderTs] = useState(Date.now());
   const [requestId, setRequestId] = useState('');
+  const [availableSlots, setAvailableSlots] = useState<{ time: string; isAvailable: boolean }[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   // Helper functions for booking management
   const clearExpiredBookings = () => {
@@ -173,6 +175,29 @@ ${data.firstName} ${data.lastName}
     clearExpiredBookings();
   }, []);
 
+  // Fetch available slots when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      const fetchSlots = async () => {
+        setLoadingSlots(true);
+        try {
+          const dateString = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+          const slots = await getAvailableSlots(dateString);
+          setAvailableSlots(slots);
+        } catch (error) {
+          console.error('Error fetching slots:', error);
+          setAvailableSlots([]);
+        } finally {
+          setLoadingSlots(false);
+        }
+      };
+      
+      fetchSlots();
+    } else {
+      setAvailableSlots([]);
+    }
+  }, [selectedDate]);
+
   // Tijdslots voor afspraken
   const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -222,7 +247,7 @@ ${data.firstName} ${data.lastName}
   const formatDate = (date: Date | null) => {
     if (!date) return '';
     return date.toLocaleDateString('nl-NL', { 
-      weekday: 'long', 
+      weekday: 'short', 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
@@ -289,8 +314,15 @@ ${data.firstName} ${data.lastName}
       if (response.ok) {
         console.log('✅ Appointment submitted successfully');
         setRequestId(response.requestId || '');
-        setEmailError(false);
+        setEmailError(false); // Geen email error - alles is goed gegaan
         setBookingStep(3);
+        
+        // Refresh available slots to show the newly booked slot
+        if (selectedDate) {
+          const dateString = selectedDate.toISOString().split('T')[0];
+          const slots = await getAvailableSlots(dateString);
+          setAvailableSlots(slots);
+        }
       } else {
         console.error('❌ API error:', response.error);
         
@@ -306,11 +338,14 @@ ${data.firstName} ${data.lastName}
           return;
         }
         
+        // Andere API fouten - toon fout maar ga wel naar stap 3
+        console.error('❌ API error, but continuing to confirmation:', response.error);
         setEmailError(true);
         setBookingStep(3);
       }
     } catch (error) {
       console.error('❌ Network error submitting booking:', error);
+      // Zelfs bij network errors, ga naar confirmatie met foutmelding
       setEmailError(true);
       setBookingStep(3);
     } finally {
@@ -678,70 +713,61 @@ ${data.firstName} ${data.lastName}
                           </p>
                         </div>
                         
-                        {/* All time slots - both available and booked */}
-                        <div className="grid grid-cols-2 gap-3">
-                          {timeSlots.map(time => {
-                            const dateString = selectedDate?.toLocaleDateString('nl-NL') || '';
-                            const bookedSlots = getBookedTimeSlotsForDate(dateString);
-                            const isBooked = bookedSlots.includes(time);
-                            
-                            if (isBooked) {
-                              // Geboekte tijd - doorgestreept en niet klikbaar
-                              return (
-                                <div
-                                  key={`booked-${time}`}
-                                  className="w-full py-4 px-6 rounded-xl text-base font-semibold bg-red-900/40 text-red-200 border-2 border-red-500/60 relative cursor-not-allowed opacity-80 min-w-[140px] transform transition-all duration-200"
-                                >
-                                  <div className="flex items-center justify-center gap-2 relative">
-                                    <Clock className="w-4 h-4 opacity-60" />
-                                    <span className="relative">
-                                      {time}
-                                      {/* Dubbele doorstreep effect voor extra duidelijkheid */}
-                                      <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-full h-1 bg-red-400 transform rotate-12 rounded-full shadow-lg"></div>
-                                      </div>
-                                      <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-full h-1 bg-red-500 transform -rotate-12 rounded-full shadow-lg"></div>
-                                      </div>
-                                    </span>
-                                    <X className="w-4 h-4 text-red-400 opacity-80" />
-                                  </div>
-                                  <div className="absolute inset-0 bg-red-500/10 rounded-xl"></div>
-                                  {/* Extra visuele indicator */}
-                                  <div className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full opacity-60"></div>
-                                </div>
-                              );
-                            } else {
-                              // Beschikbare tijd - normaal klikbaar
-                              return (
-                                <ClickSpark 
-                                  key={time}
-                                  sparkColor="#E86C28" 
-                                  sparkRadius={18} 
-                                  sparkCount={8} 
-                                  duration={500}
-                                >
-                                  <button
-                                    onClick={() => handleTimeSelect(time)}
-                                    className={`
-                                      w-full py-4 px-6 rounded-xl text-base font-semibold transition-all duration-300 transform min-w-[140px]
-                                      ${selectedTime === time
-                                        ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-xl scale-105 border-2 border-white/20'
-                                        : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-lg border-2 border-transparent'
-                                      }
-                                      backdrop-blur-sm
-                                    `}
+                        {/* Loading state */}
+                        {loadingSlots ? (
+                          <div className="col-span-2 flex items-center justify-center py-8">
+                            <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
+                            <span className="ml-2 text-[#D4B896]">Beschikbare tijden laden...</span>
+                          </div>
+                        ) : (
+                          /* Time slots from API */
+                          <div className="grid grid-cols-2 gap-3">
+                            {availableSlots.map(slot => {
+                              if (!slot.isAvailable) {
+                                // Geboekte tijd - grijs en niet klikbaar (zonder rode kruisjes)
+                                return (
+                                  <div
+                                    key={`booked-${slot.time}`}
+                                    className="w-full py-4 px-6 rounded-xl text-base font-semibold bg-gray-500/40 text-gray-300 border-2 border-gray-400/60 relative cursor-not-allowed opacity-60 min-w-[140px] transform transition-all duration-200"
                                   >
-                                    <div className="flex items-center justify-center gap-2">
-                                      <Clock className="w-4 h-4" />
-                                      {time}
+                                    <div className="flex items-center justify-center gap-2 relative">
+                                      <Clock className="w-4 h-4 opacity-60" />
+                                      <span>{slot.time}</span>
                                     </div>
-                                  </button>
-                                </ClickSpark>
-                              );
-                            }
-                          })}
-                        </div>
+                                  </div>
+                                );
+                              } else {
+                                // Beschikbare tijd - normaal klikbaar
+                                return (
+                                  <ClickSpark 
+                                    key={slot.time}
+                                    sparkColor="#E86C28" 
+                                    sparkRadius={18} 
+                                    sparkCount={8} 
+                                    duration={500}
+                                  >
+                                    <button
+                                      onClick={() => handleTimeSelect(slot.time)}
+                                      className={`
+                                        w-full py-4 px-6 rounded-xl text-base font-semibold transition-all duration-300 transform min-w-[140px]
+                                        ${selectedTime === slot.time
+                                          ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-xl scale-105 border-2 border-white/20'
+                                          : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-lg border-2 border-transparent'
+                                        }
+                                        backdrop-blur-sm
+                                      `}
+                                    >
+                                      <div className="flex items-center justify-center gap-2">
+                                        <Clock className="w-4 h-4" />
+                                        {slot.time}
+                                      </div>
+                                    </button>
+                                  </ClickSpark>
+                                );
+                              }
+                            })}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-8 border border-[#4A372E]/50 text-center">
@@ -919,15 +945,11 @@ ${data.firstName} ${data.lastName}
                 <div className="flex flex-col items-center justify-center text-center space-y-4 py-6">
                   {/* Success Icon & Title Combined */}
                   <div className="text-center space-y-3">
-                    <div className={`w-16 h-16 ${emailError ? 'bg-gradient-to-r from-orange-500 to-yellow-500' : 'bg-gradient-to-r from-green-500 to-emerald-500'} rounded-full flex items-center justify-center mx-auto shadow-lg`}>
-                      {emailError ? (
-                        <AlertCircle className="w-8 h-8 text-white" />
-                      ) : (
-                        <CheckCircle className="w-8 h-8 text-white" />
-                      )}
+                    <div className={`w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg`}>
+                      <CheckCircle className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
-                      {emailError ? '📞 Afspraak Ontvangen!' : '🎉 Gelukt!'}
+                      {emailError ? '🎉 Afspraak Ontvangen!' : '🎉 Gelukt!'}
                     </h3>
                   </div>
 
@@ -947,14 +969,13 @@ ${data.firstName} ${data.lastName}
                   <div className={`${emailError ? 'bg-orange-500/20 border-orange-400/40' : 'bg-green-500/20 border-green-400/40'} backdrop-blur-md rounded-xl p-4 max-w-sm mx-auto border`}>
                     {emailError ? (
                       <div className="text-center space-y-2">
-                        <p className="text-white text-sm font-semibold">✅ Afspraak geregistreerd!</p>
-                        <p className="text-[#D4B896] text-xs">We bellen je <strong className="text-white">binnen 24 uur</strong></p>
-                        <p className="text-xs">Vragen? <a href="tel:+31858883333" className="text-[#E86C28] font-bold underline">+31 85 888 3333</a></p>
+                        <p className="text-orange-300 text-sm font-semibold">⚠️ Afspraak geregistreerd</p>
+                        <p className="text-[#D4B896] text-xs">Er was een probleem met de bevestigingsemail. We nemen contact met je op via <strong className="text-white">{bookingData.email}</strong></p>
                       </div>
                     ) : (
                       <div className="text-center space-y-2">
-                        <p className="text-white text-sm font-semibold">Alles is in orde!</p>
-                        <p className="text-green-300 text-xs">Bevestiging email verstuurd naar {bookingData.email}</p>
+                        <p className="text-green-300 text-sm font-semibold">✅ Afspraak Bevestigd!</p>
+                        <p className="text-green-200 text-xs">Je ontvangt een bevestigingsemail op <strong className="text-white">{bookingData.email}</strong></p>
                       </div>
                     )}
                   </div>
