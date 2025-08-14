@@ -12,6 +12,18 @@ export default defineConfig({
     imagetools(),      // image optimalisatie
   ],
   server: {
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: true, // Don't try other ports if 5173 is busy
+    hmr: {
+      port: 5173,
+      host: '127.0.0.1',
+      clientPort: 5173 // Explicitly set client port
+    },
+    cors: true,
+    headers: {
+      'Cache-Control': 'no-store'
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',

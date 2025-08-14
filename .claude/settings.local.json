@@ -23,8 +23,16 @@
       "Bash(curl:*)",
       "Bash(npm test)",
       "Bash(chmod:*)",
-      "Bash(./test-rate-limit.sh:*)"
+      "Bash(./test-rate-limit.sh:*)",
+      "Bash(npx:*)",
+      "Bash(npm search:*)",
+      "Bash(psql:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(npm:*)",
+      "Bash(yarn install)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   }
 }

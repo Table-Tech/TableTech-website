@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files with sensitive data
+.env.mcp
+claude_desktop_config.json
