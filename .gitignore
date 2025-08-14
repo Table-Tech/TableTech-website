@@ -24,5 +24,12 @@ dist-ssr
 *.sw?
 
 # Environment files with sensitive data
+.env
+.env.*
+.env.local
+.env.development
+.env.production
 .env.mcp
 claude_desktop_config.json
+api/.env
+*/.env
