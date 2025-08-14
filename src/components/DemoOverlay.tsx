@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
-import PhoneMockup from "../components/PhoneMock";
+import PhoneMockup from "./PhoneMock";
 
 interface DemoOverlayProps {
   isOpen: boolean;
@@ -611,3 +611,5 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
 
 // Set display name for debugging
 DemoOverlay.displayName = 'DemoOverlay';
+
+export default DemoOverlay;
