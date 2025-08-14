@@ -171,3 +171,5 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     </AnimatePresence>
   );
 };
+
+export default DemoOverlay;
