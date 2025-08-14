@@ -10,9 +10,7 @@ interface AppointmentData {
 
 export const sendAppointmentEmail = async (appointmentData: AppointmentData): Promise<boolean> => {
   try {
-    // Log the appointment data for development/testing
-    console.log('📧 Sending appointment email to info@tabletech.nl');
-    console.log('Appointment Details:', appointmentData);
+    // Processing appointment email
     
     // Create unique booking ID to prevent double bookings
     const bookingId = `TT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -21,7 +19,7 @@ export const sendAppointmentEmail = async (appointmentData: AppointmentData): Pr
     // Check if this time slot is already booked
     const existingBookings = JSON.parse(localStorage.getItem('tabletech-booked-slots') || '{}');
     if (existingBookings[bookingKey]) {
-      console.warn('⚠️ Time slot already booked:', bookingKey);
+      // Time slot already booked
       throw new Error('Deze tijd is al gereserveerd. Kies een andere tijd.');
     }
     
@@ -51,9 +49,9 @@ export const sendAppointmentEmail = async (appointmentData: AppointmentData): Pr
         id: Date.now()
       });
       localStorage.setItem('tabletech-appointments', JSON.stringify(existingAppointments));
-      console.log('💾 Appointment saved to localStorage for development purposes');
+      // Appointment saved to localStorage
     } catch (storageError) {
-      console.warn('Could not save to localStorage:', storageError);
+      // Could not save to localStorage
     }
 
     // Try multiple email services for maximum reliability
@@ -61,7 +59,7 @@ export const sendAppointmentEmail = async (appointmentData: AppointmentData): Pr
     
     // Method 1: Try Strato email via FormSubmit with optimized settings
     try {
-      console.log('🔄 Attempting to send via Strato/FormSubmit...');
+      // Attempting to send via Strato/FormSubmit
       
       const detailedEmailContent = `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -129,54 +127,111 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
       });
 
       if (businessResponse.ok) {
-        console.log('✅ Business email sent successfully to info@tabletech.nl');
+        // Business email sent successfully
         emailSent = true;
       } else {
-        console.warn('❌ Business email failed with status:', businessResponse.status);
+        // Business email failed
         throw new Error(`Business email failed: ${businessResponse.status}`);
       }
 
       // Send confirmation email to customer
       const customerEmailContent = `
-Beste ${appointmentData.name},
-
-🎉 Bedankt voor je afspraak bij TableTech!
-
-📋 JOUW AFSPRAAK DETAILS:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 Datum: ${appointmentData.date}
-🕐 Tijd: ${appointmentData.time}
-⏱️ Duur: 30 minuten
-🎯 Type: Gratis Adviesgesprek
-🆔 Referentie: ${bookingId}
-
-✅ WAT KUNNEN WE VOOR JE BETEKENEN?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Hoe TableTech jouw restaurant kan transformeren
-💰 Welk pakket het beste bij jou past
-📊 Inzicht in je mogelijke ROI en kostenbesparingen
-🛠️ Praktische implementatie en ondersteuning
-
-📞 VOOR HET GESPREK:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-💡 Denk na over je grootste uitdagingen
-📋 Heb je huidige menukaarten bij de hand
-📱 Test je QR-code scanner vast uit
-🤔 Noteer specifieke vragen die je hebt
-
-⚠️ BELANGRIJKE INFORMATIE:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• We bevestigen je afspraak binnen 24 uur
-• Bij vragen: bel +31 85 888 3333
-• Email: info@tabletech.nl
-• Wijzigen kan tot 24 uur van tevoren
-
-🚀 We kijken ernaar uit om je te laten zien hoe TableTech jouw restaurant naar het volgende level kan brengen!
-
-Met vriendelijke groet,
-Het TableTech Team
-
-P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+  <!-- Volledig oranje header bar -->
+  <div style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); height: 8px; width: 100%;"></div>
+  
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
+    <img src="https://tabletech.nl/logo4.png" alt="TableTech Logo" style="height: 60px; margin-bottom: 20px;">
+    <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">Afspraak Bevestiging</h1>
+  </div>
+  
+  <div style="padding: 30px;">
+    <h2 style="color: #333; margin-bottom: 20px;">Beste ${appointmentData.name},</h2>
+    
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea;">
+      <h3 style="color: #667eea; margin: 0 0 15px 0;">🎉 Bedankt voor je afspraak bij TableTech!</h3>
+      <p style="margin: 5px 0; color: #555;"><strong>📅 Datum:</strong> ${appointmentData.date}</p>
+      <p style="margin: 5px 0; color: #555;"><strong>🕐 Tijd:</strong> ${appointmentData.time}</p>
+      <p style="margin: 5px 0; color: #555;"><strong>⏱️ Duur:</strong> 30 minuten</p>
+      <p style="margin: 5px 0; color: #555;"><strong>🎯 Type:</strong> Gratis Adviesgesprek</p>
+      <p style="margin: 5px 0; color: #555;"><strong>🆔 Referentie:</strong> ${bookingId}</p>
+    </div>
+    
+    <div style="background-color: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <h3 style="color: #0066cc; margin: 0 0 15px 0;">✅ Wat kunnen we voor je betekenen?</h3>
+      <ul style="color: #555; padding-left: 20px;">
+        <li>🚀 Hoe TableTech jouw restaurant kan transformeren</li>
+        <li>💰 Welk pakket het beste bij jou past</li>
+        <li>📊 Inzicht in je mogelijke ROI en kostenbesparingen</li>
+        <li>🛠️ Praktische implementatie en ondersteuning</li>
+      </ul>
+    </div>
+    
+    <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #ffeaa7;">
+      <h3 style="color: #856404; margin: 0 0 15px 0;">📞 Voor het gesprek:</h3>
+      <ul style="color: #555; padding-left: 20px;">
+        <li>💡 Denk na over je grootste uitdagingen</li>
+        <li>📋 Heb je huidige menukaarten bij de hand</li>
+        <li>📱 Test je QR-code scanner vast uit</li>
+        <li>🤔 Noteer specifieke vragen die je hebt</li>
+      </ul>
+    </div>
+    
+    <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #c3e6cb;">
+      <h3 style="color: #155724; margin: 0 0 15px 0;">⚠️ Belangrijke informatie:</h3>
+      <ul style="color: #555; padding-left: 20px;">
+        <li>We bevestigen je afspraak binnen 24 uur</li>
+        <li>Bij vragen: bel <strong>+31 85 888 3333</strong></li>
+        <li>Email: <strong>info@tabletech.nl</strong></li>
+        <li>Wijzigen kan tot 24 uur van tevoren</li>
+      </ul>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="https://tabletech.nl" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block;">🌟 Bekijk onze Demo</a>
+    </div>
+    
+    <p style="color: #666; margin-top: 30px;">
+      We kijken ernaar uit om je te laten zien hoe TableTech jouw restaurant naar het volgende level kan brengen!
+    </p>
+    
+    <p style="color: #666;">
+      Met vriendelijke groet,<br>
+      <strong>Het TableTech Team</strong>
+    </p>
+    
+    <p style="color: #999; font-size: 12px; margin-top: 20px;">
+      P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
+    </p>
+  </div>
+  
+  <!-- Verbeterde gecentreerde footer -->
+  <div style="background-color: #f8f9fa; padding: 40px 20px; text-align: center; border-top: 1px solid #e9ecef;">
+    <div style="max-width: 350px; margin: 0 auto;">
+      <img src="https://tabletech.nl/logo4.png" alt="TableTech Logo" style="height: 35px; margin-bottom: 20px;">
+      
+      <div style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <p style="color: white; margin: 0; font-size: 13px; font-weight: bold;">
+          TableTech | Biezelingeplein 32, 3086 SB<br>
+          Rotterdam, Nederland
+        </p>
+        <p style="color: white; margin: 8px 0 0 0; font-size: 12px;">
+          <a href="https://tabletech.nl" style="color: white; text-decoration: underline;">https://tabletech.nl</a>
+        </p>
+      </div>
+      
+      <p style="color: #6c757d; margin: 15px 0 5px 0; font-size: 12px; line-height: 1.4;">
+        © 2025 TableTech. Alle rechten voorbehouden.
+      </p>
+      <p style="color: #6c757d; margin: 5px 0; font-size: 11px;">
+        📧 info@tabletech.nl | 📞 +31 85 888 3333
+      </p>
+      <p style="color: #999; margin: 10px 0 0 0; font-size: 10px; font-style: italic;">
+        Je ontvangt deze e-mail omdat je een afspraak hebt aangevraagd via onze website.
+      </p>
+    </div>
+  </div>
+</div>
       `;
 
       const customerFormData = new FormData();
@@ -189,6 +244,7 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
       customerFormData.append('afspraak_datum', appointmentData.date);
       customerFormData.append('afspraak_tijd', appointmentData.time);
       customerFormData.append('bevestiging_bericht', customerEmailContent);
+      customerFormData.append('_format', 'html'); // Enable HTML format
 
       const customerResponse = await fetch('https://formsubmit.co/ajax/' + appointmentData.email, {
         method: 'POST',
@@ -199,19 +255,19 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
       });
 
       if (customerResponse.ok) {
-        console.log('✅ Customer confirmation email sent successfully');
+        // Customer confirmation email sent
       } else {
-        console.warn('⚠️ Customer email failed, but business email succeeded');
+        // Customer email failed, but business email succeeded
       }
 
     } catch (formSubmitError) {
-      console.warn('❌ Strato/FormSubmit method failed:', formSubmitError);
+      // Strato/FormSubmit method failed
     }
 
     // Method 2: Try Formspree as backup
     if (!emailSent) {
       try {
-        console.log('🔄 Attempting to send via Formspree...');
+        // Attempting to send via Formspree
         
         const formspreeResponse = await fetch('https://formspree.io/f/xpwzgzrd', {
           method: 'POST',
@@ -233,20 +289,20 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
         });
 
         if (formspreeResponse.ok) {
-          console.log('✅ Email sent successfully via Formspree');
+          // Email sent successfully via Formspree
           emailSent = true;
         } else {
           throw new Error(`Formspree failed: ${formspreeResponse.status}`);
         }
       } catch (formspreeError) {
-        console.warn('❌ Formspree method failed:', formspreeError);
+        // Formspree method failed
       }
     }
 
     // Method 3: Try Netlify Forms as final backup
     if (!emailSent) {
       try {
-        console.log('🔄 Attempting to send via Netlify Forms...');
+        // Attempting to send via Netlify Forms
         
         const netlifyFormData = new FormData();
         netlifyFormData.append('form-name', 'tabletech-appointments');
@@ -264,21 +320,19 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
         });
 
         if (netlifyResponse.ok) {
-          console.log('✅ Email sent successfully via Netlify Forms');
+          // Email sent successfully via Netlify Forms
           emailSent = true;
         } else {
           throw new Error(`Netlify Forms failed: ${netlifyResponse.status}`);
         }
       } catch (netlifyError) {
-        console.warn('❌ Netlify Forms method failed:', netlifyError);
+        // Netlify Forms method failed
       }
     }
 
     // If all methods fail, still log the attempt for manual follow-up
     if (!emailSent) {
-      console.error('❌ All email methods failed. Logging for manual follow-up...');
-      
-      // Create a detailed log entry for manual processing
+      // All email methods failed - manual follow-up required
       const manualLog = {
         timestamp: new Date().toISOString(),
         status: 'MANUAL_FOLLOW_UP_REQUIRED',
@@ -287,21 +341,19 @@ P.S. Check vast onze demo op tabletech.nl en ontdek wat er mogelijk is! 🌟
         action_required: 'Contact customer directly within 24 hours'
       };
       
-      console.error('🚨 MANUAL FOLLOW-UP REQUIRED:', manualLog);
-      
       // Try to store in a separate "failed emails" log
       try {
         const failedEmails = JSON.parse(localStorage.getItem('tabletech-failed-emails') || '[]');
         failedEmails.push(manualLog);
         localStorage.setItem('tabletech-failed-emails', JSON.stringify(failedEmails));
       } catch (e) {
-        console.warn('Could not log failed email:', e);
+        // Could not log failed email
       }
     }
 
     return emailSent;
   } catch (error) {
-    console.error('❌ Critical error in email sending process:', error);
+    // Critical error in email sending process
     
     // If it's a double booking error, re-throw it
     if (error instanceof Error && error.message.includes('al gereserveerd')) {
@@ -319,7 +371,7 @@ export const isTimeSlotAvailable = (date: string, time: string): boolean => {
     const existingBookings = JSON.parse(localStorage.getItem('tabletech-booked-slots') || '{}');
     return !existingBookings[bookingKey];
   } catch (error) {
-    console.warn('Error checking time slot availability:', error);
+    // Error checking time slot availability
     return true; // Allow booking if there's an error checking
   }
 };
@@ -332,7 +384,7 @@ export const getBookedTimeSlotsForDate = (date: string): string[] => {
       .filter(key => key.startsWith(date))
       .map(key => key.split('-').pop() || '');
   } catch (error) {
-    console.warn('Error getting booked time slots:', error);
+    // Error getting booked time slots
     return [];
   }
 };
@@ -355,9 +407,9 @@ export const clearExpiredBookings = (): void => {
     });
     
     localStorage.setItem('tabletech-booked-slots', JSON.stringify(updatedBookings));
-    console.log('🧹 Expired bookings cleared');
+    // Expired bookings cleared
   } catch (error) {
-    console.warn('Error clearing expired bookings:', error);
+    // Error clearing expired bookings
   }
 };
 
@@ -387,10 +439,10 @@ export const sendAppointmentEmailWithEmailJS = async (appointmentData: Appointme
     //   'YOUR_USER_ID'
     // );
 
-    console.log('Email would be sent with EmailJS:', templateParams);
+    // Email would be sent with EmailJS
     return true;
   } catch (error) {
-    console.error('Error sending email with EmailJS:', error);
+    // Error sending email with EmailJS
     return false;
   }
 };
