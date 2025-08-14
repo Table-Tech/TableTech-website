@@ -16,7 +16,7 @@ interface FailedBooking {
   appointmentData: AppointmentData;
   status: string;
   priority: string;
-  action: string;
+  action_required: string;
 }
 
 export const EmailDebugger = {
@@ -157,7 +157,7 @@ export const EmailDebugger = {
 
 // Maak het globaal beschikbaar in de browser console
 if (typeof window !== 'undefined') {
-  (window as any).EmailDebugger = EmailDebugger;
+  (window as unknown as Record<string, unknown>).EmailDebugger = EmailDebugger;
   console.log('🔧 EmailDebugger loaded! Use EmailDebugger.getAllLogs() to see email statistics.');
 }
 
