@@ -491,20 +491,21 @@ export const BenefitsOne: React.FC = () => {
 
           {/* Left side - Video */}
           <div className="relative flex items-end justify-start order-1 lg:order-1 -ml-40 mt-16">
-            <div className="relative">
+            <div className="relative drop-shadow-2xl">
               <video 
                 autoPlay
                 muted
                 playsInline
                 controls={false}
-                className="w-full h-full object-contain rounded-lg shadow-lg"
+                className="w-full h-full object-contain rounded-lg shadow-2xl"
                 style={{ 
                   width: '1400px', 
                   height: '1120px',
                   maxWidth: '100%',
                   minWidth: '800px',
                   minHeight: '640px',
-                  background: 'transparent'
+                  background: 'transparent',
+                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))'
                 }}
                 onLoadStart={() => console.log('Video loading started')}
                 onCanPlay={() => console.log('Video can play')}
@@ -515,7 +516,7 @@ export const BenefitsOne: React.FC = () => {
                   video.pause();
                 }}
               >
-                <source src="/videos/Export_Video_2025-08-07-ultramax.webm" type="video/webm" />
+                <source src="/videos/Export_Video_2025-08-15-hq.webm" type="video/webm" />
                 Your browser does not support the video tag.
               </video>
             </div>
