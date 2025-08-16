@@ -490,13 +490,15 @@ ${data.firstName} ${data.lastName}
         }
       `}</style>
       
-      <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] pt-64 pb-16 px-4 overflow-hidden">
-        {/* VERBETERDE overgang van PricingNew - Perfect naadloos met meer ruimte */}
-        <div className="absolute top-0 left-0 right-0 h-64 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/90 to-transparent"></div>
-          <div className="absolute top-0 left-0 right-0 h-48 bg-[#2C1E1A]"></div>
-          <div className="absolute top-0 left-0 right-0 h-32 bg-[#2C1E1A]"></div>
+      <section className="relative min-h-screen bg-[#2C1E1A] pt-0 pb-16 px-4 overflow-hidden">
+        {/* Compact seamless blend with PricingNew */}
+        <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>
+          <div className="absolute top-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
         </div>
+        
+        {/* Gradient background for content area */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] opacity-80"></div>
         
         {/* Animated background effects - matching pricing section */}
         <div className="absolute inset-0 overflow-hidden">
@@ -504,8 +506,13 @@ ${data.firstName} ${data.lastName}
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#C3561D] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
           <div className="absolute top-40 left-40 w-80 h-80 bg-[#7A5A48] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
         </div>
+
+        {/* Perfecte naadloze overgang - volledig onzichtbaar */}
+        <div className="absolute bottom-0 left-0 right-0 h-[200px] pointer-events-none z-20">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% to-[#231813] to-100%"></div>
+        </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto w-full">
+        <div className="relative z-10 max-w-7xl mx-auto w-full pt-64">
           {/* Main content - 2 columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left column - Slideshow */}
