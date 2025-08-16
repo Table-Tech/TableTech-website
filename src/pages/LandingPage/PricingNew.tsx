@@ -145,6 +145,11 @@ export const PricingNew = () => {
 
   return (
     <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] py-16 px-4 overflow-hidden">
+      {/* Smooth transition from ContainerScroll */}
+      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-transparent"></div>
+      </div>
+      
       {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
@@ -325,12 +330,10 @@ export const PricingNew = () => {
 
       </div>
       
-      {/* VERBETERDE overgang naar ContactSection - Perfect naadloos */}
+      {/* Compact fade transition to ContactSection */}
       <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none">
-        {/* Meerdere lagen voor een perfecte overgang */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2C1E1A]/30 to-[#2C1E1A]/80"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#2C1E1A]"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2C1E1A]/50 to-[#2C1E1A]"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
       </div>
 
       <style>{`
