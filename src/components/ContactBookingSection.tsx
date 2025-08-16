@@ -490,7 +490,7 @@ ${data.firstName} ${data.lastName}
         }
       `}</style>
       
-      <section className="relative min-h-screen bg-[#2C1E1A] pt-0 pb-16 px-4 overflow-hidden">
+  <section className="relative min-h-screen bg-[#2C1E1A] pt-0 pb-16 px-4 overflow-hidden">
         {/* Compact seamless blend with PricingNew */}
         <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>

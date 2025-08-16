@@ -17,34 +17,33 @@ const LandingPage: React.FC = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section id="hero" className="w-full">
+  <section id="hero" className="w-full scroll-mt-24">
         <HeroSection />
       </section>
 
       {/* Benefits Pinned Scrolling Section */}
-      <section id="benefits" className="w-full bg-gradient-to-br from-gray-50 to-white">
+  <section id="benefits" className="w-full bg-gradient-to-br from-gray-50 to-white scroll-mt-24">
         <BenefitsPinned />
       </section>
 
       {/* Restaurant Themes Section */}
-      <section id="themes" className="w-full">
+  <section id="themes" className="w-full scroll-mt-24">
         <RestaurantThemesPage />
       </section>
 
 
-      {/* Smooth transition from pricing to footer */}
+      {/* Pricing Section */}
+  <section id="pricing" className="w-full scroll-mt-24">
+        <PricingNew />
+      </section>
+
+      {/* Contact Section */}
+  <section id="contact" className="w-full scroll-mt-24">
+        <ContactSection />
+      </section>
+
+      {/* Footer */}
       <div className="w-full relative">
-        {/* Pricing Section */}
-        <section id="pricing" className="w-full">
-          <PricingNew />
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="w-full">
-          <ContactSection />
-        </section>
-
-
         <Footer />
       </div>
     </div>

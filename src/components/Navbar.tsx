@@ -1,164 +1,269 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import LanguageSwitcher from "./LanguageSwitcher";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 export const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const { t } = useTranslation();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const navbarRef = useRef<HTMLElement>(null);
 
-  // Track active section tijdens scrollen
+  // GSAP ScrollTrigger for navbar transparency
+  useLayoutEffect(() => {
+    if (!navbarRef.current) return;
+
+    // Create GSAP context
+    const ctx = gsap.context(() => {
+      // Initial state - fully transparent at top
+      gsap.set(navbarRef.current, {
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        backdropFilter: "blur(0px)",
+        borderColor: "rgba(255, 255, 255, 0)",
+      });
+
+      // Create scroll trigger for navbar background
+      ScrollTrigger.create({
+        trigger: document.body,
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => {
+          const scrollY = window.scrollY;
+          
+          if (scrollY === 0) {
+            // Only fully transparent at the very top (y = 0)
+            gsap.to(navbarRef.current, {
+              backgroundColor: "rgba(0, 0, 0, 0)",
+              backdropFilter: "blur(0px)",
+              borderColor: "rgba(255, 255, 255, 0)",
+              duration: 0.3,
+              ease: "power2.out"
+            });
+            setIsScrolled(false);
+          } else {
+            // Blur effect everywhere else (any scroll position > 0)
+            gsap.to(navbarRef.current, {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+              backdropFilter: "blur(12px)",
+              borderColor: "rgba(255, 255, 255, 0.1)",
+              duration: 0.3,
+              ease: "power2.out"
+            });
+            setIsScrolled(true);
+          }
+        }
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Track active section with proper order
   useEffect(() => {
     if (!isHomePage) return;
 
-    const sections = ["hero", "benefits", "pricing", "themes", "cta"];
-    
+    // Updated section order: hero -> benefits -> themes -> pricing -> contact
+    const sections = ["hero", "benefits", "themes", "pricing", "contact"];
+
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 150; // Offset voor navbar
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
       
-      // Check each section
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i]);
+      // Check if we're at the very top
+      if (scrollPosition < 100) {
+        setActiveSection("hero");
+        return;
+      }
+      
+      // Check if we're at the bottom of the page
+      if (scrollPosition + windowHeight >= documentHeight - 50) {
+        setActiveSection("contact");
+        return;
+      }
+      
+      // Find which section is currently most visible
+      let activeSection = "hero";
+      let maxVisibleHeight = 0;
+      
+      sections.forEach(sectionId => {
+        const element = document.getElementById(sectionId);
         if (element) {
-          const elementTop = element.offsetTop;
-          const elementHeight = element.offsetHeight;
+          const rect = element.getBoundingClientRect();
+          const elementTop = Math.max(0, -rect.top); // How much is above viewport
+          const elementBottom = Math.min(rect.height, windowHeight - rect.top); // How much is in viewport
+          const visibleHeight = Math.max(0, elementBottom - elementTop);
           
-          // Check if we're in this section
-          if (scrollPosition >= elementTop && scrollPosition < elementTop + elementHeight) {
-            setActiveSection(sections[i]);
-            break;
+          // If this section has more visible area, make it active
+          if (visibleHeight > maxVisibleHeight && visibleHeight > 50) {
+            maxVisibleHeight = visibleHeight;
+            activeSection = sectionId;
           }
         }
+      });
+      
+      setActiveSection(activeSection);
+    };
+
+    // Add throttled scroll listener
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     handleScroll(); // Initial check
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
   }, [isHomePage]);
 
-  // Smooth scroll functie voor one-pager navigatie
+  // Smooth scroll function
   const scrollToSection = (sectionId: string): void => {
     setOpen(false);
-    
     if (!isHomePage) {
-      // Als we niet op de homepage zijn, ga eerst naar home
       window.location.href = `/#${sectionId}`;
       return;
     }
 
-    // Smooth scroll naar sectie op de huidige pagina
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+    // Prevent multiple scroll operations
+    if (isScrolling) return;
 
-      // Ook Lenis smooth scroll gebruiken indien beschikbaar
-      if (window.lenis) {
-        window.lenis.scrollTo(element, { duration: 1.0 }); // Faster navigation scroll
+    // Wait for next frame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      const element = document.getElementById(sectionId);
+      
+      if (element) {
+        setIsScrolling(true);
+        const elementTop = element.offsetTop;
+        const offset = 80; // Navbar height
+        const targetPosition = Math.max(0, elementTop - offset);
+        
+        // Use Lenis if available (preferred method)
+        if (window.lenis) {
+          window.lenis.scrollTo(targetPosition, { 
+            duration: 1.2,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+            onComplete: () => {
+              setIsScrolling(false);
+            }
+          });
+        } else {
+          // Fallback to native smooth scroll
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+          // Reset scrolling state after estimated duration
+          setTimeout(() => {
+            setIsScrolling(false);
+          }, 1200);
+        }
+      } else {
+        // Element not found, reset scrolling state
+        setIsScrolling(false);
       }
-    }
+    });
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-black/10 backdrop-blur-md border-b border-white/10 text-white transition-all duration-300 shadow-lg">
+    <header
+      ref={navbarRef}
+      className={`fixed top-0 left-0 w-full z-50 text-white transition-all duration-300 ${
+        isScrolled ? 'shadow-lg' : ''
+      }`}
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        backdropFilter: 'blur(0px)',
+        WebkitBackdropFilter: 'blur(0px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0)'
+      }}
+    >
       <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 py-6 flex items-center justify-between">
-        {/* Enhanced TableTech logo met hover effect */}
-        <Link 
-          to="/" 
+        {/* Logo */}
+        <Link
+          to="/"
+          onClick={() => scrollToSection('hero')}
           className="text-2xl font-bold tracking-wide text-white drop-shadow-lg transition-all duration-300 transform hover:text-[#ffe7c3] hover:scale-105 hover:drop-shadow-2xl active:scale-95"
         >
           TableTech
         </Link>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-8 items-center text-sm font-medium">
           {isHomePage ? (
             <>
-              <button 
-                onClick={() => scrollToSection('hero')} 
-                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
-                  activeSection === 'hero' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
-                }`}
-                type="button"
-              >
-                {t("home")}
-              </button>
-              <button 
-                onClick={() => scrollToSection('benefits')} 
-                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
-                  activeSection === 'benefits' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
-                }`}
-                type="button"
-              >
-                {t("features")}
-              </button>
-              <button 
-                onClick={() => scrollToSection('pricing')} 
-                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
-                  activeSection === 'pricing' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
-                }`}
-                type="button"
-              >
-                {t("pricing")}
-              </button>
-              <button 
-                onClick={() => scrollToSection('themes')} 
-                className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
-                  activeSection === 'themes' 
-                    ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
-                    : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200'
-                }`}
-                type="button"
-              >
-                Themes
-              </button>
+              {[ 
+                { id: 'hero', label: t("home") },
+                { id: 'benefits', label: t("features") },
+                { id: 'themes', label: 'Themes' },
+                { id: 'pricing', label: t("pricing") },
+                { id: 'contact', label: (t("contact") || 'Contact').charAt(0).toUpperCase() + (t("contact") || 'Contact').slice(1) }
+              ].map((item) => (
+                <button 
+                  key={item.id}
+                  onClick={() => {
+                    // Special case: ensure 'pricing' scrolls to the correct section id
+                    if (item.id === 'pricing') {
+                      scrollToSection('pricing');
+                    } else {
+                      scrollToSection(item.id);
+                    }
+                  }} 
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer transform active:scale-95 drop-shadow-sm ${
+                    activeSection === item.id 
+                      ? 'text-[#ffe7c3] font-semibold bg-black/20 shadow-lg scale-105' 
+                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
+                  }`}
+                  type="button"
+                >
+                  {item.label}
+                </button>
+              ))}
             </>
           ) : (
             <>
-              <Link 
-                to="/" 
-                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-              >
-                {t("home")}
-              </Link>
-              <Link 
-                to="/#benefits" 
-                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-              >
-                {t("features")}
-              </Link>
-              <Link
-                to="/pricing"
-                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-              >
-                {t("pricing")}
-              </Link>
-              <Link 
-                to="/#themes" 
-                className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-              >
-                Themes
-              </Link>
+              {[
+                { id: 'hero', label: t("home"), to: '/' },
+                { id: 'benefits', label: t("features"), to: '/#benefits' },
+                { id: 'themes', label: 'Themes', to: '/#themes' },
+                { id: 'pricing', label: t("pricing"), to: '/#pricing' },
+                { id: 'contact', label: (t("contact") || 'Contact').charAt(0).toUpperCase() + (t("contact") || 'Contact').slice(1), to: '/#contact' }
+              ].map((item) => (
+                <Link 
+                  key={item.id}
+                  to={item.to}
+                  className="px-4 py-2 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </>
           )}
 
-          {/* ✅ Taalkiezer */}
+          {/* Language Switcher */}
           <LanguageSwitcher />
 
+          {/* CTA Button */}
           <button
-            onClick={() => scrollToSection('cta')}
+            onClick={() => scrollToSection('contact')}
             className="bg-gradient-to-r from-yellow-700 to-yellow-800 hover:from-yellow-800 hover:to-yellow-900 hover:scale-110 hover:shadow-xl text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform active:scale-95 shadow-lg"
             type="button"
           >
@@ -183,93 +288,58 @@ export const Navbar: React.FC = () => {
           <nav className="flex flex-col space-y-4 text-center text-sm text-white font-medium">
             {isHomePage ? (
               <>
-                <button 
-                  onClick={() => scrollToSection('hero')} 
-                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
-                    activeSection === 'hero' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
-                  }`}
-                  type="button"
-                >
-                  {t("home")}
-                </button>
-                <button 
-                  onClick={() => scrollToSection('benefits')} 
-                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
-                    activeSection === 'benefits' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
-                  }`}
-                  type="button"
-                >
-                  {t("features")}
-                </button>
-                <button 
-                  onClick={() => scrollToSection('pricing')} 
-                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
-                    activeSection === 'pricing' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
-                  }`}
-                  type="button"
-                >
-                  {t("pricing")}
-                </button>
-                <button 
-                  onClick={() => scrollToSection('themes')} 
-                  className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
-                    activeSection === 'themes' 
-                      ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
-                      : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
-                  }`}
-                  type="button"
-                >
-                  Themes
-                </button>
+                {[
+                  { id: 'hero', label: t("home") },
+                  { id: 'benefits', label: t("features") },
+                  { id: 'themes', label: 'Themes' },
+                  { id: 'pricing', label: t("pricing") },
+                  { id: 'contact', label: t("contact") || 'Contact' }
+                ].map((item) => (
+                  <button 
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)} 
+                    className={`px-4 py-3 rounded-lg transition-all duration-300 transform active:scale-95 drop-shadow-sm ${
+                      activeSection === item.id 
+                        ? 'text-[#ffe7c3] font-semibold bg-black/20 scale-105' 
+                        : 'hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md'
+                    }`}
+                    type="button"
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </>
             ) : (
               <>
-                <Link 
-                  to="/" 
-                  onClick={() => setOpen(false)} 
-                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-                >
-                  {t("home")}
-                </Link>
-                <Link 
-                  to="/#benefits" 
-                  onClick={() => setOpen(false)} 
-                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-                >
-                  {t("features")}
-                </Link>
-                <Link
-                  to="/pricing"
-                  onClick={() => setOpen(false)}
-                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-                >
-                  {t("pricing")}
-                </Link>
-                <Link 
-                  to="/#themes" 
-                  onClick={() => setOpen(false)} 
-                  className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
-                >
-                  Themes
-                </Link>
+                {[
+                  { id: 'hero', label: t("home"), to: '/' },
+                  { id: 'benefits', label: t("features"), to: '/#benefits' },
+                  { id: 'themes', label: 'Themes', to: '/#themes' },
+                  { id: 'pricing', label: t("pricing"), to: '/#pricing' },
+                  { id: 'contact', label: t("contact") || 'Contact', to: '/#contact' }
+                ].map((item) => (
+                  <Link 
+                    key={item.id}
+                    to={item.to}
+                    onClick={() => setOpen(false)} 
+                    className="px-4 py-3 rounded-lg hover:text-[#ffe7c3] hover:bg-black/10 hover:scale-105 hover:shadow-md transition-all duration-200 transform active:scale-95 drop-shadow-sm"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </>
             )}
             
+            {/* Mobile CTA */}
             <button 
-              onClick={() => scrollToSection('cta')} 
+              onClick={() => scrollToSection('contact')} 
               className="mt-4 bg-gradient-to-r from-yellow-700 to-yellow-800 hover:from-yellow-800 hover:to-yellow-900 hover:scale-110 hover:shadow-xl text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform active:scale-95"
               type="button"
             >
               {t("signup")}
             </button>
 
-            {/* ✅ Mobile taalwissel */}
+            {/* Mobile Language Switcher */}
             <div className="mt-4 flex justify-center">
               <LanguageSwitcher />
             </div>
