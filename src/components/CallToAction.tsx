@@ -17,7 +17,11 @@ export const CallToAction: React.FC = () => {
 
   return (
     <section id="cta" className="relative bg-[#2C1E1A] text-white py-24 px-4 w-full overflow-hidden">
-      {/* GEEN top overgang meer - laat ContactSection dit afhandelen */}
+      {/* Compact seamless blend with ContactSection */}
+      <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
+      </div>
       
       {/* Subtle background decorations */}
       <div className="absolute inset-0 overflow-hidden opacity-40">
@@ -46,11 +50,10 @@ export const CallToAction: React.FC = () => {
         </div>
       </div>
 
-      {/* VERBETERDE overgang naar Footer - Perfect naadloos */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none">
-        {/* Geleidelijke overgang naar footer kleur */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#2C1E1A]"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#2C1E1A]"></div>
+      {/* Compact fade transition TO Footer */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2C1E1A]/50 to-[#2C1E1A]"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
       </div>
     </section>
   );
