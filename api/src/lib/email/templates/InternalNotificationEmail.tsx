@@ -234,7 +234,7 @@ const container = {
   backgroundColor: '#1a1a1a',
   backdropFilter: 'blur(10px)',
   margin: '0 auto',
-  padding: '40px',
+  padding: '32px',
   marginBottom: '64px',
   borderRadius: '16px',
   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.2)',
@@ -246,8 +246,8 @@ const container = {
 const header = {
   background: 'linear-gradient(135deg, #E86C28, #FFB366)',
   borderRadius: '12px',
-  padding: '40px 32px',
-  margin: '-40px -40px 32px -40px',
+  padding: '32px 24px',
+  margin: '0 0 24px 0',
   textAlign: 'left' as const,
   boxShadow: '0 4px 12px rgba(232, 108, 40, 0.3)',
 };
@@ -272,10 +272,10 @@ const h2 = {
 };
 
 const section = {
-  padding: '32px 24px',
+  padding: '24px 16px',
   background: 'transparent',
   borderBottom: '1px solid rgba(232, 108, 40, 0.2)',
-  marginBottom: '24px',
+  marginBottom: '16px',
 };
 
 const table = {
@@ -288,9 +288,9 @@ const labelCell = {
   fontSize: '14px',
   fontWeight: '500',
   lineHeight: '20px',
-  padding: '12px 32px 12px 16px',
+  padding: '8px 24px 8px 0',
   verticalAlign: 'top' as const,
-  width: '160px',
+  width: '140px',
   textAlign: 'left' as const,
 };
 
@@ -298,7 +298,7 @@ const valueCell = {
   color: '#f3f4f6',
   fontSize: '14px',
   lineHeight: '20px',
-  padding: '12px 16px 12px 24px',
+  padding: '8px 0',
   verticalAlign: 'top' as const,
   textAlign: 'left' as const,
 };
@@ -319,8 +319,8 @@ const messageBox = {
   color: '#f3f4f6',
   fontSize: '14px',
   lineHeight: '22px',
-  padding: '24px 32px',
-  margin: '20px 32px',
+  padding: '20px',
+  margin: '16px 0',
   whiteSpace: 'pre-wrap' as const,
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
   textAlign: 'left' as const,
@@ -340,8 +340,8 @@ const link = {
 const actionSection = {
   background: 'linear-gradient(135deg, rgba(232, 108, 40, 0.2), rgba(255, 179, 102, 0.2))',
   borderRadius: '12px',
-  padding: '32px 48px',
-  margin: '32px -40px -40px -40px',
+  padding: '24px',
+  margin: '24px 0 0 0',
   textAlign: 'left' as const,
   borderTop: '2px solid #E86C28',
 };
