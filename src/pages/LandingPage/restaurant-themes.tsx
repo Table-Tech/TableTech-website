@@ -358,7 +358,7 @@ const RestaurantThemesPage: React.FC = () => {
           </div>
         </motion.div>
       </div>
-      {/* Enhanced smooth transition to next section (pricing) */}
+      {/* Enhanced smooth transition to next section (container-scroll) */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-[#2C1E1A]/60 to-[#2C1E1A] z-10"></div>
     </section>
   )
