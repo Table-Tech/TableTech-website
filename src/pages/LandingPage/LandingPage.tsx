@@ -1,9 +1,8 @@
 // src/pages/LandingPage/LandingPage.tsx
 import React from "react";
 import { HeroSection } from "./HeroSection";
-import { CallToAction } from "../../components/CallToAction";
 import { Navbar } from "../../components/Navbar";
-import { BenefitsScrollLock } from "../../components/BenefitsScrollLock";
+import { BenefitsPinned } from "../../components/BenefitsPinned";
 import { PricingNew } from "./PricingNew";
 import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
@@ -22,9 +21,9 @@ const LandingPage: React.FC = () => {
         <HeroSection />
       </section>
 
-      {/* Benefits Horizontal Lock Section */}
-      <section id="benefits" className="w-full h-screen relative overflow-hidden" style={{ backgroundColor: 'transparent' }}>
-        <BenefitsScrollLock />
+      {/* Benefits Pinned Scrolling Section */}
+      <section id="benefits" className="w-full bg-gradient-to-br from-gray-50 to-white">
+        <BenefitsPinned />
       </section>
 
       {/* Restaurant Themes Section */}
@@ -32,22 +31,22 @@ const LandingPage: React.FC = () => {
         <RestaurantThemesPage />
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="w-full">
-        <PricingNew />
-      </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="w-full">
-        <ContactSection />
-      </section>
+      {/* Smooth transition from pricing to footer */}
+      <div className="w-full relative">
+        {/* Pricing Section */}
+        <section id="pricing" className="w-full">
+          <PricingNew />
+        </section>
 
-      {/* Call to Action Section */}
-      <section id="cta" className="w-full">
-        <CallToAction />
-      </section>
+        {/* Contact Section */}
+        <section id="contact" className="w-full">
+          <ContactSection />
+        </section>
 
-      <Footer />
+
+        <Footer />
+      </div>
     </div>
   );
 };
