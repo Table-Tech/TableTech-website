@@ -162,6 +162,10 @@ TableTech provides:
     "magic-ui": {
       "command": "npx",
       "args": ["-y", "@magicuidesign/mcp"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/playwright-mcp-server"]
     }
   },
   "claude": {
@@ -169,13 +173,15 @@ TableTech provides:
       "sequential-thinking",
       "filesystem",
       "data-postgrest",
-      "magic-ui"
+      "magic-ui",
+      "playwright"
     ],
     "contextInstructions": [
       "Stap 1 — Denk eerst: gebruik sequential-thinking MCP om de taak in numbered 'thoughts' op te breken met subdoelen en beslismomenten. Formuleer expliciet welke data/tools je nodig hebt.",
       "Stap 2 — Data pas daarna: als je data nodig acht, gebruik eerst filesystem om relevante bestanden te lezen; gebruik daarna data-postgrest voor DB-queries.",
       "Stap 3 — UI Components: gebruik magic-ui MCP voor het genereren en optimaliseren van moderne UI componenten met animations en effects.",
-      "Stap 4 — Valideer: check de uitkomst (tests/constraints) en rapporteer eventuele onzekerheden."
+      "Stap 4 — Testing: gebruik playwright MCP voor browser automation, E2E testing, en UI interaction testing.",
+      "Stap 5 — Valideer: check de uitkomst (tests/constraints) en rapporteer eventuele onzekerheden."
     ]
   }
 }
@@ -186,6 +192,7 @@ TableTech provides:
 2. **Filesystem MCP**: Project bestanden lezen en navigeren  
 3. **Data-PostgREST MCP**: Database queries via PostgREST API
 4. **Magic UI MCP**: AI-geholpen UI component workflows voor moderne, geanimeerde componenten
+5. **Playwright MCP**: Browser automation, E2E testing, web scraping en UI testing capabilities
 
 ## Current State
 - Website is live at tabletech.nl
