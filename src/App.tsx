@@ -1,6 +1,6 @@
 // src/App.tsx
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
@@ -8,13 +8,18 @@ const SupportChat = lazy(() => import("./pages/SupportChat"));
 const MenuDemo = lazy(() => import("./pages/MenuDemo/MenuDemo"));
 
 import ScrollToTop from "./components/ScrollToTop";
+import { ScrollDots } from "./components/ScrollDots";
 
 import "./index.css";
 
 const App: React.FC = () => {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+
   return (
     <>
       <ScrollToTop />
+      {isLandingPage && <ScrollDots />}
       <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />

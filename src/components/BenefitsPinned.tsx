@@ -231,28 +231,6 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
           background: 'transparent' // Keep content transparent to show background
         }}
       >
-        {/* Progress Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex space-x-3">
-          {[0, 1, 2].map((index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === 0 
-                  ? 'bg-white scale-125 shadow-lg' 
-                  : 'bg-white/40 hover:bg-white/60'
-              }`}
-              onClick={() => {
-                // Calculate scroll position for specific section
-                const scrollTarget = window.scrollY + (index * window.innerHeight);
-                window.scrollTo({
-                  top: scrollTarget,
-                  behavior: 'smooth'
-                });
-              }}
-              aria-label={`Go to benefit ${index + 1}`}
-            />
-          ))}
-        </div>
 
         {/* Panels Container */}
         <div className="relative w-full h-full">
