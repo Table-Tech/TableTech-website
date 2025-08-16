@@ -47,6 +47,10 @@ export const BenefitsScrollSequence: React.FC = () => {
     center: {
       x: 0,
       opacity: 1,
+      transition: {
+        x: { type: "spring" as const, stiffness: 300, damping: 30 },
+        opacity: { duration: 0.3 }
+      }
     },
     exit: (direction: number) => ({
       x: direction < 0 ? "100%" : "-100%",
