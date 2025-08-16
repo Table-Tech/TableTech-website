@@ -204,7 +204,7 @@ const logoSection = {
   textAlign: 'left' as const,
   background: 'rgba(232, 108, 40, 0.1)',
   borderRadius: '12px',
-  margin: '-32px -32px 32px -32px',
+  margin: '0 0 24px 0',
 };
 
 const logo = {
