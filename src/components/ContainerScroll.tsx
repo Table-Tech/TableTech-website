@@ -50,8 +50,8 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
         // Progress from 0 to 1 as user scrolls through the section
         progress = Math.max(0, Math.min(1, scrolled / (scrollableDistance * 0.8)));
         
-        // Apply smooth easing for natural movement, but cap at 0.8 to keep tablet visible
-        progress = Math.min(0.8, easeInOutCubic(progress));
+        // Apply smooth easing for natural movement, but cap at 0.7 to keep tablet and text visible
+        progress = Math.min(0.7, easeInOutCubic(progress));
       }
       
       setScrollProgress(progress);
@@ -88,8 +88,8 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
   const rotateZ = 2 * (1 - scrollProgress); // Minimal Z-axis rotation for natural look
   
   const scale = isMobile 
-    ? 0.3 + (0.5 * scrollProgress) // Mobile: 30% to 80%
-    : 0.4 + (0.6 * scrollProgress); // Desktop: 40% to 100%
+    ? 0.2 + (0.4 * scrollProgress) // Mobile: 20% to 60%
+    : 0.3 + (0.4 * scrollProgress); // Desktop: 30% to 70%
   
   const translateY = 400 * (1 - scrollProgress); // Smoother rise from below
   const translateZ = -600 * (1 - scrollProgress); // More controlled 3D approach
@@ -152,7 +152,7 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
       
       {/* 3D Tablet Container - Enhanced for horizontal layout */}
       <div className="relative z-30" style={{ height: '50vh', marginTop: '0.5rem' }}>
-        <div className="sticky top-0 transform -translate-y-64">
+        <div className="sticky top-0 transform -translate-y-80">
           <ContainerScrollCard 
             rotate={rotateX}
             rotateY={rotateY}
