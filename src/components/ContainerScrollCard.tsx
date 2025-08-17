@@ -102,11 +102,11 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
               `,
             }}
           >
-            {/* Screen with aap.png background */}
+            {/* Screen with aap.webp background */}
             <div 
               className="relative w-full h-full rounded-[1.7rem] overflow-hidden"
               style={{
-                backgroundImage: 'url(/aap.png)',
+                backgroundImage: 'url(/aap.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

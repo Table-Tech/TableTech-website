@@ -1,12 +1,12 @@
 import React from "react";
-import optie4Bg from "../assets/afbeeldingen/optie4.png";
+// Background image moved to public: /images/backgrounds/optie4.webp
 
 const SharedBackground: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
     <div 
       className="relative w-full h-full"
       style={{
-        backgroundImage: `url(${optie4Bg})`,
+        backgroundImage: `url(/images/backgrounds/optie4.webp)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',

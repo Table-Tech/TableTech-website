@@ -12,7 +12,7 @@ import { ScrollDots } from "./components/ScrollDots";
 
 import "./index.css";
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
 
@@ -32,6 +32,10 @@ const App: React.FC = () => {
       </Suspense>
     </>
   );
+};
+
+const App: React.FC = () => {
+  return <AppContent />;
 };
 
 export default App;

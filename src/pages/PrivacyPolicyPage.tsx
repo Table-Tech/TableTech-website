@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 import { CallToAction } from "../components/CallToAction";
 import { Footer } from "../components/Footer";
-import planten2 from "../assets/afbeeldingen/Planten.png";
+// Image moved to public: /images/hero-images/Planten.webp
 import { useLenisScroll } from "../components/useLenisScroll"; // ✅ toegevoegd
 
 export const PrivacyPolicyPage: React.FC = () => {
@@ -15,7 +15,7 @@ export const PrivacyPolicyPage: React.FC = () => {
       {/* Hero */}
       <div className="relative w-full h-[60vh] overflow-hidden">
         <img
-          src={planten2}
+          src="/images/hero-images/Planten.webp"
           alt="Privacy Hero"
           loading="lazy"
           className="w-full h-full object-cover object-center"

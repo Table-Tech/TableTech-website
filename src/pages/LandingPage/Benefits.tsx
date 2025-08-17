@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import pastaImg from "../../assets/afbeeldingen/pasta.jpeg";
-import idealLogo from "../../assets/afbeeldingen/ideal1.png";
-import applePayLogo from "../../assets/afbeeldingen/apple-pay.png";
+
+const idealLogo = "/images/payment-logos/ideal1.webp";
+const applePayLogo = "/images/payment-logos/apple-pay.webp";
 
 type AppScreen = {
   id: string;
@@ -104,7 +104,7 @@ export const BenefitsOne: React.FC = () => {
             
             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-gray-100/50">
               <img
-                src={pastaImg}
+                src="/menu/menu2.webp"
                 alt="Pasta Carbonara"
                 className="w-full h-16 object-cover rounded-lg mb-2"
               />
@@ -194,7 +194,7 @@ export const BenefitsOne: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <img
-                      src={pastaImg}
+                      src="/menu/menu2.webp"
                       alt="Pasta Carbonara"
                       className="w-10 h-10 object-cover rounded-lg"
                     />
@@ -303,7 +303,7 @@ export const BenefitsOne: React.FC = () => {
                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-2 text-center">
                   <div className="w-8 h-6 bg-black rounded mx-auto mb-1 flex items-center justify-center">
                     <img 
-                      src={applePayLogo} 
+                      src={applePayLogo}
                       alt="Apple Pay" 
                       className="w-full h-full object-contain"
                     />
@@ -336,7 +336,7 @@ export const BenefitsOne: React.FC = () => {
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg py-2 text-center shadow-lg flex items-center justify-center space-x-2">
               <div className="w-6 h-4 bg-white rounded flex items-center justify-center">
                 <img 
-                  src={idealLogo} 
+                  src={idealLogo}
                   alt="iDEAL" 
                   className="w-full h-full object-contain"
                 />
@@ -516,6 +516,7 @@ export const BenefitsOne: React.FC = () => {
                   video.pause();
                 }}
               >
+                <source src="/videos/output_transparent.webm" type="video/webm" />
                 <source src="/videos/Export_Video_2025-08-15-hq.webm" type="video/webm" />
                 Your browser does not support the video tag.
               </video>

@@ -55,12 +55,12 @@ const LandingPage: React.FC = () => {
         <PricingNew />
       </section>
 
-      {/* Contact Section */}
-  <section id="contact" className="w-full scroll-mt-24">
+      {/* Contact Section - seamless transition to footer */}
+      <section id="contact" className="w-full scroll-mt-24">
         <ContactSection />
       </section>
 
-      {/* Footer */}
+      {/* Footer - no visual separation */}
       <div className="w-full relative">
         <Footer />
       </div>

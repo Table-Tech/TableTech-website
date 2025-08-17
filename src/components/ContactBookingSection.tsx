@@ -465,51 +465,20 @@ ${data.firstName} ${data.lastName}
             transform: rotate(var(--angle)) translateY(-20px);
           }
         }
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
+        /* Blob animations removed for better performance */
       `}</style>
       
-  <section className="relative min-h-screen bg-[#2C1E1A] pt-0 pb-16 px-4 overflow-hidden">
-        {/* Compact seamless blend with PricingNew */}
+  <section className="relative min-h-screen bg-[#231813] pt-0 pb-0 px-4 overflow-hidden border-0 shadow-none">
+        {/* Seamless top blend with PricingNew */}
         <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#2C1E1A]/80 to-transparent"></div>
-          <div className="absolute top-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-[#231813]"></div>
         </div>
         
-        {/* Gradient background for content area */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] opacity-80"></div>
-        
-        {/* Animated background effects - matching pricing section */}
+        {/* Subtle background effects - minimal and static */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#C3561D] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-40 left-40 w-80 h-80 bg-[#7A5A48] rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
-        </div>
-
-        {/* Perfecte naadloze overgang - volledig onzichtbaar */}
-        <div className="absolute bottom-0 left-0 right-0 h-[200px] pointer-events-none z-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% to-[#231813] to-100%"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#C3561D] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
+          <div className="absolute top-40 left-40 w-80 h-80 bg-[#7A5A48] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto w-full pt-64">

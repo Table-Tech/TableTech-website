@@ -2,12 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import ClickSpark from "../../components/ClickSpark"
 
-// Import theme images and background
-import theme1 from "../../assets/afbeeldingen/Themes/theme1.png"
-import theme2 from "../../assets/afbeeldingen/Themes/theme2.png"
-import theme3 from "../../assets/afbeeldingen/Themes/theme3.png"
-import theme4 from "../../assets/afbeeldingen/Themes/theme4.png"
-import backgroundImage from "../../assets/afbeeldingen/achtergrond.png"
+// Images moved to public: /images/Themes/ and /images/backgrounds/
 
 interface Theme {
   id: number
@@ -23,7 +18,7 @@ const themes: Theme[] = [
     id: 1,
     name: "Mediterraans Seafood",
     nameEn: "Mediterranean Seafood",
-    image: theme1,
+    image: "/images/Themes/theme1.webp",
     description: {
       nl: "Een verfijnde app voor zeevruchten restaurants met mediterrane flair",
       en: "A refined app for seafood restaurants with Mediterranean flair"
@@ -34,7 +29,7 @@ const themes: Theme[] = [
     id: 2,
     name: "Artisan Coffee House",
     nameEn: "Artisan Coffee House",
-    image: theme2,
+    image: "/images/Themes/theme2.webp",
     description: {
       nl: "Perfect voor specialty coffee shops en artisan cafés",
       en: "Perfect for specialty coffee shops and artisan cafés"
@@ -45,7 +40,7 @@ const themes: Theme[] = [
     id: 3,
     name: "Premium Spirits Bar",
     nameEn: "Premium Spirits Bar",
-    image: theme3,
+    image: "/images/Themes/theme3.webp",
     description: {
       nl: "Luxe app design voor premium bars en cocktail lounges",
       en: "Luxury app design for premium bars and cocktail lounges"
@@ -56,7 +51,7 @@ const themes: Theme[] = [
     id: 4,
     name: "French Patisserie",
     nameEn: "French Patisserie",
-    image: theme4,
+    image: "/images/Themes/theme4.webp",
     description: {
       nl: "Traditionele Franse patisserie met artisan gebak",
       en: "Traditional French patisserie with artisan pastries"
@@ -101,7 +96,7 @@ const RestaurantThemesPage: React.FC = () => {
       ref={sectionRef}
       className="relative min-h-screen py-20"
       style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(44,30,26,0.95) 0%, rgba(44,30,26,0.8) 20%, rgba(44,30,26,0.6) 40%, rgba(44,30,26,0.4) 70%, rgba(44,30,26,0.2) 100%), url(${backgroundImage})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(44,30,26,0.95) 0%, rgba(44,30,26,0.8) 20%, rgba(44,30,26,0.6) 40%, rgba(44,30,26,0.4) 70%, rgba(44,30,26,0.2) 100%), url(/images/backgrounds/achtergrond.webp)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed'

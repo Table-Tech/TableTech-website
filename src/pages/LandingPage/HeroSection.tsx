@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import qrCodeImage from "../../assets/afbeeldingen/iyd.png";
+// Image moved to public: /images/qr-codes/iyd.webp;
 import { LaptopMockup } from "../../components/LaptopMockup";
 
 // Lazy load demo components for better performance
@@ -99,9 +99,10 @@ export const HeroSection: React.FC = () => {
                     <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-6 xl:p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
                       <div className="bg-white p-4 xl:p-5 rounded-xl mx-auto w-fit shadow-2xl">
                         <img 
-                          src={qrCodeImage} 
+                          src="/images/qr-codes/iyd.webp" 
                           alt="Scan QR code voor menu demo" 
                           className="w-32 h-32 xl:w-40 xl:h-40 2xl:w-44 2xl:h-44 mx-auto filter brightness-105 contrast-110"
+                          loading="eager"
                         />
                       </div>
                       <div className="text-center mt-4 xl:mt-5">

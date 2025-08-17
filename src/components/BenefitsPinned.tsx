@@ -5,7 +5,7 @@ import { BenefitsOne } from '../pages/LandingPage/Benefits';
 import { BenefitsTwo } from '../pages/LandingPage/Benefits-2';
 import { BenefitsThree } from '../pages/LandingPage/Benefits-3';
 import '../styles/benefits-pinned.css';
-import backgroundImage from '../assets/afbeeldingen/optie4.png';
+// Background image moved to public: /images/backgrounds/optie4.webp
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -215,7 +215,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url(/images/backgrounds/optie4.webp)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

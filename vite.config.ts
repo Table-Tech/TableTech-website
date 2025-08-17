@@ -60,10 +60,7 @@ export default defineConfig({
             return 'animations';
           }
           
-          // Group large image assets
-          if (id.includes('assets/afbeeldingen/') && (id.includes('.png') || id.includes('.jpg') || id.includes('.webp'))) {
-            return 'images';
-          }
+          // Image assets are now in public/images/ folder
         }
       }
     },

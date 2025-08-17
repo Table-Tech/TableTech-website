@@ -30,7 +30,8 @@
       "Bash(pkill:*)",
       "Bash(true)",
       "Bash(npm:*)",
-      "Bash(yarn install)"
+      "Bash(yarn install)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
