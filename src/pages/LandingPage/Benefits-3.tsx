@@ -814,7 +814,7 @@ export const BenefitsThree: React.FC = () => {
             </motion.div>
             {/* Bottom accent line - moved outside card for correct alignment */}
             <div className="flex flex-col items-center w-full mt-4">
-              <div className="w-2/3 border-t border-white/10 mb-2"></div>
+              {/* Removed border line between sections */}
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>

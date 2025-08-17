@@ -8,6 +8,8 @@ import { useLenisScroll } from "../../components/useLenisScroll";
 import { Footer } from "../../components/Footer";
 import RestaurantThemesPage from "./restaurant-themes";
 import ContactSection from "../../components/ContactBookingSection";
+import ContainerScroll from "../../components/ContainerScroll";
+
 
 const LandingPage: React.FC = () => {
   useLenisScroll();
@@ -31,6 +33,22 @@ const LandingPage: React.FC = () => {
         <RestaurantThemesPage />
       </section>
 
+      {/* 3D Container Scroll Section */}
+      <section className="w-full">
+        <ContainerScroll 
+          title={
+            <div className="text-center">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
+                Jouw <span className="bg-gradient-to-r from-[#FFA94D] to-[#FFD6A0] bg-clip-text text-transparent">Dashboard</span> Ervaring
+              </h2>
+              <p className="text-xl max-w-3xl mx-auto text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
+                Beheer je restaurant moeiteloos met ons intuïtieve <span className="bg-gradient-to-r from-[#FFA94D] to-[#FFD6A0] bg-clip-text text-transparent font-semibold">dashboard</span>. Krijg direct inzicht en geniet van eenvoudige bediening.
+              </p>
+            </div>
+          }
+          card={null}
+        />
+      </section>
 
       {/* Pricing Section */}
   <section id="pricing" className="w-full scroll-mt-24">
