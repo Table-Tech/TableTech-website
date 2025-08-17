@@ -349,13 +349,7 @@ const RestaurantThemesPage: React.FC = () => {
               : "Every design is completely custom-made for your restaurant. From colors to layout, everything fits perfectly with your brand."}
           </p>
           
-          <div className="flex justify-center">
-            <ClickSpark sparkColor="#FFD382" sparkRadius={25} sparkCount={10} duration={600}>
-              <button className="px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full hover:from-amber-700 hover:to-orange-700 transition-all transform hover:scale-105 shadow-lg">
-                {language === "nl" ? "Start je project" : "Start your project"}
-              </button>
-            </ClickSpark>
-          </div>
+          {/* Start je project knop verwijderd */}
         </motion.div>
       </div>
       {/* Enhanced smooth transition to next section (container-scroll) */}
