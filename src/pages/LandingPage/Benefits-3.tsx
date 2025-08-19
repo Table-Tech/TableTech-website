@@ -687,11 +687,7 @@ export const BenefitsThree: React.FC = () => {
                 {/* Gradient overlay for depth */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/3 to-transparent pointer-events-none"></div>
                 
-                {/* Subtle animated background pattern */}
-                <div className="absolute inset-0 opacity-5">
-                  <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-3xl animate-pulse"></div>
-                  <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                </div>
+                {/* Background removed for cleaner look */}
                 
                 <div className="relative p-6 z-10">
                   <div className="text-center mb-6">

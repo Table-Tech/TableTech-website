@@ -53,7 +53,10 @@ export const InternalNotificationEmail = ({
 
   return (
     <Html>
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
+      </Head>
       <Preview>{previewText}</Preview>
       <Body style={main}>
         {/* Decorative top bar */}
@@ -220,10 +223,10 @@ export const InternalNotificationEmail = ({
   );
 };
 
-// Styles - Dark Theme
+// Styles - Donkere achtergrond voor interne emails
 const main = {
-  backgroundColor: '#0a0a0a',
-  backgroundImage: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+  backgroundColor: '#1a1a1a',
+  backgroundImage: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
   minHeight: '100vh',
@@ -231,16 +234,15 @@ const main = {
 };
 
 const container = {
-  backgroundColor: '#1a1a1a',
-  backdropFilter: 'blur(10px)',
+  backgroundColor: '#2a2a2a',
   margin: '0 auto',
   padding: '32px',
   marginBottom: '64px',
   borderRadius: '16px',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(232, 108, 40, 0.3)',
+  border: '2px solid rgba(232, 108, 40, 0.4)',
   maxWidth: '600px',
   overflow: 'hidden',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
 };
 
 const header = {
@@ -273,9 +275,10 @@ const h2 = {
 
 const section = {
   padding: '24px 16px',
-  background: 'transparent',
-  borderBottom: '1px solid rgba(232, 108, 40, 0.2)',
+  background: 'rgba(0, 0, 0, 0.3)',
+  borderBottom: '1px solid rgba(232, 108, 40, 0.3)',
   marginBottom: '16px',
+  borderRadius: '8px',
 };
 
 const table = {
@@ -284,7 +287,7 @@ const table = {
 };
 
 const labelCell = {
-  color: '#9ca3af',
+  color: '#e2e8f0',
   fontSize: '14px',
   fontWeight: '500',
   lineHeight: '20px',
@@ -295,7 +298,7 @@ const labelCell = {
 };
 
 const valueCell = {
-  color: '#f3f4f6',
+  color: '#ffffff',
   fontSize: '14px',
   lineHeight: '20px',
   padding: '8px 0',
@@ -304,7 +307,7 @@ const valueCell = {
 };
 
 const label = {
-  color: '#9ca3af',
+  color: '#e2e8f0',
   fontSize: '14px',
   fontWeight: '500',
   lineHeight: '20px',
@@ -313,21 +316,20 @@ const label = {
 };
 
 const messageBox = {
-  background: 'rgba(232, 108, 40, 0.1)',
-  border: '2px solid rgba(232, 108, 40, 0.3)',
+  background: 'rgba(232, 108, 40, 0.2)',
+  border: '2px solid rgba(232, 108, 40, 0.4)',
   borderRadius: '12px',
-  color: '#f3f4f6',
+  color: '#ffffff',
   fontSize: '14px',
   lineHeight: '22px',
   padding: '20px',
   margin: '16px 0',
   whiteSpace: 'pre-wrap' as const,
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
   textAlign: 'left' as const,
 };
 
 const hr = {
-  borderColor: 'rgba(232, 108, 40, 0.3)',
+  borderColor: 'rgba(232, 108, 40, 0.4)',
   margin: '0',
 };
 
@@ -338,7 +340,7 @@ const link = {
 };
 
 const actionSection = {
-  background: 'linear-gradient(135deg, rgba(232, 108, 40, 0.2), rgba(255, 179, 102, 0.2))',
+  background: 'rgba(232, 108, 40, 0.3)',
   borderRadius: '12px',
   padding: '24px',
   margin: '24px 0 0 0',
@@ -347,7 +349,7 @@ const actionSection = {
 };
 
 const actionText = {
-  color: '#FFB366',
+  color: '#ffffff',
   fontSize: '14px',
   lineHeight: '20px',
   margin: '0',

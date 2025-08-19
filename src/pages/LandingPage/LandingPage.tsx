@@ -39,10 +39,10 @@ const LandingPage: React.FC = () => {
           title={
             <div className="text-center">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
-                Jouw <span className="bg-gradient-to-r from-[#FFA94D] to-[#FFD6A0] bg-clip-text text-transparent">Dashboard</span> Ervaring
+                Jouw <span className="text-[#E86C28]">Dashboard</span> Ervaring
               </h2>
               <p className="text-xl max-w-3xl mx-auto text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
-                Beheer je restaurant moeiteloos met ons intuïtieve <span className="bg-gradient-to-r from-[#FFA94D] to-[#FFD6A0] bg-clip-text text-transparent font-semibold">dashboard</span>. Krijg direct inzicht en geniet van eenvoudige bediening.
+                Beheer je restaurant moeiteloos met ons intuïtieve <span className="text-[#E86C28] font-semibold">dashboard</span>. Krijg direct inzicht en geniet van eenvoudige bediening.
               </p>
             </div>
           }

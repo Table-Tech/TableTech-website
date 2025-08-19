@@ -25,11 +25,7 @@ export const Footer: React.FC = () => {
           }}
         ></div>
         
-        {/* Enhanced accent glows with subtle animation */}
-        <div className="absolute top-16 right-16 w-32 h-32 bg-[#E86C28]/6 rounded-full blur-xl opacity-60 animate-pulse" style={{animationDuration: '4s'}}></div>
-        <div className="absolute bottom-16 left-16 w-40 h-40 bg-[#FFD382]/5 rounded-full blur-2xl opacity-50 animate-pulse" style={{animationDuration: '6s'}}></div>
-        <div className="absolute top-32 left-1/3 w-24 h-24 bg-[#FFD382]/4 rounded-full blur-lg opacity-40 animate-pulse" style={{animationDuration: '5s'}}></div>
-        <div className="absolute bottom-32 right-1/4 w-28 h-28 bg-[#E86C28]/5 rounded-full blur-xl opacity-50 animate-pulse" style={{animationDuration: '7s'}}></div>
+        {/* Background removed for cleaner look */}
       </div>
 
       <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 flex flex-col items-center pt-4 sm:pt-6 lg:pt-8">
@@ -66,7 +62,7 @@ export const Footer: React.FC = () => {
           </span>
         </div>
 
-        {/* Contact & Socials met enhanced effecten */}
+        {/* Contact info met LinkedIn geïntegreerd */}
         <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 mb-8">
           <div className="flex items-center gap-2 text-base group">
             <Phone className="w-5 h-5 text-[#FFD382] group-hover:text-[#E86C28] transition-colors duration-300" />
@@ -109,69 +105,28 @@ export const Footer: React.FC = () => {
               Nederland
             </span>
           </div>
+          <div className="flex items-center gap-2 text-base group">
+            <a 
+              href="https://www.linkedin.com/company/tabletech-eu/about/" 
+              target="_blank" 
+              rel="noopener" 
+              aria-label="LinkedIn" 
+              className="flex items-center gap-2 text-[#FFD382] hover:text-white transition-all duration-300 font-semibold hover:scale-105"
+              style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
+              }}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              LinkedIn
+            </a>
+          </div>
         </div>
-
-        {/* Social media icons met enhanced glow effecten */}
-        <div className="flex gap-6 mb-8">
-          <a 
-            href="https://www.instagram.com/tabletech.nl" 
-            target="_blank" 
-            rel="noopener" 
-            aria-label="Instagram" 
-            className="text-[#E86C28] hover:scale-110 transition-all duration-300 hover:text-[#ff9347]"
-            style={{
-              filter: 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 15px rgba(237, 125, 49, 0.6))';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))';
-            }}
-          >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-          </a>
-          <a 
-            href="https://www.facebook.com/tabletech.nl" 
-            target="_blank" 
-            rel="noopener" 
-            aria-label="Facebook" 
-            className="text-[#E86C28] hover:scale-110 transition-all duration-300 hover:text-[#ff9347]"
-            style={{
-              filter: 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 15px rgba(237, 125, 49, 0.6))';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))';
-            }}
-          >
-            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          <a 
-            href="mailto:info@tabletech.nl" 
-            aria-label="Email" 
-            className="text-[#E86C28] hover:scale-110 transition-all duration-300 hover:text-[#ff9347]"
-            style={{
-              filter: 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 15px rgba(237, 125, 49, 0.6))';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.filter = 'drop-shadow(0 0 5px rgba(237, 125, 49, 0.3))';
-            }}
-          >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><polyline points="2,4 12,14 22,4"/></svg>
-          </a>
-        </div>
-
-        {/* Removed visual divider for seamless flow */}
-        <div className="mb-4"></div>
 
         {/* Copyright en links met enhanced effecten */}
         <div className="text-center text-sm flex flex-col items-center gap-2">
@@ -189,7 +144,7 @@ export const Footer: React.FC = () => {
           <div className="flex gap-6 mt-1">
             <a 
               href="/privacy" 
-              className="underline hover:text-white transition-all duration-300 hover:scale-105 hover:text-[#E86C28]"
+              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';
@@ -202,7 +157,7 @@ export const Footer: React.FC = () => {
             </a>
             <a 
               href="/algemene-voorwaarden" 
-              className="underline hover:text-white transition-all duration-300 hover:scale-105 hover:text-[#E86C28]"
+              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';

@@ -9,6 +9,7 @@ const MenuDemo = lazy(() => import("./pages/MenuDemo/MenuDemo"));
 
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDots";
+import { ScrollProgressBar } from "./components/ScrollProgressBar";
 
 import "./index.css";
 
@@ -20,6 +21,7 @@ const AppContent: React.FC = () => {
     <>
       <ScrollToTop />
       {isLandingPage && <ScrollDots />}
+      {isLandingPage && <ScrollProgressBar />}
       <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />

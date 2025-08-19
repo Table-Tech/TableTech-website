@@ -23,11 +23,7 @@ export const CallToAction: React.FC = () => {
         <div className="absolute top-0 left-0 right-0 h-24 bg-[#2C1E1A]"></div>
       </div>
       
-      {/* Subtle background decorations */}
-      <div className="absolute inset-0 overflow-hidden opacity-40">
-        <div className="absolute top-20 right-20 w-32 h-32 bg-[#E86C28]/20 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-20 w-40 h-40 bg-[#FFD382]/10 rounded-full blur-3xl"></div>
-      </div>
+      {/* Background removed for cleaner look */}
 
       <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 flex justify-center">
         <div

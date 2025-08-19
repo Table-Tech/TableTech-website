@@ -105,44 +105,6 @@ const RestaurantThemesPage: React.FC = () => {
       
       {/* Background Elements with gentle candlelight pulse */}
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.2, 0.3, 0.2]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-20 left-10 w-72 h-72 bg-amber-200/20 rounded-full mix-blend-multiply filter blur-3xl"
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.15, 1],
-            opacity: [0.15, 0.25, 0.15]
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-          className="absolute bottom-20 right-10 w-72 h-72 bg-amber-200/25 rounded-full mix-blend-multiply filter blur-3xl"
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1]
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2
-          }}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-200/15 rounded-full mix-blend-multiply filter blur-3xl"
-        />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

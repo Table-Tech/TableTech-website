@@ -7,7 +7,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -36,14 +35,6 @@ export const CustomerConfirmationEmail = ({
   message,
 }: CustomerConfirmationEmailProps) => {
   const previewText = `Bevestiging: we hebben je aanvraag ontvangen`;
-  
-  // TableTech logo as base64 - simple SVG version for reliability
-  const logoSvg = `data:image/svg+xml;base64,${Buffer.from(`
-    <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="120" height="40" rx="8" fill="#E86C28"/>
-      <text x="60" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">TableTech</text>
-    </svg>
-  `).toString('base64')}`;
 
   return (
     <Html>
@@ -52,124 +43,169 @@ export const CustomerConfirmationEmail = ({
         <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="color-scheme" content="light dark" />
         <meta name="supported-color-schemes" content="light dark" />
+        <meta name="x-apple-disable-message-reformatting" />
+        <style>{`
+          @media (prefers-color-scheme: dark) {
+            .dark-mode-bg { background-color: #1a1a1a !important; }
+            .dark-mode-text { color: #ffffff !important; }
+            .dark-mode-text-secondary { color: #e2e8f0 !important; }
+            .dark-mode-border { border-color: #333333 !important; }
+          }
+          @media (prefers-color-scheme: light) {
+            .light-mode-bg { background-color: #ffffff !important; }
+            .light-mode-text { color: #1a1a1a !important; }
+            .light-mode-text-secondary { color: #4a5568 !important; }
+            .light-mode-border { border-color: #e2e8f0 !important; }
+          }
+          @media only screen and (max-width: 600px) {
+            .container { width: 95% !important; margin: 10px auto !important; }
+            .content { padding: 15px !important; }
+            .header-section { padding: 15px !important; }
+            .header-title { font-size: 20px !important; }
+            .main-title { font-size: 22px !important; }
+          }
+          * { box-sizing: border-box; }
+        `}</style>
       </Head>
       <Preview>{previewText}</Preview>
-      <Body style={main}>
-        {/* Decorative top bar */}
-        <div style={decorativeBar}></div>
-        
-        <Container style={container}>
-          {/* Logo */}
-          <Section style={logoSection}>
-            <Img
-              src={logoSvg}
-              width="120"
-              height="40"
-              alt="TableTech"
-              style={logo}
-            />
-          </Section>
-
-          {/* Header */}
-          <Heading style={h1}>Bedankt voor je aanvraag!</Heading>
+      <Body style={main} className="dark-mode-bg light-mode-bg">
+        <Container style={outerContainer} className="dark-mode-bg light-mode-bg">
           
-          <Text style={text}>
-            Beste {firstName},
-          </Text>
-          
-          <Text style={text}>
-            We hebben je aanvraag voor een afspraak in goede orde ontvangen! 
-            We nemen binnen 1 werkdag contact met je op om de afspraak te bevestigen.
-          </Text>
-
-          {preferredDate && preferredTime && (
-            <Section style={appointmentHighlight}>
-              <Text style={appointmentText}>
-                📅 <strong>Jouw voorkeur:</strong> {preferredDate} om {preferredTime}
-              </Text>
-              <Text style={appointmentSubtext}>
-                (Telefonisch gesprek van 30 minuten)
-              </Text>
+          <Container style={container} className="container dark-mode-bg light-mode-bg dark-mode-border light-mode-border">
+            
+            {/* Header zonder logo */}
+            <Section style={headerSection} className="header-section">
+              <Text style={headerTitle} className="header-title">TableTech</Text>
             </Section>
-          )}
 
-          {/* Details section */}
-          <Section style={detailsSection}>
-            <Heading as="h2" style={h2}>
-              Details van je aanvraag
-            </Heading>
-            
-            <Text style={detailItem}>
-              <strong>Naam:</strong> {firstName} {lastName}
-            </Text>
-            <Text style={detailItem}>
-              <strong>E-mail:</strong> {email}
-            </Text>
-            {phone && (
-              <Text style={detailItem}>
-                <strong>Telefoon:</strong> {phone}
+            {/* Content sectie */}
+            <Section style={contentSection} className="content dark-mode-bg light-mode-bg">
+              
+              {/* Hoofdtitel */}
+              <Heading style={h1} className="main-title dark-mode-text light-mode-text">Bedankt voor je aanvraag!</Heading>
+              
+              <Text style={greeting} className="dark-mode-text light-mode-text">
+                Beste {firstName},
               </Text>
-            )}
-            {restaurant && (
-              <Text style={detailItem}>
-                <strong>Restaurant:</strong> {restaurant}
+              
+              <Text style={bodyText} className="dark-mode-text-secondary light-mode-text-secondary">
+                We hebben je aanvraag voor een afspraak ontvangen en zullen spoedig contact met je opnemen om de details te bespreken.
               </Text>
-            )}
-            {preferredDate && (
-              <Text style={detailItem}>
-                <strong>Voorkeursdatum:</strong> {preferredDate}
-              </Text>
-            )}
-            {preferredTime && (
-              <Text style={detailItem}>
-                <strong>Voorkeurstijd:</strong> {preferredTime}
-              </Text>
-            )}
-            <Text style={detailItem}>
-              <strong>Bericht:</strong>
-            </Text>
-            <Text style={messageBox}>
-              {message}
-            </Text>
-          </Section>
 
-          <Hr style={hr} />
+              {/* Appointment highlight */}
+              {preferredDate && preferredTime && (
+                <Section style={appointmentBox}>
+                  <Text style={appointmentIcon}>📅</Text>
+                  <Text style={appointmentTitle}>Jouw voorkeur</Text>
+                  <Text style={appointmentDate}>
+                    {preferredDate} om {preferredTime}
+                  </Text>
+                  <Text style={appointmentNote}>
+                    Telefonisch gesprek van 30 minuten
+                  </Text>
+                </Section>
+              )}
 
-          {/* Call to action */}
-          <Section style={ctaSection}>
-            <Text style={{...text, textAlign: 'center'}}>
-              Mocht je vragen hebben of de afspraak willen wijzigen, 
-              neem dan gerust contact met ons op:
-            </Text>
-            
-            <Button
-              href={`mailto:info@tabletech.nl?subject=Afspraak aanvraag`}
-              style={button}
-            >
-              Contact opnemen
-            </Button>
-          </Section>
+              {/* Details section */}
+              <Section style={detailsBox} className="dark-mode-bg light-mode-bg dark-mode-border light-mode-border">
+                <Heading as="h2" style={detailsTitle}>
+                  Overzicht van je aanvraag
+                </Heading>
+                
+                <table style={detailsTable}>
+                  <tr>
+                    <td style={labelCell} className="dark-mode-text light-mode-text"><strong>Naam:</strong></td>
+                    <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{firstName} {lastName}</td>
+                  </tr>
+                  <tr>
+                    <td style={labelCell} className="dark-mode-text light-mode-text"><strong>E-mail:</strong></td>
+                    <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{email}</td>
+                  </tr>
+                  {phone && (
+                    <tr>
+                      <td style={labelCell} className="dark-mode-text light-mode-text"><strong>Telefoon:</strong></td>
+                      <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{phone}</td>
+                    </tr>
+                  )}
+                  {restaurant && (
+                    <tr>
+                      <td style={labelCell} className="dark-mode-text light-mode-text"><strong>Restaurant:</strong></td>
+                      <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{restaurant}</td>
+                    </tr>
+                  )}
+                  {preferredDate && (
+                    <tr>
+                      <td style={labelCell} className="dark-mode-text light-mode-text"><strong>Datum:</strong></td>
+                      <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{preferredDate}</td>
+                    </tr>
+                  )}
+                  {preferredTime && (
+                    <tr>
+                      <td style={labelCell} className="dark-mode-text light-mode-text"><strong>Tijd:</strong></td>
+                      <td style={valueCell} className="dark-mode-text-secondary light-mode-text-secondary">{preferredTime}</td>
+                    </tr>
+                  )}
+                </table>
+                
+                <Text style={messageLabel} className="dark-mode-text light-mode-text"><strong>Jouw bericht:</strong></Text>
+                <Section style={messageBox} className="dark-mode-border light-mode-border">
+                  <Text style={messageText} className="dark-mode-text-secondary light-mode-text-secondary">{message}</Text>
+                </Section>
+              </Section>
 
-          {/* Footer */}
-          <Hr style={hr} />
+              <Hr style={divider} />
+
+              {/* Call to action */}
+              <Section style={ctaSection}>
+                <Text style={ctaText} className="dark-mode-text-secondary light-mode-text-secondary">
+                  Heb je vragen over je aanvraag?
+                </Text>
+                
+                <Button
+                  href={`mailto:info@tabletech.nl?subject=Vraag over afspraak aanvraag`}
+                  style={ctaButton}
+                >
+                  Neem contact op
+                </Button>
+              </Section>
+
+            </Section>
+          </Container>
           
-          <Section style={footer}>
-            <Img
-              src={logoSvg}
-              width="80"
-              height="27"
-              alt="TableTech"
-              style={footerLogo}
-            />
-            <Text style={footerText}>
-              TableTech | Biezelingeplein 32, 3086 SB Rotterdam, Nederland
-            </Text>
-            <Link href="https://tabletech.nl" style={footerLink}>
-              https://tabletech.nl
-            </Link>
-            <Text style={footerText}>
-              Je ontvangt deze e-mail omdat je een afspraak hebt aangevraagd via onze website.
-            </Text>
+          {/* Footer */}
+          <Section style={footer} className="dark-mode-bg light-mode-bg dark-mode-border light-mode-border">
+            <Container style={footerContainer}>
+              
+              <Text style={footerCompany} className="dark-mode-text light-mode-text">
+                TableTech VOF
+              </Text>
+              
+              <Text style={footerAddress} className="dark-mode-text-secondary light-mode-text-secondary">
+                Biezelingeplein 32<br />
+                3086 SB Rotterdam<br />
+                Nederland
+              </Text>
+              
+              <Text style={footerContact} className="dark-mode-text-secondary light-mode-text-secondary">
+                📧 info@tabletech.nl<br />
+                📞 +31 85 888 3333
+              </Text>
+              
+              <Link href="https://tabletech.nl" style={footerWebsite}>
+                www.tabletech.nl
+              </Link>
+              
+              <Hr style={footerDivider} />
+              
+              <Text style={footerCopyright} className="dark-mode-text-secondary light-mode-text-secondary">
+                © 2025 TableTech VOF - Alle rechten voorbehouden
+              </Text>
+              
+              <Text style={footerDisclaimer} className="dark-mode-text-secondary light-mode-text-secondary">
+                Je ontvangt deze e-mail omdat je een afspraak hebt aangevraagd via onze website.
+              </Text>
+              
+            </Container>
           </Section>
         </Container>
       </Body>
@@ -177,201 +213,280 @@ export const CustomerConfirmationEmail = ({
   );
 };
 
-// Styles - Dark Theme
+// Cross-platform compatible styles met automatische dark/light mode
 const main = {
-  backgroundColor: '#0a0a0a',
-  backgroundImage: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  minHeight: '100vh',
-  padding: '40px 20px',
+  backgroundColor: 'transparent',
+  fontFamily: 'Arial, Helvetica, sans-serif',
+  margin: '0',
+  padding: '0',
+  width: '100%',
+};
+
+const outerContainer = {
+  backgroundColor: 'transparent',
+  margin: '0 auto',
+  padding: '20px 10px',
+  width: '100%',
+  maxWidth: '600px',
 };
 
 const container = {
-  backgroundColor: '#1a1a1a',
-  backdropFilter: 'blur(10px)',
+  backgroundColor: 'transparent',
   margin: '0 auto',
-  padding: '32px',
-  marginBottom: '64px',
-  borderRadius: '16px',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(232, 108, 40, 0.3)',
-  maxWidth: '600px',
-};
-
-const logoSection = {
-  padding: '24px',
-  textAlign: 'left' as const,
-  background: 'rgba(232, 108, 40, 0.1)',
-  borderRadius: '12px',
-  margin: '0 0 24px 0',
-};
-
-const logo = {
-  margin: '0',
   borderRadius: '8px',
-  padding: '12px',
-  backgroundColor: '#ffffff',
-  boxShadow: '0 4px 12px rgba(232, 108, 40, 0.3)',
+  maxWidth: '600px',
+  width: '100%',
+  border: '1px solid #E86C28',
+};
+
+// Header - verbeterd voor alle platforms
+const headerSection = {
+  backgroundColor: '#E86C28',
+  padding: '25px 30px',
+  textAlign: 'center' as const,
+  borderRadius: '8px 8px 0 0',
+};
+
+const headerTitle = {
+  color: '#ffffff',
+  fontSize: '24px',
+  fontWeight: 'bold',
+  margin: '0',
+  padding: '0',
+  textAlign: 'center' as const,
+};
+
+// Content section
+const contentSection = {
+  padding: '30px',
+  backgroundColor: 'transparent',
 };
 
 const h1 = {
-  color: '#ffffff',
-  fontSize: '32px',
-  fontWeight: '700',
-  lineHeight: '40px',
-  margin: '0 0 24px',
-  padding: '0',
-  textAlign: 'left' as const,
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+  color: 'inherit',
+  fontSize: '26px',
+  fontWeight: 'bold',
+  lineHeight: '1.3',
+  margin: '0 0 25px 0',
+  textAlign: 'center' as const,
 };
 
-const h2 = {
-  color: '#FFB366',
-  fontSize: '22px',
-  fontWeight: '600',
-  lineHeight: '28px',
-  margin: '0 0 16px',
-  textAlign: 'left' as const,
+const greeting = {
+  color: 'inherit',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  margin: '0 0 15px 0',
+  lineHeight: '1.4',
 };
 
-const text = {
-  color: '#d1d5db',
+const bodyText = {
+  color: 'inherit',
   fontSize: '16px',
-  lineHeight: '24px',
-  margin: '0 0 20px',
-  padding: '0',
-  textAlign: 'left' as const,
+  lineHeight: '1.5',
+  margin: '0 0 25px 0',
 };
 
-const appointmentHighlight = {
-  background: 'linear-gradient(135deg, rgba(232, 108, 40, 0.2), rgba(255, 179, 102, 0.1))',
-  borderRadius: '12px',
-  margin: '24px 0',
-  padding: '24px',
-  border: '2px solid rgba(232, 108, 40, 0.4)',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-  textAlign: 'left' as const,
+// Appointment box - verbeterd contrast
+const appointmentBox = {
+  backgroundColor: '#E86C28',
+  borderRadius: '8px',
+  padding: '20px',
+  textAlign: 'center' as const,
+  margin: '25px 0',
+  border: '2px solid #E86C28',
 };
 
-const appointmentText = {
+const appointmentIcon = {
+  fontSize: '24px',
+  margin: '0 0 8px 0',
+  textAlign: 'center' as const,
+};
+
+const appointmentTitle = {
   color: '#ffffff',
   fontSize: '18px',
-  lineHeight: '24px',
-  margin: '0 0 8px',
-  fontWeight: '600',
-  textAlign: 'left' as const,
+  fontWeight: 'bold',
+  margin: '0 0 10px 0',
+  textAlign: 'center' as const,
 };
 
-const appointmentSubtext = {
-  color: '#9ca3af',
+const appointmentDate = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: 'bold',
+  margin: '0 0 8px 0',
+  textAlign: 'center' as const,
+};
+
+const appointmentNote = {
+  color: '#ffffff',
   fontSize: '14px',
-  lineHeight: '20px',
   margin: '0',
-  textAlign: 'left' as const,
+  textAlign: 'center' as const,
 };
 
-const detailsSection = {
-  background: 'rgba(232, 108, 40, 0.05)',
-  borderRadius: '12px',
-  margin: '24px 0',
-  padding: '24px',
-  border: '1px solid rgba(232, 108, 40, 0.2)',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+// Details box - automatische kleurdetectie
+const detailsBox = {
+  backgroundColor: 'transparent',
+  borderRadius: '8px',
+  padding: '25px',
+  margin: '25px 0',
+  border: '2px solid #E86C28',
 };
 
-const detailItem = {
-  color: '#f3f4f6',
+const detailsTitle = {
+  color: '#E86C28',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  margin: '0 0 20px 0',
+  textAlign: 'center' as const,
+};
+
+const detailsTable = {
+  width: '100%',
+  borderCollapse: 'collapse' as const,
+  margin: '0 0 20px 0',
+};
+
+const labelCell = {
+  color: 'inherit',
   fontSize: '14px',
-  lineHeight: '22px',
-  margin: '0 0 12px',
-  fontWeight: '500',
-  textAlign: 'left' as const,
+  padding: '8px 15px 8px 0',
+  verticalAlign: 'top',
+  width: '30%',
+};
+
+const valueCell = {
+  color: 'inherit',
+  fontSize: '14px',
+  padding: '8px 0',
+  verticalAlign: 'top',
+};
+
+const messageLabel = {
+  color: 'inherit',
+  fontSize: '14px',
+  margin: '15px 0 10px 0',
 };
 
 const messageBox = {
-  backgroundColor: 'rgba(232, 108, 40, 0.1)',
-  border: '2px solid rgba(232, 108, 40, 0.3)',
-  borderRadius: '8px',
-  color: '#f3f4f6',
+  backgroundColor: 'transparent',
+  border: '2px solid #E86C28',
+  borderRadius: '6px',
+  padding: '15px',
+  margin: '10px 0 0 0',
+};
+
+const messageText = {
+  color: 'inherit',
   fontSize: '14px',
-  lineHeight: '22px',
-  margin: '12px 0 16px',
-  padding: '16px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+  lineHeight: '1.4',
+  margin: '0',
   whiteSpace: 'pre-wrap' as const,
-  textAlign: 'left' as const,
 };
 
-const hr = {
-  borderColor: 'rgba(232, 108, 40, 0.3)',
-  margin: '20px 0',
+const divider = {
+  borderColor: '#E86C28',
+  margin: '30px 0',
+  borderWidth: '1px',
+  borderStyle: 'solid',
 };
 
+// CTA section
 const ctaSection = {
-  padding: '24px 0',
+  textAlign: 'center' as const,
+  margin: '25px 0',
+};
+
+const ctaText = {
+  color: 'inherit',
+  fontSize: '16px',
+  margin: '0 0 20px 0',
   textAlign: 'center' as const,
 };
 
-const button = {
-  background: 'linear-gradient(135deg, #E86C28, #FFB366)',
-  borderRadius: '12px',
-  color: '#fff',
+const ctaButton = {
+  backgroundColor: '#E86C28',
+  borderRadius: '6px',
+  color: '#ffffff',
   display: 'inline-block',
   fontSize: '16px',
-  fontWeight: '600',
-  lineHeight: '100%',
-  padding: '16px 32px',
+  fontWeight: 'bold',
+  padding: '14px 28px',
   textDecoration: 'none',
   textAlign: 'center' as const,
-  boxShadow: '0 4px 12px rgba(232, 108, 40, 0.3)',
   border: 'none',
-  transition: 'all 0.3s ease',
 };
 
+// Footer - automatische kleurdetectie
 const footer = {
-  padding: '24px',
+  backgroundColor: 'transparent',
+  padding: '30px 20px',
   textAlign: 'center' as const,
-  background: 'rgba(232, 108, 40, 0.05)',
-  borderRadius: '12px',
-  margin: '24px -32px -32px -32px',
-  display: 'flex' as const,
-  flexDirection: 'column' as const,
-  alignItems: 'center' as const,
-  justifyContent: 'center' as const,
+  borderTop: '2px solid #E86C28',
 };
 
-const footerText = {
-  color: '#1f2937',
-  fontSize: '12px',
-  lineHeight: '16px',
-  margin: '0 0 4px',
+const footerContainer = {
+  maxWidth: '400px',
+  margin: '0 auto',
   textAlign: 'center' as const,
 };
 
-const footerLink = {
-  color: '#FFB366',
-  fontSize: '12px',
-  lineHeight: '16px',
+const footerCompany = {
+  color: 'inherit',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  margin: '0 0 15px 0',
+  textAlign: 'center' as const,
+};
+
+const footerAddress = {
+  color: 'inherit',
+  fontSize: '14px',
+  lineHeight: '1.4',
+  margin: '0 0 15px 0',
+  textAlign: 'center' as const,
+};
+
+const footerContact = {
+  color: 'inherit',
+  fontSize: '14px',
+  lineHeight: '1.5',
+  margin: '0 0 15px 0',
+  textAlign: 'center' as const,
+};
+
+const footerWebsite = {
+  color: '#E86C28',
+  fontSize: '14px',
+  fontWeight: 'bold',
   textDecoration: 'underline',
-};
-
-const footerLogo = {
-  margin: '0 auto 16px auto',
-  borderRadius: '6px',
-  padding: '8px',
-  backgroundColor: '#ffffff',
-  boxShadow: '0 2px 8px rgba(232, 108, 40, 0.2)',
   display: 'block',
+  margin: '0 0 20px 0',
+  textAlign: 'center' as const,
 };
 
-const decorativeBar = {
-  height: '6px',
-  background: 'linear-gradient(90deg, #E86C28, #FFB366, #E86C28)',
-  width: '100%',
-  maxWidth: '600px',
-  margin: '0 auto 20px',
-  borderRadius: '3px',
+const footerDivider = {
+  borderColor: '#E86C28',
+  margin: '20px 0',
+  borderWidth: '1px',
+  borderStyle: 'solid',
+};
+
+const footerCopyright = {
+  color: 'inherit',
+  fontSize: '13px',
+  margin: '0 0 12px 0',
+  textAlign: 'center' as const,
+};
+
+const footerDisclaimer = {
+  color: 'inherit',
+  fontSize: '12px',
+  lineHeight: '1.3',
+  margin: '0',
+  textAlign: 'center' as const,
+  fontStyle: 'italic',
 };
 
 export default CustomerConfirmationEmail;

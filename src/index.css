@@ -120,8 +120,19 @@ body.modal-open {
 }
 
 /* =======================
-   Custom animaties
+   Border Beam Animation
 ========================== */
+@keyframes border-beam {
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.after\:animate-border-beam::after {
+  animation: border-beam var(--duration) infinite linear;
+  animation-delay: var(--delay);
+}
+
 @keyframes move-down {
   0% {
     transform: translateY(-100%);

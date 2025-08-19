@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
+import { BorderBeam } from "../../components/BorderBeam";
 
 // Pricing tiers data
 const pricingTiers = [
@@ -150,12 +151,7 @@ export const PricingNew = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-transparent"></div>
       </div>
       
-      {/* Static background effects - better performance */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-5"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#C3561D] rounded-full mix-blend-multiply filter blur-xl opacity-5"></div>
-        <div className="absolute top-40 left-40 w-80 h-80 bg-[#7A5A48] rounded-full mix-blend-multiply filter blur-xl opacity-5"></div>
-      </div>
+      {/* Background removed for cleaner look */}
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
@@ -166,7 +162,7 @@ export const PricingNew = () => {
           className="text-center mb-12"
         >
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            Kies jouw <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">Table Tech</span> pakket
+            Kies jouw <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">TableTech</span> pakket
           </h1>
           <p className="text-xl text-[#D4B896] max-w-3xl mx-auto">
             Transparante prijzen voor elk type restaurant. Start gratis en groei op jouw tempo.
@@ -179,8 +175,18 @@ export const PricingNew = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="backdrop-blur-xl bg-[#3A2B24]/30 rounded-3xl border border-[#4A372E]/50 shadow-2xl overflow-hidden"
+          className="relative backdrop-blur-xl bg-[#3A2B24]/30 rounded-3xl border border-[#4A372E]/50 shadow-2xl overflow-hidden"
         >
+          {/* BorderBeam animation */}
+          <BorderBeam 
+            size={250}
+            duration={12}
+            borderWidth={2}
+            anchor={90}
+            colorFrom="#E86C28"
+            colorTo="#FFB366"
+            delay={0}
+          />
           {/* Desktop view */}
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
@@ -272,10 +278,20 @@ export const PricingNew = () => {
                 return (
                   <div key={tier.id} className="w-full">
                     <div className={`
-                      backdrop-blur-xl bg-gradient-to-b ${colors.bg} 
+                      relative backdrop-blur-xl bg-gradient-to-b ${colors.bg} 
                       rounded-2xl border ${colors.border} overflow-hidden
                       ${tier.popular ? 'ring-2 ring-[#E86C28]/50' : ''}
                     `}>
+                      {/* BorderBeam for each card */}
+                      <BorderBeam 
+                        size={200}
+                        duration={10 + pricingTiers.indexOf(tier) * 2}
+                        borderWidth={1.5}
+                        anchor={90}
+                        colorFrom={tier.color === 'green' ? '#7A5A48' : tier.color === 'blue' ? '#E86C28' : tier.color === 'purple' ? '#C3561D' : '#E86C28'}
+                        colorTo={tier.color === 'green' ? '#D4B896' : tier.color === 'blue' ? '#FFB366' : tier.color === 'purple' ? '#F4A460' : '#FFB366'}
+                        delay={pricingTiers.indexOf(tier) * 0.5}
+                      />
                       <div className="p-6">
                         <div className="text-center mb-6">
                           <div className="text-4xl mb-2">{tier.icon}</div>

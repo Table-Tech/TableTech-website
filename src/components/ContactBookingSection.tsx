@@ -474,12 +474,7 @@ ${data.firstName} ${data.lastName}
           <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-[#231813]"></div>
         </div>
         
-        {/* Subtle background effects - minimal and static */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#E86C28] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#C3561D] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
-          <div className="absolute top-40 left-40 w-80 h-80 bg-[#7A5A48] rounded-full mix-blend-multiply filter blur-xl opacity-3"></div>
-        </div>
+        {/* Background removed for cleaner look */}
         
         <div className="relative z-10 max-w-7xl mx-auto w-full pt-64">
           {/* Main content - 2 columns */}
@@ -1006,6 +1001,7 @@ ${data.firstName} ${data.lastName}
                       <div className="text-center space-y-2">
                         <p className="text-green-300 text-sm font-semibold">✅ Afspraak Bevestigd!</p>
                         <p className="text-green-200 text-xs">Je ontvangt een bevestigingsemail op <strong className="text-white">{bookingData.email}</strong></p>
+                        <p className="text-green-100 text-xs mt-1">💡 Controleer ook je spam/ongewenste e-mail folder als je de mail niet ziet</p>
                       </div>
                     )}
                   </div>

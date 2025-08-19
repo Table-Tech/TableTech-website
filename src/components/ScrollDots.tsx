@@ -34,7 +34,11 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
           const rect = element.getBoundingClientRect();
           const elementTop = rect.top + scrollPosition;
           
-          if (scrollPosition >= elementTop - windowHeight / 2) {
+          // For the first section (hero), activate immediately at the top
+          // For other sections, activate when halfway through
+          const threshold = index === 0 ? 0 : windowHeight / 2;
+          
+          if (scrollPosition >= elementTop - threshold) {
             currentSection = index;
           }
         }
@@ -48,6 +52,14 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
       setActiveSection(currentSection);
     };
 
+    // Set initial state to hero section when component mounts
+    setActiveSection(0);
+    
+    // Run initial check after a short delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      handleScroll();
+    }, 100);
+
     // Initial check
     handleScroll();
 
@@ -56,6 +68,7 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
     window.addEventListener('resize', handleScroll);
 
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };

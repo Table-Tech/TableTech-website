@@ -21,10 +21,10 @@ export const useLenisScroll = () => {
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.1,
-      duration: 0.8,
+      lerp: 0.15,
+      duration: 0.6,
       smoothWheel: true,
-      wheelMultiplier: 1.2,
+      wheelMultiplier: 1.8,
     });
 
     // Koppel Lenis aan window

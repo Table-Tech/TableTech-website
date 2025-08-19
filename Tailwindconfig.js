@@ -53,9 +53,13 @@ module.exports = {
           '50%': { opacity: '0.6' },
           '100%': { transform: 'translateY(100%)', opacity: '0.1' },
         },
+        'border-beam': {
+          'to': { 'offset-distance': '100%' },
+        },
       },
       animation: {
         'move-down': 'move-down 3.5s linear infinite',
+        'border-beam': 'border-beam var(--duration) infinite linear',
       },
     },
   },
