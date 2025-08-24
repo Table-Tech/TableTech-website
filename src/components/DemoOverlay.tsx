@@ -25,7 +25,14 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
 }) => {
   const [activeTheme, setActiveTheme] = useState<ThemeId>("tabletech");
   const [isInitialized, setIsInitialized] = useState(false);
-  const [phonePosition, setPhonePosition] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [phonePosition, setPhonePosition] = useState<{ 
+    top: number; 
+    left: number; 
+    width: number;
+    phoneHeight?: number;
+    availableSpace?: number;
+    selectorHeight?: number;
+  } | null>(null);
 
   // Memoized themes data for performance
   const themes = useMemo(() => [
@@ -40,6 +47,87 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
     return themes.find(t => t.id === activeTheme) || themes[0];
   }, [themes, activeTheme]);
 
+  // Responsive button styling based on viewport and phone size
+  const getResponsiveButtonStyle = useCallback(() => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const phoneWidth = phonePosition?.width || 300;
+    
+    // Very small screens (iPhone SE, small Android)
+    if (viewportWidth < 380 || viewportHeight < 600) {
+      return {
+        fontSize: 'clamp(0.4rem, 2.2vw, 0.48rem)',
+        padding: 'clamp(0.25rem, 1vw, 0.35rem) clamp(0.3rem, 1.5vw, 0.45rem)',
+        minWidth: 'clamp(50px, 20vw, 65px)',
+        minHeight: 'clamp(28px, 7vw, 32px)',
+        maxWidth: 'clamp(65px, 23vw, 75px)',
+        gap: '0.25rem'
+      };
+    }
+    
+    // Small screens
+    if (viewportWidth < 450 || viewportHeight < 700) {
+      return {
+        fontSize: 'clamp(0.45rem, 2vw, 0.52rem)',
+        padding: 'clamp(0.3rem, 1.2vw, 0.4rem) clamp(0.35rem, 1.8vw, 0.5rem)',
+        minWidth: 'clamp(55px, 18vw, 70px)',
+        minHeight: 'clamp(30px, 7vw, 34px)',
+        maxWidth: 'clamp(70px, 22vw, 80px)',
+        gap: '0.3rem'
+      };
+    }
+    
+    // Medium screens  
+    if (viewportWidth < 600) {
+      return {
+        fontSize: 'clamp(0.5rem, 1.8vw, 0.55rem)',
+        padding: 'clamp(0.35rem, 1.2vw, 0.45rem) clamp(0.4rem, 1.8vw, 0.55rem)',
+        minWidth: 'clamp(60px, 16vw, 75px)',
+        minHeight: 'clamp(32px, 6vw, 36px)',
+        maxWidth: 'clamp(75px, 20vw, 85px)',
+        gap: '0.35rem'
+      };
+    }
+    
+    // Large screens (default)
+    return {
+      fontSize: 'clamp(0.52rem, 1.6vw, 0.58rem)',
+      padding: 'clamp(0.4rem, 1.2vw, 0.5rem) clamp(0.45rem, 1.8vw, 0.6rem)',
+      minWidth: 'clamp(65px, 15vw, 80px)',
+      minHeight: 'clamp(34px, 6vw, 38px)',
+      maxWidth: 'clamp(80px, 18vw, 90px)',
+      gap: '0.4rem'
+    };
+  }, [phonePosition]);
+
+  // Track viewport changes for responsive updates
+  const [responsiveStyle, setResponsiveStyle] = useState(getResponsiveButtonStyle());
+
+  useEffect(() => {
+    const updateResponsiveStyle = () => {
+      setResponsiveStyle(getResponsiveButtonStyle());
+    };
+
+    let timeout: number;
+    const debouncedUpdate = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(updateResponsiveStyle, 100);
+    };
+
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('orientationchange', debouncedUpdate);
+    
+    // Update when phone position changes
+    updateResponsiveStyle();
+
+    return () => {
+      window.removeEventListener('resize', debouncedUpdate);
+      window.removeEventListener('orientationchange', debouncedUpdate);
+      clearTimeout(timeout);
+    };
+  }, [getResponsiveButtonStyle, phonePosition]);
+
   // Initialize theme immediately when opened
   useEffect(() => {
     if (isOpen && !isInitialized) {
@@ -47,7 +135,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
     }
   }, [isOpen, isInitialized]);
 
-  // Phone position detection
+  // Phone position detection - Enhanced for all phone sizes
   useEffect(() => {
     if (!isOpen || !isInitialized) return;
 
@@ -56,23 +144,60 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
       if (!phoneContainer) return;
 
       const rect = phoneContainer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate optimal positioning based on phone size and viewport
+      const phoneTop = rect.top;
+      const phoneLeft = rect.left;
+      const phoneWidth = rect.width;
+      const phoneHeight = rect.height;
+      
+      // Dynamic spacing based on phone size and available space
+      let selectorHeight = 60; // Base height for theme selector
+      
+      // Adjust selector height based on viewport size
+      if (viewportHeight < 600) {
+        selectorHeight = 45; // Smaller on very small screens
+      } else if (viewportHeight < 800) {
+        selectorHeight = 50; // Medium on medium screens
+      }
+      
+      // Calculate top position with safety margin
+      const availableTopSpace = phoneTop;
+      const safeTopMargin = Math.max(10, availableTopSpace * 0.1); // 10% of available space or minimum 10px
+      const optimalTop = Math.max(safeTopMargin, phoneTop - selectorHeight - 15);
+      
       setPhonePosition({
-        top: rect.top,
-        left: rect.left + rect.width / 2,
-        width: rect.width
+        top: optimalTop,
+        left: phoneLeft + phoneWidth / 2,
+        width: phoneWidth,
+        phoneHeight: phoneHeight,
+        availableSpace: availableTopSpace,
+        selectorHeight: selectorHeight
       });
     };
 
-    // Initial detection with delay to ensure DOM is ready
+    // Initial detection with multiple attempts for reliability
+    setTimeout(detectPhonePosition, 100);
     setTimeout(detectPhonePosition, 300);
+    setTimeout(detectPhonePosition, 500);
     
-    // Update on resize/orientation change
-    window.addEventListener('resize', detectPhonePosition);
-    window.addEventListener('orientationchange', detectPhonePosition);
+    // Update on resize/orientation change with debounce
+    let resizeTimeout: number;
+    const debouncedDetection = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(detectPhonePosition, 150);
+    };
+    
+    window.addEventListener('resize', debouncedDetection);
+    window.addEventListener('orientationchange', debouncedDetection);
+    window.addEventListener('scroll', debouncedDetection); // Also track scroll changes
     
     return () => {
-      window.removeEventListener('resize', detectPhonePosition);
-      window.removeEventListener('orientationchange', detectPhonePosition);
+      window.removeEventListener('resize', debouncedDetection);
+      window.removeEventListener('orientationchange', debouncedDetection);
+      window.removeEventListener('scroll', debouncedDetection);
+      clearTimeout(resizeTimeout);
     };
   }, [isOpen, isInitialized]);
 
@@ -84,8 +209,8 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
       // Only apply dynamic scaling on mobile
       if (window.innerWidth >= 1024) return;
 
-      const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
       
       // Phone mockup dimensions (approximate)
       const phoneHeight = 740; // Approximate height of phone mockup
@@ -170,33 +295,34 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
     }
   }, [isOpen]);
 
-  // Enhanced scroll detection with precise mouse position tracking
+  // Enhanced scroll detection - Separate handling for touch vs mouse
   useEffect(() => {
     if (!isOpen) return;
 
-    const getTargetScrollContainer = (mouseEvent: MouseEvent): HTMLElement | null => {
-      // Get element under mouse cursor
-      const elementUnderMouse = document.elementFromPoint(mouseEvent.clientX, mouseEvent.clientY);
-      if (!elementUnderMouse) return null;
+    // Device detection
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-      // Check if we're inside the phone container
-      const phoneContainer = elementUnderMouse.closest('[data-phone-container="true"]');
+    const getTargetScrollContainer = (clientX: number, clientY: number): HTMLElement | null => {
+      const elementUnderCursor = document.elementFromPoint(clientX, clientY);
+      if (!elementUnderCursor) return null;
+
+      const phoneContainer = elementUnderCursor.closest('[data-phone-container="true"]');
       if (!phoneContainer) return null;
 
-      // Priority 1: Check for product detail scroll area (when product is open)
-      const productDetailContainer = elementUnderMouse.closest('[data-product-detail-scroll="true"]');
+      // Priority 1: Check for product detail scroll area
+      const productDetailContainer = elementUnderCursor.closest('[data-product-detail-scroll="true"]');
       if (productDetailContainer) {
         return productDetailContainer as HTMLElement;
       }
 
       // Priority 2: Check for horizontal scroll (categories)
-      const categoriesContainer = elementUnderMouse.closest('.flex.overflow-x-auto');
+      const categoriesContainer = elementUnderCursor.closest('.flex.overflow-x-auto');
       if (categoriesContainer && categoriesContainer.closest('[data-phone-container="true"]')) {
         return categoriesContainer as HTMLElement;
       }
 
       // Priority 3: Check for cart scroll area
-      const cartContainer = elementUnderMouse.closest('[data-phone-cart-scroll="true"]');
+      const cartContainer = elementUnderCursor.closest('[data-phone-cart-scroll="true"]');
       if (cartContainer) {
         return cartContainer as HTMLElement;
       }
@@ -207,110 +333,120 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
         return mainScrollContainer as HTMLElement;
       }
 
-      // Priority 5: Check for any other scrollable container within phone
-      const scrollableContainers = phoneContainer.querySelectorAll('[data-phone-scroll-container="true"], .overflow-y-auto');
-      for (const container of Array.from(scrollableContainers)) {
-        const htmlContainer = container as HTMLElement;
-        const rect = htmlContainer.getBoundingClientRect();
-        const isVisible = rect.width > 0 && rect.height > 0;
-        const hasVerticalScroll = htmlContainer.scrollHeight > htmlContainer.clientHeight;
-        const hasHorizontalScroll = htmlContainer.scrollWidth > htmlContainer.clientWidth;
-        
-        // Check if the mouse is actually over this container
-        if (isVisible && (hasVerticalScroll || hasHorizontalScroll)) {
-          const containerRect = htmlContainer.getBoundingClientRect();
-          if (mouseEvent.clientX >= containerRect.left && 
-              mouseEvent.clientX <= containerRect.right && 
-              mouseEvent.clientY >= containerRect.top && 
-              mouseEvent.clientY <= containerRect.bottom) {
-            return htmlContainer;
-          }
-        }
-      }
-
       return null;
     };
 
-    const directScrollTo = (element: HTMLElement, deltaX: number, deltaY: number) => {
-      // Check if this is a horizontal scroll container (categories)
-      const isHorizontalContainer = element.classList.contains('overflow-x-auto') || 
-                                   element.hasAttribute('data-horizontal-scroll');
-      
-      if (isHorizontalContainer) {
-        // For horizontal containers, convert vertical scroll to horizontal - FASTER SCROLL
-        const newScrollLeft = Math.max(0, Math.min(
-          element.scrollWidth - element.clientWidth, 
-          element.scrollLeft + (deltaY * 2.0) // Faster horizontal scroll
-        ));
-        element.scrollLeft = newScrollLeft;
-      } else {
-        // For vertical containers, use direct vertical scrolling - FASTER SCROLL
-        const newScrollTop = Math.max(0, Math.min(
-          element.scrollHeight - element.clientHeight, 
-          element.scrollTop + deltaY * 1.5 // Faster vertical scroll
-        ));
-        element.scrollTop = newScrollTop;
-        
-        // Also handle horizontal scroll if present
-        if (deltaX !== 0) {
-          const newScrollLeft = Math.max(0, Math.min(
-            element.scrollWidth - element.clientWidth, 
-            element.scrollLeft + deltaX
-          ));
-          element.scrollLeft = newScrollLeft;
-        }
-      }
-    };
-
+    // DESKTOP SCROLL HANDLING (Mouse wheel)
     const handleWheel = (e: WheelEvent) => {
-      // Only handle wheel events if they're over the phone
-      const targetContainer = getTargetScrollContainer(e);
+      if (isTouchDevice) return; // Skip on touch devices
+      
+      const targetContainer = getTargetScrollContainer(e.clientX, e.clientY);
       if (targetContainer) {
         e.preventDefault();
         e.stopPropagation();
         
-        // Use deltaY for both vertical and horizontal scrolling
-        // The directScrollTo function will determine the appropriate direction
-        directScrollTo(targetContainer, e.deltaX, e.deltaY * 4.0); // Much faster scroll response for better UX
-      }
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        window.touchStartY = e.touches[0].clientY;
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1 && typeof window.touchStartY === 'number') {
-        const touchY = e.touches[0].clientY;
-        const deltaY = window.touchStartY - touchY;
+        const isHorizontalContainer = targetContainer.classList.contains('overflow-x-auto');
         
-        // Check if touch is over phone
-        const elementUnderTouch = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-        const phoneContainer = elementUnderTouch?.closest('[data-phone-container="true"]');
-        
-        if (phoneContainer) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // Check for product detail container first
-          const productDetailContainer = phoneContainer.querySelector('[data-product-detail-scroll="true"]') as HTMLElement;
-          if (productDetailContainer) {
-            directScrollTo(productDetailContainer, 0, deltaY * 6); // Much faster product detail scroll
-          } else {
-            // Find main scroll container in phone
-            const mainContainer = phoneContainer.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
-            if (mainContainer) {
-              directScrollTo(mainContainer, 0, deltaY * 6); // Much faster touch response
-            }
-          }
-          
-          window.touchStartY = touchY;
+        if (isHorizontalContainer) {
+          // Convert vertical scroll to horizontal for categories
+          const newScrollLeft = Math.max(0, Math.min(
+            targetContainer.scrollWidth - targetContainer.clientWidth, 
+            targetContainer.scrollLeft + (e.deltaY * 2.0)
+          ));
+          targetContainer.scrollLeft = newScrollLeft;
+        } else {
+          // Vertical scrolling for menu
+          const newScrollTop = Math.max(0, Math.min(
+            targetContainer.scrollHeight - targetContainer.clientHeight, 
+            targetContainer.scrollTop + e.deltaY * 1.5
+          ));
+          targetContainer.scrollTop = newScrollTop;
         }
       }
     };
 
+    // TOUCH SCROLL HANDLING - Natural finger scrolling
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartScrollTop = 0;
+    let touchStartScrollLeft = 0;
+    let activeScrollContainer: HTMLElement | null = null;
+    let isScrolling = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        
+        // Find the scroll container
+        activeScrollContainer = getTargetScrollContainer(touch.clientX, touch.clientY);
+        
+        if (activeScrollContainer) {
+          touchStartScrollTop = activeScrollContainer.scrollTop;
+          touchStartScrollLeft = activeScrollContainer.scrollLeft;
+          isScrolling = false;
+          
+          // Add smooth transition class for natural feel
+          activeScrollContainer.style.scrollBehavior = 'auto';
+        }
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1 && activeScrollContainer) {
+        const touch = e.touches[0];
+        const deltaX = touchStartX - touch.clientX;
+        const deltaY = touchStartY - touch.clientY;
+        
+        // Determine if this is a scroll gesture
+        if (!isScrolling && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+          isScrolling = true;
+        }
+        
+        if (isScrolling) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const isHorizontalContainer = activeScrollContainer.classList.contains('overflow-x-auto');
+          
+          if (isHorizontalContainer) {
+            // Horizontal scrolling for categories - use X delta
+            const newScrollLeft = Math.max(0, Math.min(
+              activeScrollContainer.scrollWidth - activeScrollContainer.clientWidth,
+              touchStartScrollLeft + deltaX
+            ));
+            activeScrollContainer.scrollLeft = newScrollLeft;
+          } else {
+            // Vertical scrolling for menu - use Y delta
+            const newScrollTop = Math.max(0, Math.min(
+              activeScrollContainer.scrollHeight - activeScrollContainer.clientHeight,
+              touchStartScrollTop + deltaY
+            ));
+            activeScrollContainer.scrollTop = newScrollTop;
+          }
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (activeScrollContainer) {
+        // Add momentum scrolling for natural feel
+        activeScrollContainer.style.scrollBehavior = 'smooth';
+        
+        // Reset after a short delay
+        setTimeout(() => {
+          if (activeScrollContainer) {
+            activeScrollContainer.style.scrollBehavior = 'auto';
+          }
+        }, 300);
+      }
+      
+      activeScrollContainer = null;
+      isScrolling = false;
+    };
+
+    // KEYBOARD HANDLING (unchanged)
     const handleKeyDown = (e: KeyboardEvent) => {
       const scrollKeys: Record<string, { x: number; y: number }> = {
         'ArrowUp': { x: 0, y: -80 },
@@ -326,35 +462,37 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
         e.preventDefault();
         e.stopPropagation();
         
-        // For keyboard, always use main container
         const phoneContainer = document.querySelector('[data-phone-container="true"]');
         const mainContainer = phoneContainer?.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
         if (mainContainer) {
-          if (e.key === 'Home') {
-            mainContainer.scrollTop = 0;
-            mainContainer.scrollLeft = 0;
-          } else if (e.key === 'End') {
-            mainContainer.scrollTop = mainContainer.scrollHeight;
-          } else {
-            const scroll = scrollKeys[e.key];
-            directScrollTo(mainContainer, scroll.x, scroll.y);
-          }
+          const scroll = scrollKeys[e.key];
+          const newScrollTop = Math.max(0, Math.min(
+            mainContainer.scrollHeight - mainContainer.clientHeight,
+            mainContainer.scrollTop + scroll.y
+          ));
+          const newScrollLeft = Math.max(0, Math.min(
+            mainContainer.scrollWidth - mainContainer.clientWidth,
+            mainContainer.scrollLeft + scroll.x
+          ));
+          mainContainer.scrollTop = newScrollTop;
+          mainContainer.scrollLeft = newScrollLeft;
         }
       }
     };
 
-    // Add event listeners with passive: false to prevent default behavior
+    // Add event listeners
     document.addEventListener('wheel', handleWheel, { passive: false });
     document.addEventListener('touchstart', handleTouchStart, { passive: false });
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
     document.addEventListener('keydown', handleKeyDown, { passive: false });
 
     return () => {
       document.removeEventListener('wheel', handleWheel);
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
       document.removeEventListener('keydown', handleKeyDown);
-      delete window.touchStartY;
     };
   }, [isOpen]); // Only isOpen as dependency
 
@@ -402,7 +540,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
             className="flex items-center justify-center gap-8 max-w-7xl w-full px-4 h-full"
             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}
           >
-            {/* Close button */}
+            {/* Close button - Centered at top */}
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -411,10 +549,10 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 duration: 0.3
               }}
               onClick={onClose}
-              className="absolute top-6 right-6 z-60 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-200 hover:scale-110"
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 z-60 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-4 rounded-full transition-all duration-200 hover:scale-110"
               aria-label="Demo sluiten"
             >
-              <IoClose size={24} />
+              <IoClose size={32} />
             </motion.button>
 
             {/* Mobile Theme Selector - ABOVE PHONE - MOBILE ONLY */}
@@ -422,10 +560,10 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               <div 
                 className="lg:hidden absolute z-50" 
                 style={{ 
-                  top: phonePosition.top - 80,
+                  top: phonePosition.top,
                   left: phonePosition.left,
                   transform: 'translateX(-50%)',
-                  maxWidth: '96vw',
+                  maxWidth: `min(100vw, ${Math.max(320, phonePosition.width * 1.4)}px)`,
                   width: 'fit-content'
                 }}
               >
@@ -437,10 +575,21 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                     duration: 0.4
                   }}
                 >
-                  <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 text-white border border-white/10" style={{
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                  }}>
-                    <div className="flex gap-2 justify-center items-center">
+                  <div 
+                    className="bg-white/10 backdrop-blur-xl rounded-xl p-1.5 text-white border border-white/20" 
+                    style={{
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                      backdropFilter: 'blur(20px)'
+                    }}
+                  >
+                    <div 
+                      className="flex justify-center items-center px-0.5 no-scrollbar"
+                      style={{ 
+                        gap: responsiveStyle.gap,
+                        overflowX: 'visible',
+                        flexWrap: 'nowrap'
+                      }}
+                    >
                       {themes.map((theme, index) => (
                         <motion.button
                           key={`mobile-phone-${theme.id}`}
@@ -451,19 +600,31 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                             duration: 0.2
                           }}
                           onClick={() => setActiveTheme(theme.id)}
-                          className={`rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 whitespace-nowrap flex-shrink-0 min-h-[40px] flex items-center justify-center ${
+                          className={`rounded-md font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 flex items-center justify-center text-center ${
                             activeTheme === theme.id
-                              ? `${theme.color} text-white ring-1 ring-white/50`
-                              : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                              ? `theme-button-${theme.id} theme-button-active border border-white/40`
+                              : "bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border border-white/20 hover:border-white/30"
                           }`}
                           style={{
-                            fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)',
-                            padding: 'clamp(0.35rem, 1.5vw, 0.5rem) clamp(0.5rem, 2.5vw, 0.75rem)',
-                            minWidth: 'clamp(55px, 15vw, 70px)',
-                            maxWidth: '85px'
+                            fontSize: responsiveStyle.fontSize,
+                            padding: responsiveStyle.padding,
+                            minWidth: responsiveStyle.minWidth,
+                            minHeight: responsiveStyle.minHeight,
+                            maxWidth: responsiveStyle.maxWidth
                           }}
                         >
-                          {theme.name}
+                          <span 
+                            className="text-center leading-tight font-medium"
+                            style={{
+                              fontSize: window.innerWidth < 350 ? '0.38rem' : 'inherit',
+                              lineHeight: window.innerWidth < 350 ? '1.1' : '1.2'
+                            }}
+                          >
+                            {window.innerWidth < 320 && theme.name.length > 6
+                              ? theme.name.replace(' ', '\n')
+                              : theme.name
+                            }
+                          </span>
                         </motion.button>
                       ))}
                     </div>
@@ -518,10 +679,10 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                           duration: 0.2
                         }}
                         onClick={() => setActiveTheme(theme.id)}
-                        className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
+                        className={`px-3 py-2 rounded-md font-medium transition-all duration-300 text-xs whitespace-nowrap ${
                           activeTheme === theme.id
-                            ? `${theme.color} text-white ring-2 ring-white/50`
-                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                            ? `theme-button-${theme.id} theme-button-active border border-white/40`
+                            : "bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border border-white/20 hover:border-white/30"
                         }`}
                       >
                         {theme.name}

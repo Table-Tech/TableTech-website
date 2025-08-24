@@ -600,6 +600,9 @@ export const BenefitsThree: React.FC = () => {
                 muted
                 playsInline
                 controls={false}
+                webkit-playsinline="true"
+                preload="metadata"
+                poster="/images/hero-images/telefoon.webp"
                 className="w-full h-full object-contain rounded-lg shadow-lg"
                 style={{ 
                   width: '700px', 
@@ -610,7 +613,14 @@ export const BenefitsThree: React.FC = () => {
                   background: 'transparent'
                 }}
                 onLoadStart={() => console.log('Video loading started')}
-                onCanPlay={() => console.log('Video can play')}
+                onCanPlay={(e) => {
+                  console.log('Video can play');
+                  // Force play on iOS
+                  const video = e.target as HTMLVideoElement;
+                  video.play().catch(() => {
+                    console.log('Video autoplay prevented');
+                  });
+                }}
                 onError={(e) => console.error('Video error:', e)}
                 onEnded={(e) => {
                   const video = e.target as HTMLVideoElement;
@@ -618,7 +628,8 @@ export const BenefitsThree: React.FC = () => {
                   video.pause();
                 }}
               >
-                <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm" />
+                <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm; codecs=vp9" />
+                <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
                 Your browser does not support the video tag.
               </video>
             </motion.div>

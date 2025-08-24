@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 // Image moved to public: /images/qr-codes/iyd.webp;
 import { LaptopMockup } from "../../components/LaptopMockup";
@@ -12,6 +12,37 @@ export const HeroSection: React.FC = () => {
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+
+  // Detect iOS and video support
+  useEffect(() => {
+    const detectIOS = () => {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    };
+    
+    setIsIOS(detectIOS());
+    
+    // Add touch handler for iOS to trigger video playback
+    const handleTouch = () => {
+      if (detectIOS()) {
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+          if (video.paused) {
+            video.play().catch(() => {
+              console.log('Could not play video on touch');
+            });
+          }
+        });
+      }
+    };
+    
+    document.addEventListener('touchstart', handleTouch, { once: true });
+    
+    return () => {
+      document.removeEventListener('touchstart', handleTouch);
+    };
+  }, []);
 
   const handleOpenCustomerDemo = async () => {
     setIsPreloading(true);
@@ -57,18 +88,60 @@ export const HeroSection: React.FC = () => {
         id="hero"
         className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden text-center snap-start bg-black"
       >
-        {/* Achtergrondvideo */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/videos/background-2.webm" type="video/webm" />
-          Your browser does not support HTML5 video.
-        </video>
+        {/* Achtergrondvideo - iPhone Compatible */}
+        <div className="absolute inset-0 w-full h-full">
+          {/* Fallback background image - Always present, behind video */}
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat video-fallback"
+            style={{
+              backgroundImage: `url(/images/backgrounds/optie4.webp)`,
+              backgroundColor: '#3b2a1d',
+              zIndex: 0
+            }}
+          />
+          
+          {/* Video layer - Shows on top when supported */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            webkit-playsinline="true"
+            x-webkit-airplay="allow"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+            style={{
+              objectPosition: 'center center',
+              backgroundColor: 'transparent',
+              zIndex: 1,
+              opacity: isIOS ? '0' : '1' // Start hidden on iOS
+            }}
+            onCanPlayThrough={(e) => {
+              const video = e.target as HTMLVideoElement;
+              // Smooth fade in when video is ready
+              video.style.opacity = '1';
+              
+              // Ensure playback on iOS
+              if (isIOS) {
+                video.play().catch(() => {
+                  console.log('Video autoplay prevented on iOS');
+                  video.style.opacity = '0'; // Fall back to background image
+                });
+              }
+            }}
+            onError={(e) => {
+              console.log('Video failed to load, using background image fallback');
+              const video = e.target as HTMLVideoElement;
+              video.style.opacity = '0';
+            }}
+            onStalled={() => {
+              console.log('Video stalled, may fall back to image');
+            }}
+          >
+            <source src="/videos/background-2.webm" type="video/webm; codecs=vp9" />
+            <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
+          </video>
+        </div>
 
         {/* Donkere overlay */}
         <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />

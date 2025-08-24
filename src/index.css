@@ -1,6 +1,224 @@
 @import "tailwindcss";
 
 /* =======================
+   iOS Video Optimalisaties
+========================== */
+/* Force hardware acceleration for videos on iOS */
+video {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* iOS specific video styling */
+@supports (-webkit-touch-callout: none) {
+  video {
+    object-fit: cover !important;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
+  }
+  
+  /* Fallback for iOS when video fails */
+  .video-fallback {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+/* =======================
+   CSS Variabelen voor Kleuren
+========================== */
+:root {
+  /* TableTech Theme */
+  --tabletech-primary: #7b4f35;
+  --tabletech-primary-hover: #5e3b29;
+  --tabletech-primary-light: #a0825a;
+  --tabletech-primary-dark: #4a3020;
+  --tabletech-bg: #ffffff;
+  --tabletech-text: #1f2937;
+  --tabletech-accent: #f59e0b;
+  --tabletech-accent-light: #fbbf24;
+  --tabletech-card: #ffffff;
+  --tabletech-secondary: #fef3c7;
+  
+  /* Spice Palace Theme */
+  --spicepalace-primary: #dc2626;
+  --spicepalace-primary-hover: #b91c1c;
+  --spicepalace-primary-light: #ef4444;
+  --spicepalace-primary-dark: #991b1b;
+  --spicepalace-bg: linear-gradient(to bottom, #7f1d1d, #991b1b, #7f1d1d);
+  --spicepalace-text: #ffffff;
+  --spicepalace-accent: #f59e0b;
+  --spicepalace-accent-light: #fbbf24;
+  --spicepalace-card: rgba(255, 255, 255, 0.95);
+  --spicepalace-secondary: #fef2f2;
+  
+  /* Sweet Delights Theme */
+  --sweetdelights-primary: #ec4899;
+  --sweetdelights-primary-hover: #db2777;
+  --sweetdelights-primary-light: #f472b6;
+  --sweetdelights-primary-dark: #be185d;
+  --sweetdelights-bg: linear-gradient(to bottom, #fce7f3, #fbcfe8);
+  --sweetdelights-text: #9d174d;
+  --sweetdelights-accent: #ec4899;
+  --sweetdelights-accent-light: #f472b6;
+  --sweetdelights-card: #ffffff;
+  --sweetdelights-secondary: #fdf2f8;
+  
+  /* Coffee Corner Theme */
+  --coffeecorner-primary: #d97706;
+  --coffeecorner-primary-hover: #b45309;
+  --coffeecorner-primary-light: #f59e0b;
+  --coffeecorner-primary-dark: #92400e;
+  --coffeecorner-bg: linear-gradient(to bottom, #fef3c7, #fde68a);
+  --coffeecorner-text: #92400e;
+  --coffeecorner-accent: #16a34a;
+  --coffeecorner-accent-light: #22c55e;
+  --coffeecorner-card: #ffffff;
+  --coffeecorner-secondary: #fffbeb;
+  
+  /* Globale UI Kleuren */
+  --success: #10b981;
+  --success-light: #34d399;
+  --warning: #f59e0b;
+  --warning-light: #fbbf24;
+  --error: #ef4444;
+  --error-light: #f87171;
+  --info: #3b82f6;
+  --info-light: #60a5fa;
+  
+  /* Basis Design System Kleuren */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
+
+/* Dark Mode Kleuren */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 94.1%;
+}
+
+/* Thema selector knoppen - clean design zonder bolkerige effecten */
+.theme-button-active {
+  background-color: var(--theme-color) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+.theme-button-tabletech {
+  background-color: #7b4f35 !important;
+}
+
+.theme-button-spicepalace {
+  background-color: #dc2626 !important;
+}
+
+.theme-button-sweetdelights {
+  background-color: #ec4899 !important;
+}
+
+.theme-button-coffeecorner {
+  background-color: #d97706 !important;
+}
+
+/* =======================
+   Thema-specifieke Utility Klassen
+========================== */
+
+/* TableTech thema utilities */
+.bg-tabletech-gradient {
+  background: linear-gradient(135deg, var(--tabletech-primary), var(--tabletech-primary-light));
+}
+
+.text-tabletech-gradient {
+  background: linear-gradient(135deg, var(--tabletech-primary), var(--tabletech-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Spice Palace thema utilities */
+.bg-spicepalace-gradient {
+  background: linear-gradient(135deg, var(--spicepalace-primary), var(--spicepalace-primary-light));
+}
+
+.text-spicepalace-gradient {
+  background: linear-gradient(135deg, var(--spicepalace-primary), var(--spicepalace-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sweet Delights thema utilities */
+.bg-sweetdelights-gradient {
+  background: linear-gradient(135deg, var(--sweetdelights-primary), var(--sweetdelights-primary-light));
+}
+
+.text-sweetdelights-gradient {
+  background: linear-gradient(135deg, var(--sweetdelights-primary), var(--sweetdelights-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Coffee Corner thema utilities */
+.bg-coffeecorner-gradient {
+  background: linear-gradient(135deg, var(--coffeecorner-primary), var(--coffeecorner-primary-light));
+}
+
+.text-coffeecorner-gradient {
+  background: linear-gradient(135deg, var(--coffeecorner-primary), var(--coffeecorner-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Algemene thema utilities */
+.theme-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.theme-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.theme-shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* =======================
    Algemene HTML & BODY
 ========================== */
 html, body {

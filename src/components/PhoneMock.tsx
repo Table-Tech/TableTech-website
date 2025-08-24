@@ -1738,11 +1738,6 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             WebkitOverflowScrolling: 'touch',
             touchAction: 'pan-x'
           }}
-          onWheel={(e) => {
-            e.preventDefault();
-            const container = e.currentTarget;
-            container.scrollLeft += e.deltaY * 0.3; // Slower horizontal scroll
-          }}
         >
           {categories.map((cat) => (
             <button
@@ -1821,11 +1816,6 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
             touchAction: 'pan-x'
-          }}
-          onWheel={(e) => {
-            e.preventDefault();
-            const container = e.currentTarget;
-            container.scrollLeft += e.deltaY * 0.3; // Slower horizontal scroll
           }}
         >
           {categories.map((cat) => (
@@ -1989,12 +1979,6 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                   WebkitOverflowScrolling: 'touch',
                   touchAction: 'pan-y'
                 }}
-                onWheel={(e) => {
-                  e.preventDefault();
-                  const container = e.currentTarget;
-                  const scrollSpeed = 1.1; // Faster cart scroll for better responsiveness
-                  container.scrollTop += e.deltaY * scrollSpeed;
-                }}
               >
                 {[...new Set(cart.map((i) => `${i.id}|||${JSON.stringify(i.toppings || [])}`))]
                   .map((uniqueKey) => {
@@ -2145,12 +2129,6 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                   maxHeight: 'calc(100vh - 200px)',
                   WebkitOverflowScrolling: 'touch',
                   touchAction: 'pan-y'
-                }}
-                onWheel={(e) => {
-                  e.preventDefault();
-                  const container = e.currentTarget;
-                  const scrollSpeed = 1.2; // Faster detail scroll for better responsiveness
-                  container.scrollTop += e.deltaY * scrollSpeed;
                 }}
               >
                 <div>

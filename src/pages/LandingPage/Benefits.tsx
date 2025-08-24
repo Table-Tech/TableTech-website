@@ -497,6 +497,9 @@ export const BenefitsOne: React.FC = () => {
                 muted
                 playsInline
                 controls={false}
+                webkit-playsinline="true"
+                preload="metadata"
+                poster="/images/hero-images/telefoon.webp"
                 className="w-full h-full object-contain rounded-lg shadow-2xl"
                 style={{ 
                   width: '1400px', 
@@ -508,7 +511,14 @@ export const BenefitsOne: React.FC = () => {
                   filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))'
                 }}
                 onLoadStart={() => console.log('Video loading started')}
-                onCanPlay={() => console.log('Video can play')}
+                onCanPlay={(e) => {
+                  console.log('Video can play');
+                  // Force play on iOS
+                  const video = e.target as HTMLVideoElement;
+                  video.play().catch(() => {
+                    console.log('Video autoplay prevented');
+                  });
+                }}
                 onError={(e) => console.error('Video error:', e)}
                 onEnded={(e) => {
                   const video = e.target as HTMLVideoElement;
@@ -516,8 +526,8 @@ export const BenefitsOne: React.FC = () => {
                   video.pause();
                 }}
               >
-                <source src="/videos/output_transparent.webm" type="video/webm" />
-                <source src="/videos/Export_Video_2025-08-15-hq.webm" type="video/webm" />
+                <source src="/videos/Export_Video_2025-08-15-hq.webm" type="video/webm; codecs=vp9" />
+                <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
                 Your browser does not support the video tag.
               </video>
             </div>

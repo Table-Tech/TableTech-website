@@ -40,6 +40,80 @@ module.exports = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        
+        // TableTech thema kleuren
+        'tabletech': {
+          DEFAULT: 'var(--tabletech-primary)',
+          hover: 'var(--tabletech-primary-hover)',
+          light: 'var(--tabletech-primary-light)',
+          dark: 'var(--tabletech-primary-dark)',
+          bg: 'var(--tabletech-bg)',
+          text: 'var(--tabletech-text)',
+          accent: 'var(--tabletech-accent)',
+          'accent-light': 'var(--tabletech-accent-light)',
+          card: 'var(--tabletech-card)',
+          secondary: 'var(--tabletech-secondary)',
+        },
+        
+        // Spice Palace thema kleuren
+        'spicepalace': {
+          DEFAULT: 'var(--spicepalace-primary)',
+          hover: 'var(--spicepalace-primary-hover)',
+          light: 'var(--spicepalace-primary-light)',
+          dark: 'var(--spicepalace-primary-dark)',
+          bg: 'var(--spicepalace-bg)',
+          text: 'var(--spicepalace-text)',
+          accent: 'var(--spicepalace-accent)',
+          'accent-light': 'var(--spicepalace-accent-light)',
+          card: 'var(--spicepalace-card)',
+          secondary: 'var(--spicepalace-secondary)',
+        },
+        
+        // Sweet Delights thema kleuren
+        'sweetdelights': {
+          DEFAULT: 'var(--sweetdelights-primary)',
+          hover: 'var(--sweetdelights-primary-hover)',
+          light: 'var(--sweetdelights-primary-light)',
+          dark: 'var(--sweetdelights-primary-dark)',
+          bg: 'var(--sweetdelights-bg)',
+          text: 'var(--sweetdelights-text)',
+          accent: 'var(--sweetdelights-accent)',
+          'accent-light': 'var(--sweetdelights-accent-light)',
+          card: 'var(--sweetdelights-card)',
+          secondary: 'var(--sweetdelights-secondary)',
+        },
+        
+        // Coffee Corner thema kleuren
+        'coffeecorner': {
+          DEFAULT: 'var(--coffeecorner-primary)',
+          hover: 'var(--coffeecorner-primary-hover)',
+          light: 'var(--coffeecorner-primary-light)',
+          dark: 'var(--coffeecorner-primary-dark)',
+          bg: 'var(--coffeecorner-bg)',
+          text: 'var(--coffeecorner-text)',
+          accent: 'var(--coffeecorner-accent)',
+          'accent-light': 'var(--coffeecorner-accent-light)',
+          card: 'var(--coffeecorner-card)',
+          secondary: 'var(--coffeecorner-secondary)',
+        },
+        
+        // Utility kleuren
+        'success': {
+          DEFAULT: 'var(--success)',
+          light: 'var(--success-light)',
+        },
+        'warning': {
+          DEFAULT: 'var(--warning)', 
+          light: 'var(--warning-light)',
+        },
+        'error': {
+          DEFAULT: 'var(--error)',
+          light: 'var(--error-light)',
+        },
+        'info': {
+          DEFAULT: 'var(--info)',
+          light: 'var(--info-light)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
