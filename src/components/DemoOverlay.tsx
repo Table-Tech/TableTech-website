@@ -25,6 +25,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
 }) => {
   const [activeTheme, setActiveTheme] = useState<ThemeId>("tabletech");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [phonePosition, setPhonePosition] = useState<{ top: number; left: number; width: number } | null>(null);
 
   // Memoized themes data for performance
   const themes = useMemo(() => [
@@ -44,6 +45,35 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
     if (isOpen && !isInitialized) {
       setIsInitialized(true);
     }
+  }, [isOpen, isInitialized]);
+
+  // Phone position detection
+  useEffect(() => {
+    if (!isOpen || !isInitialized) return;
+
+    const detectPhonePosition = () => {
+      const phoneContainer = document.querySelector('[data-phone-container="true"]') as HTMLElement;
+      if (!phoneContainer) return;
+
+      const rect = phoneContainer.getBoundingClientRect();
+      setPhonePosition({
+        top: rect.top,
+        left: rect.left + rect.width / 2,
+        width: rect.width
+      });
+    };
+
+    // Initial detection with delay to ensure DOM is ready
+    setTimeout(detectPhonePosition, 300);
+    
+    // Update on resize/orientation change
+    window.addEventListener('resize', detectPhonePosition);
+    window.addEventListener('orientationchange', detectPhonePosition);
+    
+    return () => {
+      window.removeEventListener('resize', detectPhonePosition);
+      window.removeEventListener('orientationchange', detectPhonePosition);
+    };
   }, [isOpen, isInitialized]);
 
   // Calculate dynamic phone scale based on viewport
@@ -387,41 +417,60 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               <IoClose size={24} />
             </motion.button>
 
-            {/* Mobile Theme Selector - TOP RIGHT - MOBILE ONLY */}
-            <div className="lg:hidden absolute top-6 left-6 right-20 z-50">
-              <motion.div
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ 
-                  delay: 0.3, 
-                  duration: 0.4
+            {/* Mobile Theme Selector - ABOVE PHONE - MOBILE ONLY */}
+            {phonePosition && (
+              <div 
+                className="lg:hidden absolute z-50" 
+                style={{ 
+                  top: phonePosition.top - 80,
+                  left: phonePosition.left,
+                  transform: 'translateX(-50%)',
+                  maxWidth: '96vw',
+                  width: 'fit-content'
                 }}
               >
-                <div className="bg-white/15 backdrop-blur-md rounded-xl p-2 text-white border border-white/10">
-                  <div className="flex flex-wrap gap-1 justify-center">
-                    {themes.map((theme, index) => (
-                      <motion.button
-                        key={`mobile-top-${theme.id}`}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          delay: 0.4 + (index * 0.05),
-                          duration: 0.2
-                        }}
-                        onClick={() => setActiveTheme(theme.id)}
-                        className={`px-2 py-1 rounded-md font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 ${
-                          activeTheme === theme.id
-                            ? `${theme.color} text-white ring-1 ring-white/50`
-                            : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
-                        }`}
-                      >
-                        {theme.name}
-                      </motion.button>
-                    ))}
+                <motion.div
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ 
+                    delay: 0.3, 
+                    duration: 0.4
+                  }}
+                >
+                  <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 text-white border border-white/10" style={{
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                  }}>
+                    <div className="flex gap-2 justify-center items-center">
+                      {themes.map((theme, index) => (
+                        <motion.button
+                          key={`mobile-phone-${theme.id}`}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ 
+                            delay: 0.4 + (index * 0.05),
+                            duration: 0.2
+                          }}
+                          onClick={() => setActiveTheme(theme.id)}
+                          className={`rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg text-xs border border-white/30 whitespace-nowrap flex-shrink-0 min-h-[40px] flex items-center justify-center ${
+                            activeTheme === theme.id
+                              ? `${theme.color} text-white ring-1 ring-white/50`
+                              : "bg-white/20 hover:bg-white/30 backdrop-blur-md text-white"
+                          }`}
+                          style={{
+                            fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)',
+                            padding: 'clamp(0.35rem, 1.5vw, 0.5rem) clamp(0.5rem, 2.5vw, 0.75rem)',
+                            minWidth: 'clamp(55px, 15vw, 70px)',
+                            maxWidth: '85px'
+                          }}
+                        >
+                          {theme.name}
+                        </motion.button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            </div>
+                </motion.div>
+              </div>
+            )}
 
             {/* Demo title - positioned at top - DESKTOP ONLY */}
             <motion.div

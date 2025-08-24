@@ -55,7 +55,7 @@ export const HeroSection: React.FC = () => {
     <>
       <section
         id="hero"
-        className="relative w-full h-screen flex flex-col justify-between overflow-hidden text-center snap-start bg-black"
+        className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden text-center snap-start bg-black"
       >
         {/* Achtergrondvideo */}
         <video
@@ -74,15 +74,83 @@ export const HeroSection: React.FC = () => {
         <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
 
         {/* Inhoud */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 pt-32 sm:pt-40 pb-16 sm:pb-20 text-white text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight sm:leading-snug drop-shadow-md text-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 py-8 text-white text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-3 sm:mb-4 leading-tight sm:leading-snug drop-shadow-md text-center">
             {t('hero.title')}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto xl:text-xl leading-relaxed text-center">
+          <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-6 max-w-3xl mx-auto xl:text-xl leading-relaxed text-center">
             {t('hero.subtitle')}
           </p>
 
-          <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 sm:gap-6 lg:gap-8 max-w-8xl mx-auto">
+          {/* Mobile Version - Stacked Layout */}
+          <div className="lg:hidden space-y-3 max-w-sm mx-auto">
+            {/* Customer Demo Card - Mobile */}
+            <div className="bg-gradient-to-br from-stone-700/40 to-amber-800/40 backdrop-blur-lg p-4 rounded-xl text-center shadow-xl border border-stone-600/50 hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-center justify-center mb-2">
+                <div className="bg-gradient-to-br from-stone-600 to-stone-700 p-2 rounded-lg shadow-md">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-base font-bold mb-1 text-white drop-shadow-lg">
+                {t('hero.customerDemo.title')}
+              </h3>
+              <p className="text-white/95 text-xs mb-3 leading-relaxed">
+                {t('hero.customerDemo.description')}
+              </p>
+              <button
+                onClick={handleOpenCustomerDemo}
+                type="button"
+                disabled={isPreloading}
+                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95"
+              >
+                {isPreloading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {t('loading')}
+                  </span>
+                ) : (
+                  t('hero.customerDemo.button')
+                )}
+              </button>
+            </div>
+
+            {/* Employee Demo Card - Mobile */}
+            <div className="bg-gradient-to-br from-stone-800/40 to-amber-800/40 backdrop-blur-lg p-4 rounded-xl text-center shadow-xl border border-stone-700/50 hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-center justify-center mb-2">
+                <div className="bg-gradient-to-br from-stone-700 to-stone-800 p-2 rounded-lg shadow-md">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM8 20h8" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-base font-bold mb-1 text-white drop-shadow-lg">
+                {t('hero.employeeDemo.title')}
+              </h3>
+              <p className="text-white/95 text-xs mb-3 leading-relaxed">
+                {t('hero.employeeDemo.description')}
+              </p>
+              <button
+                onClick={handleOpenEmployeeDemo}
+                type="button"
+                disabled={isPreloading}
+                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95"
+              >
+                {isPreloading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {t('loading')}
+                  </span>
+                ) : (
+                  t('hero.employeeDemo.button')
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Version - Side by Side Layout */}
+          <div className="hidden lg:flex flex-col lg:flex-row justify-center items-stretch gap-4 sm:gap-6 lg:gap-8 max-w-8xl mx-auto">
             {/* Customer Demo Card */}
             <div className="bg-white/10 backdrop-blur-md px-6 sm:px-8 lg:px-10 xl:px-12 py-6 sm:py-7 lg:py-8 xl:py-10 rounded-2xl text-center shadow-2xl w-full max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[500px] xl:min-h-[560px] 2xl:min-h-[600px]">
               <div className="flex-1 flex flex-col h-full">
@@ -175,10 +243,10 @@ export const HeroSection: React.FC = () => {
           </div>
         
         {/* Fade effect onderaan */}
-        <div className="absolute bottom-0 h-32 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-10" />
+        <div className="absolute bottom-0 h-16 w-full bg-gradient-to-b from-transparent to-[#2f1d14] z-5" />
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
           <div className="flex flex-col items-center">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
