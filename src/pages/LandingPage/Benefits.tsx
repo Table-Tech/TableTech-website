@@ -458,27 +458,15 @@ export const BenefitsOne: React.FC = () => {
     }
   ];
 
-  const benefitMessages = [
-    {
-      title: "Geen wachttijden",
-      description: "Gasten hoeven niet te wachten op personeel om hun bestelling op te nemen. Ze kunnen direct bestellen via hun smartphone."
-    },
-    {
-      title: "Live order tracking", 
-      description: "Gasten kunnen realtime zien hoe hun bestelling vordert - van keuken tot tafel. Geen onzekerheid meer over wanneer het eten komt."
-    },
-    {
-      title: "Contactloos betalen",
-      description: "Veilig en gemakkelijk betalen met iDEAL, Apple Pay, creditcard of andere digitale betaalmethoden. Geen contant geld nodig."
-    },
-    {
-      title: "Precisie bestellen",
-      description: "Door digitaal bestellen verdwijnen misverstanden. Gasten kunnen precies aangeven wat ze willen, inclusief speciale wensen."
-    }
-  ];
+  // Map benefit clicks to existing appScreens
+  const benefitToScreenMap = [0, 3, 2, 1]; // Maps benefit index to appScreen index
 
   const handleBenefitClick = (benefitIndex: number) => {
+    // Map benefit click to corresponding appScreen
+    const screenIndex = benefitToScreenMap[benefitIndex];
+    setCurrentScreen(screenIndex);
     setSelectedBenefit(benefitIndex);
+    
     // Reset to automatic cycling after 10 seconds
     setTimeout(() => {
       setSelectedBenefit(null);
@@ -486,9 +474,6 @@ export const BenefitsOne: React.FC = () => {
   };
 
   const getCurrentMessage = () => {
-    if (selectedBenefit !== null) {
-      return benefitMessages[selectedBenefit];
-    }
     return appScreens[currentScreen];
   };
 
@@ -496,11 +481,13 @@ export const BenefitsOne: React.FC = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    intervalRef.current = setInterval(() => {
-      if (selectedBenefit === null) {
+    
+    // Only start auto-slide if no benefit is selected
+    if (selectedBenefit === null) {
+      intervalRef.current = setInterval(() => {
         setCurrentScreen((prev) => (prev + 1) % appScreens.length);
-      }
-    }, 8000); // 8 seconden per slide
+      }, 8000); // 8 seconden per slide
+    }
   }, [appScreens.length, selectedBenefit]);
 
 
@@ -514,7 +501,7 @@ export const BenefitsOne: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isManualMode, appScreens.length, startAutoSlide]);
+  }, [isManualMode, selectedBenefit, startAutoSlide]);
 
   return (
     <section
@@ -602,7 +589,7 @@ export const BenefitsOne: React.FC = () => {
             <div className="space-y-3 flex-1 overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={selectedBenefit !== null ? `benefit-${selectedBenefit}` : `screen-${currentScreen}`}
+                  key={currentScreen}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
