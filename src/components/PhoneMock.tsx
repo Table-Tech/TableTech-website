@@ -159,29 +159,29 @@ const spicePalaceMenu: Record<CategoryId, MenuItem[]> = {
   all: [],
   popular: [
     {
-      id: 101,
-      name: "Kip Handi Special",
-      nameEn: "Chicken Handi Special",
-      price: 16.5,
-      image: "/images/spice-palace/handi1.webp",
+      id: 112,
+      name: "Kip Karahi",
+      nameEn: "Chicken Karahi", 
+      price: 17.0,
+      image: "/images/spice-palace/karahi-dish.webp",
       category: "popular",
-      description: "Malse kipstukjes langzaam gestoofd in een traditionele klei pot met verse kruiden, tomaten en ui. Geserveerd met aromatische basmati rijst en warme naan.",
-      descriptionEn: "Tender chicken pieces slowly stewed in a traditional clay pot with fresh herbs, tomatoes and onions. Served with aromatic basmati rice and warm naan.",
+      description: "Authentieke Pakistaanse kip karahi bereid in een wok met verse tomaten, gember, knoflook en groene pepers. Een explosie van smaken in elke hap.",
+      descriptionEn: "Authentic Pakistani chicken karahi prepared in a wok with fresh tomatoes, ginger, garlic and green peppers. An explosion of flavors in every bite.",
     },
     {
-      id: 102,
-      name: "Lams Handi",
-      nameEn: "Lamb Handi",
-      price: 18.5,
-      image: "/images/spice-palace/handi2.webp",
+      id: 106,
+      name: "Gemengde Kebab",
+      nameEn: "Mixed Kebab",
+      price: 15.0,
+      image: "/images/spice-palace/kebab.webp",
       category: "popular",
-      description: "Succulent lamsvlees in een rijke, kruidige saus met verse koriander en garam masala. Een authentiek gerecht uit de Punjab streek.",
-      descriptionEn: "Succulent lamb in a rich, spicy sauce with fresh coriander and garam masala. An authentic dish from the Punjab region.",
+      description: "Een heerlijke combinatie van gegrilde kip, lam en gehakt kebab, gemarineerd in yoghurt en speciale kruiden. Geserveerd met verse salade en mintchutney.",
+      descriptionEn: "A delicious combination of grilled chicken, lamb and minced kebab, marinated in yogurt and special spices. Served with fresh salad and mint chutney.",
     },
   ],
   handi: [
     {
-      id: 103,
+      id: 101,
       name: "Kip Handi Special",
       nameEn: "Chicken Handi Special",
       price: 16.5,
@@ -191,7 +191,7 @@ const spicePalaceMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Tender chicken pieces slowly stewed in a traditional clay pot with fresh herbs, tomatoes and onions. Served with aromatic basmati rice and warm naan.",
     },
     {
-      id: 104,
+      id: 102,
       name: "Lams Handi",
       nameEn: "Lamb Handi",
       price: 18.5,
@@ -212,16 +212,6 @@ const spicePalaceMenu: Record<CategoryId, MenuItem[]> = {
     },
   ],
   kebab: [
-    {
-      id: 106,
-      name: "Gemengde Kebab",
-      nameEn: "Mixed Kebab",
-      price: 15.0,
-      image: "/images/spice-palace/kebab.webp",
-      category: "kebab",
-      description: "Een heerlijke combinatie van gegrilde kip, lam en gehakt kebab, gemarineerd in yoghurt en speciale kruiden. Geserveerd met verse salade en mintchutney.",
-      descriptionEn: "A delicious combination of grilled chicken, lamb and minced kebab, marinated in yogurt and special spices. Served with fresh salad and mint chutney.",
-    },
     {
       id: 107,
       name: "Broodje Kebab",
@@ -278,16 +268,6 @@ const spicePalaceMenu: Record<CategoryId, MenuItem[]> = {
     },
   ],
   karahi: [
-    {
-      id: 112,
-      name: "Kip Karahi",
-      nameEn: "Chicken Karahi",
-      price: 17.0,
-      image: "/images/spice-palace/karahi-dish.webp",
-      category: "karahi",
-      description: "Authentieke Pakistaanse kip karahi bereid in een wok met verse tomaten, gember, knoflook en groene pepers. Een explosie van smaken in elke hap.",
-      descriptionEn: "Authentic Pakistani chicken karahi prepared in a wok with fresh tomatoes, ginger, garlic and green peppers. An explosion of flavors in every bite.",
-    },
     {
       id: 113,
       name: "Curry Schotel",
@@ -385,7 +365,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Elegant French opera cake with chocolate and coffee",
     },
     {
-      id: 207,
+      id: 206,
       name: "Macaron Selectie",
       nameEn: "Macaron Selection", 
       price: 6.0,
@@ -417,7 +397,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Intense and pure espresso shot",
     },
     {
-      id: 208,
+      id: 209,
       name: "Koffie Special",
       nameEn: "Coffee Special",
       price: 4.0,
@@ -429,7 +409,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
   ],
   "cold-drinks": [
     {
-      id: 209,
+      id: 210,
       name: "IJskoffie",
       nameEn: "Iced Coffee",
       price: 4.5,
@@ -439,7 +419,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Refreshing iced coffee perfect for warm days",
     },
     {
-      id: 210,
+      id: 211,
       name: "Coca Cola",
       nameEn: "Coca Cola",
       price: 2.5,
@@ -449,7 +429,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Classic soft drink with fizzy taste",
     },
     {
-      id: 211,
+      id: 212,
       name: "Fanta",
       nameEn: "Fanta",
       price: 2.5,
@@ -459,7 +439,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Sweet orange soft drink",
     },
     {
-      id: 212,
+      id: 213,
       name: "Red Bull",
       nameEn: "Red Bull",
       price: 3.0,
@@ -471,7 +451,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
   ],
   "hot-drinks": [
     {
-      id: 213,
+      id: 214,
       name: "Groene Thee",
       nameEn: "Green Tea",
       price: 3.0,
@@ -481,7 +461,7 @@ const sweetDelightsMenu: Record<CategoryId, MenuItem[]> = {
       descriptionEn: "Healthy green tea full of antioxidants",
     },
     {
-      id: 214,
+      id: 215,
       name: "Warme Chocolademelk",
       nameEn: "Hot Chocolate",
       price: 3.5,
@@ -1168,47 +1148,6 @@ const ImageWithLoading: React.FC<{ src: string; alt: string; className: string }
   );
 };
 
-// Enhanced scroll utilities with performance optimization
-const createSmoothScroll = () => {
-  let isScrolling = false;
-  let animationId: number | null = null;
-  
-  const smoothScroll = (element: HTMLElement, targetY: number, duration: number = 200) => {
-    if (isScrolling) {
-      if (animationId) cancelAnimationFrame(animationId);
-    }
-    isScrolling = true;
-    
-    const startY = element.scrollTop;
-    const distance = targetY - startY;
-    const startTime = performance.now();
-    
-    // Faster easing function for snappier feel
-    const easeOutQuart = (t: number): number => {
-      return 1 - (--t) * t * t * t;
-    };
-    
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutQuart(progress);
-      
-      element.scrollTop = startY + (distance * easedProgress);
-      
-      if (progress < 1) {
-        animationId = requestAnimationFrame(animate);
-      } else {
-        isScrolling = false;
-        animationId = null;
-      }
-    };
-    
-    animationId = requestAnimationFrame(animate);
-  };
-  
-  return smoothScroll;
-};
-
 // Memoized PhoneMockup component for better performance with performance optimizations
 const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -1220,11 +1159,102 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
   const [isEnglish, setIsEnglish] = useState(false);
 
+  // Custom smooth touch scroll implementation - ALLEEN VOOR MOBIELE TELEFOON DEMO
+  useEffect(() => {
+    const viewportWidth = window.innerWidth;
+    const isMobile = viewportWidth < 1024; // Alleen op mobiele schermen
+    
+    if (!isMobile) return; // SKIP: Desktop gebruikt eigen scroll
+    
+    const mainScrollContainer = document.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
+    if (!mainScrollContainer) return;
+
+    let isScrolling = false;
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+    let scrollVelocity = 0;
+    let momentumAnimation: number | null = null;
+
+    // Smooth touch scroll handlers
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchCurrentY = touchStartY;
+      scrollVelocity = 0;
+      isScrolling = true;
+      
+      if (momentumAnimation) {
+        cancelAnimationFrame(momentumAnimation);
+        momentumAnimation = null;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isScrolling) return;
+      
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchCurrentY - touchY;
+      touchCurrentY = touchY;
+      
+      // Smooth scrolling with velocity calculation
+      scrollVelocity = deltaY * 1.5; // Multiplier voor smoothness
+      
+      const newScrollTop = mainScrollContainer.scrollTop + deltaY;
+      const maxScroll = mainScrollContainer.scrollHeight - mainScrollContainer.clientHeight;
+      
+      mainScrollContainer.scrollTop = Math.max(0, Math.min(newScrollTop, maxScroll));
+      
+      e.preventDefault(); // Prevent default touch scroll
+    };
+
+    const handleTouchEnd = () => {
+      isScrolling = false;
+      
+      // Momentum scroll effect
+      if (Math.abs(scrollVelocity) > 1) {
+        const startVelocity = scrollVelocity;
+        const startTime = performance.now();
+        const friction = 0.95; // Deceleration factor
+        
+        const momentumScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const currentVelocity = startVelocity * Math.pow(friction, elapsed / 16);
+          
+          if (Math.abs(currentVelocity) > 0.5) {
+            const newScrollTop = mainScrollContainer.scrollTop + currentVelocity;
+            const maxScroll = mainScrollContainer.scrollHeight - mainScrollContainer.clientHeight;
+            
+            mainScrollContainer.scrollTop = Math.max(0, Math.min(newScrollTop, maxScroll));
+            momentumAnimation = requestAnimationFrame(momentumScroll);
+          } else {
+            momentumAnimation = null;
+          }
+        };
+        
+        momentumAnimation = requestAnimationFrame(momentumScroll);
+      }
+    };
+
+    // Add touch event listeners
+    mainScrollContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+    mainScrollContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+    mainScrollContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    // Cleanup function
+    return () => {
+      mainScrollContainer.removeEventListener('touchstart', handleTouchStart);
+      mainScrollContainer.removeEventListener('touchmove', handleTouchMove);
+      mainScrollContainer.removeEventListener('touchend', handleTouchEnd);
+      
+      if (momentumAnimation) {
+        cancelAnimationFrame(momentumAnimation);
+      }
+    };
+  }, [theme]); // Re-run wanneer theme verandert
+
   // Memoized calculations for better performance with reduced recalculation
   const mockMenu = useMemo(() => getMenuForTheme(theme), [theme]);
   const categories = useMemo(() => getCategoriesForTheme(theme), [theme]);
   const themeConfig = useMemo(() => getThemeConfig(theme), [theme]);
-  const smoothScroll = useMemo(() => createSmoothScroll(), []);
 
   // Set initial category based on theme
   useEffect(() => {
@@ -1272,23 +1302,57 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
 
   const scrollToSection = useCallback((categoryId: CategoryId) => {
     setActiveCategory(categoryId);
+    
+    // Vind de scroll container
     const mainScrollContainer = document.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
-    const targetSection = sectionRefs[categoryId]?.current;
     
     if (mainScrollContainer) {
-      if (theme === "spicepalace") {
-        smoothScroll(mainScrollContainer, 0, 150); // Faster scroll for spicepalace
-      } else if (targetSection) {
-        const containerRect = mainScrollContainer.getBoundingClientRect();
-        const sectionRect = targetSection.getBoundingClientRect();
-        
-        const extraOffset = theme === "tabletech" ? 50 : 5; // Reduced offset for faster navigation
-        const scrollOffset = sectionRect.top - containerRect.top + mainScrollContainer.scrollTop - extraOffset;
-        
-        smoothScroll(mainScrollContainer, Math.max(0, scrollOffset), 150); // Faster scroll duration
+      // Desktop detection
+      const viewportWidth = window.innerWidth;
+      const isDesktop = viewportWidth >= 1024;
+      
+      console.log('🔍 ScrollToSection Debug:', {
+        categoryId,
+        theme,
+        isDesktop,
+        viewportWidth,
+        containerFound: !!mainScrollContainer,
+        currentScrollTop: mainScrollContainer.scrollTop
+      });
+      
+      // UNIFIED: Same scroll behavior for BOTH desktop and mobile (exactly like phone method)
+      console.log('🚀 Scroll to top triggered:', {
+        categoryId,
+        theme,
+        isDesktop,
+        viewportWidth,
+        currentScrollTop: mainScrollContainer.scrollTop
+      });
+      
+      // Set programmatic scrolling flag to prevent interference
+      const setFlag = (mainScrollContainer as HTMLElement & { _setProgrammaticScrolling?: (value: boolean) => void })._setProgrammaticScrolling;
+      if (setFlag) {
+        setFlag(true);
+        setTimeout(() => setFlag(false), 300);
       }
+      
+      // DIRECT scroll to top for ALL themes and ALL devices (instant, no animation)
+      console.log('🚀 Direct scroll to top - current scrollTop:', mainScrollContainer.scrollTop);
+      mainScrollContainer.scrollTop = 0;
+      
+      // Extra verification to ensure scroll position is reset
+      setTimeout(() => {
+        if (mainScrollContainer.scrollTop !== 0) {
+          console.log('🔧 Second attempt - scrollTop was:', mainScrollContainer.scrollTop);
+          mainScrollContainer.scrollTop = 0;
+          mainScrollContainer.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        console.log('✅ Final scrollTop:', mainScrollContainer.scrollTop);
+      }, 50);
+    } else {
+      console.error('❌ No scroll container found!');
     }
-  }, [theme, sectionRefs, smoothScroll]);
+  }, [theme]);
 
   // Enhanced scroll tracking with throttling and performance optimization
   useEffect(() => {
@@ -1297,10 +1361,11 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
 
     let ticking = false;
     let isUserScrolling = false;
+    let programmaticScrolling = false; // Flag to prevent category updates during programmatic scrolling
     let scrollTimeout: NodeJS.Timeout;
 
     const updateActiveCategory = () => {
-      if (!ticking && !isUserScrolling) {
+      if (!ticking && !isUserScrolling && !programmaticScrolling) {
         requestAnimationFrame(() => {
           for (const categoryId of categories.map(c => c.id)) {
             const section = sectionRefs[categoryId]?.current;
@@ -1308,8 +1373,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
               const rect = section.getBoundingClientRect();
               const containerRect = mainScrollContainer.getBoundingClientRect();
               
-              const topOffset = theme === "tabletech" ? 100 : theme === "spicepalace" ? 50 : 80;
-              const bottomOffset = theme === "tabletech" ? 50 : theme === "spicepalace" ? 15 : 40;
+              // Use same offset values for all themes to prevent rapid switching
+              const topOffset = theme === "tabletech" ? 100 : 100; // Increased for Spice Palace
+              const bottomOffset = theme === "tabletech" ? 50 : 50; // Increased for Spice Palace
               
               if (rect.top <= containerRect.top + topOffset && rect.bottom > containerRect.top + bottomOffset) {
                 if (activeCategory !== categoryId) {
@@ -1330,15 +1396,20 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         isUserScrolling = false;
-      }, 50); // Faster timeout for more responsive updates
+      }, 150); // Increased timeout to prevent conflicts with programmatic scrolling
       updateActiveCategory();
+    };
+
+    // Expose function to set programmatic scrolling flag
+    (mainScrollContainer as HTMLElement & { _setProgrammaticScrolling?: (value: boolean) => void })._setProgrammaticScrolling = (value: boolean) => {
+      programmaticScrolling = value;
     };
 
     // Enhanced wheel event handling for better mouse scroll
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       const delta = e.deltaY;
-      const scrollSpeed = 1.2; // Faster scroll speed for better responsiveness
+      const scrollSpeed = 1.8; // Snellere scroll speed: was 1.2, nu 1.8 voor sneller scrollen
       const newScrollTop = mainScrollContainer.scrollTop + (delta * scrollSpeed);
       
       mainScrollContainer.scrollTop = Math.max(0, Math.min(newScrollTop, mainScrollContainer.scrollHeight - mainScrollContainer.clientHeight));
@@ -1713,7 +1784,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
   return (
     <div 
       data-phone-container="true"
-      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans gpu-accelerated ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
+      data-phone-mockup="true"
+      data-theme={theme}
+      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans gpu-accelerated phone-screen ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
       style={{
         willChange: 'transform',
         contain: 'layout style paint'
@@ -1742,8 +1815,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
           {categories.map((cat) => (
             <button
               key={`category-${cat.id}`}
+              data-category={cat.id}
+              data-category-btn="true"
               onClick={() => scrollToSection(cat.id)}
-              className={`flex flex-col items-center min-w-[70px] text-xs rounded-lg px-3 py-2 transition shadow-sm ${
+              className={`flex flex-col items-center min-w-[70px] text-xs rounded-lg px-3 py-2 transition shadow-sm category-btn ${
                 activeCategory === cat.id
                   ? "bg-yellow-300 text-gray-800 ring-2 ring-yellow-500 font-bold"
                   : "bg-orange-200 hover:bg-yellow-200 text-gray-800"
@@ -1768,8 +1843,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             {categories.map((cat) => (
               <div
                 key={`category-${cat.id}`}
+                data-category={cat.id}
+                data-category-btn="true"
                 onClick={() => scrollToSection(cat.id)}
-                className="flex flex-col items-center cursor-pointer group"
+                className="flex flex-col items-center cursor-pointer group category-btn"
               >
                 <div
                   className={`w-16 h-16 rounded-full mb-2 overflow-hidden border-2 transition-all duration-300 flex items-center justify-center ${
@@ -1821,8 +1898,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
           {categories.map((cat) => (
             <div
               key={`category-${cat.id}`}
+              data-category={cat.id}
+              data-category-btn="true"
               onClick={() => scrollToSection(cat.id)}
-              className="flex flex-col items-center min-w-[60px] cursor-pointer group flex-shrink-0"
+              className="flex flex-col items-center min-w-[60px] cursor-pointer group flex-shrink-0 category-btn"
             >
               <div
                 className={`w-12 h-12 rounded-full mb-2 overflow-hidden border-2 transition-all duration-300 flex items-center justify-center ${
@@ -1869,7 +1948,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
           WebkitOverflowScrolling: 'touch',
           touchAction: 'pan-y',
           contain: 'layout style paint',
-          willChange: 'scroll-position'
+          willChange: 'scroll-position',
+          position: 'relative', // Required for scroll positioning
+          height: '100%' // Zorg dat de container een vaste hoogte heeft
         }}
       >
         {/* Show content based on active category */}

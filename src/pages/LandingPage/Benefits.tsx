@@ -489,17 +489,18 @@ export const BenefitsOne: React.FC = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
 
-          {/* Left side - Video */}
-          <div className="relative flex items-end justify-start order-1 lg:order-1 -ml-40 mt-16">
+          {/* Left side - Video - Verborgen op mobiel om oververhitting te voorkomen */}
+          <div className="relative hidden lg:flex items-end justify-start order-1 lg:order-1 -ml-40 mt-16">
             <div className="relative drop-shadow-2xl">
               <video 
-                autoPlay
+                autoPlay={true}
                 muted
                 playsInline
                 controls={false}
                 webkit-playsinline="true"
                 preload="metadata"
                 poster="/images/hero-images/telefoon.webp"
+                loop={false}
                 className="w-full h-full object-contain rounded-lg shadow-2xl"
                 style={{ 
                   width: '1400px', 
@@ -510,19 +511,26 @@ export const BenefitsOne: React.FC = () => {
                   background: 'transparent',
                   filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))'
                 }}
-                onLoadStart={() => console.log('Video loading started')}
                 onCanPlay={(e) => {
-                  console.log('Video can play');
-                  // Force play on iOS
+                  // Desktop: speel af maar slechts één keer
                   const video = e.target as HTMLVideoElement;
-                  video.play().catch(() => {
-                    console.log('Video autoplay prevented');
-                  });
+                  if (!video.hasAttribute('data-played-once')) {
+                    video.setAttribute('data-played-once', 'true');
+                    video.play().catch(() => {
+                      // Silent fail - geen console spam
+                    });
+                  } else {
+                    // Video heeft al één keer afgespeeld, stop het
+                    video.pause();
+                  }
                 }}
-                onError={(e) => console.error('Video error:', e)}
+                onError={() => {
+                  // Silent error handling - geen console spam
+                }}
                 onEnded={(e) => {
+                  // Na afloop: blijf gepauzeerd op laatste frame
                   const video = e.target as HTMLVideoElement;
-                  video.currentTime = video.duration - 0.1;
+                  video.currentTime = video.duration;
                   video.pause();
                 }}
               >

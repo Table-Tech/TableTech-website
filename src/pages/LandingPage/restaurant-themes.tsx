@@ -94,12 +94,12 @@ const RestaurantThemesPage: React.FC = () => {
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen py-20"
+      className="relative min-h-screen py-20 restaurant-themes-section"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(44,30,26,0.95) 0%, rgba(44,30,26,0.8) 20%, rgba(44,30,26,0.6) 40%, rgba(44,30,26,0.4) 70%, rgba(44,30,26,0.2) 100%), url(/images/backgrounds/achtergrond.webp)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+        backgroundAttachment: 'scroll'
       }}
     >
       

@@ -171,6 +171,6 @@
     }
   },
   "loading": "Loading...",
-  "demoLoading": "Loading demo...",
-  "dashboardDemoLoading": "Loading dashboard demo..."
+  "demoLoading": "TableTech is loading...",
+  "dashboardDemoLoading": "Welcome to TableTech – the smart hospitality demo!"
 }

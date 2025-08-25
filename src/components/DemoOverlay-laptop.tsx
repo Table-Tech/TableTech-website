@@ -14,6 +14,23 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
   onClose,
   onSwitchToCustomer,
 }) => {
+  // Disable Lenis when demo is open to prevent conflicts with normal scrolling
+  useEffect(() => {
+    if (isOpen) {
+      // Disable Lenis smooth scrolling during demo
+      if (window.lenis) {
+        window.lenis.stop();
+      }
+      
+      return () => {
+        // Re-enable Lenis when demo closes
+        if (window.lenis) {
+          window.lenis.start();
+        }
+      };
+    }
+  }, [isOpen]);
+
   // Block/unblock body scroll when overlay opens/closes
   useEffect(() => {
     if (isOpen) {

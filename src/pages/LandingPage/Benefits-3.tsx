@@ -596,12 +596,12 @@ export const BenefitsThree: React.FC = () => {
               }}
             >
               <video 
-                autoPlay
+                autoPlay={false}
                 muted
                 playsInline
                 controls={false}
                 webkit-playsinline="true"
-                preload="metadata"
+                preload="none"
                 poster="/images/hero-images/telefoon.webp"
                 className="w-full h-full object-contain rounded-lg shadow-lg"
                 style={{ 
@@ -612,16 +612,14 @@ export const BenefitsThree: React.FC = () => {
                   minHeight: '320px',
                   background: 'transparent'
                 }}
-                onLoadStart={() => console.log('Video loading started')}
                 onCanPlay={(e) => {
-                  console.log('Video can play');
-                  // Force play on iOS
+                  // Video intentionally disabled to prevent performance issues
                   const video = e.target as HTMLVideoElement;
-                  video.play().catch(() => {
-                    console.log('Video autoplay prevented');
-                  });
+                  video.pause();
                 }}
-                onError={(e) => console.error('Video error:', e)}
+                onError={() => {
+                  // Silent error handling - geen console spam
+                }}
                 onEnded={(e) => {
                   const video = e.target as HTMLVideoElement;
                   video.currentTime = video.duration - 0.1;

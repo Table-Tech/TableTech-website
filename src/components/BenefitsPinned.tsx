@@ -27,38 +27,33 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
   const panelsRef = useRef<HTMLDivElement[]>([]);
   const currentPanelRef = useRef<number>(-1);
 
-  // Function to play videos in a panel when entering
+  // Handle video end - keep paused
+  const handleVideoEnd = useCallback((event: Event) => {
+    const video = event.target as HTMLVideoElement;
+    video.pause();
+  }, []);
+
+  // Function to disable video playback - videos are temporarily disabled
   const playVideosInPanel = useCallback((panelElement: HTMLDivElement, panelIndex: number) => {
     if (!panelElement) return;
     
-    // Only play if we've switched to a different panel
+    // Only handle if we've switched to a different panel
     if (currentPanelRef.current === panelIndex) return;
     
     // Update current panel
     currentPanelRef.current = panelIndex;
     
-    // Find all video elements in the panel
+    // Find all video elements in the panel and pause them
     const videos = panelElement.querySelectorAll('video');
     videos.forEach((video) => {
-      // Remove any existing event listeners to prevent multiple bindings
+      // Remove any existing event listeners
       video.removeEventListener('ended', handleVideoEnd);
       
-      // Add event listener for when video ends
-      video.addEventListener('ended', handleVideoEnd);
-
-      // Reset to beginning and play
+      // Ensure videos are paused
+      video.pause();
       video.currentTime = 0;
-      video.play().catch(err => {
-        console.log('Video autoplay failed:', err);
-      });
     });
-  }, []);
-
-  // Handle video end - pause at the last frame
-  const handleVideoEnd = useCallback((event: Event) => {
-    const video = event.target as HTMLVideoElement;
-    video.pause();
-  }, []);
+  }, [handleVideoEnd]);
 
   useLayoutEffect(() => {
     // Wait for DOM to be ready

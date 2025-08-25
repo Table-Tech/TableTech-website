@@ -8,13 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const useLenisScroll = () => {
-  let location;
-  try {
-    location = useLocation();
-  } catch (error) {
-    // If useLocation fails (component not in Router context), use fallback
-    location = { pathname: "/" };
-  }
+  const location = useLocation();
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
@@ -25,6 +19,8 @@ export const useLenisScroll = () => {
       duration: 0.6,
       smoothWheel: true,
       wheelMultiplier: 1.8,
+      infinite: false,
+      gestureOrientation: 'vertical'
     });
 
     // Koppel Lenis aan window

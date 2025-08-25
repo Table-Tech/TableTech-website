@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 // Image moved to public: /images/qr-codes/iyd.webp;
 import { LaptopMockup } from "../../components/LaptopMockup";
@@ -12,37 +12,6 @@ export const HeroSection: React.FC = () => {
   const [isCustomerDemoOpen, setIsCustomerDemoOpen] = useState(false);
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-
-  // Detect iOS and video support
-  useEffect(() => {
-    const detectIOS = () => {
-      return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    };
-    
-    setIsIOS(detectIOS());
-    
-    // Add touch handler for iOS to trigger video playback
-    const handleTouch = () => {
-      if (detectIOS()) {
-        const videos = document.querySelectorAll('video');
-        videos.forEach(video => {
-          if (video.paused) {
-            video.play().catch(() => {
-              console.log('Could not play video on touch');
-            });
-          }
-        });
-      }
-    };
-    
-    document.addEventListener('touchstart', handleTouch, { once: true });
-    
-    return () => {
-      document.removeEventListener('touchstart', handleTouch);
-    };
-  }, []);
 
   const handleOpenCustomerDemo = async () => {
     setIsPreloading(true);
@@ -88,64 +57,50 @@ export const HeroSection: React.FC = () => {
         id="hero"
         className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden text-center snap-start bg-black"
       >
-        {/* Achtergrondvideo - iPhone Compatible */}
+        {/* Achtergrondvideo - Altijd netjes laden, met mp4 fallback */}
         <div className="absolute inset-0 w-full h-full">
-          {/* Fallback background image - Always present, behind video */}
+          {/* Device-specifieke fallback background image */}
           <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat video-fallback"
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat video-fallback md:hidden"
             style={{
-              backgroundImage: `url(/images/backgrounds/optie4.webp)`,
+              backgroundImage: `url(/images/backgrounds/telefoon-fallback-achtergrond.webp)`,
               backgroundColor: '#3b2a1d',
+              backgroundPosition: '90% center', // nog verder naar rechts
               zIndex: 0
             }}
           />
-          
-          {/* Video layer - Shows on top when supported */}
+          {/* Video layer - Always try to show, with mp4 fallback */}
           <video
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
+            poster="/images/backgrounds/telefoon-fallback-achtergrond.webp"
             webkit-playsinline="true"
             x-webkit-airplay="allow"
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
             style={{
               objectPosition: 'center center',
               backgroundColor: 'transparent',
-              zIndex: 1,
-              opacity: isIOS ? '0' : '1' // Start hidden on iOS
-            }}
-            onCanPlayThrough={(e) => {
-              const video = e.target as HTMLVideoElement;
-              // Smooth fade in when video is ready
-              video.style.opacity = '1';
-              
-              // Ensure playback on iOS
-              if (isIOS) {
-                video.play().catch(() => {
-                  console.log('Video autoplay prevented on iOS');
-                  video.style.opacity = '0'; // Fall back to background image
-                });
-              }
+              zIndex: 1
             }}
             onError={(e) => {
-              console.log('Video failed to load, using background image fallback');
+              // Hide video on error
               const video = e.target as HTMLVideoElement;
-              video.style.opacity = '0';
-            }}
-            onStalled={() => {
-              console.log('Video stalled, may fall back to image');
+              video.style.display = 'none';
             }}
           >
-            <source src="/videos/background-2.webm" type="video/webm; codecs=vp9" />
-            <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
+            <source src="/videos/background-2.webm" type="video/webm" />
+            <source src="/videos/telefoon.webm" type="video/webm" />
+            <source src="/videos/background-2.mp4" type="video/mp4" />
+            <source src="/videos/telefoon.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
           </video>
         </div>
 
-        {/* Donkere overlay */}
-        <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0" />
-
+        {/* Donkere overlay - alleen op desktop */}
+        <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0 hidden md:block" />
         {/* Inhoud */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 py-8 text-white text-center">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-3 sm:mb-4 leading-tight sm:leading-snug drop-shadow-md text-center">
@@ -155,32 +110,32 @@ export const HeroSection: React.FC = () => {
             {t('hero.subtitle')}
           </p>
 
-          {/* Mobile Version - Stacked Layout */}
-          <div className="lg:hidden space-y-3 max-w-sm mx-auto">
-            {/* Customer Demo Card - Mobile */}
-            <div className="bg-gradient-to-br from-stone-700/40 to-amber-800/40 backdrop-blur-lg p-4 rounded-xl text-center shadow-xl border border-stone-600/50 hover:scale-[1.02] transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-gradient-to-br from-stone-600 to-stone-700 p-2 rounded-lg shadow-md">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {/* Mobile Version - Responsive Stacked Layout - Groter voor iPhone */}
+          <div className="lg:hidden space-y-4 sm:space-y-5 md:space-y-6 max-w-[95%] sm:max-w-md md:max-w-lg mx-auto">
+            {/* Customer Demo Card - Mobile Responsive - Groter voor iPhone */}
+            <div className="bg-gradient-to-br from-stone-700/40 to-amber-800/40 backdrop-blur-lg p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xl sm:shadow-2xl border border-stone-600/50 hover:scale-[1.02] sm:hover:scale-[1.03] transition-all duration-300 min-h-[180px] sm:min-h-[200px]">
+              <div className="flex items-center justify-center mb-3 sm:mb-4">
+                <div className="bg-gradient-to-br from-stone-600 to-stone-700 p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-md">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                 </div>
               </div>
-              <h3 className="text-base font-bold mb-1 text-white drop-shadow-lg">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 text-white drop-shadow-lg">
                 {t('hero.customerDemo.title')}
               </h3>
-              <p className="text-white/95 text-xs mb-3 leading-relaxed">
+              <p className="text-white/95 text-sm sm:text-base md:text-lg mb-4 sm:mb-5 leading-relaxed">
                 {t('hero.customerDemo.description')}
               </p>
               <button
                 onClick={handleOpenCustomerDemo}
                 type="button"
                 disabled={isPreloading}
-                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95"
+                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-full text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95 min-h-[48px] sm:min-h-[52px]"
               >
                 {isPreloading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     {t('loading')}
                   </span>
                 ) : (
@@ -189,30 +144,30 @@ export const HeroSection: React.FC = () => {
               </button>
             </div>
 
-            {/* Employee Demo Card - Mobile */}
-            <div className="bg-gradient-to-br from-stone-800/40 to-amber-800/40 backdrop-blur-lg p-4 rounded-xl text-center shadow-xl border border-stone-700/50 hover:scale-[1.02] transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-gradient-to-br from-stone-700 to-stone-800 p-2 rounded-lg shadow-md">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Employee Demo Card - Mobile Responsive - Groter voor iPhone */}
+            <div className="bg-gradient-to-br from-stone-800/40 to-amber-800/40 backdrop-blur-lg p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xl sm:shadow-2xl border border-stone-700/50 hover:scale-[1.02] sm:hover:scale-[1.03] transition-all duration-300 min-h-[180px] sm:min-h-[200px]">
+              <div className="flex items-center justify-center mb-3 sm:mb-4">
+                <div className="bg-gradient-to-br from-stone-700 to-stone-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-md">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM8 20h8" />
                   </svg>
                 </div>
               </div>
-              <h3 className="text-base font-bold mb-1 text-white drop-shadow-lg">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 text-white drop-shadow-lg">
                 {t('hero.employeeDemo.title')}
               </h3>
-              <p className="text-white/95 text-xs mb-3 leading-relaxed">
+              <p className="text-white/95 text-sm sm:text-base md:text-lg mb-4 sm:mb-5 leading-relaxed">
                 {t('hero.employeeDemo.description')}
               </p>
               <button
                 onClick={handleOpenEmployeeDemo}
                 type="button"
                 disabled={isPreloading}
-                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95"
+                className="bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-full text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 active:scale-95 min-h-[48px] sm:min-h-[52px]"
               >
                 {isPreloading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     {t('loading')}
                   </span>
                 ) : (

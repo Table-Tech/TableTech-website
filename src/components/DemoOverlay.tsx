@@ -47,57 +47,57 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
     return themes.find(t => t.id === activeTheme) || themes[0];
   }, [themes, activeTheme]);
 
-  // Responsive button styling based on viewport and phone size
+  // Responsive button styling based on viewport and phone size - GROTER GEMAAKT
   const getResponsiveButtonStyle = useCallback(() => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const phoneWidth = phonePosition?.width || 300;
     
-    // Very small screens (iPhone SE, small Android)
+    // Very small screens (iPhone SE, small Android) - GROTER
     if (viewportWidth < 380 || viewportHeight < 600) {
       return {
-        fontSize: 'clamp(0.4rem, 2.2vw, 0.48rem)',
-        padding: 'clamp(0.25rem, 1vw, 0.35rem) clamp(0.3rem, 1.5vw, 0.45rem)',
-        minWidth: 'clamp(50px, 20vw, 65px)',
-        minHeight: 'clamp(28px, 7vw, 32px)',
-        maxWidth: 'clamp(65px, 23vw, 75px)',
-        gap: '0.25rem'
+        fontSize: 'clamp(0.5rem, 2.5vw, 0.58rem)', // Was: 0.4-0.48rem, Nu: 0.5-0.58rem
+        padding: 'clamp(0.35rem, 1.3vw, 0.45rem) clamp(0.4rem, 1.8vw, 0.55rem)', // Meer padding
+        minWidth: 'clamp(60px, 22vw, 75px)', // Was: 50-65px, Nu: 60-75px
+        minHeight: 'clamp(32px, 8vw, 36px)', // Was: 28-32px, Nu: 32-36px
+        maxWidth: 'clamp(75px, 25vw, 85px)', // Was: 65-75px, Nu: 75-85px
+        gap: '0.3rem' // Was: 0.25rem
       };
     }
     
-    // Small screens
+    // Small screens - GROTER
     if (viewportWidth < 450 || viewportHeight < 700) {
       return {
-        fontSize: 'clamp(0.45rem, 2vw, 0.52rem)',
-        padding: 'clamp(0.3rem, 1.2vw, 0.4rem) clamp(0.35rem, 1.8vw, 0.5rem)',
-        minWidth: 'clamp(55px, 18vw, 70px)',
-        minHeight: 'clamp(30px, 7vw, 34px)',
-        maxWidth: 'clamp(70px, 22vw, 80px)',
-        gap: '0.3rem'
+        fontSize: 'clamp(0.55rem, 2.2vw, 0.62rem)', // Was: 0.45-0.52rem, Nu: 0.55-0.62rem
+        padding: 'clamp(0.4rem, 1.4vw, 0.5rem) clamp(0.45rem, 2vw, 0.6rem)', // Meer padding
+        minWidth: 'clamp(65px, 20vw, 80px)', // Was: 55-70px, Nu: 65-80px
+        minHeight: 'clamp(34px, 8vw, 38px)', // Was: 30-34px, Nu: 34-38px
+        maxWidth: 'clamp(80px, 24vw, 90px)', // Was: 70-80px, Nu: 80-90px
+        gap: '0.35rem' // Was: 0.3rem
       };
     }
     
-    // Medium screens  
+    // Medium screens - GROTER
     if (viewportWidth < 600) {
       return {
-        fontSize: 'clamp(0.5rem, 1.8vw, 0.55rem)',
-        padding: 'clamp(0.35rem, 1.2vw, 0.45rem) clamp(0.4rem, 1.8vw, 0.55rem)',
-        minWidth: 'clamp(60px, 16vw, 75px)',
-        minHeight: 'clamp(32px, 6vw, 36px)',
-        maxWidth: 'clamp(75px, 20vw, 85px)',
-        gap: '0.35rem'
+        fontSize: 'clamp(0.6rem, 2vw, 0.65rem)', // Was: 0.5-0.55rem, Nu: 0.6-0.65rem
+        padding: 'clamp(0.45rem, 1.4vw, 0.55rem) clamp(0.5rem, 2vw, 0.65rem)', // Meer padding
+        minWidth: 'clamp(70px, 18vw, 85px)', // Was: 60-75px, Nu: 70-85px
+        minHeight: 'clamp(36px, 7vw, 40px)', // Was: 32-36px, Nu: 36-40px
+        maxWidth: 'clamp(85px, 22vw, 95px)', // Was: 75-85px, Nu: 85-95px
+        gap: '0.4rem' // Was: 0.35rem
       };
     }
     
-    // Large screens (default)
+    // Large screens (default) - GROTER
     return {
-      fontSize: 'clamp(0.52rem, 1.6vw, 0.58rem)',
-      padding: 'clamp(0.4rem, 1.2vw, 0.5rem) clamp(0.45rem, 1.8vw, 0.6rem)',
-      minWidth: 'clamp(65px, 15vw, 80px)',
-      minHeight: 'clamp(34px, 6vw, 38px)',
-      maxWidth: 'clamp(80px, 18vw, 90px)',
-      gap: '0.4rem'
+      fontSize: 'clamp(0.62rem, 1.8vw, 0.68rem)', // Was: 0.52-0.58rem, Nu: 0.62-0.68rem
+      padding: 'clamp(0.5rem, 1.4vw, 0.6rem) clamp(0.55rem, 2vw, 0.7rem)', // Meer padding
+      minWidth: 'clamp(75px, 17vw, 90px)', // Was: 65-80px, Nu: 75-90px
+      minHeight: 'clamp(38px, 7vw, 42px)', // Was: 34-38px, Nu: 38-42px
+      maxWidth: 'clamp(90px, 20vw, 100px)', // Was: 80-90px, Nu: 90-100px
+      gap: '0.45rem' // Was: 0.4rem
     };
   }, [phonePosition]);
 
@@ -242,6 +242,23 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
       window.removeEventListener('orientationchange', calculatePhoneScale);
       document.documentElement.style.removeProperty('--phone-scale');
     };
+  }, [isOpen]);
+
+  // Disable Lenis when demo is open to prevent conflicts with normal scrolling
+  useEffect(() => {
+    if (isOpen) {
+      // Disable Lenis smooth scrolling during demo
+      if (window.lenis) {
+        window.lenis.stop();
+      }
+      
+      return () => {
+        // Re-enable Lenis when demo closes
+        if (window.lenis) {
+          window.lenis.start();
+        }
+      };
+    }
   }, [isOpen]);
 
   // Block/unblock body scroll when overlay opens/closes with optimization
@@ -511,6 +528,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
           }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
           onClick={onClose}
+          data-demo-overlay="true"
           style={{ 
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden'
@@ -540,8 +558,8 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
             className="flex items-center justify-center gap-8 max-w-7xl w-full px-4 h-full"
             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}
           >
-            {/* Close button - Centered at top */}
-            <motion.button
+            {/* Demo title - MOBILE VERSION */}
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ 
@@ -549,11 +567,20 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                 duration: 0.3
               }}
               onClick={onClose}
-              className="absolute top-4 left-1/2 transform -translate-x-1/2 z-60 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-4 rounded-full transition-all duration-200 hover:scale-110"
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 lg:left-auto lg:right-4 lg:transform-none z-60 cursor-pointer"
               aria-label="Demo sluiten"
             >
-              <IoClose size={32} />
-            </motion.button>
+              {/* MOBILE: Losse tekst - ALLEEN OP MOBIEL */}
+              <div className="lg:hidden text-center text-white">
+                <h3 className="text-lg font-semibold mb-1">TableTech Klant-demo</h3>
+                <p className="text-xs text-white/80">Alles is volledig functioneel</p>
+              </div>
+              
+              {/* DESKTOP: Kruisje - ALLEEN OP DESKTOP */}
+              <div className="hidden lg:block bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-4 rounded-full transition-all duration-200 hover:scale-110">
+                <IoClose size={32} />
+              </div>
+            </motion.div>
 
             {/* Mobile Theme Selector - ABOVE PHONE - MOBILE ONLY */}
             {phonePosition && (
@@ -633,6 +660,70 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               </div>
             )}
 
+            {/* Mobile Navigation Buttons - ECHT ONDER DE TELEFOON */}
+            {phonePosition && (
+              <div 
+                className="lg:hidden absolute z-40" 
+                style={{ 
+                  // Gebruik de echte telefoon positie + hoogte + minder ruimte = HOGER
+                  top: phonePosition.top + (phonePosition.phoneHeight || 600) + 80, // Minder ruimte: 80px gap onder telefoon (was 120px)
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  maxWidth: `${Math.min(phonePosition.width * 1.1, window.innerWidth - 30)}px`, // Iets breder: 110% van telefoon breedte
+                  width: 'fit-content'
+                }}
+              >
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ 
+                    delay: 0.6, 
+                    duration: 0.4
+                  }}
+                  className="flex w-full"
+                  style={{
+                    // Iets meer gap voor grotere buttons
+                    gap: `${Math.max(8, Math.min(16, phonePosition.width * 0.035))}px`,
+                    padding: '0'
+                  }}
+                >
+                  {/* Terug naar homepage button - GROTER */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onClose}
+                    className="flex-1 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white rounded-lg font-medium transition-all duration-200 border border-white/20"
+                    style={{
+                      // Grotere styling voor betere zichtbaarheid
+                      fontSize: `${Math.max(12, Math.min(15, phonePosition.width * 0.042))}px`, // Groter: 4.2% van telefoonbreedte
+                      padding: `${Math.max(10, Math.min(14, phonePosition.width * 0.035))}px ${Math.max(12, Math.min(18, phonePosition.width * 0.045))}px`, // Meer padding
+                      minWidth: `${Math.max(100, phonePosition.width * 0.4)}px`, // Breder: 40% van telefoonbreedte
+                      maxWidth: `${phonePosition.width * 0.48}px` // Max 48% van telefoonbreedte
+                    }}
+                  >
+                    Terug naar homepage
+                  </motion.button>
+                  
+                  {/* Demo werknemer button - GROTER en kleur past bij actief thema */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onSwitchToEmployee}
+                    className={`flex-1 text-white rounded-lg font-medium transition-all duration-200 shadow-lg ${getCurrentTheme().color} ${getCurrentTheme().hoverColor}`}
+                    style={{
+                      // Grotere styling voor betere zichtbaarheid
+                      fontSize: `${Math.max(12, Math.min(15, phonePosition.width * 0.042))}px`, // Groter: 4.2% van telefoonbreedte
+                      padding: `${Math.max(10, Math.min(14, phonePosition.width * 0.035))}px ${Math.max(12, Math.min(18, phonePosition.width * 0.045))}px`, // Meer padding
+                      minWidth: `${Math.max(100, phonePosition.width * 0.4)}px`, // Breder: 40% van telefoonbreedte
+                      maxWidth: `${phonePosition.width * 0.48}px` // Max 48% van telefoonbreedte
+                    }}
+                  >
+                    Demo werknemer
+                  </motion.button>
+                </motion.div>
+              </div>
+            )}
+
             {/* Demo title - positioned at top - DESKTOP ONLY */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -678,7 +769,21 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
                           delay: 0.4 + (index * 0.05),
                           duration: 0.2
                         }}
-                        onClick={() => setActiveTheme(theme.id)}
+                        onClick={() => {
+                          setActiveTheme(theme.id);
+                          // Scroll to top when switching themes on desktop
+                          setTimeout(() => {
+                            const mainScrollContainer = document.querySelector('[data-phone-scroll-container="true"]') as HTMLElement;
+                            if (mainScrollContainer) {
+                              mainScrollContainer.scrollTop = 0;
+                              // Also reset horizontal scroll for categories
+                              const categoriesContainer = document.querySelector('.flex.overflow-x-auto') as HTMLElement;
+                              if (categoriesContainer) {
+                                categoriesContainer.scrollLeft = 0;
+                              }
+                            }
+                          }, 50);
+                        }}
                         className={`px-3 py-2 rounded-md font-medium transition-all duration-300 text-xs whitespace-nowrap ${
                           activeTheme === theme.id
                             ? `theme-button-${theme.id} theme-button-active border border-white/40`
