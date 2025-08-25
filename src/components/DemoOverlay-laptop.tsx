@@ -248,6 +248,9 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
       } else if (availableWidth === 912 && availableHeight === 1368) {
         // Surface Pro 912x1368 - knoppen netjes onder dashboard
         safeGap = 30; // Kleine, nette gap onder dashboard
+      } else if (availableWidth === 853 && availableHeight === 1280) {
+        // Tablet 853x1280 - knoppen netjes onder dashboard
+        safeGap = 30; // Kleine, nette gap onder dashboard
       } else if (availableWidth >= 768 && availableWidth <= 1024) {
         // Voor andere iPads - consistente, kleine gap voor clean look
         safeGap = 25; // Kleine, nette witruimte onder dashboard
