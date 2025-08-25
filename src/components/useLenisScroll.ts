@@ -52,6 +52,7 @@ export const useLenisScroll = () => {
 
     ScrollTrigger.refresh();
 
+    // Enhanced fade-in animations with better performance
     gsap.utils.toArray(".fade-in").forEach((el: unknown) => {
       if (el instanceof HTMLElement) {
         gsap.from(el, {
@@ -63,6 +64,28 @@ export const useLenisScroll = () => {
             trigger: el,
             start: "top 85%",
             toggleActions: "play none none none",
+            scroller: document.body, // Explicitly set scroller for Lenis
+            refreshPriority: -1, // Lower priority for better performance
+          },
+        });
+      }
+    });
+
+    // Enhanced scroll animations for container scroll components
+    gsap.utils.toArray(".container-scroll-element").forEach((el: unknown) => {
+      if (el instanceof HTMLElement) {
+        gsap.from(el, {
+          opacity: 0.8,
+          y: 20,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 90%",
+            end: "bottom 10%",
+            toggleActions: "play none none reverse",
+            scroller: document.body,
+            refreshPriority: 0, // Higher priority for container scroll
           },
         });
       }

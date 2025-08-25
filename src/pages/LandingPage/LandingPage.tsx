@@ -41,12 +41,19 @@ const LandingPage: React.FC = () => {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
                 Jouw <span className="text-[#E86C28]">Dashboard</span> Ervaring
               </h2>
-              <p className="text-xl max-w-3xl mx-auto text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
-                Beheer je restaurant moeiteloos met ons intuïtieve <span className="text-[#E86C28] font-semibold">dashboard</span>. Krijg direct inzicht en geniet van eenvoudige bediening.
-              </p>
             </div>
           }
-          card={null}
+          card={
+            <div className="w-full h-full relative overflow-hidden">
+              {/* Dashboard content will be shown through the image */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-white/20 text-center pointer-events-none">
+                  <div className="text-lg font-medium mb-2">TableTech Dashboard</div>
+                  <div className="text-sm opacity-70">Real-time restaurant management</div>
+                </div>
+              </div>
+            </div>
+          }
         />
       </section>
 

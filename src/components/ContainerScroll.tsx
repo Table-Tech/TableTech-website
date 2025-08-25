@@ -1,93 +1,202 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { ContainerScrollTitle } from "./ContainerScrollTitle";
 import { ContainerScrollCard } from "./ContainerScrollCard";
+import { useThrottledCallback } from "../hooks/useThrottledCallback";
 
 interface ContainerScrollProps {
   title?: React.ReactNode;
   card?: React.ReactNode;
 }
 
+// Types for scroll state
+interface ScrollState {
+  scrollYProgress: number;
+  isInView: boolean;
+  windowHeight: number;
+  containerBottom: number;
+}
+
 const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [scrollYProgress, setScrollYProgress] = useState(0);
-  const [isInView, setIsInView] = useState(false);
+  const [scrollState, setScrollState] = useState<ScrollState>({
+    scrollYProgress: 0,
+    isInView: false,
+    windowHeight: typeof window !== 'undefined' ? window.innerHeight : 800,
+    containerBottom: 0
+  });
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+  // Memoized mobile detection
+  const updateIsMobile = useCallback(() => {
+    setIsMobile(window.innerWidth <= 768);
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const scrollY = window.scrollY;
-      const bottom = rect.bottom + scrollY;
-      
-      // Check if section is in view
-      const inView = rect.top < windowHeight && rect.bottom > 0;
-      setIsInView(inView);
-      
-      // Vue-style scroll progress calculation
-      const progress = bottom > 0 ? 1 - Math.max(0, bottom - scrollY) / windowHeight : 0;
-      setScrollYProgress(Math.max(0, Math.min(1, progress)));
-    };
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile, { passive: true });
+    return () => window.removeEventListener("resize", updateIsMobile);
+  }, [updateIsMobile]);
 
-    // Smooth scroll handling
-    let ticking = false;
-    const smoothScrollHandler = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
+  // Enhanced scroll calculation with Lenis integration
+  const calculateScrollProgress = useCallback(() => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    // Get scroll position (Lenis compatible)
+    const scrollY = window.lenis?.scroll || window.scrollY || document.documentElement.scrollTop;
+    const containerTop = rect.top + scrollY;
+    const containerBottom = rect.bottom + scrollY;
+    const containerHeight = rect.height;
+    
+    // Enhanced in-view detection
+    const inView = rect.top < windowHeight * 1.2 && rect.bottom > -windowHeight * 0.2;
+    
+    // Vue-style scroll progress with enhanced easing
+    let progress = 0;
+    if (containerBottom > scrollY) {
+      const remaining = Math.max(0, containerBottom - scrollY);
+      const totalScrollable = containerHeight + windowHeight;
+      progress = Math.max(0, Math.min(1, (totalScrollable - remaining) / totalScrollable));
+    } else {
+      progress = 1;
+    }
+    
+    // Smooth easing function for more natural animation
+    const easedProgress = progress < 0.5 
+      ? 2 * progress * progress 
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    
+    setScrollState({
+      scrollYProgress: easedProgress,
+      isInView: inView,
+      windowHeight,
+      containerBottom
+    });
+  }, []);
+
+  // Throttled scroll handler for performance
+  const throttledScrollHandler = useThrottledCallback(calculateScrollProgress, 16); // ~60fps
+
+  useEffect(() => {
+    // Initial calculation with delay to ensure proper mounting
+    const initialTimer = setTimeout(calculateScrollProgress, 100);
+    
+    // Enhanced Lenis integration
+    const setupScrollListener = () => {
+      if (window.lenis) {
+        // Use Lenis-specific scroll event for better performance
+        window.lenis.on('scroll', throttledScrollHandler);
+      } else {
+        // Fallback to window scroll with passive listener
+        window.addEventListener('scroll', throttledScrollHandler, { passive: true });
       }
     };
+    
+    setupScrollListener();
+    
+    // Also listen to resize for recalculation with debounce
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(calculateScrollProgress, 150);
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+    
+    return () => {
+      clearTimeout(initialTimer);
+      clearTimeout(resizeTimer);
+      
+      if (window.lenis) {
+        window.lenis.off('scroll', throttledScrollHandler);
+      } else {
+        window.removeEventListener('scroll', throttledScrollHandler);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [calculateScrollProgress, throttledScrollHandler]);
 
-    window.addEventListener("scroll", smoothScrollHandler, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", smoothScrollHandler);
-  }, []);
-
-  // Vue-style animation calculations
-  const scaleDimensions = isMobile ? [0.7, 0.9] : [1.05, 1];
-  const rotate = 20 * (1 - scrollYProgress);
-  const scale = scaleDimensions[0] + (scaleDimensions[1] - scaleDimensions[0]) * scrollYProgress;
-  const translateY = -100 * scrollYProgress;
+  // Memoized animation calculations for performance
+  const animationValues = useMemo(() => {
+    const { scrollYProgress } = scrollState;
+    
+    // Enhanced scale dimensions with smoother transitions
+    const scaleDimensions = isMobile ? [0.65, 0.95] : [1.08, 1.02];
+    
+    // More dynamic rotation with easing
+    const maxRotation = isMobile ? 15 : 25;
+    const rotate = maxRotation * (1 - scrollYProgress);
+    
+    // Smoother scale transition
+    const [startScale, endScale] = scaleDimensions;
+    const scale = startScale + (endScale - startScale) * scrollYProgress;
+    
+    // Enhanced Y translation with more dramatic effect
+    const maxTranslateY = isMobile ? -80 : -120;
+    const translateY = maxTranslateY * scrollYProgress;
+    
+    return { rotate, scale, translateY };
+  }, [scrollState.scrollYProgress, isMobile]);
 
   return (
     <div 
       ref={containerRef}
-      className="relative flex h-[60rem] md:h-[80rem] flex-col justify-center p-2 md:p-20 bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A]"
+      className="relative flex h-[60rem] md:h-[80rem] items-center justify-center p-2 md:p-20 overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #2C1E1A 0%, #3A2B24 50%, #2C1E1A 100%)'
+      }}
     >
+      {/* Animated background elements for depth */}
+      <div className="absolute inset-0 opacity-30">
+        <div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl transform transition-transform duration-1000"
+          style={{
+            transform: `translateX(${animationValues.translateY * 0.3}px) translateY(${animationValues.translateY * 0.2}px)`
+          }}
+        />
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl transform transition-transform duration-1000"
+          style={{
+            transform: `translateX(${animationValues.translateY * -0.2}px) translateY(${animationValues.translateY * 0.4}px)`
+          }}
+        />
+      </div>
+      
       <div
-        className="relative w-full flex flex-col items-center space-y-8 md:space-y-16"
+        className="relative w-full py-10 md:py-40"
         style={{ perspective: '1000px' }}
       >
-        <div className="w-full">
-          <ContainerScrollTitle translate={translateY}>
-            {title}
-          </ContainerScrollTitle>
-        </div>
-        <div className="w-full flex justify-center">
-          <ContainerScrollCard
-            rotate={rotate}
-            scale={scale}
-          >
-            {card}
-          </ContainerScrollCard>
-        </div>
+        <ContainerScrollTitle translate={animationValues.translateY}>
+          {title}
+        </ContainerScrollTitle>
+        
+        <ContainerScrollCard
+          rotate={animationValues.rotate}
+          scale={animationValues.scale}
+          isInView={scrollState.isInView}
+        >
+          {card}
+        </ContainerScrollCard>
       </div>
     </div>
   );
 };
+
+// Add global type for Lenis
+declare global {
+  interface Window {
+    lenis?: {
+      scroll: number;
+      scrollTo: (target: number | string, options?: any) => void;
+      on: (event: string, callback: Function) => void;
+      off: (event: string, callback: Function) => void;
+      stop: () => void;
+      start: () => void;
+      destroy: () => void;
+    };
+  }
+}
 
 export default ContainerScroll;
