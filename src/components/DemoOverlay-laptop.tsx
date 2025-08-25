@@ -35,9 +35,37 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     };
   }, []);
 
+  // Universele iPad schaal berekening - clean en groot maar netjes
+  const getIPadDashboardScale = () => {
+    // Universele instellingen voor alle iPads
+    const titleHeight = 80; // Compactere titel
+    const buttonContainerHeight = 140; // Ruimte voor knoppen container
+    const frameVisibilityMargin = 40; // Marges zodat frames zichtbaar blijven
+    const safetyPadding = 20; // Extra veiligheid
+    
+    // Bereken beschikbare ruimte voor dashboard
+    const totalReservedSpace = titleHeight + buttonContainerHeight + frameVisibilityMargin + safetyPadding;
+    const availableSpace = windowHeight - totalReservedSpace;
+    
+    // Laptop mockup totale hoogte (768px dashboard + 8px frame)
+    const laptopTotalHeight = 776;
+    const calculatedScale = availableSpace / laptopTotalHeight;
+    
+    // iPad specifieke schaal grenzen - iets uitgezoomed voor betere overview
+    const minScale = 0.35; // Kleiner minimum voor meer overview
+    const maxScale = 0.65; // Kleiner maximum - meer uitgezoomed
+    
+    return Math.min(Math.max(calculatedScale, minScale), maxScale);
+  };
+
   // Bereken optimale dashboard schaal - RESPONSIEF OP BREEDTE EN HOOGTE
   const getOptimalDashboardScale = () => {
     if (windowWidth >= 1024) return 0.75; // Desktop
+    
+    // iPad specifieke optimalisatie (768px, 820px of 1024px breed)
+    if (windowWidth === 768 || windowWidth === 820 || windowWidth === 1024) {
+      return getIPadDashboardScale();
+    }
     
     const availableHeight = window.innerHeight;
     const availableWidth = windowWidth;
@@ -127,7 +155,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
 
     // Bereken dynamische positie voor knoppen - VAST CONTAINER ONDER LAPTOP MOCKUP
   const getButtonPosition = () => {
-    if (windowWidth >= 1280) return 70; // Desktop positionering (xl breakpoint)
+    if (windowWidth >= 1280) return -9999; // Desktop: verberg mobile knoppen volledig
     
     // Gebruik tracked window dimensions voor realtime updates
     const availableHeight = windowHeight;
@@ -153,13 +181,14 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     // CONSERVATIEVE POSITIONERING - ALTIJD ONDER LAPTOP
     let safeGap = 170; // Standaard gap
     
-    // Tablet specifieke aanpassing - meer ruimte nodig
+    // Tablet specifieke aanpassing - universele iPad behandeling
     if (isTablet) {
-      // iPad Pro 1024x1366 specifiek
-      if (availableWidth === 1024 && availableHeight === 1366) {
-        safeGap = 350; // Veel meer ruimte voor iPad Pro 1024x1366
+      // Universele iPad instellingen voor alle formaten
+      if (availableWidth >= 768 && availableWidth <= 1024) {
+        // Voor alle iPads - consistente, kleine gap voor clean look
+        safeGap = 25; // Kleine, nette witruimte onder dashboard
       } else {
-        safeGap = 250; // Standaard tablet gap
+        safeGap = 50; // Standaard tablet gap voor andere tablets
       }
     }
     
