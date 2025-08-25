@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
+import { TermsModal } from "./TermsModal";
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   return (
     <footer 
@@ -142,9 +146,9 @@ export const Footer: React.FC = () => {
             </span>. Alle rechten voorbehouden.
           </p>
           <div className="flex gap-6 mt-1">
-            <a 
-              href="/privacy" 
-              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105"
+            <button 
+              onClick={() => setIsPrivacyModalOpen(true)}
+              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';
@@ -154,10 +158,10 @@ export const Footer: React.FC = () => {
               }}
             >
               Privacybeleid
-            </a>
-            <a 
-              href="/algemene-voorwaarden" 
-              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105"
+            </button>
+            <button 
+              onClick={() => setIsTermsModalOpen(true)}
+              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';
@@ -167,12 +171,24 @@ export const Footer: React.FC = () => {
               }}
             >
               Algemene voorwaarden
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       {/* Removed bottom fade for cleaner finish */}
+      
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal 
+        isOpen={isPrivacyModalOpen} 
+        onClose={() => setIsPrivacyModalOpen(false)} 
+      />
+      
+      {/* Terms & Conditions Modal */}
+      <TermsModal 
+        isOpen={isTermsModalOpen} 
+        onClose={() => setIsTermsModalOpen(false)} 
+      />
     </footer>
   );
 };
