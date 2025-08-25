@@ -109,7 +109,7 @@ export const ScrollArrows: React.FC<ScrollArrowsProps> = ({ targetSelector }) =>
   };
 
   return (
-    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 flex flex-col gap-2 items-center">
+    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 -mt-3 z-20 flex flex-col gap-2 items-center">
       {/* Up Arrow */}
       <button
         onMouseDown={handleUpMouseDown}
