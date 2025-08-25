@@ -217,6 +217,9 @@ export const PricingNew = () => {
                                 <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
                                 {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
                               </div>
+                              {tier.monthlyFee !== "€0" && (
+                                <div className="text-xs text-[#D4B896]/80 mt-1">excl. BTW</div>
+                              )}
                               {tier.monthlyFee === "€0" && (
                                 <div className="text-lg font-semibold text-[#D4B896] mt-1">Voor altijd gratis</div>
                               )}
@@ -302,6 +305,9 @@ export const PricingNew = () => {
                               <span className="text-3xl font-bold text-white">{tier.monthlyFee}</span>
                               {tier.monthlyFee !== "€0" && <span className="text-sm text-[#D4B896]">/maand</span>}
                             </div>
+                            {tier.monthlyFee !== "€0" && (
+                              <div className="text-xs text-[#D4B896]/80 mt-1">excl. BTW</div>
+                            )}
                             {tier.monthlyFee === "€0" && (
                               <div className="text-lg font-semibold text-[#D4B896] mt-1">Voor altijd gratis</div>
                             )}
