@@ -143,7 +143,7 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
   return (
     <div 
       ref={containerRef}
-      className="relative flex h-[60rem] md:h-[80rem] items-center justify-center p-2 md:p-20 overflow-hidden"
+      className="relative flex h-[50rem] md:h-[65rem] items-center justify-center p-2 md:p-12 overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #2C1E1A 0%, #3A2B24 50%, #2C1E1A 100%)'
       }}
@@ -165,7 +165,7 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
       </div>
       
       <div
-        className="relative w-full py-10 md:py-40"
+        className="relative w-full py-6 md:py-20"
         style={{ perspective: '1000px' }}
       >
         <ContainerScrollTitle translate={animationValues.translateY}>
