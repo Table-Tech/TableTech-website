@@ -476,8 +476,9 @@ const HorizontalTabletScroll: React.FC<HorizontalTabletScrollProps> = ({
 
         {/* Enhanced scroll indicator */}
         <div 
-          className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-40"
+          className="absolute left-1/2 transform -translate-x-1/2 z-40"
           style={{
+            bottom: '-80px',
             opacity: Math.max(0, 1 - scrollProgress * 4),
             transform: `translateX(-50%) translateY(${scrollProgress * 80}px) scale(${1 - scrollProgress * 0.3})`,
           }}

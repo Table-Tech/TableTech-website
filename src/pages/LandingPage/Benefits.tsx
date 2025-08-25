@@ -15,6 +15,7 @@ export const BenefitsOne: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isManualMode, setIsManualMode] = useState(false);
+  const [selectedBenefit, setSelectedBenefit] = useState<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const appScreens: AppScreen[] = [
@@ -457,14 +458,50 @@ export const BenefitsOne: React.FC = () => {
     }
   ];
 
+  const benefitMessages = [
+    {
+      title: "Geen wachttijden",
+      description: "Gasten hoeven niet te wachten op personeel om hun bestelling op te nemen. Ze kunnen direct bestellen via hun smartphone."
+    },
+    {
+      title: "Live order tracking", 
+      description: "Gasten kunnen realtime zien hoe hun bestelling vordert - van keuken tot tafel. Geen onzekerheid meer over wanneer het eten komt."
+    },
+    {
+      title: "Contactloos betalen",
+      description: "Veilig en gemakkelijk betalen met iDEAL, Apple Pay, creditcard of andere digitale betaalmethoden. Geen contant geld nodig."
+    },
+    {
+      title: "Precisie bestellen",
+      description: "Door digitaal bestellen verdwijnen misverstanden. Gasten kunnen precies aangeven wat ze willen, inclusief speciale wensen."
+    }
+  ];
+
+  const handleBenefitClick = (benefitIndex: number) => {
+    setSelectedBenefit(benefitIndex);
+    // Reset to automatic cycling after 10 seconds
+    setTimeout(() => {
+      setSelectedBenefit(null);
+    }, 10000);
+  };
+
+  const getCurrentMessage = () => {
+    if (selectedBenefit !== null) {
+      return benefitMessages[selectedBenefit];
+    }
+    return appScreens[currentScreen];
+  };
+
   const startAutoSlide = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
     intervalRef.current = setInterval(() => {
-      setCurrentScreen((prev) => (prev + 1) % appScreens.length);
+      if (selectedBenefit === null) {
+        setCurrentScreen((prev) => (prev + 1) % appScreens.length);
+      }
     }, 8000); // 8 seconden per slide
-  }, [appScreens.length]);
+  }, [appScreens.length, selectedBenefit]);
 
 
   useEffect(() => {
@@ -565,7 +602,7 @@ export const BenefitsOne: React.FC = () => {
             <div className="space-y-3 flex-1 overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={currentScreen}
+                  key={selectedBenefit !== null ? `benefit-${selectedBenefit}` : `screen-${currentScreen}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -585,13 +622,13 @@ export const BenefitsOne: React.FC = () => {
                         style={{
                           textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                         }}>
-                      {appScreens[currentScreen].title}
+                      {getCurrentMessage().title}
                     </h3>
                     <p className="text-white/95 text-sm sm:text-base lg:text-lg leading-relaxed"
                        style={{
                          textShadow: '0 1px 4px rgba(0,0,0,0.4)'
                        }}>
-                      {appScreens[currentScreen].description}
+                      {getCurrentMessage().description}
                     </p>
                   </div>
                 </motion.div>
@@ -632,6 +669,7 @@ export const BenefitsOne: React.FC = () => {
                       className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
+                      onClick={() => handleBenefitClick(0)}
                     >
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -658,6 +696,7 @@ export const BenefitsOne: React.FC = () => {
                       className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
+                      onClick={() => handleBenefitClick(1)}
                     >
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -684,6 +723,7 @@ export const BenefitsOne: React.FC = () => {
                       className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
+                      onClick={() => handleBenefitClick(2)}
                     >
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -710,6 +750,7 @@ export const BenefitsOne: React.FC = () => {
                       className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
+                      onClick={() => handleBenefitClick(3)}
                     >
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
