@@ -204,14 +204,14 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                       onClose();
                       onOpenPrivacy();
                     }}
-                    className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 transition-all duration-200 font-medium"
+                    className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl"
                   >
                     Privacybeleid
                   </button>
                 )}
                 <button
                   onClick={onClose}
-                  className="px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-200 font-medium shadow-lg"
+                  className="px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl"
                 >
                   Sluiten
                 </button>
