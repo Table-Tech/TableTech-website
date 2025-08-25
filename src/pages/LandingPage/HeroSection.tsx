@@ -102,11 +102,11 @@ export const HeroSection: React.FC = () => {
         {/* Donkere overlay - alleen op desktop */}
         <div className="absolute inset-0 bg-[#3b2a1d]/60 z-0 hidden md:block" />
         {/* Inhoud */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 3xl:px-40 py-8 text-white text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-3 sm:mb-4 leading-tight sm:leading-snug drop-shadow-md text-center">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6 lg:py-8 text-white text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-3 sm:mb-4 leading-tight sm:leading-snug drop-shadow-md text-center">
             {t('hero.title')}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-6 max-w-3xl mx-auto xl:text-xl leading-relaxed text-center">
+          <p className="text-sm sm:text-base lg:text-base xl:text-lg 2xl:text-xl text-white/90 mb-4 lg:mb-6 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed text-center">
             {t('hero.subtitle')}
           </p>
 
@@ -178,31 +178,31 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Desktop Version - Side by Side Layout */}
-          <div className="hidden lg:flex flex-col lg:flex-row justify-center items-stretch gap-4 sm:gap-6 lg:gap-8 max-w-8xl mx-auto">
+          <div className="hidden lg:flex flex-col lg:flex-row justify-center items-stretch gap-4 lg:gap-6 xl:gap-8 max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">
             {/* Customer Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-6 sm:px-8 lg:px-10 xl:px-12 py-6 sm:py-7 lg:py-8 xl:py-10 rounded-2xl text-center shadow-2xl w-full max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[500px] xl:min-h-[560px] 2xl:min-h-[600px]">
+            <div className="bg-white/10 backdrop-blur-md px-4 lg:px-6 xl:px-8 py-4 lg:py-6 xl:py-8 rounded-2xl text-center shadow-2xl w-full max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] lg:min-h-[400px] xl:min-h-[450px] 2xl:min-h-[500px]">
               <div className="flex-1 flex flex-col h-full">
-                <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold mb-3 sm:mb-4 text-white">
+                <h3 className="text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold mb-2 lg:mb-3 text-white">
                   {t('hero.customerDemo.title')}
                 </h3>
-                <p className="text-white/90 mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg leading-relaxed flex-shrink-0">
+                <p className="text-white/90 mb-3 lg:mb-4 text-sm lg:text-base xl:text-lg leading-relaxed flex-shrink-0">
                   {t('hero.customerDemo.description')}
                 </p>
                 
                 {/* QR Code Component - Desktop Only */}
                 <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
-                  <div className="relative w-full max-w-sm xl:max-w-md 2xl:max-w-lg mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
-                    <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-6 xl:p-8" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
-                      <div className="bg-white p-4 xl:p-5 rounded-xl mx-auto w-fit shadow-2xl">
+                  <div className="relative w-full max-w-xs lg:max-w-sm xl:max-w-md mx-auto transform scale-100 hover:scale-105 transition-transform duration-300">
+                    <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-4 lg:p-5 xl:p-6" style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
+                      <div className="bg-white p-3 lg:p-4 xl:p-5 rounded-xl mx-auto w-fit shadow-2xl">
                         <img 
                           src="/images/qr-codes/iyd.webp" 
                           alt="Scan QR code voor menu demo" 
-                          className="w-32 h-32 xl:w-40 xl:h-40 2xl:w-44 2xl:h-44 mx-auto filter brightness-105 contrast-110"
+                          className="w-24 h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 2xl:w-36 2xl:h-36 mx-auto filter brightness-105 contrast-110"
                           loading="eager"
                         />
                       </div>
-                      <div className="text-center mt-4 xl:mt-5">
-                        <p className="text-white/95 text-sm xl:text-base font-medium">
+                      <div className="text-center mt-3 lg:mt-4">
+                        <p className="text-white/95 text-xs lg:text-sm xl:text-base font-medium">
                           {t('hero.customerDemo.qrInstruction')}
                         </p>
                       </div>
@@ -216,7 +216,7 @@ export const HeroSection: React.FC = () => {
                   onClick={handleOpenCustomerDemo}
                   type="button"
                   disabled={isPreloading}
-                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-12 sm:px-14 lg:px-18 py-4 sm:py-5 h-[56px] sm:h-[60px] rounded-full text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[320px] lg:max-w-[360px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-8 lg:px-10 xl:px-12 py-3 lg:py-4 h-[48px] lg:h-[52px] xl:h-[56px] rounded-full text-sm lg:text-base xl:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[260px] lg:max-w-[280px] xl:max-w-[320px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
                 >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">
@@ -231,18 +231,18 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Employee Demo Card */}
-            <div className="bg-white/10 backdrop-blur-md px-6 sm:px-8 lg:px-10 xl:px-12 py-6 sm:py-7 lg:py-8 xl:py-10 rounded-2xl text-center shadow-2xl w-full max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[500px] xl:min-h-[560px] 2xl:min-h-[600px]">
+            <div className="bg-white/10 backdrop-blur-md px-4 lg:px-6 xl:px-8 py-4 lg:py-6 xl:py-8 rounded-2xl text-center shadow-2xl w-full max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-auto hover:scale-105 transition-all duration-300 group border-2 border-white/30 flex flex-col justify-between min-h-[280px] lg:min-h-[400px] xl:min-h-[450px] 2xl:min-h-[500px]">
               <div className="flex-1 flex flex-col h-full">
-                <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold mb-3 sm:mb-4 text-white">
+                <h3 className="text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold mb-2 lg:mb-3 text-white">
                   {t('hero.employeeDemo.title')}
                 </h3>
-                <p className="text-white/90 mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg leading-relaxed flex-shrink-0">
+                <p className="text-white/90 mb-3 lg:mb-4 text-sm lg:text-base xl:text-lg leading-relaxed flex-shrink-0">
                   {t('hero.employeeDemo.description')}
                 </p>
                 
                 {/* Laptop Mockup - Desktop Only */}
                 <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
-                  <div className="w-full max-w-sm xl:max-w-md 2xl:max-w-lg mx-auto">
+                  <div className="w-full max-w-xs lg:max-w-sm xl:max-w-md mx-auto">
                     <LaptopMockup />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export const HeroSection: React.FC = () => {
                   onClick={handleOpenEmployeeDemo}
                   type="button"
                   disabled={isPreloading}
-                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-12 sm:px-14 lg:px-18 py-4 sm:py-5 h-[56px] sm:h-[60px] rounded-full text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[320px] lg:max-w-[360px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
+                  className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white hover:from-yellow-800 hover:to-yellow-900 px-8 lg:px-10 xl:px-12 py-3 lg:py-4 h-[48px] lg:h-[52px] xl:h-[56px] rounded-full text-sm lg:text-base xl:text-lg font-bold transition-all duration-300 hover:scale-105 transform active:scale-95 shadow-xl hover:shadow-2xl hover:cursor-pointer relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:animate-[shimmer_6s_infinite] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center w-full max-w-[260px] lg:max-w-[280px] xl:max-w-[320px] ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 border-2 border-white/20"
                 >
                 {isPreloading ? (
                   <span className="flex items-center gap-2">

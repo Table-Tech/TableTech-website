@@ -236,6 +236,11 @@ html, body {
   /* Scrollbar verbergen voor Firefox/IE */
   scrollbar-width: none;
   -ms-overflow-style: none;
+  
+  /* Viewport scaling optimalisatie voor laptops */
+  @media (min-width: 1024px) and (max-width: 1920px) {
+    font-size: 14px;
+  }
 }
 
 /* Scrollbar verbergen voor WebKit browsers (Chrome/Safari/Edge) */

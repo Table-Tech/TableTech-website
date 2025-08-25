@@ -25,32 +25,26 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
 }) => {
   return (
     <div 
-      className="relative mx-auto"
+      className="relative mx-auto px-4 lg:px-8"
       style={{
         perspective: '3000px',
         perspectiveOrigin: '50% 50%',
+        overflow: 'visible',
       }}
     >
       <div
         style={{
-          transform: `
-            rotateX(${rotate}deg) 
-            rotateY(${rotateY}deg) 
-            rotateZ(${rotateZ}deg)
-            translateY(${translateY}px) 
-            translateZ(${translateZ}px) 
-            scale(${scale})
-          `,
+          transform: `translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotate}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
           transformStyle: 'preserve-3d',
-          willChange: 'transform, opacity',
+          willChange: 'transform',
           opacity: opacity,
-          transition: 'none',
-          maxWidth: isHorizontal ? '1400px' : '900px',
-          width: '95%',
+          maxWidth: isHorizontal ? '1000px' : '900px',
+          width: '85%',
           margin: '0 auto',
           backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
           isolation: 'isolate',
+          contain: 'layout style paint',
         }}
       >
         {/* Enhanced dynamic shadow with brown tint */}

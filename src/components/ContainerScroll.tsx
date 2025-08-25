@@ -41,31 +41,33 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
       // Enhanced scroll progress calculation for smoother animation
       let progress = 0;
       
-      // Start animation when section enters viewport
+      // Start animation only when tablet is fully visible in viewport
       if (sectionBottom > 0 && sectionTop < windowHeight) {
-        // Calculate how much of the section has been scrolled through
-        const scrollableDistance = sectionHeight + windowHeight;
-        const scrolled = windowHeight - sectionTop;
+        // Wait until section is 60% into viewport (tablet fully visible)
+        const delayThreshold = windowHeight * 0.6;
+        const scrolled = windowHeight - sectionTop - delayThreshold;
         
-        // Progress from 0 to 1 as user scrolls through the section
-        progress = Math.max(0, Math.min(1, scrolled / (scrollableDistance * 0.8)));
-        
-        // Apply smooth easing for natural movement, but cap at 0.7 to keep tablet and text visible
-        progress = Math.min(0.7, easeInOutCubic(progress));
+        if (scrolled > 0) {
+          // Animation completes over 30% of viewport height after tablet is visible
+          const scrollableDistance = windowHeight * 0.3;
+          
+          // Linear progress calculation
+          const rawProgress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+          
+          // Apply gentle easing for natural movement
+          progress = Math.min(0.85, easeInOutCubic(rawProgress));
+        }
       }
       
       setScrollProgress(progress);
     };
 
-    // Use requestAnimationFrame for smoother scroll handling with improved throttling
+    // Use requestAnimationFrame for ultra-smooth scroll handling
     let ticking = false;
-    let lastTime = 0;
     const smoothScrollHandler = () => {
-      const now = performance.now();
-      if (!ticking && now - lastTime > 8) { // Limit to ~120fps for smoothness
+      if (!ticking) {
         requestAnimationFrame(() => {
           handleScroll();
-          lastTime = now;
           ticking = false;
         });
         ticking = true;
@@ -77,73 +79,65 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
     return () => window.removeEventListener("scroll", smoothScrollHandler);
   }, []);
 
-  // Enhanced easing function for smoother motion
+  // Natural easing function for smooth motion
   const easeInOutCubic = (t: number): number => {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    // Gentle quadratic easing for natural movement
+    return t * t * (3 - 2 * t);
   };
 
-  // Improved 3D animation values for horizontal tablet - smoother and straighter
-  const rotateX = 25 * (1 - scrollProgress); // Reduced initial tilt for smoother movement
-  const rotateY = -8 * (1 - scrollProgress); // Reduced horizontal rotation to keep tablet straighter
-  const rotateZ = 2 * (1 - scrollProgress); // Minimal Z-axis rotation for natural look
+  // Natural 3D animation values with gradual motion
+  const rotateX = 20 * (1 - scrollProgress); // Gradual initial tilt
+  const rotateY = -6 * (1 - scrollProgress); // Subtle horizontal rotation
+  const rotateZ = 2 * (1 - scrollProgress); // Gentle Z-axis rotation
   
   const scale = isMobile 
-    ? 0.2 + (0.4 * scrollProgress) // Mobile: 20% to 60%
-    : 0.3 + (0.4 * scrollProgress); // Desktop: 30% to 70%
+    ? 0.3 + (0.2 * scrollProgress) // Mobile: 30% to 50%
+    : 0.35 + (0.2 * scrollProgress); // Desktop: 35% to 55%
   
-  const translateY = 400 * (1 - scrollProgress); // Smoother rise from below
-  const translateZ = -600 * (1 - scrollProgress); // More controlled 3D approach
-  const opacity = Math.min(1, scrollProgress * 1.5); // Gradual fade in
+  const translateY = 100 * (1 - scrollProgress); // Natural vertical movement
+  const translateZ = -300 * (1 - scrollProgress); // Gradual depth approach
+  const opacity = Math.min(1, scrollProgress * 1.2); // Gentle fade in
 
   return (
     <div 
       ref={containerRef}
-      className="relative min-h-[90vh] overflow-hidden bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A]"
+      className="relative min-h-[70vh] overflow-visible bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A]"
       style={{
         willChange: 'transform',
         transform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
+        clipPath: 'inset(0 0 0 0)',
       }}
     >
       
-      {/* Enhanced ambient glow effects */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Optimized ambient glow effects */}
+      <div className="absolute inset-0 pointer-events-none will-change-transform">
         <div 
-          className="absolute top-1/3 left-1/3 w-[600px] h-[600px] rounded-full"
+          className="absolute top-1/3 left-1/3 w-[600px] h-[600px] rounded-full opacity-80"
           style={{
             background: 'radial-gradient(circle, rgba(232, 108, 40, 0.15) 0%, rgba(195, 86, 29, 0.08) 40%, transparent 70%)',
-            filter: 'blur(80px)',
-            transform: `translate(${scrollProgress * 60}px, ${scrollProgress * 40}px) scale(${1 + scrollProgress * 0.3})`,
+            filter: 'blur(60px)',
+            transform: `translate3d(${scrollProgress * 30}px, ${scrollProgress * 20}px, 0) scale(${1 + scrollProgress * 0.2})`,
           }}
         />
         <div 
-          className="absolute bottom-1/3 right-1/3 w-[500px] h-[500px] rounded-full"
+          className="absolute bottom-1/3 right-1/3 w-[500px] h-[500px] rounded-full opacity-70"
           style={{
             background: 'radial-gradient(circle, rgba(122, 90, 72, 0.12) 0%, rgba(74, 55, 46, 0.06) 50%, transparent 70%)',
-            filter: 'blur(100px)',
-            transform: `translate(-${scrollProgress * 70}px, -${scrollProgress * 50}px) scale(${1 + scrollProgress * 0.4})`,
-          }}
-        />
-        
-        {/* Additional ambient lights */}
-        <div 
-          className="absolute top-1/2 left-1/2 w-[800px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(232, 108, 40, 0.08) 0%, transparent 60%)',
-            filter: 'blur(120px)',
-            transform: `translate(-50%, -50%) rotate(${scrollProgress * 20}deg)`,
+            filter: 'blur(80px)',
+            transform: `translate3d(-${scrollProgress * 35}px, -${scrollProgress * 25}px, 0) scale(${1 + scrollProgress * 0.25})`,
           }}
         />
       </div>
       
       {/* Title Container - Improved positioning */}
-      <div className="relative z-40 pt-16 pb-12">
+      <div className="relative z-40 pt-12 pb-2">
         <ContainerScrollTitle 
           isInView={isInView}
           style={{
-            transform: `translateY(${scrollProgress * -30}px)`,
-            opacity: Math.max(0.3, 1 - scrollProgress * 0.7),
+            transform: `translateY(${scrollProgress * -20}px)`,
+            opacity: Math.max(0.4, 1 - scrollProgress * 0.5),
           }}
         >
           {title}
@@ -151,8 +145,8 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
       </div>
       
       {/* 3D Tablet Container - Enhanced for horizontal layout */}
-      <div className="relative z-30" style={{ height: '50vh', marginTop: '0.5rem' }}>
-        <div className="sticky top-0 transform -translate-y-80">
+      <div className="relative z-30" style={{ minHeight: '50vh', paddingBottom: '8vh', marginTop: '-6rem' }}>
+        <div className="sticky top-[5vh] transform -translate-y-8">
           <ContainerScrollCard 
             rotate={rotateX}
             rotateY={rotateY}

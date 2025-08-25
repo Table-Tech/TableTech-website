@@ -486,7 +486,7 @@ export const BenefitsOne: React.FC = () => {
       style={{ backgroundColor: 'transparent' }}
     >
       {/* Main content - Beter gecentreerd */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
 
           {/* Left side - Video - Verborgen op mobiel om oververhitting te voorkomen */}

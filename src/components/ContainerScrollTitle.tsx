@@ -13,7 +13,7 @@ export const ContainerScrollTitle: React.FC<ContainerScrollTitleProps> = ({
 }) => {
   return (
     <div
-      className="text-center max-w-6xl mx-auto px-4 transition-all duration-1000 ease-out"
+      className="text-center max-w-5xl mx-auto px-4 transition-all duration-1000 ease-out"
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(-40px)',
