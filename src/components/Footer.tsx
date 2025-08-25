@@ -182,12 +182,14 @@ export const Footer: React.FC = () => {
       <PrivacyPolicyModal 
         isOpen={isPrivacyModalOpen} 
         onClose={() => setIsPrivacyModalOpen(false)} 
+        onOpenTerms={() => setIsTermsModalOpen(true)}
       />
       
       {/* Terms & Conditions Modal */}
       <TermsModal 
         isOpen={isTermsModalOpen} 
         onClose={() => setIsTermsModalOpen(false)} 
+        onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
       />
     </footer>
   );

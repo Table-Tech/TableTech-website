@@ -5,11 +5,13 @@ import { IoClose } from "react-icons/io5";
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenTerms?: () => void;
 }
 
 export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   isOpen,
   onClose,
+  onOpenTerms,
 }) => {
   // Block body scroll when modal is open but allow modal content scroll
   React.useEffect(() => {
@@ -95,7 +97,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
 
             {/* Content */}
             <div 
-              className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-80px)] scrollbar-thin scrollbar-track-[#3A2B24] scrollbar-thumb-amber-600/50 hover:scrollbar-thumb-amber-600/70"
+              className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-80px)] scrollbar-hide"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               data-modal-content="true"
             >
               <div className="prose prose-lg max-w-none">
@@ -169,7 +172,18 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
 
             {/* Footer */}
             <div className="sticky bottom-0 bg-gradient-to-r from-[#2C1E1A] to-[#1a110d] border-t border-amber-600/30 px-6 py-4">
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center">
+                {onOpenTerms && (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onOpenTerms();
+                    }}
+                    className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 transition-all duration-200 font-medium"
+                  >
+                    Algemene voorwaarden
+                  </button>
+                )}
                 <button
                   onClick={onClose}
                   className="px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-200 font-medium shadow-lg"
