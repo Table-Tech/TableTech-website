@@ -37,7 +37,55 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
 
   // Universele iPad schaal berekening - clean en groot maar netjes
   const getIPadDashboardScale = () => {
-    // Universele instellingen voor alle iPads
+    // iPad Pro 1024x1366 specifieke behandeling - meer ruimte beschikbaar
+    if (windowWidth === 1024 && windowHeight === 1366) {
+      const titleHeight = 80;
+      const buttonContainerHeight = 160; // Meer ruimte voor knoppen
+      const frameVisibilityMargin = 60; // Extra marges voor clean look
+      const safetyPadding = 30;
+      
+      const totalReservedSpace = titleHeight + buttonContainerHeight + frameVisibilityMargin + safetyPadding;
+      const availableSpace = windowHeight - totalReservedSpace;
+      const laptopTotalHeight = 776;
+      const calculatedScale = availableSpace / laptopTotalHeight;
+      
+      // iPad Pro kan groter dashboard aan - maak het nog groter
+      return Math.min(Math.max(calculatedScale, 0.6), 1.0);
+    }
+    
+    // Surface Pro 912x1368 specifieke behandeling
+    if (windowWidth === 912 && windowHeight === 1368) {
+      const titleHeight = 80;
+      const buttonContainerHeight = 140; // Ruimte voor knoppen
+      const frameVisibilityMargin = 80; // Grote marges zodat frames goed zichtbaar zijn
+      const safetyPadding = 40;
+      
+      const totalReservedSpace = titleHeight + buttonContainerHeight + frameVisibilityMargin + safetyPadding;
+      const availableSpace = windowHeight - totalReservedSpace;
+      const laptopTotalHeight = 776;
+      const calculatedScale = availableSpace / laptopTotalHeight;
+      
+      // Surface Pro dashboard nog meer uitgezoomed
+      return Math.min(Math.max(calculatedScale, 0.45), 0.7);
+    }
+    
+    // Tablet 853x1280 specifieke behandeling
+    if (windowWidth === 853 && windowHeight === 1280) {
+      const titleHeight = 80;
+      const buttonContainerHeight = 140; // Ruimte voor knoppen
+      const frameVisibilityMargin = 75; // Goede marges voor frame zichtbaarheid
+      const safetyPadding = 35;
+      
+      const totalReservedSpace = titleHeight + buttonContainerHeight + frameVisibilityMargin + safetyPadding;
+      const availableSpace = windowHeight - totalReservedSpace;
+      const laptopTotalHeight = 776;
+      const calculatedScale = availableSpace / laptopTotalHeight;
+      
+      // Tablet 853x1280 uitgezoomed dashboard
+      return Math.min(Math.max(calculatedScale, 0.45), 0.7);
+    }
+    
+    // Universele instellingen voor andere iPads
     const titleHeight = 80; // Compactere titel
     const buttonContainerHeight = 140; // Ruimte voor knoppen container
     const frameVisibilityMargin = 40; // Marges zodat frames zichtbaar blijven
@@ -62,8 +110,8 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
   const getOptimalDashboardScale = () => {
     if (windowWidth >= 1024) return 0.75; // Desktop
     
-    // iPad specifieke optimalisatie (768px, 820px of 1024px breed)
-    if (windowWidth === 768 || windowWidth === 820 || windowWidth === 1024) {
+    // iPad, Surface Pro en tablet specifieke optimalisatie
+    if (windowWidth === 768 || windowWidth === 820 || windowWidth === 853 || windowWidth === 912 || windowWidth === 1024) {
       return getIPadDashboardScale();
     }
     
@@ -121,6 +169,11 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
   const getButtonScale = () => {
     const availableWidth = windowWidth;
     const availableHeight = window.innerHeight;
+    
+    // iPad Pro 1024x1366 specifiek - grotere knoppen
+    if (availableWidth === 1024 && availableHeight === 1366) {
+      return 1.5; // 50% groter voor iPad Pro
+    }
     
     // Bereken schaal gebaseerd op kleinste dimensie voor proportionele scaling
     const baseWidth = 375; // iPhone standaard breedte als referentie
@@ -181,11 +234,22 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     // CONSERVATIEVE POSITIONERING - ALTIJD ONDER LAPTOP
     let safeGap = 170; // Standaard gap
     
+    // Kleine telefoons - knoppen meer naar beneden
+    if (availableWidth < 400 && availableHeight < 700) {
+      safeGap = 220; // Meer ruimte onder dashboard voor kleine telefoons
+    }
+    
     // Tablet specifieke aanpassing - universele iPad behandeling
     if (isTablet) {
       // Universele iPad instellingen voor alle formaten
-      if (availableWidth >= 768 && availableWidth <= 1024) {
-        // Voor alle iPads - consistente, kleine gap voor clean look
+      if (availableWidth === 1024 && availableHeight === 1366) {
+        // iPad Pro 1024x1366 - knoppen nog meer omhoog
+        safeGap = -1000; // Nog hoger voor knoppen
+      } else if (availableWidth === 912 && availableHeight === 1368) {
+        // Surface Pro 912x1368 - knoppen netjes onder dashboard
+        safeGap = 30; // Kleine, nette gap onder dashboard
+      } else if (availableWidth >= 768 && availableWidth <= 1024) {
+        // Voor andere iPads - consistente, kleine gap voor clean look
         safeGap = 25; // Kleine, nette witruimte onder dashboard
       } else {
         safeGap = 50; // Standaard tablet gap voor andere tablets
@@ -194,7 +258,12 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
     
     const buttonContainerTop = laptopEndY + safeGap;
     
-    // Zorg dat knoppen binnen scherm blijven
+    // iPad Pro 1024x1366 - geen beperkingen voor knoppen positie
+    if (availableWidth === 1024 && availableHeight === 1366) {
+      return buttonContainerTop; // Geen restricties voor iPad Pro
+    }
+    
+    // Zorg dat knoppen binnen scherm blijven (andere apparaten)
     const containerHeight = 120;
     const maxSafePosition = availableHeight - containerHeight - 20;
     
@@ -287,7 +356,14 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = ({
             </motion.div>
 
             {/* Main content area - GEPOSITIONEERD MET ZICHTBARE FRAMES */}
-            <div className="flex items-start lg:items-center justify-center w-full h-full pt-0 lg:pt-20 pb-6 gap-0 -mt-16 lg:mt-0"> {/* -mt-16 voor hoger dashboard op mobiel */}
+            <div 
+              className="flex items-start lg:items-center justify-center w-full h-full pt-0 lg:pt-20 pb-6 gap-0 -mt-16 lg:mt-0"
+              style={{
+                // iPad Pro 1024x1366 specifiek - dashboard 3x hoger
+                marginTop: windowWidth === 1024 && windowHeight === 1366 ? '-660px' : 
+                          windowWidth < 1280 ? '-16px' : '0'
+              }}
+            >
               {/* Left Demo Features panel - VERBORGEN OP MOBIEL EN TABLET VOOR MEER RUIMTE */}
               <motion.div
                 initial={{ x: -100, opacity: 0 }}
