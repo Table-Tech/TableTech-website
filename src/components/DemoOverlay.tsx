@@ -555,7 +555,7 @@ export const DemoOverlay: React.FC<DemoOverlayProps> = memo(({
               duration: 0.4, 
               ease: [0.16, 1, 0.3, 1]
             }}
-            className="flex items-center justify-center gap-8 max-w-7xl w-full px-4 h-full"
+            className="flex items-center justify-center gap-6 lg:gap-8 max-w-6xl w-full px-4 h-full"
             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}
           >
             {/* Demo title - MOBILE VERSION */}

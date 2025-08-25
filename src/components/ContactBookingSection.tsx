@@ -476,7 +476,7 @@ ${data.firstName} ${data.lastName}
         
         {/* Background removed for cleaner look */}
         
-        <div className="relative z-10 max-w-7xl mx-auto w-full pt-64">
+        <div className="relative z-10 max-w-6xl mx-auto w-full pt-32 lg:pt-48 xl:pt-64">
           {/* Main content - 2 columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left column - Slideshow */}

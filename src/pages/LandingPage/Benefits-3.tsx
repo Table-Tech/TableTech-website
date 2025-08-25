@@ -575,7 +575,7 @@ export const BenefitsThree: React.FC = () => {
       className="relative w-full h-screen flex items-center justify-center shrink-0 overflow-hidden"
     >
         {/* Main content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full pt-20 lg:pt-24">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 h-full pt-16 lg:pt-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
 
           {/* Left side - Video */}

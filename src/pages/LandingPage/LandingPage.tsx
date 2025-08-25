@@ -34,7 +34,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* 3D Container Scroll Section */}
-      <section className="w-full">
+      <section className="w-full relative overflow-visible">
         <ContainerScroll 
           title={
             <div className="text-center">

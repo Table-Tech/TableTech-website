@@ -196,7 +196,7 @@ export const Navbar: React.FC = () => {
         borderBottom: '1px solid rgba(255, 255, 255, 0)'
       }}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 py-6 flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-4 lg:py-5 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/"

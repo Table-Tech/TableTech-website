@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
         {/* Background removed for cleaner look */}
       </div>
 
-      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 2xl:px-24 3xl:px-64 flex flex-col items-center pt-4 sm:pt-6 lg:pt-8">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex flex-col items-center pt-4 sm:pt-6 lg:pt-8">
         {/* Groot logo en slogan met enhanced effecten */}
         <div className="flex flex-col items-center gap-3 mb-6">
           <img 
