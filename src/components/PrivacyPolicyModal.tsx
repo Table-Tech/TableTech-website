@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
+import { ScrollArrows } from "./ScrollArrows";
 
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
@@ -96,11 +97,12 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </div>
 
             {/* Content */}
-            <div 
-              className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-80px)] scrollbar-hide"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              data-modal-content="true"
-            >
+            <div className="relative">
+              <div 
+                className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-80px)] scrollbar-hide privacy-modal-content"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                data-modal-content="true"
+              >
               <div className="prose prose-lg max-w-none">
                 <p className="text-[#FFD382]/80 mb-6">
                   <strong className="text-[#FFD382]">Laatst bijgewerkt:</strong> {new Date().toLocaleDateString('nl-NL')}
@@ -168,6 +170,10 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   </p>
                 </div>
               </div>
+              </div>
+              
+              {/* Scroll Arrows */}
+              <ScrollArrows targetSelector=".privacy-modal-content" />
             </div>
 
             {/* Footer */}
