@@ -17,10 +17,19 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
   ];
 
   useEffect(() => {
+    // Set initial state to hero section immediately when component mounts
+    setActiveSection(0);
+    
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
+
+      // If we're at the very top, always show hero section
+      if (scrollPosition <= 50) {
+        setActiveSection(0);
+        return;
+      }
 
       // Calculate which section we're in based on scroll position
       const sectionElements = sections.map(section => 
@@ -52,9 +61,6 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
       setActiveSection(currentSection);
     };
 
-    // Set initial state to hero section when component mounts
-    setActiveSection(0);
-    
     // Run initial check after a short delay to ensure DOM is ready
     const timeoutId = setTimeout(() => {
       handleScroll();
@@ -85,12 +91,12 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
   };
 
   return (
-    <div className={`fixed right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col space-y-4 ${className}`}>
+    <div className={`fixed right-2 top-1/2 transform -translate-y-1/2 z-50 flex flex-col space-y-4 ${className}`}>
       {sections.map((section, index) => (
         <button
           key={section.id}
           onClick={() => scrollToSection(section.id)}
-          className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${
+          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 lg:w-4.5 lg:h-4.5 rounded-full transition-all duration-300 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${
             index === activeSection
               ? 'scale-125 shadow-lg border-2 border-white/20'
               : 'hover:scale-110'

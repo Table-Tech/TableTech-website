@@ -341,7 +341,7 @@ export const HeroSection: React.FC = () => {
                   
                   {/* Laptop Mockup voor tablets */}
                   <div className="flex mb-4 flex-1 flex-col justify-center items-center">
-                    <div className="w-full max-w-xs mx-auto scale-75">
+                    <div className="w-full max-w-sm mx-auto scale-100">
                       <LaptopMockup />
                     </div>
                   </div>
