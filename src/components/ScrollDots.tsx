@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
+// Define sections outside component to avoid dependency issues
+const sections = [
+  { id: 'hero', label: 'Hero' },
+  { id: 'benefits', label: 'Benefits' },
+  { id: 'themes', label: 'Themes' },
+  { id: 'pricing', label: 'Pricing' },
+  { id: 'contact', label: 'Contact' }
+];
+
 interface ScrollDotsProps {
   className?: string;
 }
 
 export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
   const [activeSection, setActiveSection] = useState(0);
-
-  // Define the main sections of the website
-  const sections = [
-    { id: 'hero', label: 'Hero' },
-    { id: 'benefits', label: 'Benefits' },
-    { id: 'themes', label: 'Themes' },
-    { id: 'pricing', label: 'Pricing' },
-    { id: 'contact', label: 'Contact' }
-  ];
 
   useEffect(() => {
     // Set initial state to hero section immediately when component mounts
@@ -78,7 +78,7 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [sections.length]);
+  }, []);  // Empty dependency array since sections is static
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
