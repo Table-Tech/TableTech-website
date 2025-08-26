@@ -4,17 +4,17 @@ interface ScrollDotsProps {
   className?: string;
 }
 
+// Define the main sections of the website outside component to avoid dependency issues
+const sections = [
+  { id: 'hero', label: 'Hero' },
+  { id: 'benefits', label: 'Benefits' },
+  { id: 'themes', label: 'Themes' },
+  { id: 'pricing', label: 'Pricing' },
+  { id: 'contact', label: 'Contact' }
+];
+
 export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
   const [activeSection, setActiveSection] = useState(0);
-
-  // Define the main sections of the website
-  const sections = [
-    { id: 'hero', label: 'Hero' },
-    { id: 'benefits', label: 'Benefits' },
-    { id: 'themes', label: 'Themes' },
-    { id: 'pricing', label: 'Pricing' },
-    { id: 'contact', label: 'Contact' }
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,7 +72,7 @@ export const ScrollDots: React.FC<ScrollDotsProps> = ({ className = '' }) => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [sections.length]);
+  }, []); // Empty dependency array since sections is now constant
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);

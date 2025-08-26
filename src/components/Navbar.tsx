@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        onUpdate: (self) => {
+        onUpdate: () => {
           const scrollY = window.scrollY;
           
           if (scrollY === 0) {
