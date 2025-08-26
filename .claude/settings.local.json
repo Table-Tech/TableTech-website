@@ -31,7 +31,8 @@
       "Bash(true)",
       "Bash(npm:*)",
       "Bash(yarn install)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Read(//mnt/c/Users/Wish/Downloads/**)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
