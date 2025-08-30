@@ -100,8 +100,9 @@ export const HeroSection: React.FC = () => {
           {/* Spacer for navbar - responsive heights */}
           <div className="h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 2xl:h-44 flex-shrink-0"></div>
           
-          {/* Content container - Flex grow to fill space and center vertically */}
-          <div className="flex-1 flex flex-col justify-center px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
+          {/* Content container - Pushed higher for better viewport utilization */}
+          <div className="flex-1 flex flex-col justify-center px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12"
+               style={{ transform: 'translateY(-6rem)' }}>
             {/* Inner content wrapper with max width */}
             <div className="w-full max-w-7xl mx-auto">
               {/* Title - Responsive sizing for all devices - HIGHER POSITION */}
