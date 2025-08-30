@@ -141,7 +141,7 @@ const RestaurantThemesPage: React.FC = () => {
             className="relative"
           >
             {/* Realistic Phone Frame - iPhone Style */}
-            <div className="relative w-80 h-[600px] lg:w-64 lg:h-[480px]">
+            <div className="relative w-72 h-[540px] lg:w-64 lg:h-[480px]">
               {/* Phone Body with realistic materials */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#E86C28] via-[#D2581F] to-[#B8471A] rounded-[3rem] shadow-2xl">
                 {/* Metallic edge highlight */}
