@@ -724,7 +724,7 @@ export const BenefitsThree: React.FC = () => {
           </div>
 
           {/* Right side - Description & Features */}
-          <div className="space-y-4 order-2 lg:order-2 max-h-full overflow-hidden lg:-mt-24">
+          <div className="space-y-4 order-2 lg:order-2 max-h-full overflow-hidden mt-16 sm:mt-12 md:mt-8 lg:-mt-24">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
