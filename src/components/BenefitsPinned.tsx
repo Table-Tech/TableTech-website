@@ -2,7 +2,6 @@ import React, { useRef, useLayoutEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BenefitsOne } from '../pages/LandingPage/Benefits';
-import { BenefitsTwo } from '../pages/LandingPage/Benefits-2';
 import { BenefitsThree } from '../pages/LandingPage/Benefits-3';
 import '../styles/benefits-pinned.css';
 // Background image moved to public: /images/backgrounds/optie4.webp
@@ -257,26 +256,12 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
             </div>
           </div>
 
-          {/* Panel 2 - Benefits Two */}
+          {/* Panel 2 - Benefits Three */}
           <div 
             ref={el => panelsRef.current[1] = el!}
             className="panel absolute w-full h-full flex items-center justify-center"
             style={{ 
               zIndex: 2,
-              willChange: 'transform'
-            }}
-          >
-            <div className="w-full h-full">
-              <BenefitsTwo />
-            </div>
-          </div>
-
-          {/* Panel 3 - Benefits Three */}
-          <div 
-            ref={el => panelsRef.current[2] = el!}
-            className="panel absolute w-full h-full flex items-center justify-center"
-            style={{ 
-              zIndex: 3,
               willChange: 'transform'
             }}
           >
