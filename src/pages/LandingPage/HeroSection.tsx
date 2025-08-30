@@ -100,40 +100,44 @@ export const HeroSection: React.FC = () => {
           {/* Spacer for navbar - responsive heights */}
           <div className="h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 2xl:h-44 flex-shrink-0"></div>
           
-          {/* Content container - Pushed higher for better viewport utilization */}
-          <div className="flex-1 flex flex-col justify-center px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12"
-               style={{ transform: 'translateY(-6rem)' }}>
+          {/* Content container - Even higher */}
+          <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-12 sm:py-16 md:py-20"
+               style={{ transform: 'translateY(-8rem)', maxWidth: '85vw', margin: '0 auto' }}>
             {/* Inner content wrapper with max width */}
             <div className="w-full max-w-7xl mx-auto">
-              {/* Title - Responsive sizing for all devices - HIGHER POSITION */}
-              <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl 3xl:text-7xl 
-                           font-bold mb-1 xs:mb-1.5 sm:mb-3 md:mb-4 lg:mb-5 xl:mb-6 
-                           leading-tight drop-shadow-md text-center
-                           [transform:translateY(-4rem)] sm:[transform:translateY(-2rem)] md:[transform:translateY(-8rem)] lg:[transform:translateY(-1rem)]">
+              {/* Title - Scaled down */}
+              <h1 className="font-bold leading-tight drop-shadow-md text-center text-white"
+                  style={{
+                    fontSize: 'clamp(1.2rem, 4vw, 2.5rem)',
+                    marginBottom: 'clamp(1rem, 3vw, 2rem)'
+                  }}>
                 {t('hero.title')}
               </h1>
               
-              {/* Subtitle - Responsive for all screens - HIGHER POSITION */}
-              <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl 
-                          text-white/90 mb-0 xs:mb-1 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 
-                          max-w-xs xs:max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl 
-                          mx-auto leading-relaxed text-center px-2
-                          [transform:translateY(-4rem)] sm:[transform:translateY(-2rem)] md:[transform:translateY(-8rem)] lg:[transform:translateY(-1rem)]">
+              {/* Subtitle - Closer to title */}
+              <p className="text-white/90 leading-relaxed text-center mx-auto px-6"
+                 style={{
+                   fontSize: 'clamp(0.8rem, 2.5vw, 1.1rem)',
+                   marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)',
+                   maxWidth: 'min(75vw, 500px)'
+                 }}>
                 {t('hero.subtitle')}
               </p>
 
-              {/* Mobile Phones (up to 639px) - HIGHER positioning for 375x667 */}
-              <div 
-                className="sm:hidden flex flex-col space-y-4 max-w-sm mx-auto w-full px-3"
-                style={{
-                  marginTop: 'clamp(-1.5rem, -3vh, -0.5rem)', // Push content higher on mobile
-                  transform: 'translateY(clamp(-1rem, -2vh, -0.5rem))' // Additional upward shift
-                }}
-              >
-              {/* Customer Demo Card - Mobile Groter */}
+              {/* Mobile Layout - More spaced out */}
+              <div className="sm:hidden flex flex-col w-full px-6"
+                   style={{
+                     gap: 'clamp(1rem, 3vw, 1.5rem)',
+                     maxWidth: 'min(80vw, 350px)',
+                     margin: '0 auto'
+                   }}>
+              {/* Customer Demo Card - Scaled down */}
               <div className="bg-gradient-to-br from-stone-700/50 to-amber-800/50 backdrop-blur-lg 
-                           p-5 xs:p-6 rounded-xl text-center shadow-xl border border-stone-600/50 
-                           min-h-[200px] xs:min-h-[220px] flex flex-col justify-between">
+                           text-center shadow-xl border border-stone-600/50 rounded-xl flex flex-col justify-between"
+                   style={{
+                     padding: 'clamp(1.5rem, 5vw, 2rem)',
+                     minHeight: 'clamp(120px, 16vh, 160px)'
+                   }}>
                 <div>
                   <div className="flex items-center justify-center mb-3">
                     <div className="bg-gradient-to-br from-stone-600 to-stone-700 p-3 xs:p-3.5 rounded-xl shadow-md">
@@ -142,10 +146,12 @@ export const HeroSection: React.FC = () => {
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-base xs:text-lg font-bold mb-2 xs:mb-2.5 text-white drop-shadow-lg">
+                  <h3 className="font-bold text-white drop-shadow-lg"
+                      style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                     {t('hero.customerDemo.title')}
                   </h3>
-                  <p className="text-white/90 text-sm xs:text-base mb-4 xs:mb-5 leading-relaxed px-2">
+                  <p className="text-white/90 leading-relaxed"
+                     style={{ fontSize: 'clamp(0.7rem, 2.5vw, 0.85rem)', marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}>
                     {t('hero.customerDemo.description')}
                   </p>
                 </div>
@@ -154,19 +160,26 @@ export const HeroSection: React.FC = () => {
                   type="button"
                   disabled={isPreloading}
                   className="bg-gradient-to-r from-amber-600 to-amber-700 text-white 
-                           hover:from-amber-700 hover:to-amber-800 px-6 xs:px-8 py-3 xs:py-3.5 
-                           rounded-full text-sm xs:text-base font-semibold transition-all 
+                           hover:from-amber-700 hover:to-amber-800 rounded-full font-semibold transition-all 
                            duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 
-                           active:scale-95 min-h-[44px] xs:min-h-[48px]"
+                           active:scale-95"
+                  style={{
+                    padding: 'clamp(0.75rem, 3vw, 1rem) clamp(1.5rem, 6vw, 2rem)',
+                    fontSize: 'clamp(0.8rem, 3vw, 0.95rem)',
+                    minHeight: 'clamp(40px, 6vh, 48px)'
+                  }}
                 >
                   {isPreloading ? t('loading') : t('hero.customerDemo.button')}
                 </button>
               </div>
 
-              {/* Employee Demo Card - Mobile Groter */}
+              {/* Employee Demo Card - Mobile Responsive */}
               <div className="bg-gradient-to-br from-stone-800/50 to-amber-800/50 backdrop-blur-lg 
-                           p-5 xs:p-6 rounded-xl text-center shadow-xl border border-stone-700/50 
-                           min-h-[200px] xs:min-h-[220px] flex flex-col justify-between">
+                           text-center shadow-xl border border-stone-700/50 rounded-xl flex flex-col justify-between"
+                   style={{
+                     padding: 'clamp(1rem, 4vw, 1.5rem)',
+                     minHeight: 'clamp(140px, 20vh, 200px)'
+                   }}>
                 <div>
                   <div className="flex items-center justify-center mb-3">
                     <div className="bg-gradient-to-br from-stone-700 to-stone-800 p-3 xs:p-3.5 rounded-xl shadow-md">
@@ -175,10 +188,12 @@ export const HeroSection: React.FC = () => {
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-base xs:text-lg font-bold mb-2 xs:mb-2.5 text-white drop-shadow-lg">
+                  <h3 className="font-bold text-white drop-shadow-lg"
+                      style={{ fontSize: 'clamp(0.9rem, 3.5vw, 1.1rem)', marginBottom: 'clamp(0.5rem, 1.5vw, 0.75rem)' }}>
                     {t('hero.employeeDemo.title')}
                   </h3>
-                  <p className="text-white/90 text-sm xs:text-base mb-4 xs:mb-5 leading-relaxed px-2">
+                  <p className="text-white/90 leading-relaxed"
+                     style={{ fontSize: 'clamp(0.75rem, 3vw, 0.9rem)', marginBottom: 'clamp(1rem, 3vw, 1.25rem)' }}>
                     {t('hero.employeeDemo.description')}
                   </p>
                 </div>
@@ -187,45 +202,69 @@ export const HeroSection: React.FC = () => {
                   type="button"
                   disabled={isPreloading}
                   className="bg-gradient-to-r from-amber-600 to-amber-700 text-white 
-                           hover:from-amber-700 hover:to-amber-800 px-6 xs:px-8 py-3 xs:py-3.5 
-                           rounded-full text-sm xs:text-base font-semibold transition-all 
+                           hover:from-amber-700 hover:to-amber-800 rounded-full font-semibold transition-all 
                            duration-300 hover:scale-105 shadow-lg w-full border border-amber-500/30 
-                           active:scale-95 min-h-[44px] xs:min-h-[48px]"
+                           active:scale-95"
+                  style={{
+                    padding: 'clamp(0.75rem, 3vw, 1rem) clamp(1.5rem, 6vw, 2rem)',
+                    fontSize: 'clamp(0.8rem, 3vw, 0.95rem)',
+                    minHeight: 'clamp(40px, 6vh, 48px)'
+                  }}
                 >
                   {isPreloading ? t('loading') : t('hero.employeeDemo.button')}
                 </button>
               </div>
               </div>
 
-              {/* Small Tablets (640px to 767px) - Gelijk aan desktop maar kleiner */}
-              <div className="hidden sm:grid md:hidden grid-cols-2 gap-3 max-w-3xl mx-auto">
-              {/* Customer Demo Card - Small Tablet met QR */}
-              <div className="bg-white/10 backdrop-blur-md 
-                           p-4 rounded-xl text-center shadow-xl border-2 border-white/30 
-                           min-h-[320px] flex flex-col justify-between hover:scale-105 transition-all duration-300">
+              {/* Tablet Layout - More breathing room */}
+              <div className="hidden sm:grid lg:hidden grid-cols-2 mx-auto"
+                   style={{
+                     gap: 'clamp(1.5rem, 4vw, 3rem)',
+                     maxWidth: 'min(85vw, 700px)'
+                   }}>
+              {/* Customer Demo Card - Scaled down */}
+              <div className="bg-white/10 backdrop-blur-md text-center shadow-xl border-2 border-white/30 
+                           rounded-xl flex flex-col justify-between hover:scale-105 transition-all duration-300"
+                   style={{
+                     padding: 'clamp(1.5rem, 4vw, 2rem)',
+                     minHeight: 'clamp(240px, 28vh, 280px)'
+                   }}>
                 <div className="flex-1 flex flex-col h-full">
-                  <h3 className="text-base font-bold mb-2 text-white">
+                  <h3 className="font-bold text-white"
+                      style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', marginBottom: 'clamp(0.5rem, 1vw, 0.75rem)' }}>
                     {t('hero.customerDemo.title')}
                   </h3>
-                  <p className="text-white/90 text-xs mb-3 leading-relaxed">
+                  <p className="text-white/90 leading-relaxed"
+                     style={{ fontSize: 'clamp(0.8rem, 2vw, 1rem)', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                     {t('hero.customerDemo.description')}
                   </p>
                   
-                  {/* QR Code voor kleine tablets */}
-                  <div className="flex mb-3 flex-1 flex-col justify-center items-center">
-                    <div className="relative w-full max-w-[140px] mx-auto transform hover:scale-105 transition-transform duration-300">
-                      <div className="relative w-full rounded-lg overflow-hidden shadow-lg backdrop-blur-lg border border-white/40 p-2" 
-                           style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
-                        <div className="bg-white p-2 rounded-md mx-auto w-fit shadow-lg">
+                  {/* QR Code - Responsive */}
+                  <div className="flex flex-1 flex-col justify-center items-center"
+                       style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
+                    <div className="relative transform hover:scale-105 transition-transform duration-300"
+                         style={{ maxWidth: 'clamp(120px, 15vw, 160px)' }}>
+                      <div className="relative rounded-lg overflow-hidden shadow-lg backdrop-blur-lg border border-white/40" 
+                           style={{
+                             backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                             padding: 'clamp(0.5rem, 1.5vw, 0.75rem)'
+                           }}>
+                        <div className="bg-white rounded-md mx-auto w-fit shadow-lg"
+                             style={{ padding: 'clamp(0.5rem, 1vw, 0.75rem)' }}>
                           <img 
                             src="/images/qr-codes/iyd.webp" 
                             alt="Scan QR code voor menu demo" 
-                            className="w-16 h-16 mx-auto"
                             loading="eager"
+                            style={{
+                              width: 'clamp(48px, 8vw, 64px)',
+                              height: 'clamp(48px, 8vw, 64px)'
+                            }}
                           />
                         </div>
-                        <div className="text-center mt-1">
-                          <p className="text-white/95 text-[10px] font-medium">
+                        <div className="text-center"
+                             style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+                          <p className="text-white/95 font-medium"
+                             style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.75rem)' }}>
                             {t('hero.customerDemo.qrInstruction')}
                           </p>
                         </div>
@@ -239,10 +278,13 @@ export const HeroSection: React.FC = () => {
                   type="button"
                   disabled={isPreloading}
                   className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white 
-                           hover:from-yellow-800 hover:to-yellow-900 px-5 py-2.5 
-                           rounded-full text-sm font-bold transition-all duration-300 
-                           hover:scale-105 shadow-lg w-full border border-white/20 
-                           active:scale-95 min-h-[40px]"
+                           hover:from-yellow-800 hover:to-yellow-900 rounded-full font-bold transition-all duration-300 
+                           hover:scale-105 shadow-lg w-full border border-white/20 active:scale-95"
+                  style={{
+                    padding: 'clamp(0.6rem, 2vw, 0.75rem) clamp(1.2rem, 4vw, 1.5rem)',
+                    fontSize: 'clamp(0.8rem, 2vw, 1rem)',
+                    minHeight: 'clamp(36px, 5vh, 44px)'
+                  }}
                 >
                   {isPreloading ? t('loading') : t('hero.customerDemo.button')}
                 </button>
@@ -379,40 +421,60 @@ export const HeroSection: React.FC = () => {
               </div>
               </div>
 
-              {/* Desktop (1024px and up) - Compacter voor betere zichtbaarheid */}
-              <div className="hidden lg:flex flex-row justify-center items-stretch gap-6 xl:gap-8 mx-auto">
-              {/* Customer Demo Card - Desktop Compacter */}
-              <div className="bg-white/10 backdrop-blur-md 
-                           px-5 lg:px-6 xl:px-7 
-                           py-5 lg:py-6 xl:py-7 
-                           rounded-2xl lg:rounded-3xl text-center shadow-2xl 
-                           w-full max-w-md lg:max-w-lg xl:max-w-xl 
-                           hover:scale-105 transition-all duration-300 group 
+              {/* Desktop Layout - More spaced out */}
+              <div className="hidden lg:flex flex-row justify-center items-stretch mx-auto"
+                   style={{
+                     gap: 'clamp(2rem, 5vw, 4rem)',
+                     maxWidth: 'min(85vw, 1000px)'
+                   }}>
+              {/* Customer Demo Card - Desktop Scaled */}
+              <div className="bg-white/10 backdrop-blur-md text-center shadow-2xl 
                            border-2 border-white/30 flex flex-col justify-between 
-                           min-h-[350px] lg:min-h-[380px] xl:min-h-[400px]">
+                           hover:scale-105 transition-all duration-300 group"
+                   style={{
+                     padding: 'clamp(2rem, 4vw, 2.5rem)',
+                     borderRadius: 'clamp(1rem, 2vw, 1.5rem)',
+                     width: '100%',
+                     maxWidth: 'clamp(280px, 35vw, 400px)',
+                     minHeight: 'clamp(280px, 32vh, 350px)'
+                   }}>
                 <div className="flex-1 flex flex-col h-full">
-                  <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4 text-white">
+                  <h3 className="font-bold text-white"
+                      style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                     {t('hero.customerDemo.title')}
                   </h3>
-                  <p className="text-white/90 mb-4 lg:mb-5 text-base lg:text-lg xl:text-xl leading-relaxed">
+                  <p className="text-white/90 leading-relaxed"
+                     style={{ fontSize: 'clamp(0.9rem, 2vw, 1.2rem)', marginBottom: 'clamp(1rem, 2vw, 1.5rem)' }}>
                     {t('hero.customerDemo.description')}
                   </p>
                   
-                  {/* QR Code - Compacter */}
-                  <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
-                    <div className="relative w-full max-w-xs lg:max-w-sm mx-auto transform hover:scale-105 transition-transform duration-300">
-                      <div className="relative w-full rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-3 lg:p-4" 
-                           style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
-                        <div className="bg-white p-3 lg:p-4 rounded-lg mx-auto w-fit shadow-2xl">
+                  {/* QR Code - Desktop Responsive */}
+                  <div className="hidden lg:flex flex-1 flex-col justify-center items-center"
+                       style={{ marginBottom: 'clamp(1rem, 2vw, 1.5rem)' }}>
+                    <div className="relative transform hover:scale-105 transition-transform duration-300"
+                         style={{ maxWidth: 'clamp(180px, 20vw, 240px)' }}>
+                      <div className="relative overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40" 
+                           style={{
+                             backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                             borderRadius: 'clamp(0.75rem, 1.5vw, 1.25rem)',
+                             padding: 'clamp(0.75rem, 2vw, 1rem)'
+                           }}>
+                        <div className="bg-white rounded-lg mx-auto w-fit shadow-2xl"
+                             style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)' }}>
                           <img 
                             src="/images/qr-codes/iyd.webp" 
                             alt="Scan QR code voor menu demo" 
-                            className="w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 mx-auto"
                             loading="eager"
+                            style={{
+                              width: 'clamp(80px, 10vw, 120px)',
+                              height: 'clamp(80px, 10vw, 120px)'
+                            }}
                           />
                         </div>
-                        <div className="text-center mt-3">
-                          <p className="text-white/95 text-sm lg:text-base font-medium">
+                        <div className="text-center"
+                             style={{ marginTop: 'clamp(0.5rem, 1vw, 0.75rem)' }}>
+                          <p className="text-white/95 font-medium"
+                             style={{ fontSize: 'clamp(0.8rem, 1.5vw, 1rem)' }}>
                             {t('hero.customerDemo.qrInstruction')}
                           </p>
                         </div>
@@ -427,42 +489,52 @@ export const HeroSection: React.FC = () => {
                     type="button"
                     disabled={isPreloading}
                     className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white 
-                             hover:from-yellow-800 hover:to-yellow-900 
-                             px-8 lg:px-10 xl:px-12 
-                             py-3 lg:py-4 
-                             h-[48px] lg:h-[52px] xl:h-[56px] 
-                             rounded-full text-base lg:text-lg xl:text-xl font-bold 
+                             hover:from-yellow-800 hover:to-yellow-900 rounded-full font-bold 
                              transition-all duration-300 hover:scale-105 transform active:scale-95 
-                             shadow-xl hover:shadow-2xl 
-                             w-full max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] 
+                             shadow-xl hover:shadow-2xl w-full
                              ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 
                              border-2 border-white/20"
+                    style={{
+                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(2rem, 5vw, 3rem)',
+                      fontSize: 'clamp(0.9rem, 2vw, 1.2rem)',
+                      minHeight: 'clamp(44px, 6vh, 56px)',
+                      maxWidth: 'clamp(280px, 30vw, 360px)'
+                    }}
                   >
                     {isPreloading ? t('loading') : t('hero.customerDemo.button')}
                   </button>
                 </div>
               </div>
 
-              {/* Employee Demo Card - Desktop Compacter */}
-              <div className="bg-white/10 backdrop-blur-md 
-                           px-5 lg:px-6 xl:px-7 
-                           py-5 lg:py-6 xl:py-7 
-                           rounded-2xl lg:rounded-3xl text-center shadow-2xl 
-                           w-full max-w-md lg:max-w-lg xl:max-w-xl 
-                           hover:scale-105 transition-all duration-300 group 
+              {/* Employee Demo Card - Desktop Responsive */}
+              <div className="bg-white/10 backdrop-blur-md text-center shadow-2xl 
                            border-2 border-white/30 flex flex-col justify-between 
-                           min-h-[350px] lg:min-h-[380px] xl:min-h-[400px]">
+                           hover:scale-105 transition-all duration-300 group"
+                   style={{
+                     padding: 'clamp(1.25rem, 3vw, 2rem)',
+                     borderRadius: 'clamp(1rem, 2vw, 1.5rem)',
+                     width: '100%',
+                     maxWidth: 'clamp(300px, 40vw, 500px)',
+                     minHeight: 'clamp(320px, 40vh, 450px)'
+                   }}>
                 <div className="flex-1 flex flex-col h-full">
-                  <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4 text-white">
+                  <h3 className="font-bold text-white"
+                      style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                     {t('hero.employeeDemo.title')}
                   </h3>
-                  <p className="text-white/90 mb-4 lg:mb-5 text-base lg:text-lg xl:text-xl leading-relaxed">
+                  <p className="text-white/90 leading-relaxed"
+                     style={{ fontSize: 'clamp(0.9rem, 2vw, 1.2rem)', marginBottom: 'clamp(1rem, 2vw, 1.5rem)' }}>
                     {t('hero.employeeDemo.description')}
                   </p>
                   
-                  {/* Laptop Mockup - Compacter */}
-                  <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
-                    <div className="w-full max-w-xs lg:max-w-sm mx-auto scale-75 lg:scale-85 xl:scale-95">
+                  {/* Laptop Mockup - Desktop Responsive */}
+                  <div className="hidden lg:flex flex-1 flex-col justify-center items-center"
+                       style={{ marginBottom: 'clamp(1rem, 2vw, 1.5rem)' }}>
+                    <div className="mx-auto"
+                         style={{
+                           maxWidth: 'clamp(200px, 25vw, 300px)',
+                           transform: 'scale(clamp(0.7, 1vw, 1))'
+                         }}>
                       <LaptopMockup />
                     </div>
                   </div>
@@ -474,16 +546,17 @@ export const HeroSection: React.FC = () => {
                     type="button"
                     disabled={isPreloading}
                     className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white 
-                             hover:from-yellow-800 hover:to-yellow-900 
-                             px-8 lg:px-10 xl:px-12 
-                             py-3 lg:py-4 
-                             h-[48px] lg:h-[52px] xl:h-[56px] 
-                             rounded-full text-base lg:text-lg xl:text-xl font-bold 
+                             hover:from-yellow-800 hover:to-yellow-900 rounded-full font-bold 
                              transition-all duration-300 hover:scale-105 transform active:scale-95 
-                             shadow-xl hover:shadow-2xl 
-                             w-full max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] 
+                             shadow-xl hover:shadow-2xl w-full
                              ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 
                              border-2 border-white/20"
+                    style={{
+                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(2rem, 5vw, 3rem)',
+                      fontSize: 'clamp(0.9rem, 2vw, 1.2rem)',
+                      minHeight: 'clamp(44px, 6vh, 56px)',
+                      maxWidth: 'clamp(280px, 30vw, 360px)'
+                    }}
                   >
                     {isPreloading ? t('loading') : t('hero.employeeDemo.button')}
                   </button>
