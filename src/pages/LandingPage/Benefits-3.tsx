@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +11,86 @@ type DashboardScreen = {
 
 export const BenefitsThree: React.FC = () => {
   const { t } = useTranslation();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoHasStarted, setVideoHasStarted] = useState(false);
+  const [videoHasCompleted, setVideoHasCompleted] = useState(false);
+  const [showPhoneImage, setShowPhoneImage] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5 && !videoHasStarted) {
+            const video = videoRef.current;
+            if (video && !videoHasStarted) {
+              setVideoHasStarted(true);
+              video.currentTime = 0;
+              const playPromise = video.play();
+              
+              if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                  console.warn("Video auto-play failed:", error);
+                });
+              }
+            }
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const element = document.getElementById('benefits-3');
+    if (element) {
+      observer.observe(element);
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && videoHasStarted && !videoHasCompleted) {
+        const video = videoRef.current;
+        if (video && video.paused) {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Silent fail
+            });
+          }
+        }
+      }
+    };
+
+    const handlePageShow = () => {
+      if (videoHasStarted && !videoHasCompleted) {
+        const video = videoRef.current;
+        if (video && video.paused) {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Silent fail
+            });
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pageshow', handlePageShow);
+    window.addEventListener('focus', handlePageShow);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('focus', handlePageShow);
+    };
+  }, [videoHasStarted, videoHasCompleted]);
+
+  const handleVideoEnded = () => {
+    setVideoHasCompleted(true);
+    setTimeout(() => {
+      setShowPhoneImage(true);
+    }, 1000);
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dashboardScreens: DashboardScreen[] = useMemo(() => [
@@ -595,41 +675,51 @@ export const BenefitsThree: React.FC = () => {
                 transformStyle: 'preserve-3d'
               }}
             >
-              <video 
-                autoPlay={false}
-                muted
-                playsInline
-                controls={false}
-                webkit-playsinline="true"
-                preload="none"
-                poster="/images/hero-images/telefoon.webp"
-                className="w-full h-full object-contain rounded-lg shadow-lg"
-                style={{ 
-                  width: '700px', 
-                  height: '560px',
-                  maxWidth: '100%',
-                  minWidth: '400px',
-                  minHeight: '320px',
-                  background: 'transparent'
-                }}
-                onCanPlay={(e) => {
-                  // Video intentionally disabled to prevent performance issues
-                  const video = e.target as HTMLVideoElement;
-                  video.pause();
-                }}
-                onError={() => {
-                  // Silent error handling - geen console spam
-                }}
-                onEnded={(e) => {
-                  const video = e.target as HTMLVideoElement;
-                  video.currentTime = video.duration - 0.1;
-                  video.pause();
-                }}
-              >
-                <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm; codecs=vp9" />
-                <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
-                Your browser does not support the video tag.
-              </video>
+              {!showPhoneImage ? (
+                <video 
+                  ref={videoRef}
+                  autoPlay={false}
+                  muted
+                  playsInline
+                  controls={false}
+                  webkit-playsinline="true"
+                  preload="metadata"
+                  poster="/images/hero-images/telefoon.webp"
+                  className="w-full h-full object-contain rounded-lg shadow-lg"
+                  style={{ 
+                    width: '700px', 
+                    height: '560px',
+                    maxWidth: '100%',
+                    minWidth: '400px',
+                    minHeight: '320px',
+                    background: 'transparent'
+                  }}
+                  onEnded={handleVideoEnded}
+                  onError={() => {
+                    // Silent error handling
+                  }}
+                >
+                  <source src="/videos/output_frame_perfect_transparent.webm" type="video/webm; codecs=vp9" />
+                  <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm; codecs=vp9" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <motion.img
+                  src="/images/hero-images/telefoon.webp"
+                  alt="TableTech App Interface"
+                  className="w-full h-full object-contain rounded-lg shadow-lg"
+                  style={{ 
+                    width: '700px', 
+                    height: '560px',
+                    maxWidth: '100%',
+                    minWidth: '400px',
+                    minHeight: '320px'
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                />
+              )}
             </motion.div>
           </div>
 
