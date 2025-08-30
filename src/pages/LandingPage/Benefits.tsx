@@ -16,7 +16,14 @@ export const BenefitsOne: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isManualMode, setIsManualMode] = useState(false);
   const [selectedBenefit, setSelectedBenefit] = useState<number | null>(null);
+  const [shouldPlayVideo, setShouldPlayVideo] = useState(false);
+  const [videoHasStarted, setVideoHasStarted] = useState(false);
+  const [videoHasCompleted, setVideoHasCompleted] = useState(false);
+  const [showPhoneImage, setShowPhoneImage] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const appScreens: AppScreen[] = [
     {
@@ -503,8 +510,98 @@ export const BenefitsOne: React.FC = () => {
     };
   }, [isManualMode, selectedBenefit, startAutoSlide]);
 
+  // Robuuste scroll observer - eenmalige trigger, video blijft afspelen ook bij wegschrollen
+  useEffect(() => {
+    // Stop observer als video al is gestart of voltooid
+    if (videoHasStarted || videoHasCompleted) {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Alleen actie ondernemen als video nog niet is gestart
+          if (entry.isIntersecting && !videoHasStarted && !videoHasCompleted) {
+            const rect = entry.boundingClientRect;
+            const sectionHeight = rect.height;
+            const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+            const visibilityRatio = visibleHeight / sectionHeight;
+            
+            // Start video afspelen als meer dan 50% van de sectie zichtbaar is
+            if (visibilityRatio >= 0.5) {
+              setShouldPlayVideo(true);
+              setVideoHasStarted(true);
+              
+              // Onmiddellijk observer stoppen om dubbele triggers te voorkomen
+              observer.disconnect();
+              observerRef.current = null;
+              
+              // Video starten - zal doorspelen ook bij wegschrollen
+              setTimeout(() => {
+                if (videoRef.current && !videoRef.current.hasAttribute('data-played-once')) {
+                  videoRef.current.setAttribute('data-played-once', 'true');
+                  // Zet video op niet-pauseerbaar door scroll events
+                  videoRef.current.setAttribute('data-keep-playing', 'true');
+                  videoRef.current.play().catch(() => {
+                    // Silent fail
+                  });
+                }
+              }, 100);
+            }
+          }
+        });
+      },
+      {
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+        rootMargin: '0px'
+      }
+    );
+
+    observerRef.current = observer;
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, [videoHasStarted, videoHasCompleted]);
+
+  // Prevent video pause bij visibility changes - video moet doorspelen
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (videoRef.current && videoHasStarted && !videoHasCompleted) {
+        // Forceer video om door te spelen ook als tab/window niet zichtbaar is
+        if (videoRef.current.paused && videoRef.current.hasAttribute('data-keep-playing')) {
+          videoRef.current.play().catch(() => {
+            // Silent fail
+          });
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
+  }, [videoHasStarted, videoHasCompleted]);
+
   return (
     <section
+      ref={sectionRef}
       id="benefits-1"
       className="relative w-full h-full flex items-center justify-center overflow-hidden"
       style={{ backgroundColor: 'transparent' }}
@@ -514,18 +611,20 @@ export const BenefitsOne: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
 
           {/* Left side - Video - Verborgen op mobiel om oververhitting te voorkomen */}
-          <div className="relative hidden lg:flex items-end justify-start order-1 lg:order-1 -ml-40 mt-16">
+          <div className="relative hidden lg:flex items-end justify-start order-1 lg:order-1 -ml-80 mt-16">
             <div className="relative drop-shadow-2xl">
+              {/* Video element */}
               <video 
-                autoPlay={true}
+                ref={videoRef}
+                autoPlay={false}
                 muted
                 playsInline
                 controls={false}
                 webkit-playsinline="true"
                 preload="metadata"
-                poster="/images/hero-images/telefoon.webp"
+                poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className="w-full h-full object-contain rounded-lg shadow-2xl"
+                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 ease-out"
                 style={{ 
                   width: '1400px', 
                   height: '1120px',
@@ -536,41 +635,112 @@ export const BenefitsOne: React.FC = () => {
                   filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))'
                 }}
                 onCanPlay={(e) => {
-                  // Desktop: speel af maar slechts één keer
+                  // Alleen afspelen als video al gestart is via scroll trigger
                   const video = e.target as HTMLVideoElement;
-                  if (!video.hasAttribute('data-played-once')) {
+                  if (shouldPlayVideo && videoHasStarted && !videoHasCompleted && !video.hasAttribute('data-played-once')) {
                     video.setAttribute('data-played-once', 'true');
+                    video.setAttribute('data-keep-playing', 'true');
                     video.play().catch(() => {
                       // Silent fail - geen console spam
                     });
-                  } else {
-                    // Video heeft al één keer afgespeeld, stop het
-                    video.pause();
+                  }
+                }}
+                onPause={(e) => {
+                  // Prevent pause - forceer video om door te spelen als het nog bezig is
+                  const video = e.target as HTMLVideoElement;
+                  if (videoHasStarted && !videoHasCompleted && video.hasAttribute('data-keep-playing')) {
+                    setTimeout(() => {
+                      if (!video.ended && video.paused) {
+                        video.play().catch(() => {
+                          // Silent fail
+                        });
+                      }
+                    }, 10);
+                  }
+                }}
+                onTimeUpdate={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
+                  
+                  // Alleen fade logic als video actief bezig is en nog niet voltooid
+                  if (video.duration > 0 && !videoHasCompleted && videoHasStarted) {
+                    const timeRemaining = video.duration - video.currentTime;
+                    
+                    if (timeRemaining <= 1 && phoneImage) {
+                      // Bereken opacity voor snelle overgang in laatste seconde
+                      const fadeProgress = 1 - (timeRemaining / 1); // 0 to 1 in laatste seconde
+                      const imageOpacity = Math.min(fadeProgress, 1);
+                      const videoOpacity = Math.max(1 - fadeProgress, 0);
+                      
+                      // Snelle crossfade tussen video en afbeelding
+                      video.style.opacity = videoOpacity.toString();
+                      phoneImage.style.opacity = imageOpacity.toString();
+                      phoneImage.style.visibility = 'visible';
+                    }
                   }
                 }}
                 onError={() => {
                   // Silent error handling - geen console spam
                 }}
                 onEnded={(e) => {
-                  // Na afloop: blijf gepauzeerd op laatste frame
+                  // Na afloop: permanent state instellen - video is klaar
                   const video = e.target as HTMLVideoElement;
-                  video.currentTime = video.duration;
-                  video.pause();
+                  const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
+                  
+                  // Markeer video als definitief voltooid
+                  setVideoHasCompleted(true);
+                  setShowPhoneImage(true);
+                  
+                  // Remove keep-playing attribute - video is klaar
+                  video.removeAttribute('data-keep-playing');
+                  
+                  // Visuele state permanent instellen
+                  video.style.opacity = '0';
+                  video.style.visibility = 'hidden';
+                  if (phoneImage) {
+                    phoneImage.style.opacity = '1';
+                    phoneImage.style.visibility = 'visible';
+                  }
+                  
+                  // Stop observer definitief
+                  if (observerRef.current) {
+                    observerRef.current.disconnect();
+                    observerRef.current = null;
+                  }
                 }}
               >
-                <source src="/videos/Export_Video_2025-08-15-hq.webm" type="video/webm; codecs=vp9" />
-                <source src="/videos/telefoon.webm" type="video/webm; codecs=vp8" />
+                <source src="/videos/benefit.tsx-Iphone.webm" type="video/webm; codecs=vp9" />
                 Your browser does not support the video tag.
               </video>
+              
+              {/* Telefoon afbeelding overlay - robuuste state handling */}
+              <img
+                src="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
+                alt="TableTech App Mockup"
+                className="phone-overlay absolute inset-0 w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 ease-out"
+                style={{ 
+                  width: '1400px', 
+                  height: '1120px',
+                  maxWidth: '100%',
+                  minWidth: '800px',
+                  minHeight: '640px',
+                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))',
+                  opacity: (showPhoneImage || videoHasCompleted) ? '1' : '0',
+                  visibility: (showPhoneImage || videoHasCompleted) ? 'visible' : 'hidden',
+                  zIndex: '10'
+                }}
+              />
             </div>
           </div>
 
-          {/* Right side - Content */}
-          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0">
+          {/* Right side - Content - DESKTOP REORDERED */}
+          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0 lg:flex-col-reverse">
+            {/* Desktop: Title section positioned lower using lg:order-2 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="lg:order-2"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold text-white mb-3"
                   style={{
@@ -586,7 +756,8 @@ export const BenefitsOne: React.FC = () => {
               </p>
             </motion.div>
 
-            <div className="space-y-3 flex-1 overflow-visible">
+            {/* Desktop: Content sections positioned higher using lg:order-1 */}
+            <div className="space-y-3 flex-1 overflow-visible lg:order-1">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentScreen}
@@ -765,8 +936,6 @@ export const BenefitsOne: React.FC = () => {
               </motion.div>
             </div>
           </div>
-
-
         </div>
       </div>
     </section>

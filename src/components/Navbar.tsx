@@ -195,11 +195,12 @@ export const Navbar: React.FC = () => {
         if (window.lenis) {
           window.lenis.scrollTo(targetPosition, { 
             duration: 1.2,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
-            onComplete: () => {
-              setIsScrolling(false);
-            }
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // easeOutExpo
           });
+          // Set timeout to reset scrolling state after animation duration
+          setTimeout(() => {
+            setIsScrolling(false);
+          }, 1200); // Match duration
         } else {
           // Fallback to native smooth scroll
           window.scrollTo({

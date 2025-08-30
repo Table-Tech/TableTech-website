@@ -1,0 +1,15 @@
+{
+  "tested": "2025-08-29T15:04:31.688Z",
+  "working": [
+    "Sequential Thinking",
+    "Memory"
+  ],
+  "notWorking": [
+    "Filesystem",
+    "Magic UI",
+    "Playwright",
+    "Puppeteer"
+  ],
+  "totalServers": 6,
+  "workingCount": 2
+}

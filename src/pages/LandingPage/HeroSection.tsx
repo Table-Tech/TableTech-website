@@ -104,23 +104,31 @@ export const HeroSection: React.FC = () => {
           <div className="flex-1 flex flex-col justify-center px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
             {/* Inner content wrapper with max width */}
             <div className="w-full max-w-7xl mx-auto">
-              {/* Title - Responsive sizing for all devices */}
+              {/* Title - Responsive sizing for all devices - HIGHER POSITION */}
               <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl 3xl:text-7xl 
-                           font-bold mb-2 xs:mb-2.5 sm:mb-3 md:mb-4 lg:mb-5 xl:mb-6 
-                           leading-tight drop-shadow-md text-center">
+                           font-bold mb-1 xs:mb-1.5 sm:mb-3 md:mb-4 lg:mb-5 xl:mb-6 
+                           leading-tight drop-shadow-md text-center
+                           [transform:translateY(-4rem)] sm:[transform:translateY(-2rem)] md:[transform:translateY(-8rem)] lg:[transform:translateY(-1rem)]">
                 {t('hero.title')}
               </h1>
               
-              {/* Subtitle - Responsive for all screens */}
+              {/* Subtitle - Responsive for all screens - HIGHER POSITION */}
               <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl 
-                          text-white/90 mb-4 xs:mb-5 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 
+                          text-white/90 mb-0 xs:mb-1 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 
                           max-w-xs xs:max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl 
-                          mx-auto leading-relaxed text-center px-2">
+                          mx-auto leading-relaxed text-center px-2
+                          [transform:translateY(-4rem)] sm:[transform:translateY(-2rem)] md:[transform:translateY(-8rem)] lg:[transform:translateY(-1rem)]">
                 {t('hero.subtitle')}
               </p>
 
-              {/* Mobile Phones (up to 639px) - Centered vertically */}
-              <div className="sm:hidden flex flex-col space-y-4 max-w-sm mx-auto w-full px-3">
+              {/* Mobile Phones (up to 639px) - HIGHER positioning for 375x667 */}
+              <div 
+                className="sm:hidden flex flex-col space-y-4 max-w-sm mx-auto w-full px-3"
+                style={{
+                  marginTop: 'clamp(-1.5rem, -3vh, -0.5rem)', // Push content higher on mobile
+                  transform: 'translateY(clamp(-1rem, -2vh, -0.5rem))' // Additional upward shift
+                }}
+              >
               {/* Customer Demo Card - Mobile Groter */}
               <div className="bg-gradient-to-br from-stone-700/50 to-amber-800/50 backdrop-blur-lg 
                            p-5 xs:p-6 rounded-xl text-center shadow-xl border border-stone-600/50 
@@ -274,8 +282,14 @@ export const HeroSection: React.FC = () => {
               </div>
               </div>
 
-              {/* Medium iPads & Tablets (768px to 1023px) - Gelijk aan desktop maar compacter */}
-              <div className="hidden md:grid lg:hidden grid-cols-2 gap-4 max-w-4xl mx-auto">
+              {/* Medium iPads & Tablets (768px to 1023px) - HIGHER POSITIONING for iPad */}
+              <div 
+                className="hidden md:grid lg:hidden grid-cols-2 gap-4 max-w-4xl mx-auto"
+                style={{
+                  marginTop: 'clamp(-5rem, -10vh, -2.5rem)', // Push iPad demo cards MAXIMUM higher
+                  transform: 'translateY(clamp(-4.5rem, -9vh, -2.25rem))' // MAXIMUM upward adjustment for iPad
+                }}
+              >
               {/* Customer Demo Card - Medium Tablet/iPad met QR */}
               <div className="bg-white/10 backdrop-blur-md 
                            p-5 rounded-2xl text-center shadow-xl border-2 border-white/30 
@@ -364,40 +378,40 @@ export const HeroSection: React.FC = () => {
               </div>
               </div>
 
-              {/* Desktop (1024px and up) - Centered vertically with larger cards */}
-              <div className="hidden lg:flex flex-row justify-center items-stretch gap-8 xl:gap-10 2xl:gap-12 mx-auto">
-              {/* Customer Demo Card - Desktop Iets groter */}
+              {/* Desktop (1024px and up) - Compacter voor betere zichtbaarheid */}
+              <div className="hidden lg:flex flex-row justify-center items-stretch gap-6 xl:gap-8 mx-auto">
+              {/* Customer Demo Card - Desktop Compacter */}
               <div className="bg-white/10 backdrop-blur-md 
-                           px-7 lg:px-9 xl:px-11 2xl:px-13 
-                           py-7 lg:py-9 xl:py-11 2xl:py-13 
+                           px-5 lg:px-6 xl:px-7 
+                           py-5 lg:py-6 xl:py-7 
                            rounded-2xl lg:rounded-3xl text-center shadow-2xl 
-                           w-full max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-2xl 
+                           w-full max-w-md lg:max-w-lg xl:max-w-xl 
                            hover:scale-105 transition-all duration-300 group 
                            border-2 border-white/30 flex flex-col justify-between 
-                           min-h-[430px] lg:min-h-[470px] xl:min-h-[510px] 2xl:min-h-[550px]">
+                           min-h-[350px] lg:min-h-[380px] xl:min-h-[400px]">
                 <div className="flex-1 flex flex-col h-full">
-                  <h3 className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold mb-4 lg:mb-5 text-white">
+                  <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4 text-white">
                     {t('hero.customerDemo.title')}
                   </h3>
-                  <p className="text-white/90 mb-5 lg:mb-6 text-lg lg:text-xl xl:text-2xl 2xl:text-3xl leading-relaxed">
+                  <p className="text-white/90 mb-4 lg:mb-5 text-base lg:text-lg xl:text-xl leading-relaxed">
                     {t('hero.customerDemo.description')}
                   </p>
                   
-                  {/* QR Code - Iets groter */}
-                  <div className="hidden lg:flex mb-6 flex-1 flex-col justify-center items-center">
-                    <div className="relative w-full max-w-sm lg:max-w-md xl:max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300">
-                      <div className="relative w-full rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-4 lg:p-5 xl:p-6" 
+                  {/* QR Code - Compacter */}
+                  <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
+                    <div className="relative w-full max-w-xs lg:max-w-sm mx-auto transform hover:scale-105 transition-transform duration-300">
+                      <div className="relative w-full rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg border-2 border-white/40 p-3 lg:p-4" 
                            style={{backgroundColor: 'rgba(255, 255, 255, 0.15)'}}>
-                        <div className="bg-white p-4 lg:p-5 xl:p-6 rounded-xl mx-auto w-fit shadow-2xl">
+                        <div className="bg-white p-3 lg:p-4 rounded-lg mx-auto w-fit shadow-2xl">
                           <img 
                             src="/images/qr-codes/iyd.webp" 
                             alt="Scan QR code voor menu demo" 
-                            className="w-28 h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 2xl:w-40 2xl:h-40 mx-auto"
+                            className="w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 mx-auto"
                             loading="eager"
                           />
                         </div>
-                        <div className="text-center mt-4">
-                          <p className="text-white/95 text-base lg:text-lg xl:text-xl font-medium">
+                        <div className="text-center mt-3">
+                          <p className="text-white/95 text-sm lg:text-base font-medium">
                             {t('hero.customerDemo.qrInstruction')}
                           </p>
                         </div>
@@ -406,20 +420,20 @@ export const HeroSection: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-4">
                   <button
                     onClick={handleOpenCustomerDemo}
                     type="button"
                     disabled={isPreloading}
                     className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white 
                              hover:from-yellow-800 hover:to-yellow-900 
-                             px-12 lg:px-14 xl:px-16 
-                             py-4 lg:py-5 
-                             h-[56px] lg:h-[60px] xl:h-[64px] 
-                             rounded-full text-lg lg:text-xl xl:text-2xl font-bold 
+                             px-8 lg:px-10 xl:px-12 
+                             py-3 lg:py-4 
+                             h-[48px] lg:h-[52px] xl:h-[56px] 
+                             rounded-full text-base lg:text-lg xl:text-xl font-bold 
                              transition-all duration-300 hover:scale-105 transform active:scale-95 
                              shadow-xl hover:shadow-2xl 
-                             w-full max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] 
+                             w-full max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] 
                              ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 
                              border-2 border-white/20"
                   >
@@ -428,45 +442,45 @@ export const HeroSection: React.FC = () => {
                 </div>
               </div>
 
-              {/* Employee Demo Card - Desktop Iets groter */}
+              {/* Employee Demo Card - Desktop Compacter */}
               <div className="bg-white/10 backdrop-blur-md 
-                           px-7 lg:px-9 xl:px-11 2xl:px-13 
-                           py-7 lg:py-9 xl:py-11 2xl:py-13 
+                           px-5 lg:px-6 xl:px-7 
+                           py-5 lg:py-6 xl:py-7 
                            rounded-2xl lg:rounded-3xl text-center shadow-2xl 
-                           w-full max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-2xl 
+                           w-full max-w-md lg:max-w-lg xl:max-w-xl 
                            hover:scale-105 transition-all duration-300 group 
                            border-2 border-white/30 flex flex-col justify-between 
-                           min-h-[430px] lg:min-h-[470px] xl:min-h-[510px] 2xl:min-h-[550px]">
+                           min-h-[350px] lg:min-h-[380px] xl:min-h-[400px]">
                 <div className="flex-1 flex flex-col h-full">
-                  <h3 className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold mb-4 lg:mb-5 text-white">
+                  <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4 text-white">
                     {t('hero.employeeDemo.title')}
                   </h3>
-                  <p className="text-white/90 mb-5 lg:mb-6 text-lg lg:text-xl xl:text-2xl 2xl:text-3xl leading-relaxed">
+                  <p className="text-white/90 mb-4 lg:mb-5 text-base lg:text-lg xl:text-xl leading-relaxed">
                     {t('hero.employeeDemo.description')}
                   </p>
                   
-                  {/* Laptop Mockup - Iets groter */}
-                  <div className="hidden lg:flex mb-6 flex-1 flex-col justify-center items-center">
-                    <div className="w-full max-w-sm lg:max-w-md xl:max-w-lg mx-auto scale-90 lg:scale-105 xl:scale-120">
+                  {/* Laptop Mockup - Compacter */}
+                  <div className="hidden lg:flex mb-4 flex-1 flex-col justify-center items-center">
+                    <div className="w-full max-w-xs lg:max-w-sm mx-auto scale-75 lg:scale-85 xl:scale-95">
                       <LaptopMockup />
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-4">
                   <button
                     onClick={handleOpenEmployeeDemo}
                     type="button"
                     disabled={isPreloading}
                     className="bg-gradient-to-r from-yellow-700 to-yellow-800 text-white 
                              hover:from-yellow-800 hover:to-yellow-900 
-                             px-12 lg:px-14 xl:px-16 
-                             py-4 lg:py-5 
-                             h-[56px] lg:h-[60px] xl:h-[64px] 
-                             rounded-full text-lg lg:text-xl xl:text-2xl font-bold 
+                             px-8 lg:px-10 xl:px-12 
+                             py-3 lg:py-4 
+                             h-[48px] lg:h-[52px] xl:h-[56px] 
+                             rounded-full text-base lg:text-lg xl:text-xl font-bold 
                              transition-all duration-300 hover:scale-105 transform active:scale-95 
                              shadow-xl hover:shadow-2xl 
-                             w-full max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] 
+                             w-full max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] 
                              ring-2 ring-yellow-600/40 hover:ring-yellow-600/60 
                              border-2 border-white/20"
                   >

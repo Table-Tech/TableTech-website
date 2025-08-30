@@ -32,7 +32,8 @@
       "Bash(npm:*)",
       "Bash(yarn install)",
       "Bash(sed:*)",
-      "Read(//mnt/c/Users/Wish/Downloads/**)"
+      "Read(//mnt/c/Users/Wish/Downloads/**)",
+      "WebSearch"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

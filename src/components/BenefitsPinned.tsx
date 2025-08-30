@@ -13,7 +13,18 @@ gsap.registerPlugin(ScrollTrigger);
 // Declare window.lenis type
 declare global {
   interface Window {
-    lenis?: any;
+    lenis?: {
+      stop: () => void;
+      start: () => void;
+      scrollTo: (target: number | string | HTMLElement, options?: {
+        offset?: number;
+        duration?: number;
+        easing?: (t: number) => number;
+        immediate?: boolean;
+        lock?: boolean;
+        force?: boolean;
+      }) => void;
+    };
   }
 }
 
@@ -77,6 +88,9 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
       const totalPanels = panels.length;
       const scrollDistance = window.innerHeight * (totalPanels - 0.5);
       
+      // Detect mobile/touchscreen devices
+      const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+      
       // Create horizontal scroll animation
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -84,7 +98,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
           pin: true,
           start: "top top",
           end: `+=${scrollDistance}`,
-          scrub: 1, // Smooth scrubbing
+          scrub: isMobile ? 0.5 : 1, // Faster scrubbing on mobile for touchscreen
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -273,7 +287,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
         </div>
 
         {/* Scroll Hint */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white/70 text-sm flex flex-col items-center z-50">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/70 text-sm flex flex-col items-center z-50">
           <span>Scroll voor meer</span>
           <svg
             className="w-6 h-6 mt-2 animate-bounce"

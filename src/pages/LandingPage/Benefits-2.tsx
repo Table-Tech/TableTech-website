@@ -146,18 +146,40 @@ export const BenefitsTwo: React.FC = () => {
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 min-h-0 flex-1 flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start w-full">
             {/* Titel bovenaan - buiten frame */}
-            <div className="lg:col-span-2 text-center mb-6">
-              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-2 drop-shadow-lg tracking-tight">
-                Slim tafelbeheer in één oogopslag.
-              </h1>
-              {/* Hover instruction */}
-              <div className="flex items-center justify-center space-x-2 text-white/80 text-sm">
-                <span>▽</span>
-                <span>Beweeg de muis over de tafels</span>
+            <div className="lg:col-span-2 mb-6">
+              {/* Mobile: Fixed height title container */}
+              <div className="md:hidden text-center h-20 flex flex-col justify-center px-4">
+                <h1 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                  Slim tafelbeheer
+                </h1>
+                <p className="text-white/95 text-sm mb-3 leading-relaxed"
+                   style={{
+                     textShadow: '0 2px 6px rgba(0,0,0,0.5)'
+                   }}>
+                  Live tafelstatus en analytics
+                </p>
+              </div>
+
+              {/* Desktop: Original layout */}
+              <div className="hidden md:block text-center md:text-left">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 md:mb-3 drop-shadow-lg">
+                  Slim tafelbeheer in één oogopslag.
+                </h1>
+                <p className="text-white/95 text-sm sm:text-base md:text-lg mb-3 md:mb-4 leading-relaxed"
+                   style={{
+                     textShadow: '0 2px 6px rgba(0,0,0,0.5)'
+                   }}>
+                  Live inzicht in tafelstatus, bezetting en real-time analytics
+                </p>
+                {/* Hover instruction - alleen op desktop */}
+                <div className="flex items-center justify-center space-x-2 text-white/80 text-sm">
+                  <span>▽</span>
+                  <span>Beweeg de muis over de tafels</span>
+                </div>
               </div>
             </div>
-            {/* Left side - Restaurant Floor Plan - Alles in één frame zoals afbeelding 3 */}
-            <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border-2 border-gray-600/50 p-4 shadow-2xl">
+            {/* Left side - Restaurant Floor Plan - Verborgen op mobiel */}
+            <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border-2 border-gray-600/50 p-4 shadow-2xl hidden md:block">
               {/* Tijd bovenaan in de frame */}
               <div className="text-center mb-4">
                 <div className="text-white text-xl font-mono font-bold drop-shadow-lg">
@@ -426,51 +448,51 @@ export const BenefitsTwo: React.FC = () => {
           </div>
 
           {/* Right side - Features - Naar beneden verplaatst en transparant onderkant */}
-          <div className="space-y-4 flex flex-col justify-start h-full pb-2">
-            <div className="bg-white/20 backdrop-blur-lg border border-white/40 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-white/25 transition-all duration-300">
+          <div className="space-y-3 flex flex-col justify-start h-auto md:h-full pb-2">
+            <div className="bg-white/20 backdrop-blur-lg border border-white/40 rounded-2xl p-3 md:p-4 shadow-2xl relative overflow-hidden hover:bg-white/25 transition-all duration-300 h-24 md:h-auto">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-gray-600/60 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-gray-400/60 hover:bg-gray-600/80 transition-all duration-300">
                   <span className="text-xl">⚙️</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Slimme algoritmen</h3>
-                  <p className="text-gray-200 text-sm leading-relaxed">AI berekent de beste tafelindeling, zelfs tijdens piekmomenten</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Slimme algoritmen</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">AI berekent de beste tafelindeling, zelfs tijdens piekmomenten</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-500/20 backdrop-blur-lg border border-blue-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-blue-500/30 transition-all duration-300">
+            <div className="bg-blue-500/20 backdrop-blur-lg border border-blue-300/50 rounded-2xl p-3 md:p-4 shadow-2xl relative overflow-hidden hover:bg-blue-500/30 transition-all duration-300 h-24 md:h-auto">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-blue-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-blue-200/60 hover:bg-blue-400/70 transition-all duration-300">
                   <span className="text-xl">📊</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Capaciteit & wachttijd</h3>
-                  <p className="text-gray-200 text-sm leading-relaxed">Real-time voorspellingen op basis van bezetting en bestelhistoriek</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Capaciteit & wachttijd</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Real-time voorspellingen op basis van bezetting en bestelhistoriek</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-orange-500/20 backdrop-blur-lg border border-orange-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-orange-500/30 transition-all duration-300">
+            <div className="bg-orange-500/20 backdrop-blur-lg border border-orange-300/50 rounded-2xl p-3 md:p-4 shadow-2xl relative overflow-hidden hover:bg-orange-500/30 transition-all duration-300 h-24 md:h-auto">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-orange-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-orange-200/60 hover:bg-orange-400/70 transition-all duration-300">
                   <span className="text-xl">📍</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Locatie gebaseerde service</h3>
-                  <p className="text-gray-200 text-sm leading-relaxed">Personeel ziet exact welke tafel wat nodig heeft</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Locatie gebaseerde service</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Personeel ziet exact welke tafel wat nodig heeft</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-green-500/20 backdrop-blur-lg border border-green-300/50 rounded-2xl p-4 shadow-2xl relative overflow-hidden hover:bg-green-500/30 transition-all duration-300">
+            <div className="bg-green-500/20 backdrop-blur-lg border border-green-300/50 rounded-2xl p-3 md:p-4 shadow-2xl relative overflow-hidden hover:bg-green-500/30 transition-all duration-300 h-24 md:h-auto">
               <div className="flex items-start space-x-3 relative z-10">
                 <div className="w-12 h-12 bg-green-400/50 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-green-200/60 hover:bg-green-400/70 transition-all duration-300">
                   <span className="text-xl">✅</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1 drop-shadow-sm">Automatisch plannen</h3>
-                  <p className="text-gray-200 text-sm leading-relaxed">Reserveringen + walk-ins worden automatisch ingedeeld & bijgewerkt</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Automatisch plannen</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Reserveringen + walk-ins worden automatisch ingedeeld & bijgewerkt</p>
                 </div>
               </div>
             </div>

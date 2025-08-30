@@ -1,0 +1,203 @@
+/* ===============================================
+   RESPONSIVE DASHBOARD ENHANCEMENTS
+   ===============================================
+   These CSS rules work together with JavaScript viewport scaling
+   to create a truly responsive dashboard that adapts to screen size
+   =============================================== */
+
+/* Override fixed CSS for dynamic JavaScript scaling */
+@media screen and (min-width: 768px) {
+  /* RESPONSIVE DASHBOARD PREVIEW - ALL TABLET SIZES */
+  #hero .md\:flex [style*="maxWidth"] {
+    /* Allow JavaScript to control sizing dynamically */
+    transition: all 0.3s ease !important;
+    min-width: 280px !important;
+    max-width: none !important;
+    min-height: 180px !important;
+    max-height: none !important;
+  }
+  
+  /* RESPONSIVE FLEX RATIOS - Adjust based on content */
+  #hero .md\:flex > div:first-child {
+    /* QR Card gets smaller as dashboard gets bigger */
+    min-flex: 25% !important;
+    max-flex: 35% !important;
+  }
+  
+  #hero .md\:flex > div:last-child {
+    /* Dashboard card takes remaining space */
+    flex: 1 !important;
+  }
+  
+  /* SMOOTH TRANSITIONS for all responsive elements */
+  #hero .md\:flex,
+  #hero .md\:flex > div,
+  #hero .md\:flex [style*="fontSize"],
+  #hero .md\:flex [style*="padding"],
+  #hero .md\:flex [style*="gap"] {
+    transition: all 0.3s ease !important;
+  }
+}
+
+/* SMALL SCREENS - Extra compact */
+@media screen and (min-width: 768px) and (max-width: 900px) {
+  #hero .md\:flex {
+    gap: 16px !important;
+  }
+  
+  #hero .md\:flex > div:first-child {
+    flex: 0 0 28% !important;
+  }
+  
+  #hero .md\:flex > div:last-child {
+    flex: 1 1 72% !important;
+  }
+}
+
+/* MEDIUM SCREENS - Balanced layout */
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+  #hero .md\:flex {
+    gap: 24px !important;
+  }
+  
+  #hero .md\:flex > div:first-child {
+    flex: 0 0 32% !important;
+  }
+  
+  #hero .md\:flex > div:last-child {
+    flex: 1 1 68% !important;
+  }
+}
+
+/* LARGE SCREENS - Spacious layout */
+@media screen and (min-width: 1200px) {
+  #hero .md\:flex {
+    gap: 32px !important;
+  }
+  
+  #hero .md\:flex > div:first-child {
+    flex: 0 0 35% !important;
+  }
+  
+  #hero .md\:flex > div:last-child {
+    flex: 1 1 65% !important;
+  }
+}
+
+/* ===============================================
+   RESPONSIVE TEXT SCALING
+   =============================================== */
+
+/* Ensure text remains readable at all sizes */
+@media screen and (min-width: 768px) {
+  /* Minimum font sizes for readability */
+  #hero .md\:flex [style*="fontSize"] {
+    min-font-size: 8px !important;
+  }
+  
+  /* Maximum font sizes to prevent overflow */
+  #hero .md\:flex h3 {
+    max-font-size: 24px !important;
+  }
+  
+  #hero .md\:flex p {
+    max-font-size: 18px !important;
+  }
+}
+
+/* ===============================================
+   RESPONSIVE SPACING
+   =============================================== */
+
+/* Dynamic spacing that works with JavaScript scaling */
+@media screen and (min-width: 768px) {
+  /* Card padding scales with screen size */
+  #hero .md\:flex > div {
+    min-padding: 12px !important;
+    max-padding: 32px !important;
+  }
+  
+  /* Gap between elements */
+  #hero .md\:flex [style*="gap"] {
+    min-gap: 4px !important;
+    max-gap: 24px !important;
+  }
+}
+
+/* ===============================================
+   ASPECT RATIO PROTECTION
+   =============================================== */
+
+/* Maintain dashboard aspect ratio across all sizes */
+@media screen and (min-width: 768px) {
+  #hero .md\:flex [style*="maxWidth"] {
+    aspect-ratio: 16/9 !important;
+    object-fit: contain !important;
+  }
+}
+
+/* ===============================================
+   PERFORMANCE OPTIMIZATIONS
+   =============================================== */
+
+/* Use GPU acceleration for smooth scaling */
+@media screen and (min-width: 768px) {
+  #hero .md\:flex [style*="transform"] {
+    will-change: transform !important;
+    transform-style: preserve-3d !important;
+    backface-visibility: hidden !important;
+  }
+}
+
+/* ===============================================
+   ACCESSIBILITY RESPONSIVE SUPPORT
+   =============================================== */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  #hero .md\:flex * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  #hero .md\:flex {
+    border: 2px solid currentColor !important;
+  }
+  
+  #hero .md\:flex > div {
+    border: 1px solid currentColor !important;
+  }
+}
+
+/* ===============================================
+   DEBUG MODE (remove in production)
+   =============================================== */
+
+/* Add visual debug indicators when needed */
+.debug-responsive #hero .md\:flex {
+  outline: 2px dashed red !important;
+}
+
+.debug-responsive #hero .md\:flex > div:first-child {
+  outline: 1px solid blue !important;
+}
+
+.debug-responsive #hero .md\:flex > div:last-child {
+  outline: 1px solid green !important;
+}
+
+.debug-responsive #hero .md\:flex [style*="maxWidth"]:after {
+  content: attr(style) !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  background: rgba(0,0,0,0.8) !important;
+  color: white !important;
+  font-size: 10px !important;
+  padding: 2px 4px !important;
+  max-width: 200px !important;
+  word-break: break-all !important;
+}

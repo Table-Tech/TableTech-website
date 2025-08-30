@@ -1,0 +1,507 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "description": "Dynamic problem-solving with step-by-step reasoning"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "--rootDir",
+        "C:/Users/Wish/Downloads/github-repo/Systemen/Team/TableTech/TableTech-website"
+      ],
+      "description": "File system access and manipulation"
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "description": "Git repository operations"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Knowledge graph-based persistence"
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "description": "Web content fetching"
+    },
+    "magic-ui": {
+      "command": "npx",
+      "args": ["-y", "@magicuidesign/mcp"],
+      "description": "AI-powered UI component generation with animations"
+    },
+    "shadcn-ui": {
+      "command": "npx",
+      "args": ["-y", "shadcn-mcp"],
+      "description": "Beautiful UI components from shadcn/ui"
+    },
+    "tailwind-helper": {
+      "command": "npx",
+      "args": ["-y", "tailwind-mcp"],
+      "description": "Tailwind CSS utility and class generation"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/playwright-mcp-server"],
+      "description": "Browser automation and E2E testing"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "puppeteer-mcp-server"],
+      "description": "Alternative browser automation"
+    },
+    "code-runner": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-code-runner"],
+      "description": "Execute code in multiple languages"
+    },
+    "yepcode": {
+      "command": "npx",
+      "args": ["-y", "@yepcode/mcp-server-js"],
+      "description": "Execute LLM-generated code in sandbox"
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "description": "GitHub repository management"
+    },
+    "package-registry": {
+      "command": "npx",
+      "args": ["-y", "package-registry-mcp"],
+      "description": "Search NPM, PyPI, Cargo packages"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase"],
+      "description": "Supabase database and auth integration"
+    },
+    "postgrest": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-postgrest",
+        "--url",
+        "http://localhost:3000",
+        "--schema",
+        "public"
+      ],
+      "env": {
+        "POSTGREST_API_KEY": ""
+      },
+      "description": "PostgREST API integration"
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "sqlite-mcp"],
+      "description": "SQLite database operations"
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "description": "PostgreSQL database operations"
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "description": "Notion API integration"
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@sentry/mcp-server"],
+      "description": "Error tracking and monitoring"
+    },
+    "mapbox": {
+      "command": "npx",
+      "args": ["-y", "@mapbox/mcp-server"],
+      "description": "Maps and location services"
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-mcp"],
+      "description": "Figma design integration"
+    },
+    "vercel": {
+      "command": "npx",
+      "args": ["-y", "vercel-mcp"],
+      "description": "Vercel deployment and serverless"
+    },
+    "netlify": {
+      "command": "npx",
+      "args": ["-y", "netlify-mcp"],
+      "description": "Netlify deployment and hosting"
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "docker-mcp"],
+      "description": "Docker container management"
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "kubernetes-mcp"],
+      "description": "Kubernetes orchestration"
+    },
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "aws-mcp"],
+      "description": "AWS cloud services"
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "azure-mcp"],
+      "description": "Azure cloud services"
+    },
+    "google-cloud": {
+      "command": "npx",
+      "args": ["-y", "gcp-mcp"],
+      "description": "Google Cloud Platform"
+    },
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "stripe-mcp"],
+      "description": "Payment processing"
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "slack-mcp"],
+      "description": "Slack integration"
+    },
+    "discord": {
+      "command": "npx",
+      "args": ["-y", "discord-mcp"],
+      "description": "Discord bot integration"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "brave-search-mcp"],
+      "description": "Privacy-focused web search"
+    },
+    "wikipedia": {
+      "command": "npx",
+      "args": ["-y", "wikipedia-mcp"],
+      "description": "Wikipedia content access"
+    },
+    "youtube": {
+      "command": "npx",
+      "args": ["-y", "youtube-data-mcp-server"],
+      "description": "YouTube data API"
+    },
+    "spotify": {
+      "command": "npx",
+      "args": ["-y", "spotify-mcp"],
+      "description": "Spotify music integration"
+    },
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "openai-mcp"],
+      "description": "OpenAI API integration"
+    },
+    "anthropic": {
+      "command": "npx",
+      "args": ["-y", "anthropic-mcp"],
+      "description": "Anthropic Claude API"
+    },
+    "langchain": {
+      "command": "npx",
+      "args": ["-y", "langchain-mcp"],
+      "description": "LangChain framework integration"
+    },
+    "vector-db": {
+      "command": "npx",
+      "args": ["-y", "milvus-mcp"],
+      "description": "Vector database for AI"
+    },
+    "redis": {
+      "command": "npx",
+      "args": ["-y", "redis-mcp"],
+      "description": "Redis cache and database"
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp"],
+      "description": "MongoDB NoSQL database"
+    },
+    "elasticsearch": {
+      "command": "npx",
+      "args": ["-y", "elasticsearch-mcp"],
+      "description": "Full-text search engine"
+    },
+    "graphql": {
+      "command": "npx",
+      "args": ["-y", "graphql-mcp"],
+      "description": "GraphQL API tooling"
+    },
+    "rest-api": {
+      "command": "npx",
+      "args": ["-y", "rest-api-mcp"],
+      "description": "RESTful API testing"
+    },
+    "postman": {
+      "command": "npx",
+      "args": ["-y", "postman-mcp"],
+      "description": "API development and testing"
+    },
+    "insomnia": {
+      "command": "npx",
+      "args": ["-y", "insomnia-mcp"],
+      "description": "API client and testing"
+    },
+    "webpack": {
+      "command": "npx",
+      "args": ["-y", "webpack-mcp"],
+      "description": "Module bundling and optimization"
+    },
+    "vite": {
+      "command": "npx",
+      "args": ["-y", "vite-mcp"],
+      "description": "Fast build tool"
+    },
+    "rollup": {
+      "command": "npx",
+      "args": ["-y", "rollup-mcp"],
+      "description": "JavaScript module bundler"
+    },
+    "parcel": {
+      "command": "npx",
+      "args": ["-y", "parcel-mcp"],
+      "description": "Zero-config build tool"
+    },
+    "babel": {
+      "command": "npx",
+      "args": ["-y", "babel-mcp"],
+      "description": "JavaScript transpiler"
+    },
+    "typescript": {
+      "command": "npx",
+      "args": ["-y", "typescript-mcp"],
+      "description": "TypeScript compiler and tools"
+    },
+    "eslint": {
+      "command": "npx",
+      "args": ["-y", "eslint-mcp"],
+      "description": "JavaScript linting"
+    },
+    "prettier": {
+      "command": "npx",
+      "args": ["-y", "prettier-mcp"],
+      "description": "Code formatting"
+    },
+    "jest": {
+      "command": "npx",
+      "args": ["-y", "jest-mcp"],
+      "description": "JavaScript testing framework"
+    },
+    "vitest": {
+      "command": "npx",
+      "args": ["-y", "vitest-mcp"],
+      "description": "Vite-native testing"
+    },
+    "cypress": {
+      "command": "npx",
+      "args": ["-y", "cypress-mcp"],
+      "description": "E2E testing framework"
+    },
+    "storybook": {
+      "command": "npx",
+      "args": ["-y", "storybook-mcp"],
+      "description": "Component development"
+    },
+    "react-devtools": {
+      "command": "npx",
+      "args": ["-y", "react-devtools-mcp"],
+      "description": "React debugging tools"
+    },
+    "vue-devtools": {
+      "command": "npx",
+      "args": ["-y", "vue-devtools-mcp"],
+      "description": "Vue.js debugging"
+    },
+    "svelte-devtools": {
+      "command": "npx",
+      "args": ["-y", "svelte-devtools-mcp"],
+      "description": "Svelte debugging"
+    },
+    "nextjs": {
+      "command": "npx",
+      "args": ["-y", "nextjs-mcp"],
+      "description": "Next.js framework tools"
+    },
+    "nuxtjs": {
+      "command": "npx",
+      "args": ["-y", "nuxtjs-mcp"],
+      "description": "Nuxt.js framework tools"
+    },
+    "gatsby": {
+      "command": "npx",
+      "args": ["-y", "gatsby-mcp"],
+      "description": "Gatsby static site generator"
+    },
+    "astro": {
+      "command": "npx",
+      "args": ["-y", "astro-mcp"],
+      "description": "Astro web framework"
+    },
+    "remix": {
+      "command": "npx",
+      "args": ["-y", "remix-mcp"],
+      "description": "Remix web framework"
+    },
+    "sveltekit": {
+      "command": "npx",
+      "args": ["-y", "sveltekit-mcp"],
+      "description": "SvelteKit framework"
+    },
+    "angular": {
+      "command": "npx",
+      "args": ["-y", "angular-mcp"],
+      "description": "Angular framework tools"
+    },
+    "lighthouse": {
+      "command": "npx",
+      "args": ["-y", "lighthouse-mcp"],
+      "description": "Web performance testing"
+    },
+    "webpagetest": {
+      "command": "npx",
+      "args": ["-y", "webpagetest-mcp"],
+      "description": "Performance analysis"
+    },
+    "bundlephobia": {
+      "command": "npx",
+      "args": ["-y", "bundlephobia-mcp"],
+      "description": "Bundle size analysis"
+    },
+    "npm-check": {
+      "command": "npx",
+      "args": ["-y", "npm-check-mcp"],
+      "description": "Dependency management"
+    },
+    "dependabot": {
+      "command": "npx",
+      "args": ["-y", "dependabot-mcp"],
+      "description": "Automated dependency updates"
+    },
+    "renovate": {
+      "command": "npx",
+      "args": ["-y", "renovate-mcp"],
+      "description": "Dependency automation"
+    },
+    "husky": {
+      "command": "npx",
+      "args": ["-y", "husky-mcp"],
+      "description": "Git hooks management"
+    },
+    "commitizen": {
+      "command": "npx",
+      "args": ["-y", "commitizen-mcp"],
+      "description": "Conventional commits"
+    },
+    "semantic-release": {
+      "command": "npx",
+      "args": ["-y", "semantic-release-mcp"],
+      "description": "Automated versioning"
+    },
+    "changesets": {
+      "command": "npx",
+      "args": ["-y", "changesets-mcp"],
+      "description": "Versioning and changelogs"
+    },
+    "turbo": {
+      "command": "npx",
+      "args": ["-y", "turbo-mcp"],
+      "description": "Monorepo build system"
+    },
+    "nx": {
+      "command": "npx",
+      "args": ["-y", "nx-mcp"],
+      "description": "Monorepo management"
+    },
+    "lerna": {
+      "command": "npx",
+      "args": ["-y", "lerna-mcp"],
+      "description": "Monorepo tools"
+    },
+    "pnpm": {
+      "command": "npx",
+      "args": ["-y", "pnpm-mcp"],
+      "description": "Fast package manager"
+    },
+    "yarn": {
+      "command": "npx",
+      "args": ["-y", "yarn-mcp"],
+      "description": "Yarn package manager"
+    },
+    "bun": {
+      "command": "npx",
+      "args": ["-y", "bun-mcp"],
+      "description": "Fast JavaScript runtime"
+    },
+    "deno": {
+      "command": "npx",
+      "args": ["-y", "deno-mcp"],
+      "description": "Secure JavaScript runtime"
+    },
+    "rome": {
+      "command": "npx",
+      "args": ["-y", "rome-mcp"],
+      "description": "Unified toolchain"
+    },
+    "biome": {
+      "command": "npx",
+      "args": ["-y", "biome-mcp"],
+      "description": "Fast formatter and linter"
+    },
+    "swc": {
+      "command": "npx",
+      "args": ["-y", "swc-mcp"],
+      "description": "Super-fast compiler"
+    },
+    "esbuild": {
+      "command": "npx",
+      "args": ["-y", "esbuild-mcp"],
+      "description": "Extremely fast bundler"
+    },
+    "rspack": {
+      "command": "npx",
+      "args": ["-y", "rspack-mcp"],
+      "description": "Rust-based bundler"
+    },
+    "farm": {
+      "command": "npx",
+      "args": ["-y", "farm-mcp"],
+      "description": "Super fast build tool"
+    },
+    "mako": {
+      "command": "npx",
+      "args": ["-y", "mako-mcp"],
+      "description": "Bytedance build tool"
+    }
+  },
+  "claude": {
+    "defaultMCPServers": [
+      "sequential-thinking",
+      "filesystem",
+      "git",
+      "memory",
+      "magic-ui",
+      "playwright",
+      "code-runner",
+      "github",
+      "package-registry"
+    ],
+    "contextInstructions": [
+      "Step 1 — Think first: Use sequential-thinking MCP to break down tasks into numbered 'thoughts' with sub-goals and decision points. Explicitly formulate what data/tools you need.",
+      "Step 2 — File operations: Use filesystem MCP for reading, writing, and navigating project files. Use git MCP for version control operations.",
+      "Step 3 — UI Components: Use magic-ui MCP for generating modern UI components with animations. Use shadcn-ui for beautiful, accessible components.",
+      "Step 4 — Testing: Use playwright MCP for E2E testing, browser automation. Use jest/vitest MCPs for unit testing.",
+      "Step 5 — Code execution: Use code-runner or yepcode MCPs to execute code in sandboxed environments.",
+      "Step 6 — Package management: Use package-registry MCP to search for and get information about NPM packages.",
+      "Step 7 — Deployment: Use appropriate cloud MCPs (vercel, netlify, aws, etc.) for deployment tasks.",
+      "Step 8 — Validation: Check outcomes (tests/constraints) and report any uncertainties."
+    ]
+  }
+}
