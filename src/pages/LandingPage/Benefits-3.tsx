@@ -14,19 +14,30 @@ export const BenefitsThree: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoHasStarted, setVideoHasStarted] = useState(false);
   const [videoHasCompleted, setVideoHasCompleted] = useState(false);
-  const [showPhoneImage, setShowPhoneImage] = useState(false);
+  const hasTriggeredOnce = useRef(false); // Nieuwe ref om te voorkomen dat video opnieuw start
 
   useEffect(() => {
+    // Alleen observer maken als video nog nooit is gestart
+    if (hasTriggeredOnce.current || videoHasStarted || videoHasCompleted) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5 && !videoHasStarted) {
+          // Alleen starten als nog nooit geactiveerd EN nog niet gestart
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.3 && !hasTriggeredOnce.current && !videoHasStarted) {
             const video = videoRef.current;
-            if (video && !videoHasStarted) {
+            if (video && !hasTriggeredOnce.current) {
+              // Permanent markeren dat video is geactiveerd voor deze sessie
+              hasTriggeredOnce.current = true;
               setVideoHasStarted(true);
               video.currentTime = 0;
-              const playPromise = video.play();
               
+              // Maak video persistent - blijft spelen ongeacht scroll positie
+              video.setAttribute('data-persistent-play', 'true');
+              
+              const playPromise = video.play();
               if (playPromise !== undefined) {
                 playPromise.catch(error => {
                   console.warn("Video auto-play failed:", error);
@@ -37,18 +48,22 @@ export const BenefitsThree: React.FC = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { 
+        threshold: 0.3,
+        rootMargin: '0px 0px 0px 0px'
+      }
     );
 
     const element = document.getElementById('benefits-3');
-    if (element) {
+    if (element && !hasTriggeredOnce.current) {
       observer.observe(element);
     }
 
+    // Continue video playback zelfs als de sectie uit beeld gaat - maar alleen als video al gestart is
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && videoHasStarted && !videoHasCompleted) {
         const video = videoRef.current;
-        if (video && video.paused) {
+        if (video && video.paused && video.hasAttribute('data-persistent-play')) {
           const playPromise = video.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
@@ -62,7 +77,7 @@ export const BenefitsThree: React.FC = () => {
     const handlePageShow = () => {
       if (videoHasStarted && !videoHasCompleted) {
         const video = videoRef.current;
-        if (video && video.paused) {
+        if (video && video.paused && video.hasAttribute('data-persistent-play')) {
           const playPromise = video.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
@@ -73,23 +88,66 @@ export const BenefitsThree: React.FC = () => {
       }
     };
 
+    // Continue video playback zelfs als de sectie uit beeld gaat
+    const handleScroll = () => {
+      if (videoHasStarted && !videoHasCompleted) {
+        const video = videoRef.current;
+        if (video && video.paused && video.hasAttribute('data-persistent-play')) {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Silent fail
+            });
+          }
+        }
+      }
+    };
+
+    // Extra handler voor wanneer de gebruiker wegklikt of weg scrollt
+    const handleBlur = () => {
+      if (videoHasStarted && !videoHasCompleted) {
+        const video = videoRef.current;
+        // Video moet blijven spelen ook als window focus verliest
+        if (video && video.hasAttribute('data-persistent-play')) {
+          setTimeout(() => {
+            if (video.paused) {
+              video.play().catch(() => {
+                // Silent fail
+              });
+            }
+          }, 100);
+        }
+      }
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pageshow', handlePageShow);
     window.addEventListener('focus', handlePageShow);
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('blur', handleBlur);
 
     return () => {
       observer.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pageshow', handlePageShow);
       window.removeEventListener('focus', handlePageShow);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('blur', handleBlur);
     };
-  }, [videoHasStarted, videoHasCompleted]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally empty - this effect should only run once
 
   const handleVideoEnded = () => {
+    // Permanent markeren dat video is voltooid
     setVideoHasCompleted(true);
-    setTimeout(() => {
-      setShowPhoneImage(true);
-    }, 1000);
+    
+    // Remove persistent play attribute - video is done
+    const video = videoRef.current;
+    if (video) {
+      video.removeAttribute('data-persistent-play');
+    }
+    
+    // Direct smooth fade naar afbeelding via CSS transitions (1 seconde)
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -659,7 +717,7 @@ export const BenefitsThree: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
 
           {/* Left side - Video */}
-          <div className="relative flex items-center justify-start order-1 lg:order-1">
+          <div className="relative flex items-start justify-start order-1 lg:order-1 -ml-80 lg:-ml-[26rem] -mt-[58rem] lg:-mt-[66rem]">
             <motion.div
               className="relative"
               animate={{
@@ -675,7 +733,8 @@ export const BenefitsThree: React.FC = () => {
                 transformStyle: 'preserve-3d'
               }}
             >
-              {!showPhoneImage ? (
+              <div className="relative w-full h-full">
+                {/* Video Element - positioned lower than image */}
                 <video 
                   ref={videoRef}
                   autoPlay={false}
@@ -685,14 +744,20 @@ export const BenefitsThree: React.FC = () => {
                   webkit-playsinline="true"
                   preload="metadata"
                   poster="/images/hero-images/telefoon.webp"
-                  className="w-full h-full object-contain rounded-lg shadow-lg"
+                  className="absolute inset-0 w-full h-full object-contain rounded-lg shadow-lg transition-all duration-2000 ease-in-out"
                   style={{ 
-                    width: '700px', 
-                    height: '560px',
+                    width: '1000px', // Video groter gemaakt
+                    height: '800px', // Video groter gemaakt
                     maxWidth: '100%',
-                    minWidth: '400px',
-                    minHeight: '320px',
-                    background: 'transparent'
+                    minWidth: '600px', // Minimum grootte verhoogd
+                    minHeight: '480px', // Minimum grootte verhoogd
+                    background: 'transparent',
+                    opacity: videoHasCompleted ? 0 : 1,
+                    visibility: videoHasCompleted ? 'hidden' : 'visible',
+                    marginTop: '4rem', // Video nog meer omhoog
+                    marginLeft: '16rem', // Video nog meer naar rechts
+                    transform: videoHasCompleted ? 'scale(0.95)' : 'scale(1)', // Smooth scale transition
+                    filter: videoHasCompleted ? 'blur(2px)' : 'blur(0px)' // Smooth blur transition
                   }}
                   onEnded={handleVideoEnded}
                   onError={() => {
@@ -703,23 +768,25 @@ export const BenefitsThree: React.FC = () => {
                   <source src="/videos/Export_Video_2025-08-07-ultraaamax.webm" type="video/webm; codecs=vp9" />
                   Your browser does not support the video tag.
                 </video>
-              ) : (
-                <motion.img
-                  src="/images/hero-images/telefoon.webp"
-                  alt="TableTech App Interface"
-                  className="w-full h-full object-contain rounded-lg shadow-lg"
+
+                {/* Static Image - same position as video */}
+                <img
+                  src="/images/backgrounds/ipad-foto.png"
+                  alt="TableTech Dashboard Interface"
+                  className="absolute inset-0 w-full h-full object-contain rounded-lg shadow-lg transition-all duration-2000 ease-in-out"
                   style={{ 
-                    width: '700px', 
-                    height: '560px',
+                    width: '1200px', 
+                    height: '960px',
                     maxWidth: '100%',
-                    minWidth: '400px',
-                    minHeight: '320px'
+                    minWidth: '800px',
+                    minHeight: '640px',
+                    opacity: videoHasCompleted ? 1 : 0,
+                    visibility: videoHasCompleted ? 'visible' : 'hidden',
+                    transform: videoHasCompleted ? 'scale(1)' : 'scale(1.05)', // Smooth scale in
+                    filter: videoHasCompleted ? 'blur(0px)' : 'blur(2px)' // Smooth blur in
                   }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1, ease: "easeInOut" }}
                 />
-              )}
+              </div>
             </motion.div>
           </div>
 

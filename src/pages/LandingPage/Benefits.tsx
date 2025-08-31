@@ -24,6 +24,7 @@ export const BenefitsOne: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const hasTriggeredOnce = useRef(false); // Nieuwe ref om te voorkomen dat video opnieuw start
 
   const appScreens: AppScreen[] = [
     {
@@ -512,8 +513,8 @@ export const BenefitsOne: React.FC = () => {
 
   // Robuuste scroll observer - eenmalige trigger, video blijft afspelen ook bij wegschrollen
   useEffect(() => {
-    // Stop observer als video al is gestart of voltooid
-    if (videoHasStarted || videoHasCompleted) {
+    // Stop observer als video al is gestart, voltooid, of al eens geactiveerd
+    if (hasTriggeredOnce.current || videoHasStarted || videoHasCompleted) {
       if (observerRef.current) {
         observerRef.current.disconnect();
         observerRef.current = null;
@@ -524,15 +525,17 @@ export const BenefitsOne: React.FC = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Alleen actie ondernemen als video nog niet is gestart
-          if (entry.isIntersecting && !videoHasStarted && !videoHasCompleted) {
+          // Alleen actie ondernemen als video nog nooit is geactiveerd EN nog niet is gestart
+          if (entry.isIntersecting && !hasTriggeredOnce.current && !videoHasStarted && !videoHasCompleted) {
             const rect = entry.boundingClientRect;
             const sectionHeight = rect.height;
             const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
             const visibilityRatio = visibleHeight / sectionHeight;
             
-            // Start video afspelen als meer dan 50% van de sectie zichtbaar is
-            if (visibilityRatio >= 0.5) {
+            // Start video afspelen als meer dan 30% van de sectie zichtbaar is
+            if (visibilityRatio >= 0.3) {
+              // Permanent markeren dat video is geactiveerd voor deze sessie
+              hasTriggeredOnce.current = true;
               setShouldPlayVideo(true);
               setVideoHasStarted(true);
               
@@ -544,8 +547,8 @@ export const BenefitsOne: React.FC = () => {
               setTimeout(() => {
                 if (videoRef.current && !videoRef.current.hasAttribute('data-played-once')) {
                   videoRef.current.setAttribute('data-played-once', 'true');
-                  // Zet video op niet-pauseerbaar door scroll events
-                  videoRef.current.setAttribute('data-keep-playing', 'true');
+                  // Zet video op persistent mode - blijft spelen ongeacht scroll positie
+                  videoRef.current.setAttribute('data-persistent-play', 'true');
                   videoRef.current.play().catch(() => {
                     // Silent fail
                   });
@@ -563,7 +566,7 @@ export const BenefitsOne: React.FC = () => {
 
     observerRef.current = observer;
 
-    if (sectionRef.current) {
+    if (sectionRef.current && !hasTriggeredOnce.current) {
       observer.observe(sectionRef.current);
     }
 
@@ -573,14 +576,15 @@ export const BenefitsOne: React.FC = () => {
         observerRef.current = null;
       }
     };
-  }, [videoHasStarted, videoHasCompleted]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally empty - this effect should only run once
 
   // Prevent video pause bij visibility changes - video moet doorspelen
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (videoRef.current && videoHasStarted && !videoHasCompleted) {
         // Forceer video om door te spelen ook als tab/window niet zichtbaar is
-        if (videoRef.current.paused && videoRef.current.hasAttribute('data-keep-playing')) {
+        if (videoRef.current.paused && videoRef.current.hasAttribute('data-persistent-play')) {
           videoRef.current.play().catch(() => {
             // Silent fail
           });
@@ -588,14 +592,47 @@ export const BenefitsOne: React.FC = () => {
       }
     };
 
+    // Continue video playback zelfs als de sectie uit beeld gaat
+    const handleScroll = () => {
+      if (videoRef.current && videoHasStarted && !videoHasCompleted) {
+        // Forceer video om door te spelen ook bij scrollen
+        if (videoRef.current.paused && videoRef.current.hasAttribute('data-persistent-play')) {
+          videoRef.current.play().catch(() => {
+            // Silent fail
+          });
+        }
+      }
+    };
+
+    // Extra handler voor wanneer de gebruiker wegklikt of weg scrollt
+    const handleBlur = () => {
+      if (videoHasStarted && !videoHasCompleted) {
+        const video = videoRef.current;
+        // Video moet blijven spelen ook als window focus verliest
+        if (video && video.hasAttribute('data-persistent-play')) {
+          setTimeout(() => {
+            if (video.paused) {
+              video.play().catch(() => {
+                // Silent fail
+              });
+            }
+          }, 100);
+        }
+      }
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleVisibilityChange);
     window.addEventListener('focus', handleVisibilityChange);
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('blur', handleBlur);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('blur', handleVisibilityChange);
       window.removeEventListener('focus', handleVisibilityChange);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('blur', handleBlur);
     };
   }, [videoHasStarted, videoHasCompleted]);
 
@@ -624,7 +661,7 @@ export const BenefitsOne: React.FC = () => {
                 preload="metadata"
                 poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 ease-out"
+                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
                 style={{ 
                   width: '1400px', 
                   height: '1120px',
@@ -632,14 +669,18 @@ export const BenefitsOne: React.FC = () => {
                   minWidth: '800px',
                   minHeight: '640px',
                   background: 'transparent',
-                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))'
+                  filter: videoHasCompleted 
+                    ? 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3)) blur(2px)' 
+                    : 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6)) blur(0px)',
+                  transform: videoHasCompleted ? 'scale(0.95)' : 'scale(1)',
+                  opacity: videoHasCompleted ? 0 : 1
                 }}
                 onCanPlay={(e) => {
                   // Alleen afspelen als video al gestart is via scroll trigger
                   const video = e.target as HTMLVideoElement;
                   if (shouldPlayVideo && videoHasStarted && !videoHasCompleted && !video.hasAttribute('data-played-once')) {
                     video.setAttribute('data-played-once', 'true');
-                    video.setAttribute('data-keep-playing', 'true');
+                    video.setAttribute('data-persistent-play', 'true');
                     video.play().catch(() => {
                       // Silent fail - geen console spam
                     });
@@ -691,13 +732,17 @@ export const BenefitsOne: React.FC = () => {
                   setVideoHasCompleted(true);
                   setShowPhoneImage(true);
                   
-                  // Remove keep-playing attribute - video is klaar
+                  // Remove persistent-play attribute - video is klaar
+                  video.removeAttribute('data-persistent-play');
                   video.removeAttribute('data-keep-playing');
                   
-                  // Visuele state permanent instellen
+                  // Visuele state permanent instellen met smooth transition
+                  video.style.transition = 'opacity 1s ease-out, visibility 1s ease-out';
                   video.style.opacity = '0';
                   video.style.visibility = 'hidden';
+                  
                   if (phoneImage) {
+                    phoneImage.style.transition = 'opacity 1s ease-out, visibility 1s ease-out';
                     phoneImage.style.opacity = '1';
                     phoneImage.style.visibility = 'visible';
                   }
@@ -715,18 +760,21 @@ export const BenefitsOne: React.FC = () => {
               
               {/* Telefoon afbeelding overlay - robuuste state handling */}
               <img
-                src="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
+                src="/images/backgrounds/telefoon-3.png"
                 alt="TableTech App Mockup"
-                className="phone-overlay absolute inset-0 w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 ease-out"
+                className="phone-overlay absolute inset-0 w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
                 style={{ 
                   width: '1400px', 
                   height: '1120px',
                   maxWidth: '100%',
                   minWidth: '800px',
                   minHeight: '640px',
-                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))',
+                  filter: videoHasCompleted 
+                    ? 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6)) blur(0px)' 
+                    : 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3)) blur(1px)',
                   opacity: (showPhoneImage || videoHasCompleted) ? '1' : '0',
                   visibility: (showPhoneImage || videoHasCompleted) ? 'visible' : 'hidden',
+                  transform: videoHasCompleted ? 'scale(1)' : 'scale(0.95)',
                   zIndex: '10'
                 }}
               />
@@ -734,7 +782,7 @@ export const BenefitsOne: React.FC = () => {
           </div>
 
           {/* Right side - Content - DESKTOP REORDERED */}
-          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0 lg:flex-col-reverse">
+          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0 lg:flex-col-reverse lg:ml-12 xl:ml-16">
             {/* Desktop: Title section positioned lower using lg:order-2 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -809,11 +857,9 @@ export const BenefitsOne: React.FC = () => {
                 {/* Gradient overlay for depth */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/3 to-transparent pointer-events-none"></div>
                 
-                {/* Background removed for cleaner look */}
-                
                 <div className="relative p-4 sm:p-6 lg:p-8 z-10">
                   <div className="text-center mb-4 sm:mb-6">
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2"
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2"
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
@@ -824,24 +870,24 @@ export const BenefitsOne: React.FC = () => {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                     <motion.div 
-                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(0)}
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-blue-100 transition-colors"
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-blue-100 transition-colors mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Geen wachttijden
                         </p>
-                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -851,24 +897,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(1)}
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-green-100 transition-colors"
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-green-100 transition-colors mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Live order tracking
                         </p>
-                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -878,24 +924,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(2)}
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-purple-100 transition-colors"
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-purple-100 transition-colors mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Contactloos betalen
                         </p>
-                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -905,24 +951,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:bg-white/5 group cursor-pointer"
+                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(3)}
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-orange-100 transition-colors"
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-orange-100 transition-colors mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Precisie bestellen
                         </p>
-                        <p className="text-xs text-white/85 group-hover:text-white/95 transition-colors"
+                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
