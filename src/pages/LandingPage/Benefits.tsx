@@ -790,7 +790,7 @@ export const BenefitsOne: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="lg:order-2"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold text-white mb-3"
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3"
                   style={{
                     textShadow: '0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4)'
                   }}>
