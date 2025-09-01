@@ -45,13 +45,7 @@ const LandingPage: React.FC = () => {
           }
           card={
             <div className="w-full h-full relative overflow-hidden">
-              {/* Dashboard content will be shown through the image */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-white/20 text-center pointer-events-none">
-                  <div className="text-lg font-medium mb-2">TableTech Dashboard</div>
-                  <div className="text-sm opacity-70">Real-time restaurant management</div>
-                </div>
-              </div>
+              {/* Video content - no overlay text */}
             </div>
           }
         />

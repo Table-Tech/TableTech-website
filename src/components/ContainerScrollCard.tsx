@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 export interface ContainerScrollCardProps {
   rotate: number;
@@ -13,6 +13,21 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
   isInView = true,
   children 
 }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   // Enhanced shadow calculation based on rotation and scale
   const dynamicShadow = useMemo(() => {
     const intensity = Math.max(0.3, Math.min(1, scale));
@@ -38,21 +53,48 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
       }}
       className="mx-auto -mt-12 h-[26rem] w-full max-w-4xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[36rem] md:max-w-4xl md:p-6 transform-gpu will-change-transform"
     >
-      <div className="size-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 md:rounded-2xl md:p-4">
-        <div className="size-full rounded-2xl overflow-hidden relative bg-gradient-to-br from-gray-900 to-black">
-          {/* Enhanced background with better visual hierarchy */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#1a1a1a]" />
-          
-          {/* Dashboard preview image */}
-          <img 
-            src="/aap.webp" 
-            alt="TableTech Dashboard Preview"
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
-            loading="lazy"
+      <div className="size-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 md:rounded-2xl">
+        <div 
+          className="size-full rounded-2xl overflow-hidden relative bg-gradient-to-br from-gray-900 to-black group cursor-pointer"
+          onMouseEnter={() => setShowControls(true)}
+          onMouseLeave={() => setShowControls(false)}
+          onClick={togglePlay}
+        >
+          {/* Dashboard preview video - fits entire container */}
+          <video 
+            ref={videoRef}
+            src="/videos/kitchen-side-demo.mp4"
+            className="absolute inset-0 w-full h-full object-contain opacity-90 rounded-2xl"
+            loop
+            muted
+            playsInline
           />
           
+          {/* Play/Pause Button Overlay */}
+          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${showControls || !isPlaying ? 'opacity-100' : 'opacity-0'}`}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePlay();
+              }}
+              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full p-4 transition-all duration-200 hover:scale-110"
+            >
+              {isPlaying ? (
+                // Pause Icon
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              ) : (
+                // Play Icon
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              )}
+            </button>
+          </div>
+          
           {/* Screen overlay with subtle gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10 pointer-events-none" />
           
           {/* Optional content overlay */}
           {children && (
