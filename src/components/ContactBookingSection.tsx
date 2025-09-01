@@ -41,7 +41,7 @@ const ClickSpark = ({ children, sparkColor = "#ffffff", sparkRadius = 20, sparkC
   };
 
   return (
-    <div onClick={createSparks} style={{ position: 'relative', display: 'inline-block' }}>
+    <div onClick={createSparks} style={{ position: 'relative', display: 'block' }}>
       {children}
       {sparks.map((spark) => (
         <div
@@ -526,8 +526,8 @@ ${data.firstName} ${data.lastName}
             </div>
             
             {/* Right column - Larger glassmorphism booking card */}
-            <div className="order-1 lg:order-2">
-              <div className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl w-full max-w-lg mx-auto rounded-3xl overflow-hidden">
+            <div className="order-1 lg:order-2 flex justify-center">
+              <div className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl w-full max-w-lg rounded-3xl overflow-hidden">
                 {/* Header section with gradient */}
                 <div className="bg-gradient-to-r from-[#E86C28]/20 to-[#C3561D]/20 p-8 border-b border-[#4A372E]/30">
                   <div className="text-center">
@@ -555,7 +555,7 @@ ${data.firstName} ${data.lastName}
                     >
                       <button
                         onClick={() => setShowBookingModal(true)}
-                        className="w-full bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-6 px-12 rounded-3xl font-bold text-xl transition-all duration-500 transform hover:scale-105 hover:shadow-2xl active:scale-95 flex items-center justify-center space-x-4 mb-8 shadow-lg border-2 border-white/20 backdrop-blur-sm relative overflow-hidden group min-w-[320px]"
+                        className="w-full bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-6 px-12 rounded-3xl font-bold text-xl transition-all duration-500 transform hover:scale-105 hover:shadow-2xl active:scale-95 flex items-center justify-center space-x-4 mb-8 shadow-lg border-2 border-white/20 backdrop-blur-sm relative overflow-hidden group"
                       >
                         {/* Animated background effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
