@@ -1,4 +1,3 @@
-// @ts-expect-error - js-cookie module resolution issue
 import Cookies from 'js-cookie';
 import * as CryptoJS from 'crypto-js';
 
