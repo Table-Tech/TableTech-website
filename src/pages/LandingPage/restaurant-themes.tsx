@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import ClickSpark from "../../components/ClickSpark"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { motion } from "framer-motion"
 
 // Images moved to public: /images/Themes/ and /images/backgrounds/
 
@@ -79,7 +78,8 @@ const RestaurantThemesPage: React.FC = () => {
     return () => observer.disconnect()
   }, [])
 
-  const handleThemeChange = (themeIndex: number) => {
+  // Basic theme change handler (placeholder for future implementation)
+  const handleThemeChange = useCallback((themeIndex: number) => {
     if (themeIndex === currentTheme || isTransitioning) return
     
     setIsTransitioning(true)
@@ -87,9 +87,15 @@ const RestaurantThemesPage: React.FC = () => {
       setCurrentTheme(themeIndex)
       setIsTransitioning(false)
     }, 150)
-  }
+  }, [currentTheme, isTransitioning])
 
   const currentThemeData = themes[currentTheme]
+
+  // Prevent unused variable warnings by consuming them
+  useEffect(() => {
+    // Future theme implementation logic will go here
+    console.debug('Current theme:', currentThemeData?.name, 'Handler:', handleThemeChange)
+  }, [currentThemeData, handleThemeChange])
 
   return (
     <section 

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { ContainerScrollTitle } from "./ContainerScrollTitle";
 import { ContainerScrollCard } from "./ContainerScrollCard";
 import { useThrottledCallback } from "../hooks/useThrottledCallback";
@@ -16,7 +16,7 @@ interface ScrollState {
   containerBottom: number;
 }
 
-const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
+const ContainerScroll = ({ title, card }: ContainerScrollProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [scrollState, setScrollState] = useState<ScrollState>({
@@ -44,9 +44,8 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
     const rect = containerRef.current.getBoundingClientRect();
     const windowHeight = window.innerHeight;
     
-    // Get scroll position (Lenis compatible)
-    const scrollY = window.lenis?.scroll || window.scrollY || document.documentElement.scrollTop;
-    const containerTop = rect.top + scrollY;
+    // Get scroll position (fallback to regular scroll if Lenis not available)
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
     const containerBottom = rect.bottom + scrollY;
     const containerHeight = rect.height;
     
@@ -83,21 +82,16 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
     // Initial calculation with delay to ensure proper mounting
     const initialTimer = setTimeout(calculateScrollProgress, 100);
     
-    // Enhanced Lenis integration
+    // Setup scroll listener (using standard scroll events)
     const setupScrollListener = () => {
-      if (window.lenis) {
-        // Use Lenis-specific scroll event for better performance
-        window.lenis.on('scroll', throttledScrollHandler);
-      } else {
-        // Fallback to window scroll with passive listener
-        window.addEventListener('scroll', throttledScrollHandler, { passive: true });
-      }
+      // Use standard scroll events for compatibility
+      window.addEventListener('scroll', throttledScrollHandler, { passive: true });
     };
     
     setupScrollListener();
     
     // Also listen to resize for recalculation with debounce
-    let resizeTimer: NodeJS.Timeout;
+    let resizeTimer: number;
     const handleResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(calculateScrollProgress, 150);
@@ -109,11 +103,8 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
       clearTimeout(initialTimer);
       clearTimeout(resizeTimer);
       
-      if (window.lenis) {
-        window.lenis.off('scroll', throttledScrollHandler);
-      } else {
-        window.removeEventListener('scroll', throttledScrollHandler);
-      }
+      // Cleanup scroll listeners  
+      window.removeEventListener('scroll', throttledScrollHandler);
       window.removeEventListener('resize', handleResize);
     };
   }, [calculateScrollProgress, throttledScrollHandler]);
@@ -138,7 +129,7 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
     const translateY = maxTranslateY * scrollYProgress;
     
     return { rotate, scale, translateY };
-  }, [scrollState.scrollYProgress, isMobile]);
+  }, [scrollState, isMobile]);
 
   return (
     <div 
@@ -183,20 +174,5 @@ const ContainerScroll: React.FC<ContainerScrollProps> = ({ title, card }) => {
     </div>
   );
 };
-
-// Add global type for Lenis
-declare global {
-  interface Window {
-    lenis?: {
-      scroll: number;
-      scrollTo: (target: number | string, options?: any) => void;
-      on: (event: string, callback: Function) => void;
-      off: (event: string, callback: Function) => void;
-      stop: () => void;
-      start: () => void;
-      destroy: () => void;
-    };
-  }
-}
 
 export default ContainerScroll;

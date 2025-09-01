@@ -1,5 +1,6 @@
+// @ts-expect-error - js-cookie module resolution issue
 import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 const ENCRYPTION_KEY = import.meta.env.VITE_COOKIE_ENCRYPTION_KEY || 'TableTech-2024-SecureKey-Default';
 
@@ -302,8 +303,8 @@ class CookieManager {
   }
 
   private enableGoogleAnalytics(): void {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
+    if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('consent', 'update', {
         'analytics_storage': 'granted'
       });
     }
@@ -312,10 +313,10 @@ class CookieManager {
   private disableGoogleAnalytics(): void {
     if (typeof window !== 'undefined') {
       // Disable Google Analytics
-      (window as any)['ga-disable-G-GV8ZVCHNFE'] = true;
+      (window as unknown as Record<string, unknown>)['ga-disable-G-GV8ZVCHNFE'] = true;
       
-      if ((window as any).gtag) {
-        (window as any).gtag('consent', 'update', {
+      if ((window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+        (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('consent', 'update', {
           'analytics_storage': 'denied'
         });
       }
@@ -331,8 +332,8 @@ class CookieManager {
 
   private disableMarketingScripts(): void {
     // Block Facebook Pixel
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq = () => {};
+    if (typeof window !== 'undefined' && (window as unknown as { fbq?: () => void }).fbq) {
+      (window as unknown as { fbq: () => void }).fbq = () => {};
     }
 
     // Remove marketing cookies

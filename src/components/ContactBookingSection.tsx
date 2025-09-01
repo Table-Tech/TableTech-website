@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, AlertCircle, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, Clock } from 'lucide-react';
 import { submitAppointment, getAvailableSlots, getAvailableDates } from '../services/appointmentService';
 
 // Define types for ClickSpark
@@ -83,7 +83,6 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [formRenderTs] = useState(Date.now());
-  const [requestId, setRequestId] = useState('');
   const [availableSlots, setAvailableSlots] = useState<{ time: string; isAvailable: boolean }[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
@@ -102,42 +101,6 @@ const ContactSection = () => {
     } catch (error) {
       console.error('Error clearing expired bookings:', error);
     }
-  };
-
-  const getBookedTimeSlotsForDate = (dateString: string): string[] => {
-    try {
-      const bookings = JSON.parse(localStorage.getItem('tabletech_bookings') || '[]');
-      return bookings
-        .filter((booking: { date: string; time: string }) => booking.date === dateString)
-        .map((booking: { date: string; time: string }) => booking.time);
-    } catch (error) {
-      console.error('Error getting booked time slots:', error);
-      return [];
-    }
-  };
-
-  const createMailtoLink = (data: Record<string, unknown>) => {
-    const subject = encodeURIComponent('TableTech Afspraak Bevestiging');
-    const body = encodeURIComponent(`
-Hallo TableTech team,
-
-Ik heb zojuist een afspraak geboekt via jullie website:
-
-Naam: ${data.firstName} ${data.lastName}
-Email: ${data.email}
-Telefoon: ${data.phone}
-Restaurant: ${data.restaurant || 'Niet opgegeven'}
-Datum: ${data.date}
-Tijd: ${data.time}
-
-Bericht:
-${data.message || 'Geen extra bericht'}
-
-Met vriendelijke groet,
-${data.firstName} ${data.lastName}
-    `);
-    
-    return `mailto:info@tabletech.nl?subject=${subject}&body=${body}`;
   };
 
   // Roterende teksten voor de slideshow
@@ -219,12 +182,6 @@ ${data.firstName} ${data.lastName}
       setAvailableSlots([]);
     }
   }, [selectedDate]);
-
-  // Tijdslots voor afspraken
-  const timeSlots = [
-    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
-  ];
 
   // Genereer kalenderdagen
   const getDaysInMonth = (date: Date) => {
@@ -343,7 +300,6 @@ ${data.firstName} ${data.lastName}
       
       if (response.ok) {
         console.log('✅ Appointment submitted successfully');
-        setRequestId(response.requestId || '');
         setEmailError(false); // Geen email error - alles is goed gegaan
         setBookingStep(3);
         
@@ -447,11 +403,6 @@ ${data.firstName} ${data.lastName}
   };
 
   // Helper function to create Date object from YYYY-MM-DD string
-  const parseDateString = (dateString: string): Date => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  };
-
   return (
     <>
       <style>{`
