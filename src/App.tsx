@@ -1,21 +1,28 @@
 // src/App.tsx
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const SupportChat = lazy(() => import("./pages/SupportChat"));
 const MenuDemo = lazy(() => import("./pages/MenuDemo/MenuDemo"));
+const CookieConsentBanner = lazy(() => import("./components/CookieConsentBanner"));
 
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDots";
 import { ScrollProgressBar } from "./components/ScrollProgressBar";
+import securityManager from "./utils/security";
 
 import "./index.css";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+
+  useEffect(() => {
+    // Initialize security on app load
+    securityManager.ensureCSRFToken();
+  }, []);
 
   return (
     <>
@@ -31,6 +38,9 @@ const AppContent: React.FC = () => {
       </Suspense>
       <Suspense fallback={null}>
         <SupportChat />
+      </Suspense>
+      <Suspense fallback={null}>
+        <CookieConsentBanner />
       </Suspense>
     </>
   );

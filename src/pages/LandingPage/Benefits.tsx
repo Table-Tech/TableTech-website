@@ -640,16 +640,16 @@ export const BenefitsOne: React.FC = () => {
     <section
       ref={sectionRef}
       id="benefits-1"
-      className="relative w-full h-full flex items-center justify-center overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24"
       style={{ backgroundColor: 'transparent' }}
     >
-      {/* Main content - Beter gecentreerd */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-6 lg:py-8 min-h-0 flex-1 flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-center w-full">
+      {/* Main content - Mobile first approach with smaller desktop sizing */}
+      <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-12 max-w-[1920px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-8 xl:gap-10 2xl:gap-12 items-center w-full">
 
-          {/* Left side - Video - Verborgen op mobiel om oververhitting te voorkomen */}
-          <div className="relative hidden lg:flex items-end justify-start order-1 lg:order-1 -ml-80 mt-16">
-            <div className="relative drop-shadow-2xl">
+          {/* Left side - Video - Hidden on mobile, only visible on desktop - Smaller sizing */}
+          <div className="hidden lg:flex relative items-center justify-center order-1 lg:order-1">
+            <div className="relative drop-shadow-2xl lg:w-[70%] lg:max-w-[400px] xl:w-[75%] xl:max-w-[450px] 2xl:w-[80%] 2xl:max-w-[500px]">
               {/* Video element */}
               <video 
                 ref={videoRef}
@@ -661,13 +661,11 @@ export const BenefitsOne: React.FC = () => {
                 preload="metadata"
                 poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
+                className="w-full h-auto object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
                 style={{ 
-                  width: '1400px', 
-                  height: '1120px',
+                  display: videoHasCompleted ? 'none' : 'block',
                   maxWidth: '100%',
-                  minWidth: '800px',
-                  minHeight: '640px',
+                  height: 'auto',
                   background: 'transparent',
                   filter: videoHasCompleted 
                     ? 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3)) blur(2px)' 
@@ -762,13 +760,10 @@ export const BenefitsOne: React.FC = () => {
               <img
                 src="/images/backgrounds/telefoon-3.png"
                 alt="TableTech App Mockup"
-                className="phone-overlay absolute inset-0 w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
+                className="phone-overlay absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl transition-all duration-2000 ease-in-out"
                 style={{ 
-                  width: '1400px', 
-                  height: '1120px',
                   maxWidth: '100%',
-                  minWidth: '800px',
-                  minHeight: '640px',
+                  height: 'auto',
                   filter: videoHasCompleted 
                     ? 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6)) blur(0px)' 
                     : 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3)) blur(1px)',
@@ -781,22 +776,22 @@ export const BenefitsOne: React.FC = () => {
             </div>
           </div>
 
-          {/* Right side - Content - DESKTOP REORDERED */}
-          <div className="space-y-4 order-2 lg:order-2 flex flex-col min-h-0 lg:flex-col-reverse lg:ml-12 xl:ml-16">
-            {/* Desktop: Title section positioned lower using lg:order-2 */}
+          {/* Right side - Content - Mobile optimized, smaller desktop sizing */}
+          <div className="space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-6 xl:space-y-7 2xl:space-y-8 order-2 md:order-2 flex flex-col lg:h-full lg:justify-center">
+            {/* Desktop: Title section with smaller sizing */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="lg:order-2"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3"
+              <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-4 xl:mb-5 leading-tight lg:leading-[1.1]"
                   style={{
                     textShadow: '0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4)'
                   }}>
                 Mobiele Restaurantervaring
               </h2>
-              <p className="text-white/95 text-base sm:text-lg lg:text-xl mb-4 leading-relaxed"
+              <p className="text-white/95 text-sm xs:text-base sm:text-lg md:text-base lg:text-base xl:text-lg 2xl:text-xl mb-3 sm:mb-4 md:mb-6 lg:mb-5 xl:mb-6 leading-relaxed lg:leading-relaxed"
                  style={{
                    textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                  }}>
@@ -804,8 +799,8 @@ export const BenefitsOne: React.FC = () => {
               </p>
             </motion.div>
 
-            {/* Desktop: Content sections positioned higher using lg:order-1 */}
-            <div className="space-y-3 flex-1 overflow-visible lg:order-1">
+            {/* Content sections - Mobile first, smaller desktop spacing */}
+            <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-5 xl:space-y-6 2xl:space-y-7 flex-1 overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentScreen}
@@ -813,7 +808,7 @@ export const BenefitsOne: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
-                  className="relative overflow-hidden rounded-2xl shadow-xl"
+                  className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl"
                   style={{
                     background: 'rgba(255, 255, 255, 0.08)',
                     backdropFilter: 'blur(20px)',
@@ -823,14 +818,14 @@ export const BenefitsOne: React.FC = () => {
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
-                  <div className="relative p-4 sm:p-6 z-10">
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3"
+                  <div className="relative p-4 sm:p-5 md:p-6 lg:p-6 xl:p-7 2xl:p-8 z-10">
+                    <h3 className="text-base sm:text-lg md:text-xl lg:text-xl xl:text-2xl 2xl:text-3xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-4 xl:mb-5"
                         style={{
                           textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                         }}>
                       {getCurrentMessage().title}
                     </h3>
-                    <p className="text-white/95 text-sm sm:text-base lg:text-lg leading-relaxed"
+                    <p className="text-white/95 text-sm sm:text-base md:text-lg lg:text-base xl:text-lg 2xl:text-xl leading-relaxed lg:leading-relaxed"
                        style={{
                          textShadow: '0 1px 4px rgba(0,0,0,0.4)'
                        }}>
@@ -840,7 +835,7 @@ export const BenefitsOne: React.FC = () => {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Enhanced Mobile Benefits with premium glassmorphism */}
+              {/* Enhanced Mobile Benefits with premium glassmorphism - Better desktop layout */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -857,37 +852,37 @@ export const BenefitsOne: React.FC = () => {
                 {/* Gradient overlay for depth */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/3 to-transparent pointer-events-none"></div>
                 
-                <div className="relative p-4 sm:p-6 lg:p-8 z-10">
-                  <div className="text-center mb-4 sm:mb-6">
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2"
+                <div className="relative p-4 sm:p-5 md:p-6 lg:p-8 xl:p-12 2xl:p-16 z-10">
+                  <div className="text-center mb-4 sm:mb-5 md:mb-6 lg:mb-10 xl:mb-12">
+                    <h3 className="text-sm sm:text-base md:text-lg lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-6 xl:mb-8"
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
                       Waarom mobiel bestellen?
                     </h3>
-                    <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+                    <div className="w-12 sm:w-16 md:w-20 lg:w-32 xl:w-40 2xl:w-48 h-0.5 md:h-1 lg:h-1.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-8 xl:gap-10 2xl:gap-12">
                     <motion.div 
-                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
+                      className="flex items-start space-x-3 sm:space-x-4 lg:space-x-6 xl:space-x-8 p-3 sm:p-4 md:p-5 lg:p-8 xl:p-10 2xl:p-12 rounded-lg md:rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer border border-white/10 min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[120px] xl:min-h-[140px] 2xl:min-h-[160px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(0)}
                     >
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 2xl:w-24 2xl:h-24 min-w-[44px] min-h-[44px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-blue-100 transition-colors mb-1"
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white group-hover:text-blue-100 transition-colors mb-1 lg:mb-3 xl:mb-4"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Geen wachttijden
                         </p>
-                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -897,24 +892,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
+                      className="flex items-start space-x-3 sm:space-x-4 lg:space-x-6 xl:space-x-8 p-3 sm:p-4 md:p-5 lg:p-8 xl:p-10 2xl:p-12 rounded-lg md:rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer border border-white/10 min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[120px] xl:min-h-[140px] 2xl:min-h-[160px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(1)}
                     >
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 2xl:w-24 2xl:h-24 min-w-[44px] min-h-[44px] bg-gradient-to-br from-green-500 to-green-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-green-100 transition-colors mb-1"
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white group-hover:text-green-100 transition-colors mb-1 lg:mb-3 xl:mb-4"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Live order tracking
                         </p>
-                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -924,24 +919,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
+                      className="flex items-start space-x-3 sm:space-x-4 lg:space-x-6 xl:space-x-8 p-3 sm:p-4 md:p-5 lg:p-8 xl:p-10 2xl:p-12 rounded-lg md:rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer border border-white/10 min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[120px] xl:min-h-[140px] 2xl:min-h-[160px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(2)}
                     >
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 2xl:w-24 2xl:h-24 min-w-[44px] min-h-[44px] bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-purple-100 transition-colors mb-1"
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white group-hover:text-purple-100 transition-colors mb-1 lg:mb-3 xl:mb-4"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Contactloos betalen
                         </p>
-                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -951,24 +946,24 @@ export const BenefitsOne: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-start space-x-2.5 p-2.5 sm:p-3 rounded-lg transition-all duration-300 hover:bg-white/8 group cursor-pointer border border-white/10"
+                      className="flex items-start space-x-3 sm:space-x-4 lg:space-x-6 xl:space-x-8 p-3 sm:p-4 md:p-5 lg:p-8 xl:p-10 2xl:p-12 rounded-lg md:rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer border border-white/10 min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[120px] xl:min-h-[140px] 2xl:min-h-[160px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => handleBenefitClick(3)}
                     >
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 2xl:w-24 2xl:h-24 min-w-[44px] min-h-[44px] bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex-shrink-0 mt-0.5">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-semibold text-white group-hover:text-orange-100 transition-colors mb-1"
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white group-hover:text-orange-100 transition-colors mb-1 lg:mb-3 xl:mb-4"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           Precisie bestellen
                         </p>
-                        <p className="text-[10px] sm:text-xs text-white/80 group-hover:text-white/90 transition-colors leading-snug"
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>

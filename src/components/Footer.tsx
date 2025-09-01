@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
-import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
-import { TermsModal } from "./TermsModal";
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer 
@@ -147,7 +150,7 @@ export const Footer: React.FC = () => {
           </p>
           <div className="flex gap-6 mt-1">
             <button 
-              onClick={() => setIsPrivacyModalOpen(true)}
+              onClick={() => scrollToSection('privacy-policy')}
               className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
@@ -160,7 +163,7 @@ export const Footer: React.FC = () => {
               Privacybeleid
             </button>
             <button 
-              onClick={() => setIsTermsModalOpen(true)}
+              onClick={() => scrollToSection('terms-conditions')}
               className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
@@ -177,20 +180,6 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Removed bottom fade for cleaner finish */}
-      
-      {/* Privacy Policy Modal */}
-      <PrivacyPolicyModal 
-        isOpen={isPrivacyModalOpen} 
-        onClose={() => setIsPrivacyModalOpen(false)} 
-        onOpenTerms={() => setIsTermsModalOpen(true)}
-      />
-      
-      {/* Terms & Conditions Modal */}
-      <TermsModal 
-        isOpen={isTermsModalOpen} 
-        onClose={() => setIsTermsModalOpen(false)} 
-        onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
-      />
     </footer>
   );
 };

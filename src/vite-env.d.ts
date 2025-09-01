@@ -3,6 +3,9 @@
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string;
   readonly VITE_API_URL: string;
+  readonly VITE_ENCRYPTION_KEY: string;
+  readonly VITE_SESSION_SECRET: string;
+  readonly PROD: boolean;
   // Add more env variables as needed
 }
 
