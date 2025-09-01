@@ -33,7 +33,10 @@
       "Bash(yarn install)",
       "Bash(sed:*)",
       "Read(//mnt/c/Users/Wish/Downloads/**)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(netstat:*)",
+      "Bash(kill:*)",
+      "Bash(ss:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
