@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 // Type declarations for Vite environment
 
 interface ImportMetaEnv {
@@ -55,10 +57,8 @@ declare module "react-i18next";
 declare module "framer-motion";
 declare module "lucide-react";
 
-// NodeJS types for timeout
-declare namespace NodeJS {
-  type Timeout = number;
-}
+// Browser timeout types
+type Timeout = number;
 
 // Global window extensions
 declare global {

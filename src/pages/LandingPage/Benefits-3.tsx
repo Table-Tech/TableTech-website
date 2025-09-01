@@ -1,4 +1,5 @@
-import React, { useMemo, useRef, useEffect, useState } from "react";
+import * as React from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -39,7 +40,7 @@ export const BenefitsThree: React.FC = () => {
               
               const playPromise = video.play();
               if (playPromise !== undefined) {
-                playPromise.catch(error => {
+                playPromise.catch((error: Error) => {
                   console.warn("Video auto-play failed:", error);
                 });
               }

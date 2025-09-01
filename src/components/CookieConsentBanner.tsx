@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, Cookie, Settings, X, Check, ChevronDown, ChevronUp, BarChart3, Megaphone, Zap, Sparkles, Lock } from 'lucide-react';
 import cookieManager, { CookieCategory } from '../utils/cookieManager';
@@ -70,7 +71,7 @@ const CookieConsentBanner: React.FC = () => {
   };
 
   const toggleCategory = (category: keyof CategoryState) => {
-    setCategories(prev => ({
+    setCategories((prev: CategoryState) => ({
       ...prev,
       [category]: !prev[category]
     }));

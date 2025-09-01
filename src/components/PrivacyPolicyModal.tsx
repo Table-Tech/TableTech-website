@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { ScrollArrows } from "./ScrollArrows";
@@ -15,7 +15,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   onClose,
   onOpenTerms,
   onOpenCookies,
-}) => {
+}: PrivacyPolicyModalProps) => {
   // Block body scroll when modal is open but allow modal content scroll
   React.useEffect(() => {
     if (isOpen) {
