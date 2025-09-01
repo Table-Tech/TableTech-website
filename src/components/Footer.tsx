@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
+import { TermsModal } from "./TermsModal";
+import { CookiePolicyModal } from "./CookiePolicyModal";
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [isCookieModalOpen, setIsCookieModalOpen] = useState(false);
   
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handlePrivacyClick = () => {
+    setIsPrivacyModalOpen(true);
+  };
+
+  const handleTermsClick = () => {
+    setIsTermsModalOpen(true);
+  };
+
+  const handleCookieClick = () => {
+    setIsCookieModalOpen(true);
   };
 
   return (
@@ -150,7 +161,7 @@ export const Footer: React.FC = () => {
           </p>
           <div className="flex gap-6 mt-1">
             <button 
-              onClick={() => scrollToSection('privacy-policy')}
+              onClick={handlePrivacyClick}
               className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
@@ -163,7 +174,7 @@ export const Footer: React.FC = () => {
               Privacybeleid
             </button>
             <button 
-              onClick={() => scrollToSection('terms-conditions')}
+              onClick={handleTermsClick}
               className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
@@ -175,11 +186,62 @@ export const Footer: React.FC = () => {
             >
               Algemene voorwaarden
             </button>
+            <button 
+              onClick={handleCookieClick}
+              className="underline hover:text-[#E86C28] transition-all duration-300 hover:scale-105 cursor-pointer"
+              style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4), 0 0 8px rgba(237, 125, 49, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
+              }}
+            >
+              Cookiebeleid
+            </button>
           </div>
         </div>
       </div>
 
       {/* Removed bottom fade for cleaner finish */}
+      
+      {/* Modals */}
+      <PrivacyPolicyModal 
+        isOpen={isPrivacyModalOpen} 
+        onClose={() => setIsPrivacyModalOpen(false)}
+        onOpenTerms={() => {
+          setIsPrivacyModalOpen(false);
+          setIsTermsModalOpen(true);
+        }}
+        onOpenCookies={() => {
+          setIsPrivacyModalOpen(false);
+          setIsCookieModalOpen(true);
+        }}
+      />
+      <TermsModal 
+        isOpen={isTermsModalOpen} 
+        onClose={() => setIsTermsModalOpen(false)}
+        onOpenPrivacy={() => {
+          setIsTermsModalOpen(false);
+          setIsPrivacyModalOpen(true);
+        }}
+        onOpenCookies={() => {
+          setIsTermsModalOpen(false);
+          setIsCookieModalOpen(true);
+        }}
+      />
+      <CookiePolicyModal 
+        isOpen={isCookieModalOpen} 
+        onClose={() => setIsCookieModalOpen(false)}
+        onOpenPrivacy={() => {
+          setIsCookieModalOpen(false);
+          setIsPrivacyModalOpen(true);
+        }}
+        onOpenTerms={() => {
+          setIsCookieModalOpen(false);
+          setIsTermsModalOpen(true);
+        }}
+      />
     </footer>
   );
 };

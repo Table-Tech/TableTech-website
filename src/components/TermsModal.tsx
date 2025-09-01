@@ -7,12 +7,14 @@ interface TermsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenPrivacy?: () => void;
+  onOpenCookies?: () => void;
 }
 
 export const TermsModal: React.FC<TermsModalProps> = ({
   isOpen,
   onClose,
   onOpenPrivacy,
+  onOpenCookies,
 }) => {
   // Block body scroll when modal is open but allow modal content scroll
   React.useEffect(() => {
@@ -262,17 +264,30 @@ export const TermsModal: React.FC<TermsModalProps> = ({
             {/* Footer */}
             <div className="sticky bottom-0 bg-gradient-to-r from-[#2C1E1A] to-[#1a110d] border-t border-amber-600/30 px-6 py-4">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-                {onOpenPrivacy && (
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onOpenPrivacy();
-                    }}
-                    className="w-full sm:w-auto px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
-                  >
-                    Privacybeleid
-                  </button>
-                )}
+                <div className="flex gap-3">
+                  {onOpenPrivacy && (
+                    <button
+                      onClick={() => {
+                        onClose();
+                        onOpenPrivacy();
+                      }}
+                      className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
+                    >
+                      Privacybeleid
+                    </button>
+                  )}
+                  {onOpenCookies && (
+                    <button
+                      onClick={() => {
+                        onClose();
+                        onOpenCookies();
+                      }}
+                      className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
+                    >
+                      Cookiebeleid
+                    </button>
+                  )}
+                </div>
                 <button
                   onClick={onClose}
                   className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"

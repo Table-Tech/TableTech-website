@@ -7,12 +7,14 @@ interface PrivacyPolicyModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenTerms?: () => void;
+  onOpenCookies?: () => void;
 }
 
 export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   isOpen,
   onClose,
   onOpenTerms,
+  onOpenCookies,
 }) => {
   // Block body scroll when modal is open but allow modal content scroll
   React.useEffect(() => {
@@ -82,7 +84,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-4xl max-h-[90vh] mx-4 bg-gradient-to-br from-[#2C1E1A] to-[#1a110d] rounded-2xl shadow-2xl overflow-hidden border border-amber-600/30"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="sticky top-0 z-10 bg-gradient-to-r from-[#2C1E1A] to-[#1a110d] border-b border-amber-600/30 px-6 py-4 flex items-center justify-between">
@@ -320,17 +322,30 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             {/* Footer */}
             <div className="sticky bottom-0 bg-gradient-to-r from-[#2C1E1A] to-[#1a110d] border-t border-amber-600/30 px-6 py-4">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-                {onOpenTerms && (
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onOpenTerms();
-                    }}
-                    className="w-full sm:w-auto px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
-                  >
-                    Algemene voorwaarden
-                  </button>
-                )}
+                <div className="flex gap-3">
+                  {onOpenTerms && (
+                    <button
+                      onClick={() => {
+                        onClose();
+                        onOpenTerms();
+                      }}
+                      className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
+                    >
+                      Algemene voorwaarden
+                    </button>
+                  )}
+                  {onOpenCookies && (
+                    <button
+                      onClick={() => {
+                        onClose();
+                        onOpenCookies();
+                      }}
+                      className="px-4 py-2 bg-transparent border border-amber-600/50 text-[#FFD382] rounded-lg hover:bg-amber-600/10 hover:border-amber-600 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"
+                    >
+                      Cookiebeleid
+                    </button>
+                  )}
+                </div>
                 <button
                   onClick={onClose}
                   className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 hover:scale-105 active:scale-95 transition-all duration-300 transform font-medium shadow-lg hover:shadow-xl text-center"

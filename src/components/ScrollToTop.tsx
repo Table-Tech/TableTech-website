@@ -1,10 +1,7 @@
 // src/components/ScrollToTop.tsx
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation();
-
   useEffect(() => {
     // Kill eventuele animatie
     if (window.lenis) {
@@ -29,7 +26,7 @@ const ScrollToTop: React.FC = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }
-  }, [pathname]);
+  }, []);
 
   return null;
 };

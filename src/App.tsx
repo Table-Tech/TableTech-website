@@ -1,11 +1,7 @@
 // src/App.tsx
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
 
 const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
-const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
-const SupportChat = lazy(() => import("./pages/SupportChat"));
-const MenuDemo = lazy(() => import("./pages/MenuDemo/MenuDemo"));
 const CookieConsentBanner = lazy(() => import("./components/CookieConsentBanner"));
 
 import ScrollToTop from "./components/ScrollToTop";
@@ -15,10 +11,7 @@ import securityManager from "./utils/security";
 
 import "./index.css";
 
-const AppContent: React.FC = () => {
-  const location = useLocation();
-  const isLandingPage = location.pathname === '/';
-
+const App: React.FC = () => {
   useEffect(() => {
     // Initialize security on app load
     securityManager.ensureCSRFToken();
@@ -27,27 +20,16 @@ const AppContent: React.FC = () => {
   return (
     <>
       <ScrollToTop />
-      {isLandingPage && <ScrollDots />}
-      {isLandingPage && <ScrollProgressBar />}
+      <ScrollDots />
+      <ScrollProgressBar />
       <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/privacy" element={<PrivacyPolicyPage />} />
-          <Route path="/menu-demo" element={<MenuDemo />} />
-        </Routes>
-      </Suspense>
-      <Suspense fallback={null}>
-        <SupportChat />
+        <LandingPage />
       </Suspense>
       <Suspense fallback={null}>
         <CookieConsentBanner />
       </Suspense>
     </>
   );
-};
-
-const App: React.FC = () => {
-  return <AppContent />;
 };
 
 export default App;

@@ -1,6 +1,5 @@
 // src/hooks/useLenisScroll.ts
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const useLenisScroll = () => {
-  const location = useLocation();
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
@@ -98,5 +96,5 @@ export const useLenisScroll = () => {
       lenis.destroy();
       window.lenis = undefined;
     };
-  }, [location.pathname]);
+  }, []);
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, Cookie, Settings, X, Check, ChevronDown, ChevronUp, BarChart3, Megaphone, Zap, Sparkles, Lock } from 'lucide-react';
-import cookieManager, { CookieCategory, CookieConsent } from '../utils/cookieManager';
+import cookieManager, { CookieCategory } from '../utils/cookieManager';
 import { shouldOpenCookieSettings } from '../utils/cookieSettings';
 
 interface CategoryState {
@@ -12,7 +12,7 @@ interface CategoryState {
 }
 
 const CookieConsentBanner: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [activeView, setActiveView] = useState<'main' | 'settings'>('main');
   const [categories, setCategories] = useState<CategoryState>({
