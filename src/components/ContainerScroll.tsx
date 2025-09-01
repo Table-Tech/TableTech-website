@@ -52,12 +52,14 @@ const ContainerScroll = ({ title, card }: ContainerScrollProps) => {
     // Enhanced in-view detection
     const inView = rect.top < windowHeight * 1.2 && rect.bottom > -windowHeight * 0.2;
     
-    // Vue-style scroll progress with enhanced easing
+    // Vue-style scroll progress with enhanced easing - triggers much earlier
     let progress = 0;
     if (containerBottom > scrollY) {
       const remaining = Math.max(0, containerBottom - scrollY);
       const totalScrollable = containerHeight + windowHeight;
-      progress = Math.max(0, Math.min(1, (totalScrollable - remaining) / totalScrollable));
+      const rawProgress = (totalScrollable - remaining) / totalScrollable;
+      // Accelerate progress by 2x to trigger animation earlier
+      progress = Math.max(0, Math.min(1, rawProgress * 2));
     } else {
       progress = 1;
     }
