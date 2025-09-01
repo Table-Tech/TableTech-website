@@ -14,20 +14,55 @@
     <meta http-equiv="Permissions-Policy" content="unload=()">
     <base href="/" />
     <title>TableTech.nl</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GV8ZVCHNFE"></script>
     <script>
+      // Initialize Google consent mode with default denied state
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GV8ZVCHNFE');
+      
+      // Set default consent state
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'denied',
+        'personalization_storage': 'denied',
+        'security_storage': 'granted'
+      });
+      
+      // Check for existing consent
+      try {
+        const consent = localStorage.getItem('cookieconsent_status');
+        if (consent) {
+          const parsed = JSON.parse(consent);
+          gtag('consent', 'update', {
+            'analytics_storage': parsed.analytics ? 'granted' : 'denied',
+            'ad_storage': parsed.marketing ? 'granted' : 'denied',
+            'ad_user_data': parsed.marketing ? 'granted' : 'denied',
+            'ad_personalization': parsed.marketing ? 'granted' : 'denied',
+            'functionality_storage': parsed.functional ? 'granted' : 'denied',
+            'personalization_storage': parsed.functional ? 'granted' : 'denied'
+          });
+        }
+      } catch (e) {
+        console.error('Error loading consent:', e);
+      }
     </script>
-    <script type="module" crossorigin src="/assets/index-DI83p34I.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-BuJXPnG8.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-react-LjvvlVjq.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-i18n-gc6HghnV.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-Df04HTve.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GV8ZVCHNFE"></script>
+    <script>
+      gtag('js', new Date());
+      gtag('config', 'G-GV8ZVCHNFE', {
+        'anonymize_ip': true,
+        'cookie_flags': 'SameSite=Strict;Secure'
+      });
+    </script>
+    <script type="module" crossorigin src="/assets/index-iJSNZBEC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-Dzfc9VTA.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-D9mlhOYw.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-i18n-xQW4JTxY.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-DLB9mWM7.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
