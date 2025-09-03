@@ -552,11 +552,7 @@ const ContactSection = () => {
 
                     {/* Trust indicators */}
                     <div className="mt-8 pt-6 border-t border-[#4A372E]/30">
-                      <div className="grid grid-cols-2 gap-4 text-center text-sm text-[#D4B896]">
-                        <div>
-                          <div className="text-xl font-bold text-[#E86C28]">500+</div>
-                          <div>Tevreden restaurants</div>
-                        </div>
+                      <div className="text-center text-sm text-[#D4B896]">
                         <div>
                           <div className="text-xl font-bold text-[#E86C28]">24/7</div>
                           <div>Support beschikbaar</div>
