@@ -255,8 +255,8 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 </div>
               </div>
 
-              {/* Scroll Arrows - Hidden on mobile */}
-              <div className="hidden md:block">
+              {/* Scroll Arrows - Hidden up to 900px */}
+              <div className="max-[900px]:hidden">
                 <ScrollArrows targetSelector=".terms-modal-content" />
               </div>
             </div>
