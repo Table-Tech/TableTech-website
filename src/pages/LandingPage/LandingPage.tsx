@@ -1,5 +1,6 @@
 // src/pages/LandingPage/LandingPage.tsx
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { HeroSection } from "./HeroSection";
 import { Navbar } from "../../components/Navbar";
 import { BenefitsPinned } from "../../components/BenefitsPinned";
@@ -12,6 +13,7 @@ import ContainerScroll from "../../components/ContainerScroll";
 
 
 const LandingPage: React.FC = () => {
+  const { t } = useTranslation();
   useLenisScroll();
 
   return (
@@ -39,7 +41,7 @@ const LandingPage: React.FC = () => {
           title={
             <div className="text-center">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
-                Jouw <span className="text-[#E86C28]">Dashboard</span> Ervaring
+                <span dangerouslySetInnerHTML={{ __html: t('experienceTitles.dashboardExperience') }} />
               </h2>
             </div>
           }

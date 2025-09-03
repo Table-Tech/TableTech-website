@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 // Images moved to public: /images/Themes/ and /images/backgrounds/
 
@@ -60,9 +61,8 @@ const themes: Theme[] = [
 ];
 
 const RestaurantThemesPage: React.FC = () => {
+  const { t } = useTranslation()
   const [currentTheme, setCurrentTheme] = useState(0)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [language, setLanguage] = useState<"nl" | "en">("nl")
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -122,15 +122,7 @@ const RestaurantThemesPage: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-6">
-            {language === "nl" ? (
-              <>
-                Jouw <span className="text-[#E86C28]">Bestel</span> Ervaring
-              </>
-            ) : (
-              <>
-                Your <span className="text-[#E86C28]">Ordering</span> Experience
-              </>
-            )}
+            <span dangerouslySetInnerHTML={{ __html: t('experienceTitles.orderingExperience') }} />
           </h2>
         </motion.div>
 

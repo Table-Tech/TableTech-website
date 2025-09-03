@@ -259,6 +259,10 @@
   "pinnedBenefits": {
     "scrollHint": "Scroll for more"
   },
+  "experienceTitles": {
+    "orderingExperience": "Your <span class=\"text-[#E86C28]\">Ordering</span> Experience",
+    "dashboardExperience": "Your <span class=\"text-[#E86C28]\">Dashboard</span> Experience"
+  },
   "loading": "Loading...",
   "demoLoading": "TableTech is loading...",
   "dashboardDemoLoading": "Welcome to TableTech – the smart hospitality demo!"

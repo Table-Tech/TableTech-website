@@ -260,6 +260,10 @@
   "pinnedBenefits": {
     "scrollHint": "Scroll voor meer"
   },
+  "experienceTitles": {
+    "orderingExperience": "Jouw <span class=\"text-[#E86C28]\">Bestel</span> Ervaring",
+    "dashboardExperience": "Jouw <span class=\"text-[#E86C28]\">Dashboard</span> Ervaring"
+  },
   "loading": "Laden...",
   "demoLoading": "TableTech wordt geladen...",
   "dashboardDemoLoading": "Welkom bij TableTech – dé slimme horeca demo!"
