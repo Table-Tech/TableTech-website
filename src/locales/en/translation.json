@@ -54,6 +54,8 @@
   "benefits3": {
     "title": "Powerful Dashboard",
     "subtitle": "Manage your restaurant with professional analytics and real-time insights",
+    "dashboardTitle": "All-in-one dashboard for restaurant management",
+    "dashboardDescription": "Live orders, analytics, kitchen management and more in one clear system",
     "moreFeaturesTitle": "More features",
     "screens": {
       "liveOrders": {
@@ -169,6 +171,93 @@
         "description": "Guests can call staff"
       }
     }
+  },
+  "benefits1": {
+    "title": "Mobile Restaurant Experience",
+    "subtitle": "From QR scan to payment - everything on your guests' smartphones",
+    "whyMobileOrdering": "Why mobile ordering?",
+    "features": {
+      "noWaiting": {
+        "title": "No waiting times",
+        "description": "Order directly without staff"
+      },
+      "liveTracking": {
+        "title": "Live order tracking",
+        "description": "Follow your order in real-time"
+      },
+      "contactlessPayment": {
+        "title": "Contactless payment",
+        "description": "iDEAL, Apple Pay and more"
+      },
+      "preciseOrdering": {
+        "title": "Precise ordering",
+        "description": "No more miscommunication"
+      }
+    },
+    "screens": {
+      "menu": {
+        "title": "Browse Digital Menu",
+        "description": "Guests scan the QR code and view the complete menu on their phone"
+      },
+      "ordering": {
+        "title": "Place Order",
+        "description": "Easily add items to cart without waiting for staff"
+      },
+      "payment": {
+        "title": "Secure Payment",
+        "description": "Payment via iDEAL, credit card or other payment methods without checkout"
+      },
+      "orderStatus": {
+        "title": "Track Order",
+        "description": "Real-time updates on your order status, from kitchen to table"
+      }
+    }
+  },
+  "benefits2": {
+    "title": "Smart table management at a glance",
+    "subtitle": "Live insight into table status, occupancy and real-time analytics",
+    "mobileTitle": "Smart table management",
+    "mobileSubtitle": "Live table status and analytics",
+    "hoverInstruction": "Move the mouse over the tables",
+    "features": {
+      "smartAlgorithms": {
+        "title": "Smart algorithms",
+        "description": "AI calculates the best table layout, even during peak times"
+      },
+      "capacityWaitTime": {
+        "title": "Capacity & wait time",
+        "description": "Real-time predictions based on occupancy and order history"
+      },
+      "locationBasedService": {
+        "title": "Location-based service",
+        "description": "Staff sees exactly which table needs what"
+      },
+      "automaticPlanning": {
+        "title": "Automatic planning",
+        "description": "Reservations + walk-ins are automatically assigned & updated"
+      }
+    },
+    "tableStatuses": {
+      "available": "Available",
+      "occupied": "Occupied",
+      "almostReady": "Almost ready",
+      "waitingStaff": "Waiting for staff",
+      "notOrdered": "Not ordered yet",
+      "foodDelivered": "Food delivered",
+      "reserved": "Reserved"
+    },
+    "zones": {
+      "a": "Zone A",
+      "b": "Zone B", 
+      "c": "Zone C"
+    },
+    "stats": {
+      "averageWaitTime": "Avg. wait time",
+      "reserved": "Reserved"
+    }
+  },
+  "pinnedBenefits": {
+    "scrollHint": "Scroll for more"
   },
   "loading": "Loading...",
   "demoLoading": "TableTech is loading...",

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const idealLogo = "/images/payment-logos/ideal1.webp";
 const applePayLogo = "/images/payment-logos/apple-pay.webp";
@@ -12,6 +13,7 @@ type AppScreen = {
 };
 
 export const BenefitsOne: React.FC = () => {
+  const { t } = useTranslation();
   const [currentScreen, setCurrentScreen] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isManualMode, setIsManualMode] = useState(false);
@@ -29,8 +31,8 @@ export const BenefitsOne: React.FC = () => {
   const appScreens: AppScreen[] = [
     {
       id: "menu",
-      title: "Digitaal Menu Bekijken",
-      description: "Gasten scannen de QR code en bekijken direct het volledige menu op hun telefoon",
+      title: t('benefits1.screens.menu.title'),
+      description: t('benefits1.screens.menu.description'),
       content: (
         <div className="h-full bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800 overflow-hidden">
           {/* Header */}
@@ -132,8 +134,8 @@ export const BenefitsOne: React.FC = () => {
     },
     {
       id: "ordering",
-      title: "Bestelling Plaatsen",
-      description: "Eenvoudig items toevoegen aan winkelwagentje zonder wachten op personeel",
+      title: t('benefits1.screens.ordering.title'),
+      description: t('benefits1.screens.ordering.description'),
       content: (
         <div className="h-full bg-gradient-to-br from-emerald-50 to-green-50 text-gray-800 overflow-hidden">
           {/* Header */}
@@ -251,8 +253,8 @@ export const BenefitsOne: React.FC = () => {
     },
     {
       id: "payment",
-      title: "Veilig Betalen",
-      description: "Betaling via iDEAL, creditcard of andere betaalmethoden zonder kassarij",
+      title: t('benefits1.screens.payment.title'),
+      description: t('benefits1.screens.payment.description'),
       content: (
         <div className="h-full bg-gradient-to-br from-purple-50 to-indigo-50 text-gray-800 flex flex-col">
           {/* Header */}
@@ -358,8 +360,8 @@ export const BenefitsOne: React.FC = () => {
     },
     {
       id: "order-status",
-      title: "Bestelling Volgen",
-      description: "Realtime updates over de status van je bestelling, van keuken tot tafel",
+      title: t('benefits1.screens.orderStatus.title'),
+      description: t('benefits1.screens.orderStatus.description'),
       content: (
         <div className="h-full bg-gradient-to-br from-green-50 to-emerald-50 text-gray-800 flex flex-col">
           {/* Header */}
@@ -789,13 +791,13 @@ export const BenefitsOne: React.FC = () => {
                   style={{
                     textShadow: '0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4)'
                   }}>
-                Mobiele Restaurantervaring
+                {t('benefits1.title')}
               </h2>
               <p className="text-white/95 text-sm xs:text-base sm:text-lg md:text-base lg:text-sm xl:text-base 2xl:text-lg mb-3 sm:mb-4 md:mb-6 lg:mb-3 xl:mb-4 leading-relaxed lg:leading-relaxed"
                  style={{
                    textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                  }}>
-                Van QR-scan tot betaling - alles op de smartphone van je gasten
+                {t('benefits1.subtitle')}
               </p>
             </motion.div>
 
@@ -858,7 +860,7 @@ export const BenefitsOne: React.FC = () => {
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
-                      Waarom mobiel bestellen?
+                      {t('benefits1.whyMobileOrdering')}
                     </h3>
                     <div className="w-12 sm:w-16 md:w-20 lg:w-16 xl:w-20 2xl:w-24 h-0.5 md:h-1 lg:h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
                   </div>
@@ -880,13 +882,13 @@ export const BenefitsOne: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Geen wachttijden
+                          {t('benefits1.features.noWaiting.title')}
                         </p>
                         <p className="text-xs sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Direct bestellen zonder personeel
+                          {t('benefits1.features.noWaiting.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -907,13 +909,13 @@ export const BenefitsOne: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Live order tracking
+                          {t('benefits1.features.liveTracking.title')}
                         </p>
                         <p className="text-xs sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Volg je bestelling realtime
+                          {t('benefits1.features.liveTracking.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -934,13 +936,13 @@ export const BenefitsOne: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Contactloos betalen
+                          {t('benefits1.features.contactlessPayment.title')}
                         </p>
                         <p className="text-xs sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          iDEAL, Apple Pay en meer
+                          {t('benefits1.features.contactlessPayment.description')}
                         </p>
                       </div>
                     </motion.div>
@@ -961,13 +963,13 @@ export const BenefitsOne: React.FC = () => {
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
-                          Precisie bestellen
+                          {t('benefits1.features.preciseOrdering.title')}
                         </p>
                         <p className="text-xs sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug lg:leading-snug"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
-                          Geen miscommunicatie meer
+                          {t('benefits1.features.preciseOrdering.description')}
                         </p>
                       </div>
                     </motion.div>

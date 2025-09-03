@@ -825,13 +825,13 @@ export const BenefitsThree: React.FC = () => {
                       style={{
                         textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                       }}>
-                    Alles-in-één dashboard voor restaurantbeheer
+{t('benefits3.dashboardTitle')}
                   </h3>
                   <p className="text-white/95 text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed lg:leading-relaxed"
                      style={{
                        textShadow: '0 1px 4px rgba(0,0,0,0.4)'
                      }}>
-                    Live bestellingen, analytics, keuken management en meer in één overzichtelijk systeem
+{t('benefits3.dashboardDescription')}
                   </p>
                 </div>
               </motion.div>

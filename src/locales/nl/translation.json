@@ -55,6 +55,8 @@
   "benefits3": {
     "title": "Krachtig Dashboard",
     "subtitle": "Beheer je restaurant met professionele analytics en realtime inzichten",
+    "dashboardTitle": "Alles-in-één dashboard voor restaurantbeheer",
+    "dashboardDescription": "Live bestellingen, analytics, keuken management en meer in één overzichtelijk systeem",
     "moreFeaturesTitle": "Meer functies",
     "screens": {
       "liveOrders": {
@@ -170,6 +172,93 @@
         "description": "Gasten kunnen personeel oproepen"
       }
     }
+  },
+  "benefits1": {
+    "title": "Mobiele Restaurantervaring",
+    "subtitle": "Van QR-scan tot betaling - alles op de smartphone van je gasten",
+    "whyMobileOrdering": "Waarom mobiel bestellen?",
+    "features": {
+      "noWaiting": {
+        "title": "Geen wachttijden",
+        "description": "Direct bestellen zonder personeel"
+      },
+      "liveTracking": {
+        "title": "Live order tracking",
+        "description": "Volg je bestelling realtime"
+      },
+      "contactlessPayment": {
+        "title": "Contactloos betalen",
+        "description": "iDEAL, Apple Pay en meer"
+      },
+      "preciseOrdering": {
+        "title": "Precisie bestellen",
+        "description": "Geen miscommunicatie meer"
+      }
+    },
+    "screens": {
+      "menu": {
+        "title": "Digitaal Menu Bekijken",
+        "description": "Gasten scannen de QR code en bekijken direct het volledige menu op hun telefoon"
+      },
+      "ordering": {
+        "title": "Bestelling Plaatsen",
+        "description": "Eenvoudig items toevoegen aan winkelwagentje zonder wachten op personeel"
+      },
+      "payment": {
+        "title": "Veilig Betalen",
+        "description": "Betaling via iDEAL, creditcard of andere betaalmethoden zonder kassarij"
+      },
+      "orderStatus": {
+        "title": "Bestelling Volgen",
+        "description": "Realtime updates over de status van je bestelling, van keuken tot tafel"
+      }
+    }
+  },
+  "benefits2": {
+    "title": "Slim tafelbeheer in één oogopslag",
+    "subtitle": "Live inzicht in tafelstatus, bezetting en real-time analytics",
+    "mobileTitle": "Slim tafelbeheer",
+    "mobileSubtitle": "Live tafelstatus en analytics",
+    "hoverInstruction": "Beweeg de muis over de tafels",
+    "features": {
+      "smartAlgorithms": {
+        "title": "Slimme algoritmen",
+        "description": "AI berekent de beste tafelindeling, zelfs tijdens piekmomenten"
+      },
+      "capacityWaitTime": {
+        "title": "Capaciteit & wachttijd",
+        "description": "Real-time voorspellingen op basis van bezetting en bestelhistoriek"
+      },
+      "locationBasedService": {
+        "title": "Locatie gebaseerde service",
+        "description": "Personeel ziet exact welke tafel wat nodig heeft"
+      },
+      "automaticPlanning": {
+        "title": "Automatisch plannen",
+        "description": "Reserveringen + walk-ins worden automatisch ingedeeld & bijgewerkt"
+      }
+    },
+    "tableStatuses": {
+      "available": "Beschikbaar",
+      "occupied": "Bezet",
+      "almostReady": "Bijna klaar",
+      "waitingStaff": "Wacht op personeel",
+      "notOrdered": "Nog niet besteld",
+      "foodDelivered": "Eten geleverd",
+      "reserved": "Gereserveerd"
+    },
+    "zones": {
+      "a": "Zone A",
+      "b": "Zone B", 
+      "c": "Zone C"
+    },
+    "stats": {
+      "averageWaitTime": "Gem. wachttijd",
+      "reserved": "Gereserveerd"
+    }
+  },
+  "pinnedBenefits": {
+    "scrollHint": "Scroll voor meer"
   },
   "loading": "Laden...",
   "demoLoading": "TableTech wordt geladen...",

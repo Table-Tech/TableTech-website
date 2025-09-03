@@ -1,4 +1,5 @@
 import React, { useRef, useLayoutEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BenefitsOne } from '../pages/LandingPage/Benefits';
@@ -32,6 +33,7 @@ interface BenefitsPinnedProps {
 }
 
 export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panelsRef = useRef<HTMLDivElement[]>([]);
@@ -273,7 +275,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
 
         {/* Scroll Hint */}
         <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/70 text-sm flex flex-col items-center z-50">
-          <span>Scroll voor meer</span>
+<span>{t('pinnedBenefits.scrollHint')}</span>
           <svg
             className="w-6 h-6 mt-2 animate-bounce"
             fill="none"

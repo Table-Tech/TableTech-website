@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Table {
   id: number;
@@ -52,15 +53,6 @@ const statusColors = {
   gereserveerd: "bg-purple-600/85 border border-purple-400/70 shadow-lg",
 };
 
-const statusLabels = {
-  vrij: "Beschikbaar",
-  bezet: "Bezet", 
-  "bijna-klaar": "Bijna klaar",
-  "wacht-personeel": "Wacht op personeel",
-  "nog-niet-besteld": "Nog niet besteld",
-  "eten-geleverd": "Eten geleverd",
-  gereserveerd: "Gereserveerd",
-};
 
 const getTooltipPosition = (table: Table) => {
   const { x, y } = table.position;
@@ -126,9 +118,23 @@ const getTooltipPosition = (table: Table) => {
 };
 
 export const BenefitsTwo: React.FC = () => {
+  const { t } = useTranslation();
   const [tables] = useState<Table[]>(initialTables);
   const [hoveredTable, setHoveredTable] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  const getStatusLabel = (status: string) => {
+    const statusMap: Record<string, string> = {
+      'vrij': t('benefits2.tableStatuses.available'),
+      'bezet': t('benefits2.tableStatuses.occupied'), 
+      'bijna-klaar': t('benefits2.tableStatuses.almostReady'),
+      'wacht-personeel': t('benefits2.tableStatuses.waitingStaff'),
+      'nog-niet-besteld': t('benefits2.tableStatuses.notOrdered'),
+      'eten-geleverd': t('benefits2.tableStatuses.foodDelivered'),
+      'gereserveerd': t('benefits2.tableStatuses.reserved'),
+    };
+    return statusMap[status] || status;
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -150,31 +156,31 @@ export const BenefitsTwo: React.FC = () => {
               {/* Mobile: Fixed height title container */}
               <div className="md:hidden text-center h-20 flex flex-col justify-center px-4">
                 <h1 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
-                  Slim tafelbeheer
+                  {t('benefits2.mobileTitle')}
                 </h1>
                 <p className="text-white/95 text-sm mb-3 leading-relaxed"
                    style={{
                      textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                    }}>
-                  Live tafelstatus en analytics
+                  {t('benefits2.mobileSubtitle')}
                 </p>
               </div>
 
               {/* Desktop: Original layout */}
               <div className="hidden md:block text-center md:text-left">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 md:mb-3 drop-shadow-lg">
-                  Slim tafelbeheer in één oogopslag.
+                  {t('benefits2.title')}
                 </h1>
                 <p className="text-white/95 text-sm sm:text-base md:text-lg mb-3 md:mb-4 leading-relaxed"
                    style={{
                      textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                    }}>
-                  Live inzicht in tafelstatus, bezetting en real-time analytics
+                  {t('benefits2.subtitle')}
                 </p>
                 {/* Hover instruction - alleen op desktop */}
                 <div className="flex items-center justify-center space-x-2 text-white/80 text-sm">
                   <span>▽</span>
-                  <span>Beweeg de muis over de tafels</span>
+                  <span>{t('benefits2.hoverInstruction')}</span>
                 </div>
               </div>
             </div>
@@ -197,7 +203,7 @@ export const BenefitsTwo: React.FC = () => {
               <div className="absolute top-4 left-4 w-48 h-32 bg-blue-900/25 border border-blue-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-white text-xs font-medium">Zone A</span>
+                  <span className="text-white text-xs font-medium">{t('benefits2.zones.a')}</span>
                 </div>
               </div>
 
@@ -205,7 +211,7 @@ export const BenefitsTwo: React.FC = () => {
               <div className="absolute top-4 right-4 w-48 h-32 bg-green-900/25 border border-green-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span className="text-white text-xs font-medium">Zone B</span>
+                  <span className="text-white text-xs font-medium">{t('benefits2.zones.b')}</span>
                 </div>
               </div>
 
@@ -213,7 +219,7 @@ export const BenefitsTwo: React.FC = () => {
               <div className="absolute bottom-4 left-4 right-4 h-20 bg-purple-900/25 border border-purple-500/40 rounded-xl backdrop-blur-sm shadow-lg">
                 <div className="absolute top-1 left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
                   <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-white text-xs font-medium">Zone C</span>
+                  <span className="text-white text-xs font-medium">{t('benefits2.zones.c')}</span>
                 </div>
               </div>
 
@@ -308,7 +314,7 @@ export const BenefitsTwo: React.FC = () => {
                             Status: <span className="text-white font-medium">
                               {(table.id === 5 || table.id === 9) && table.status === "eten-geleverd" 
                                 ? "Afgerond" 
-                                : statusLabels[table.status]}
+                                : getStatusLabel(table.status)}
                             </span>
                           </div>
 
@@ -408,7 +414,7 @@ export const BenefitsTwo: React.FC = () => {
                     style={{ width: "83%" }}
                   />
                 </div>
-                <div className="text-gray-300 text-xs">Gem. wachttijd: 6m</div>
+                <div className="text-gray-300 text-xs">{t('benefits2.stats.averageWaitTime')}: 6m</div>
               </div>
 
               <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-green-500/30 p-3 shadow-lg">
@@ -442,7 +448,7 @@ export const BenefitsTwo: React.FC = () => {
                     style={{ width: "100%" }}
                   />
                 </div>
-                <div className="text-gray-300 text-xs">Gereserveerd</div>
+                <div className="text-gray-300 text-xs">{t('benefits2.stats.reserved')}</div>
               </div>
             </div>
           </div>
@@ -455,8 +461,8 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-xl">⚙️</span>
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Slimme algoritmen</h3>
-                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">AI berekent de beste tafelindeling, zelfs tijdens piekmomenten</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">{t('benefits2.features.smartAlgorithms.title')}</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">{t('benefits2.features.smartAlgorithms.description')}</p>
                 </div>
               </div>
             </div>
@@ -467,8 +473,8 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-xl">📊</span>
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Capaciteit & wachttijd</h3>
-                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Real-time voorspellingen op basis van bezetting en bestelhistoriek</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">{t('benefits2.features.capacityWaitTime.title')}</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">{t('benefits2.features.capacityWaitTime.description')}</p>
                 </div>
               </div>
             </div>
@@ -479,8 +485,8 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-xl">📍</span>
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Locatie gebaseerde service</h3>
-                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Personeel ziet exact welke tafel wat nodig heeft</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">{t('benefits2.features.locationBasedService.title')}</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">{t('benefits2.features.locationBasedService.description')}</p>
                 </div>
               </div>
             </div>
@@ -491,8 +497,8 @@ export const BenefitsTwo: React.FC = () => {
                   <span className="text-xl">✅</span>
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">Automatisch plannen</h3>
-                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">Reserveringen + walk-ins worden automatisch ingedeeld & bijgewerkt</p>
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-0.5 md:mb-1 drop-shadow-sm">{t('benefits2.features.automaticPlanning.title')}</h3>
+                  <p className="text-gray-200 text-xs md:text-sm leading-relaxed">{t('benefits2.features.automaticPlanning.description')}</p>
                 </div>
               </div>
             </div>
