@@ -242,7 +242,7 @@ export const Navbar: React.FC = () => {
                 { id: 'benefits', label: t("features") },
                 { id: 'themes', label: 'Themes' },
                 { id: 'pricing', label: t("pricing") },
-                { id: 'contact', label: (t("contact") || 'Contact').charAt(0).toUpperCase() + (t("contact") || 'Contact').slice(1) }
+                { id: 'contact', label: 'Contact' }
               ].map((item) => (
                 <button 
                   key={item.id}
@@ -340,7 +340,7 @@ export const Navbar: React.FC = () => {
                 { id: 'benefits', label: t("features") },
                 { id: 'themes', label: 'Themes' },
                 { id: 'pricing', label: t("pricing") },
-                { id: 'contact', label: t("contact") || 'Contact' }
+                { id: 'contact', label: 'Contact' }
               ].map((item) => (
                 <button 
                   key={item.id}

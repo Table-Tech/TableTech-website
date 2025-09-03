@@ -4,8 +4,10 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
 import { TermsModal } from "./TermsModal";
 import { CookiePolicyModal } from "./CookiePolicyModal";
+import { useTranslation } from "react-i18next";
 
 export const Footer: React.FC = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
@@ -77,7 +79,7 @@ export const Footer: React.FC = () => {
             className="text-lg text-[#FFD382] font-medium italic"
             style={{textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)'}}
           >
-            De slimme oplossing voor elk restaurant
+            {t('footer.tagline')}
           </span>
         </div>
 
@@ -121,7 +123,7 @@ export const Footer: React.FC = () => {
               className="font-semibold group-hover:text-white transition-colors duration-300"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
             >
-              Nederland
+              {t('footer.country')}
             </span>
           </div>
           <div className="flex items-center gap-2 text-base group">
@@ -158,7 +160,7 @@ export const Footer: React.FC = () => {
               style={{textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5), 0 0 10px rgba(237, 125, 49, 0.2)'}}
             >
               TableTech
-            </span>. Alle rechten voorbehouden.
+            </span>. {t('footer.copyright')}
           </p>
           <div className="flex gap-6 mt-1">
             <button 
@@ -172,7 +174,7 @@ export const Footer: React.FC = () => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
               }}
             >
-              Privacybeleid
+              {t('footer.links.privacy')}
             </button>
             <button 
               onClick={handleTermsClick}
@@ -185,7 +187,7 @@ export const Footer: React.FC = () => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
               }}
             >
-              Algemene voorwaarden
+              {t('footer.links.terms')}
             </button>
             <button 
               onClick={handleCookieClick}
@@ -198,7 +200,7 @@ export const Footer: React.FC = () => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
               }}
             >
-              Cookiebeleid
+              {t('footer.links.cookies')}
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, Clock } from 'lucide-react';
 import { submitAppointment, getAvailableSlots, getAvailableDates } from '../services/appointmentService';
+import { useTranslation } from 'react-i18next';
 
 // Define types for ClickSpark
 interface Spark {
@@ -66,6 +67,7 @@ const ClickSpark = ({ children, sparkColor = "#ffffff", sparkRadius = 20, sparkC
 };
 
 const ContactSection = () => {
+  const { t } = useTranslation();
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState('');
@@ -106,24 +108,24 @@ const ContactSection = () => {
   // Roterende teksten voor de slideshow
   const rotatingTexts = [
     {
-      title: "Vragen over de proefperiode?",
-      description: "We leggen uit hoe je 14 dagen gratis kunt testen zonder verplichtingen. Ontdek wat TableTech voor jouw restaurant kan betekenen."
+      title: t('contact.rotatingTexts.trial.title'),
+      description: t('contact.rotatingTexts.trial.description')
     },
     {
-      title: "Welk pakket past bij jou?",
-      description: "Gratis, Groei, Pro of Ultimate? We bespreken je behoeftes en adviseren het beste pakket voor jouw situatie en budget."
+      title: t('contact.rotatingTexts.package.title'),
+      description: t('contact.rotatingTexts.package.description')
     },
     {
-      title: "Hoeveel kost TableTech precies?",
-      description: "Transparante prijzen vanaf gratis. We berekenen samen wat de investering en verwachte ROI voor jouw restaurant is."
+      title: t('contact.rotatingTexts.pricing.title'),
+      description: t('contact.rotatingTexts.pricing.description')
     },
     {
-      title: "Hoe werkt de installatie?",
-      description: "Van QR-codes tot tablets - we bespreken het complete installatieproces en hoe snel je operationeel kunt zijn."
+      title: t('contact.rotatingTexts.installation.title'),
+      description: t('contact.rotatingTexts.installation.description')
     },
     {
-      title: "Technische vragen of zorgen?",
-      description: "Werkt het met jouw kassasysteem? Hoe zit het met training? Alle technische aspecten komen aan bod."
+      title: t('contact.rotatingTexts.technical.title'),
+      description: t('contact.rotatingTexts.technical.description')
     }
   ];
 
@@ -260,7 +262,7 @@ const ContactSection = () => {
       // Check of email een @ bevat
       const emailInput = e.target as HTMLInputElement;
       if (!value.includes('@') && value.length > 0) {
-        emailInput.setCustomValidity('Email moet een @ bevatten');
+        emailInput.setCustomValidity(t('contact.modal.form.emailError'));
       } else {
         emailInput.setCustomValidity('');
       }
@@ -288,7 +290,7 @@ const ContactSection = () => {
         restaurant: bookingData.restaurant,
         preferredDate: selectedDate ? formatDateString(selectedDate) : undefined,
         preferredTime: selectedTime,
-        message: bookingData.message || 'Ik wil graag meer informatie over TableTech en zou een adviesgesprek willen plannen.',
+        message: bookingData.message || t('contact.modal.defaultMessage'),
         formRenderTs,
         hp: '', // Honeypot field (empty)
       };
@@ -314,13 +316,13 @@ const ContactSection = () => {
         
         // Handle specific error types
         if (response.error?.code === 'RATE_LIMIT_EXCEEDED') {
-          alert('⚠️ Te veel aanvragen. Probeer het over een paar minuten opnieuw.');
+          alert(t('contact.modal.errors.tooManyRequests'));
           return;
         } else if (response.error?.code === 'VALIDATION_ERROR') {
-          alert('⚠️ Controleer je gegevens en probeer opnieuw.');
+          alert(t('contact.modal.errors.validationError'));
           return;
         } else if (response.error?.code === 'CAPTCHA_FAILED') {
-          alert('⚠️ Verificatie mislukt. Ververs de pagina en probeer opnieuw.');
+          alert(t('contact.modal.errors.captchaFailed'));
           return;
         }
         
@@ -387,12 +389,8 @@ const ContactSection = () => {
     });
   };
 
-  const monthNames = [
-    'Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni',
-    'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'
-  ];
-
-  const dayNames = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
+  const monthNames = t('contact.modal.calendar.months', { returnObjects: true }) as string[];
+  const dayNames = t('contact.modal.calendar.days', { returnObjects: true }) as string[];
 
   // Helper function to convert Date to YYYY-MM-DD string without timezone issues
   const formatDateString = (date: Date): string => {
@@ -432,8 +430,8 @@ const ContactSection = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left column - Slideshow */}
             <div className="order-1 lg:order-1 text-left mb-8 lg:mb-0">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight text-left">
-                Plan een <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">Gratis</span> Adviesgesprek
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight text-left"
+                  dangerouslySetInnerHTML={{ __html: t('contact.title') }}>
               </h1>
               
               {/* Slideshow container */}
@@ -463,15 +461,15 @@ const ContactSection = () => {
               <div className="space-y-3 text-[#D4B896]">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#E86C28] rounded-full"></div>
-                  <span>30 minuten persoonlijk advies</span>
+                  <span>{t('contact.features.personalAdvice')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#E86C28] rounded-full"></div>
-                  <span>Geen verplichtingen of verborgen kosten</span>
+                  <span>{t('contact.features.noObligations')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#E86C28] rounded-full"></div>
-                  <span>Direct implementatieplan</span>
+                  <span>{t('contact.features.implementationPlan')}</span>
                 </div>
               </div>
             </div>
@@ -486,10 +484,10 @@ const ContactSection = () => {
                       <Calendar className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-white mb-2">
-                      Klaar voor de volgende stap?
+                      {t('contact.card.readyTitle')}
                     </h3>
                     <p className="text-[#D4B896] text-lg">
-                      Automatiseer je restaurant vandaag nog
+                      {t('contact.card.readySubtitle')}
                     </p>
                   </div>
                 </div>
@@ -512,7 +510,7 @@ const ContactSection = () => {
                         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <Calendar className="w-7 h-7 relative z-10" />
-                        <span className="relative z-10 tracking-wide">Plan nu je gratis adviesgesprek</span>
+                        <span className="relative z-10 tracking-wide">{t('contact.card.mainButton')}</span>
                         <ArrowRight className="w-7 h-7 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                       </button>
                     </ClickSpark>
@@ -523,7 +521,7 @@ const ContactSection = () => {
                         <div className="w-full border-t border-[#4A372E]/30"></div>
                       </div>
                       <div className="relative flex justify-center text-sm">
-                        <span className="px-4 bg-[#3A2B24]/30 text-[#D4B896]">Of neem direct contact op</span>
+                        <span className="px-4 bg-[#3A2B24]/30 text-[#D4B896]">{t('contact.card.orContact')}</span>
                       </div>
                     </div>
 
@@ -554,8 +552,8 @@ const ContactSection = () => {
                     <div className="mt-8 pt-6 border-t border-[#4A372E]/30">
                       <div className="text-center text-sm text-[#D4B896]">
                         <div>
-                          <div className="text-xl font-bold text-[#E86C28]">24/7</div>
-                          <div>Support beschikbaar</div>
+                          <div className="text-xl font-bold text-[#E86C28]">{t('contact.card.support24')}</div>
+                          <div>{t('contact.card.supportText')}</div>
                         </div>
                       </div>
                     </div>
@@ -574,9 +572,9 @@ const ContactSection = () => {
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] p-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white">
-                {bookingStep === 1 && 'Kies datum en tijd'}
-                {bookingStep === 2 && 'Jouw gegevens'}
-                {bookingStep === 3 && 'Afspraak bevestigd!'}
+                {bookingStep === 1 && t('contact.modal.steps.selectDateTime')}
+                {bookingStep === 2 && t('contact.modal.steps.contactInfo')}
+                {bookingStep === 3 && t('contact.modal.steps.confirmed')}
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -593,7 +591,7 @@ const ContactSection = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Calendar */}
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-4">Selecteer een datum</h3>
+                    <h3 className="text-xl font-semibold text-white mb-4">{t('contact.modal.calendar.selectDate')}</h3>
                     <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50">
                       {/* Month navigation */}
                       <div className="flex items-center justify-between mb-4">
@@ -633,7 +631,7 @@ const ContactSection = () => {
                           <div className="absolute inset-0 bg-[#3A2B24]/80 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
                             <div className="flex items-center gap-2">
                               <div className="w-4 h-4 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
-                              <span className="text-[#D4B896] text-sm">Beschikbare datums laden...</span>
+                              <span className="text-[#D4B896] text-sm">{t('contact.modal.calendar.loadingDates')}</span>
                             </div>
                           </div>
                         )}
@@ -675,13 +673,13 @@ const ContactSection = () => {
 
                   {/* Time slots */}
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-4">Kies een tijd</h3>
+                    <h3 className="text-xl font-semibold text-white mb-4">{t('contact.modal.calendar.selectTime')}</h3>
                     {selectedDate ? (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50">
                         <div className="flex items-center gap-2 mb-4">
                           <Clock className="w-4 h-4 text-[#E86C28]" />
                           <p className="text-[#D4B896] text-sm">
-                            Tijden voor {formatDate(selectedDate)}:
+                            {t('contact.modal.calendar.timeFor')} {formatDate(selectedDate)}:
                           </p>
                         </div>
                         
@@ -689,7 +687,7 @@ const ContactSection = () => {
                         {loadingSlots ? (
                           <div className="col-span-2 flex items-center justify-center py-8">
                             <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
-                            <span className="ml-2 text-[#D4B896]">Beschikbare tijden laden...</span>
+                            <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
                           </div>
                         ) : (
                           /* Time slots from API */
@@ -744,7 +742,7 @@ const ContactSection = () => {
                     ) : (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-8 border border-[#4A372E]/50 text-center">
                         <Calendar className="w-12 h-12 text-[#4A372E] mx-auto mb-3" />
-                        <p className="text-[#D4B896]">Selecteer eerst een datum</p>
+                        <p className="text-[#D4B896]">{t('contact.modal.calendar.selectDateFirst')}</p>
                       </div>
                     )}
                   </div>
@@ -757,11 +755,11 @@ const ContactSection = () => {
                   <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-6 border border-[#4A372E]/50 mb-4">
                     <div className="flex items-center justify-between text-white mb-4">
                       <div>
-                        <p className="text-sm text-[#D4B896]">Geselecteerde datum:</p>
+                        <p className="text-sm text-[#D4B896]">{t('contact.modal.form.selectedDate')}</p>
                         <p className="font-semibold">{formatDate(selectedDate)}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-[#D4B896]">Tijd:</p>
+                        <p className="text-sm text-[#D4B896]">{t('contact.modal.form.time')}</p>
                         <p className="font-semibold">{selectedTime}</p>
                       </div>
                     </div>
@@ -771,7 +769,7 @@ const ContactSection = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-white text-sm font-medium mb-2">
-                          Voornaam *
+                          {t('contact.modal.form.firstName')}
                         </label>
                         <div className="relative">
                           <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4B896]" />
@@ -782,13 +780,13 @@ const ContactSection = () => {
                             value={bookingData.firstName}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
-                            placeholder="Je voornaam"
+                            placeholder={t('contact.modal.form.placeholders.firstName')}
                           />
                         </div>
                       </div>
                       <div>
                         <label className="block text-white text-sm font-medium mb-2">
-                          Achternaam *
+                          {t('contact.modal.form.lastName')}
                         </label>
                         <div className="relative">
                           <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4B896]" />
@@ -799,7 +797,7 @@ const ContactSection = () => {
                             value={bookingData.lastName}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
-                            placeholder="Je achternaam"
+                            placeholder={t('contact.modal.form.placeholders.lastName')}
                           />
                         </div>
                       </div>
@@ -808,7 +806,7 @@ const ContactSection = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-white text-sm font-medium mb-2">
-                          Restaurant
+                          {t('contact.modal.form.restaurant')}
                         </label>
                         <div className="relative">
                           <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4B896]" />
@@ -818,7 +816,7 @@ const ContactSection = () => {
                             value={bookingData.restaurant}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
-                            placeholder="Naam van je restaurant"
+                            placeholder={t('contact.modal.form.placeholders.restaurant')}
                           />
                         </div>
                       </div>
@@ -827,7 +825,7 @@ const ContactSection = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-white text-sm font-medium mb-2">
-                          Email *
+                          {t('contact.modal.form.email')}
                         </label>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4B896]" />
@@ -839,14 +837,14 @@ const ContactSection = () => {
                             value={bookingData.email}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
-                            placeholder="je@email.nl"
-                            title="Vul een geldig email adres in (bijv. naam@domein.nl)"
+                            placeholder={t('contact.modal.form.placeholders.email')}
+                            title={t('contact.modal.form.emailValidation')}
                           />
                         </div>
                       </div>
                       <div>
                         <label className="block text-white text-sm font-medium mb-2">
-                          Telefoon *
+                          {t('contact.modal.form.phone')}
                         </label>
                         <div className="relative">
                           <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4B896]" />
@@ -857,7 +855,7 @@ const ContactSection = () => {
                             value={bookingData.phone}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
-                            placeholder="+31 6 12345678"
+                            placeholder={t('contact.modal.form.placeholders.phone')}
                           />
                         </div>
                       </div>
@@ -865,7 +863,7 @@ const ContactSection = () => {
 
                     <div>
                       <label className="block text-white text-sm font-medium mb-2">
-                        Waar wil je het over hebben? (optioneel)
+                        {t('contact.modal.form.message')}
                       </label>
                       <textarea
                         name="message"
@@ -873,7 +871,7 @@ const ContactSection = () => {
                         value={bookingData.message}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent resize-none"
-                        placeholder="Bijvoorbeeld: Ik wil graag meer weten over jullie analytics mogelijkheden..."
+                        placeholder={t('contact.modal.form.placeholders.message')}
                       />
                     </div>
 
@@ -884,7 +882,7 @@ const ContactSection = () => {
                           className="flex-1 bg-[#4A372E]/50 text-white py-4 px-6 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-[#4A372E]/70 border border-[#4A372E]/30 flex items-center justify-center gap-2 min-h-[56px]"
                         >
                           <ChevronLeft className="w-5 h-5" />
-                          <span>Terug</span>
+                          <span>{t('contact.modal.form.back')}</span>
                         </button>
                       </ClickSpark>
                       <ClickSpark sparkColor="#ffffff" sparkRadius={25} sparkCount={10} duration={600}>
@@ -896,12 +894,12 @@ const ContactSection = () => {
                           {isSubmitting ? (
                             <>
                               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              <span>Bezig...</span>
+                              <span>{t('contact.modal.form.submitting')}</span>
                             </>
                           ) : (
                             <>
                               <CheckCircle className="w-5 h-5" />
-                              <span>Bevestig Afspraak</span>
+                              <span>{t('contact.modal.form.confirm')}</span>
                               <ArrowRight className="w-5 h-5" />
                             </>
                           )}
@@ -921,19 +919,19 @@ const ContactSection = () => {
                       <CheckCircle className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
-                      {emailError ? '🎉 Afspraak Ontvangen!' : '🎉 Gelukt!'}
+                      {emailError ? t('contact.modal.confirmation.received') : t('contact.modal.confirmation.success')}
                     </h3>
                   </div>
 
                   {/* Compact Info Grid */}
                   <div className="bg-gradient-to-r from-[#3A2B24]/80 to-[#4A372E]/60 backdrop-blur-md rounded-xl p-4 max-w-sm mx-auto border border-[#E86C28]/30 shadow-xl">
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="text-[#D4B896]">📅 Datum:</div>
+                      <div className="text-[#D4B896]">{t('contact.modal.confirmation.date')}</div>
                       <div className="text-white font-bold">{formatDate(selectedDate)}</div>
-                      <div className="text-[#D4B896]">🕐 Tijd:</div>
+                      <div className="text-[#D4B896]">{t('contact.modal.confirmation.time')}</div>
                       <div className="text-white font-bold">{selectedTime}</div>
-                      <div className="text-[#D4B896]">📞 Type:</div>
-                      <div className="text-white font-bold">Telefonisch (30 min)</div>
+                      <div className="text-[#D4B896]">{t('contact.modal.confirmation.type')}</div>
+                      <div className="text-white font-bold">{t('contact.modal.confirmation.phoneCall')}</div>
                     </div>
                   </div>
 
@@ -941,14 +939,14 @@ const ContactSection = () => {
                   <div className={`${emailError ? 'bg-orange-500/20 border-orange-400/40' : 'bg-green-500/20 border-green-400/40'} backdrop-blur-md rounded-xl p-4 max-w-sm mx-auto border`}>
                     {emailError ? (
                       <div className="text-center space-y-2">
-                        <p className="text-orange-300 text-sm font-semibold">⚠️ Afspraak geregistreerd</p>
-                        <p className="text-[#D4B896] text-xs">Er was een probleem met de bevestigingsemail. We nemen contact met je op via <strong className="text-white">{bookingData.email}</strong></p>
+                        <p className="text-orange-300 text-sm font-semibold">{t('contact.modal.confirmation.registered')}</p>
+                        <p className="text-[#D4B896] text-xs">{t('contact.modal.confirmation.emailIssue')} <strong className="text-white">{bookingData.email}</strong></p>
                       </div>
                     ) : (
                       <div className="text-center space-y-2">
-                        <p className="text-green-300 text-sm font-semibold">✅ Afspraak Bevestigd!</p>
-                        <p className="text-green-200 text-xs">Je ontvangt een bevestigingsemail op <strong className="text-white">{bookingData.email}</strong></p>
-                        <p className="text-green-100 text-xs mt-1">💡 Controleer ook je spam/ongewenste e-mail folder als je de mail niet ziet</p>
+                        <p className="text-green-300 text-sm font-semibold">{t('contact.modal.confirmation.confirmed')}</p>
+                        <p className="text-green-200 text-xs">{t('contact.modal.confirmation.emailSent')} <strong className="text-white">{bookingData.email}</strong></p>
+                        <p className="text-green-100 text-xs mt-1">{t('contact.modal.confirmation.checkSpam')}</p>
                       </div>
                     )}
                   </div>
@@ -958,7 +956,7 @@ const ContactSection = () => {
                       onClick={handleCloseModal}
                       className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
                     >
-                      Perfect! 🚀
+                      {t('contact.modal.confirmation.closeButton')}
                     </button>
                   </ClickSpark>
                 </div>

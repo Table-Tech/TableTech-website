@@ -265,5 +265,116 @@
   },
   "loading": "Loading...",
   "demoLoading": "TableTech is loading...",
-  "dashboardDemoLoading": "Welcome to TableTech – the smart hospitality demo!"
+  "dashboardDemoLoading": "Welcome to TableTech – the smart hospitality demo!",
+  "contact": {
+    "title": "Schedule a <span class=\"bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent\">Free</span> Consultation",
+    "rotatingTexts": {
+      "trial": {
+        "title": "Questions about the trial period?",
+        "description": "We'll explain how you can test for free for 14 days without obligations. Discover what TableTech can mean for your restaurant."
+      },
+      "package": {
+        "title": "Which package suits you?",
+        "description": "Free, Growth, Pro or Ultimate? We discuss your needs and recommend the best package for your situation and budget."
+      },
+      "pricing": {
+        "title": "What does TableTech cost exactly?",
+        "description": "Transparent pricing starting from free. We'll calculate together what the investment and expected ROI for your restaurant will be."
+      },
+      "installation": {
+        "title": "How does the installation work?",
+        "description": "From QR codes to tablets - we discuss the complete installation process and how quickly you can be operational."
+      },
+      "technical": {
+        "title": "Technical questions or concerns?",
+        "description": "Does it work with your POS system? What about training? All technical aspects will be covered."
+      }
+    },
+    "features": {
+      "personalAdvice": "30 minutes personal consultation",
+      "noObligations": "No obligations or hidden costs",
+      "implementationPlan": "Direct implementation plan"
+    },
+    "card": {
+      "readyTitle": "Ready for the next step?",
+      "readySubtitle": "Automate your restaurant today",
+      "mainButton": "Schedule your free consultation now",
+      "orContact": "Or contact us directly",
+      "support24": "24/7",
+      "supportText": "Support available"
+    },
+    "modal": {
+      "steps": {
+        "selectDateTime": "Choose date and time",
+        "contactInfo": "Your information",
+        "confirmed": "Appointment confirmed!"
+      },
+      "calendar": {
+        "selectDate": "Select a date",
+        "selectTime": "Choose a time",
+        "loadingDates": "Loading available dates...",
+        "loadingTimes": "Loading available times...",
+        "selectDateFirst": "Select a date first",
+        "timeFor": "Times for",
+        "months": [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ],
+        "days": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+      },
+      "form": {
+        "selectedDate": "Selected date:",
+        "time": "Time:",
+        "firstName": "First name *",
+        "lastName": "Last name *",
+        "restaurant": "Restaurant",
+        "email": "Email *",
+        "phone": "Phone *",
+        "message": "What would you like to discuss? (optional)",
+        "placeholders": {
+          "firstName": "Your first name",
+          "lastName": "Your last name",
+          "restaurant": "Name of your restaurant",
+          "email": "you@email.com",
+          "phone": "+1 555 123 4567",
+          "message": "For example: I'd like to know more about your analytics capabilities..."
+        },
+        "emailValidation": "Please enter a valid email address (e.g. name@domain.com)",
+        "emailError": "Email must contain an @",
+        "back": "Back",
+        "confirm": "Confirm Appointment",
+        "submitting": "Submitting..."
+      },
+      "confirmation": {
+        "success": "🎉 Success!",
+        "received": "🎉 Appointment Received!",
+        "date": "📅 Date:",
+        "time": "🕐 Time:",
+        "type": "📞 Type:",
+        "phoneCall": "Phone call (30 min)",
+        "confirmed": "✅ Appointment Confirmed!",
+        "emailSent": "You will receive a confirmation email at",
+        "checkSpam": "💡 Also check your spam/junk email folder if you don't see the email",
+        "registered": "⚠️ Appointment registered",
+        "emailIssue": "There was an issue with the confirmation email. We will contact you at",
+        "closeButton": "Perfect! 🚀"
+      },
+      "errors": {
+        "tooManyRequests": "⚠️ Too many requests. Please try again in a few minutes.",
+        "validationError": "⚠️ Please check your information and try again.",
+        "captchaFailed": "⚠️ Verification failed. Please refresh the page and try again."
+      },
+      "defaultMessage": "I would like to learn more about TableTech and would like to schedule a consultation."
+    }
+  },
+  "footer": {
+    "tagline": "The smart solution for every restaurant",
+    "country": "Netherlands",
+    "copyright": "All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions",
+      "cookies": "Cookie Policy"
+    }
+  }
 }

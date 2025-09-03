@@ -266,5 +266,116 @@
   },
   "loading": "Laden...",
   "demoLoading": "TableTech wordt geladen...",
-  "dashboardDemoLoading": "Welkom bij TableTech – dé slimme horeca demo!"
+  "dashboardDemoLoading": "Welkom bij TableTech – dé slimme horeca demo!",
+  "contact": {
+    "title": "Plan een <span class=\"bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent\">Gratis</span> Adviesgesprek",
+    "rotatingTexts": {
+      "trial": {
+        "title": "Vragen over de proefperiode?",
+        "description": "We leggen uit hoe je 14 dagen gratis kunt testen zonder verplichtingen. Ontdek wat TableTech voor jouw restaurant kan betekenen."
+      },
+      "package": {
+        "title": "Welk pakket past bij jou?",
+        "description": "Gratis, Groei, Pro of Ultimate? We bespreken je behoeftes en adviseren het beste pakket voor jouw situatie en budget."
+      },
+      "pricing": {
+        "title": "Hoeveel kost TableTech precies?",
+        "description": "Transparante prijzen vanaf gratis. We berekenen samen wat de investering en verwachte ROI voor jouw restaurant is."
+      },
+      "installation": {
+        "title": "Hoe werkt de installatie?",
+        "description": "Van QR-codes tot tablets - we bespreken het complete installatieproces en hoe snel je operationeel kunt zijn."
+      },
+      "technical": {
+        "title": "Technische vragen of zorgen?",
+        "description": "Werkt het met jouw kassasysteem? Hoe zit het met training? Alle technische aspecten komen aan bod."
+      }
+    },
+    "features": {
+      "personalAdvice": "30 minuten persoonlijk advies",
+      "noObligations": "Geen verplichtingen of verborgen kosten",
+      "implementationPlan": "Direct implementatieplan"
+    },
+    "card": {
+      "readyTitle": "Klaar voor de volgende stap?",
+      "readySubtitle": "Automatiseer je restaurant vandaag nog",
+      "mainButton": "Plan nu je gratis adviesgesprek",
+      "orContact": "Of neem direct contact op",
+      "support24": "24/7",
+      "supportText": "Support beschikbaar"
+    },
+    "modal": {
+      "steps": {
+        "selectDateTime": "Kies datum en tijd",
+        "contactInfo": "Jouw gegevens",
+        "confirmed": "Afspraak bevestigd!"
+      },
+      "calendar": {
+        "selectDate": "Selecteer een datum",
+        "selectTime": "Kies een tijd",
+        "loadingDates": "Beschikbare datums laden...",
+        "loadingTimes": "Beschikbare tijden laden...",
+        "selectDateFirst": "Selecteer eerst een datum",
+        "timeFor": "Tijden voor",
+        "months": [
+          "Januari", "Februari", "Maart", "April", "Mei", "Juni",
+          "Juli", "Augustus", "September", "Oktober", "November", "December"
+        ],
+        "days": ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"]
+      },
+      "form": {
+        "selectedDate": "Geselecteerde datum:",
+        "time": "Tijd:",
+        "firstName": "Voornaam *",
+        "lastName": "Achternaam *",
+        "restaurant": "Restaurant",
+        "email": "Email *",
+        "phone": "Telefoon *",
+        "message": "Waar wil je het over hebben? (optioneel)",
+        "placeholders": {
+          "firstName": "Je voornaam",
+          "lastName": "Je achternaam",
+          "restaurant": "Naam van je restaurant",
+          "email": "je@email.nl",
+          "phone": "+31 6 12345678",
+          "message": "Bijvoorbeeld: Ik wil graag meer weten over jullie analytics mogelijkheden..."
+        },
+        "emailValidation": "Vul een geldig email adres in (bijv. naam@domein.nl)",
+        "emailError": "Email moet een @ bevatten",
+        "back": "Terug",
+        "confirm": "Bevestig Afspraak",
+        "submitting": "Bezig..."
+      },
+      "confirmation": {
+        "success": "🎉 Gelukt!",
+        "received": "🎉 Afspraak Ontvangen!",
+        "date": "📅 Datum:",
+        "time": "🕐 Tijd:",
+        "type": "📞 Type:",
+        "phoneCall": "Telefonisch (30 min)",
+        "confirmed": "✅ Afspraak Bevestigd!",
+        "emailSent": "Je ontvangt een bevestigingsemail op",
+        "checkSpam": "💡 Controleer ook je spam/ongewenste e-mail folder als je de mail niet ziet",
+        "registered": "⚠️ Afspraak geregistreerd",
+        "emailIssue": "Er was een probleem met de bevestigingsemail. We nemen contact met je op via",
+        "closeButton": "Perfect! 🚀"
+      },
+      "errors": {
+        "tooManyRequests": "⚠️ Te veel aanvragen. Probeer het over een paar minuten opnieuw.",
+        "validationError": "⚠️ Controleer je gegevens en probeer opnieuw.",
+        "captchaFailed": "⚠️ Verificatie mislukt. Ververs de pagina en probeer opnieuw."
+      },
+      "defaultMessage": "Ik wil graag meer informatie over TableTech en zou een adviesgesprek willen plannen."
+    }
+  },
+  "footer": {
+    "tagline": "De slimme oplossing voor elk restaurant",
+    "country": "Nederland",
+    "copyright": "Alle rechten voorbehouden.",
+    "links": {
+      "privacy": "Privacybeleid",
+      "terms": "Algemene voorwaarden",
+      "cookies": "Cookiebeleid"
+    }
+  }
 }
