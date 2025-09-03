@@ -431,7 +431,7 @@ const ContactSection = () => {
           {/* Main content - 2 columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left column - Slideshow */}
-            <div className="order-2 lg:order-1 text-left">
+            <div className="order-1 lg:order-1 text-left mb-8 lg:mb-0">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight text-left">
                 Plan een <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">Gratis</span> Adviesgesprek
               </h1>
@@ -477,7 +477,7 @@ const ContactSection = () => {
             </div>
             
             {/* Right column - Larger glassmorphism booking card */}
-            <div className="order-1 lg:order-2 flex justify-center">
+            <div className="order-2 lg:order-2 flex justify-center">
               <div className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl w-full max-w-lg rounded-3xl overflow-hidden">
                 {/* Header section with gradient */}
                 <div className="bg-gradient-to-r from-[#E86C28]/20 to-[#C3561D]/20 p-8 border-b border-[#4A372E]/30">
