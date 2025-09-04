@@ -8,7 +8,14 @@ export default defineConfig({
   base: '/', // Voor custom domeinen zoals tabletech.nl BROO
   plugins: [
     react(),
-    viteCompression(), // gzip compressie
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      deleteOriginFile: false,
+      threshold: 1024,
+      verbose: false, // Disable verbose logging to reduce clutter
+      filter: /\.(js|mjs|json|css|html)$/i
+    }), // gzip compressie
     imagetools(),      // image optimalisatie
   ],
   server: {
@@ -39,6 +46,8 @@ export default defineConfig({
     }
   },
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
