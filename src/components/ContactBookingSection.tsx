@@ -417,7 +417,7 @@ const ContactSection = () => {
         /* Blob animations removed for better performance */
       `}</style>
       
-  <section className="relative min-h-screen bg-[#231813] pt-0 pb-0 px-4 overflow-hidden border-0 shadow-none">
+  <section className="relative min-h-screen bg-[#231813] pt-0 pb-16 sm:pb-20 md:pb-24 lg:pb-32 xl:pb-40 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 overflow-hidden border-0 shadow-none">
         {/* Seamless top blend with PricingNew */}
         <div className="absolute top-0 left-0 right-0 h-48 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-[#231813]"></div>
@@ -425,17 +425,17 @@ const ContactSection = () => {
         
         {/* Background removed for cleaner look */}
         
-        <div className="relative z-10 max-w-6xl mx-auto w-full pt-32 lg:pt-48 xl:pt-64">
+        <div className="relative z-10 max-w-6xl mx-auto w-full pt-20 sm:pt-28 md:pt-32 lg:pt-48 xl:pt-64">
           {/* Main content - 2 columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-center">
             {/* Left column - Slideshow */}
-            <div className="order-1 lg:order-1 text-left mb-8 lg:mb-0">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight text-left"
+            <div className="order-1 lg:order-1 text-center sm:text-left mb-8 lg:mb-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 leading-tight"
                   dangerouslySetInnerHTML={{ __html: t('contact.title') }}>
               </h1>
               
               {/* Slideshow container */}
-              <div className="relative h-48 mb-8">
+              <div className="relative h-40 sm:h-44 md:h-48 mb-6 sm:mb-8">
                 <div className="absolute inset-0">
                   {rotatingTexts.map((text, index) => (
                     <div
@@ -446,10 +446,10 @@ const ContactSection = () => {
                           : 'opacity-0 transform translate-y-4'
                       }`}
                     >
-                      <h2 className="text-2xl md:text-3xl font-bold text-[#E86C28] mb-4 leading-tight text-left">
+                      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#E86C28] mb-3 sm:mb-4 leading-tight text-center sm:text-left">
                         {text.title}
                       </h2>
-                      <p className="text-lg text-[#D4B896] leading-relaxed text-left">
+                      <p className="text-base sm:text-lg text-[#D4B896] leading-relaxed text-center sm:text-left">
                         {text.description}
                       </p>
                     </div>
@@ -474,26 +474,26 @@ const ContactSection = () => {
               </div>
             </div>
             
-            {/* Right column - Larger glassmorphism booking card */}
-            <div className="order-2 lg:order-2 flex justify-center">
-              <div className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl w-full max-w-lg rounded-3xl overflow-hidden">
-                {/* Header section with gradient */}
-                <div className="bg-gradient-to-r from-[#E86C28]/20 to-[#C3561D]/20 p-8 border-b border-[#4A372E]/30">
+            {/* Right column - Solid dark booking card */}
+            <div className="order-2 lg:order-2 flex justify-center px-2 sm:px-0">
+              <div className="relative bg-[#1A0F0A] border-2 border-[#4A372E]/60 shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-lg rounded-2xl sm:rounded-3xl overflow-hidden">
+                {/* Header section with gradient overlay */}
+                <div className="bg-gradient-to-br from-[#2C1E1A] to-[#1F1511] p-6 sm:p-8 border-b-2 border-[#4A372E]/40">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-[#E86C28] to-[#FFB366] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="w-8 h-8 text-white" />
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-[#E86C28] to-[#FFB366] rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+                      <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                       {t('contact.card.readyTitle')}
                     </h3>
-                    <p className="text-[#D4B896] text-lg">
+                    <p className="text-[#D4B896] text-base sm:text-lg">
                       {t('contact.card.readySubtitle')}
                     </p>
                   </div>
                 </div>
 
-                {/* Content section */}
-                <div className="p-8">
+                {/* Content section with solid dark background */}
+                <div className="p-6 sm:p-8 bg-[#1A0F0A]">
                   <div className="relative z-10">
                     {/* Main CTA Button */}
                     <ClickSpark
@@ -504,35 +504,35 @@ const ContactSection = () => {
                     >
                       <button
                         onClick={() => setShowBookingModal(true)}
-                        className="w-full bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-6 px-12 rounded-3xl font-bold text-xl transition-all duration-500 transform hover:scale-105 hover:shadow-2xl active:scale-95 flex items-center justify-center space-x-4 mb-8 shadow-lg border-2 border-white/20 backdrop-blur-sm relative overflow-hidden group"
+                        className="w-full bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-4 sm:py-5 md:py-6 px-6 sm:px-8 md:px-12 rounded-2xl sm:rounded-3xl font-bold text-base sm:text-lg md:text-xl transition-all duration-500 transform hover:scale-105 hover:shadow-2xl active:scale-95 flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-4 mb-6 sm:mb-8 shadow-lg border-2 border-white/20 backdrop-blur-sm relative overflow-hidden group"
                       >
                         {/* Animated background effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
-                        <Calendar className="w-7 h-7 relative z-10" />
+                        <Calendar className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 relative z-10" />
                         <span className="relative z-10 tracking-wide">{t('contact.card.mainButton')}</span>
-                        <ArrowRight className="w-7 h-7 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                       </button>
                     </ClickSpark>
 
                     {/* Divider */}
-                    <div className="relative mb-8">
+                    <div className="relative mb-6 sm:mb-8">
                       <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-[#4A372E]/30"></div>
+                        <div className="w-full border-t border-[#4A372E]/50"></div>
                       </div>
-                      <div className="relative flex justify-center text-sm">
-                        <span className="px-4 bg-[#3A2B24]/30 text-[#D4B896]">{t('contact.card.orContact')}</span>
+                      <div className="relative flex justify-center text-xs sm:text-sm">
+                        <span className="px-3 sm:px-4 bg-[#1A0F0A] text-[#D4B896] font-medium">{t('contact.card.orContact')}</span>
                       </div>
                     </div>
 
                     {/* Contact options */}
-                    <div className="flex items-center justify-center gap-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8">
                       <ClickSpark sparkColor="#E86C28" sparkRadius={25} sparkCount={8} duration={600}>
                         <a 
                           href="tel:+31858883333" 
-                          className="flex items-center space-x-2 text-white font-semibold text-base transition-all duration-300 hover:text-[#E86C28]"
+                          className="flex items-center space-x-2 text-white font-semibold text-sm sm:text-base transition-all duration-300 hover:text-[#E86C28]"
                         >
-                          <Phone className="w-5 h-5 text-[#E86C28]" />
+                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#E86C28]" />
                           <span>+31 85 888 3333</span>
                         </a>
                       </ClickSpark>
@@ -540,20 +540,20 @@ const ContactSection = () => {
                       <ClickSpark sparkColor="#E86C28" sparkRadius={25} sparkCount={8} duration={600}>
                         <a 
                           href="mailto:info@tabletech.nl" 
-                          className="flex items-center space-x-2 text-white font-semibold text-base transition-all duration-300 hover:text-[#E86C28]"
+                          className="flex items-center space-x-2 text-white font-semibold text-sm sm:text-base transition-all duration-300 hover:text-[#E86C28]"
                         >
-                          <Mail className="w-5 h-5 text-[#E86C28]" />
+                          <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#E86C28]" />
                           <span>info@tabletech.nl</span>
                         </a>
                       </ClickSpark>
                     </div>
 
                     {/* Trust indicators */}
-                    <div className="mt-8 pt-6 border-t border-[#4A372E]/30">
-                      <div className="text-center text-sm text-[#D4B896]">
-                        <div>
-                          <div className="text-xl font-bold text-[#E86C28]">{t('contact.card.support24')}</div>
-                          <div>{t('contact.card.supportText')}</div>
+                    <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-[#4A372E]/50">
+                      <div className="text-center">
+                        <div className="bg-gradient-to-br from-[#2C1E1A]/50 to-[#1F1511]/50 rounded-lg sm:rounded-xl p-3 sm:p-4">
+                          <div className="text-lg sm:text-xl font-bold text-[#E86C28] mb-1">{t('contact.card.support24')}</div>
+                          <div className="text-xs sm:text-sm text-[#D4B896]">{t('contact.card.supportText')}</div>
                         </div>
                       </div>
                     </div>

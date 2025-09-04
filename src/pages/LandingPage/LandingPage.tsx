@@ -58,12 +58,12 @@ const LandingPage: React.FC = () => {
         <PricingNew />
       </section>
 
-      {/* Contact Section - seamless transition to footer */}
+      {/* Contact Section - seamless on mobile */}
       <section id="contact" className="w-full scroll-mt-24">
         <ContactSection />
       </section>
 
-      {/* Footer - no visual separation */}
+      {/* Footer - direct connection on mobile, spacing on larger screens */}
       <div className="w-full relative">
         <Footer />
       </div>
