@@ -16,6 +16,9 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -27,6 +30,75 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
       setIsPlaying(!isPlaying);
     }
   };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime;
+      const duration = videoRef.current.duration;
+      setProgress((currentTime / duration) * 100);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const updateVideoTime = (clientX: number, rect: DOMRect) => {
+    if (videoRef.current) {
+      const clickX = clientX - rect.left;
+      const width = rect.width;
+      const percentage = Math.max(0, Math.min(1, clickX / width));
+      const clickedTime = percentage * videoRef.current.duration;
+      videoRef.current.currentTime = clickedTime;
+      setProgress(percentage * 100);
+    }
+  };
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    updateVideoTime(e.clientX, rect);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    updateVideoTime(e.clientX, rect);
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isDragging) {
+      const progressBar = document.querySelector('.video-progress-bar') as HTMLElement;
+      if (progressBar) {
+        const rect = progressBar.getBoundingClientRect();
+        updateVideoTime(e.clientX, rect);
+      }
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Add global mouse event listeners for dragging
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove, { passive: false });
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'grabbing';
+      document.body.style.userSelect = 'none';
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [isDragging]);
 
   // Enhanced shadow calculation based on rotation and scale
   const dynamicShadow = useMemo(() => {
@@ -68,6 +140,10 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
             loop
             muted
             playsInline
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadedMetadata}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
           />
           
           {/* Play/Pause Button Overlay */}
@@ -93,6 +169,40 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
             </button>
           </div>
           
+          {/* Video Progress Bar */}
+          <div className={`absolute bottom-4 left-4 right-4 transition-opacity duration-300 ${showControls || isDragging ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Larger clickable/draggable area */}
+            <div 
+              className="video-progress-bar relative w-full h-6 flex items-center cursor-pointer group"
+              onClick={handleProgressClick}
+              onMouseDown={handleMouseDown}
+            >
+              {/* Visual progress bar */}
+              <div className="relative w-full h-1.5 bg-black/50 rounded-full backdrop-blur-sm">
+                {/* Progress fill */}
+                <div 
+                  className="h-full bg-white/90 rounded-full transition-all duration-200"
+                  style={{ 
+                    width: `${progress}%`,
+                    transition: isDragging ? 'none' : 'width 0.2s ease'
+                  }}
+                />
+              </div>
+              {/* Draggable thumb */}
+              <div 
+                className={`absolute w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-200 ${
+                  isDragging ? 'scale-125' : 'scale-100 group-hover:scale-110'
+                } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                style={{ 
+                  left: `calc(${progress}% - 8px)`,
+                  opacity: showControls || isDragging ? 1 : 0,
+                  top: '50%',
+                  transform: 'translateY(-50%)'
+                }}
+              />
+            </div>
+          </div>
+
           {/* Screen overlay with subtle gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10 pointer-events-none" />
           
