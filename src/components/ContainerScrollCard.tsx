@@ -51,7 +51,7 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
         opacity: isInView ? 1 : 0.8,
         transition: 'opacity 0.3s ease-out',
       }}
-      className="mx-auto -mt-12 h-[26rem] w-full max-w-4xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[36rem] md:max-w-4xl md:p-6 transform-gpu will-change-transform"
+      className="mx-auto -mt-12 h-[325px] w-full max-w-4xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[485px] md:max-w-4xl md:p-6 transform-gpu will-change-transform"
     >
       <div className="size-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 md:rounded-2xl">
         <div 
