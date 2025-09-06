@@ -414,7 +414,29 @@ const ContactSection = () => {
             transform: rotate(var(--angle)) translateY(-20px);
           }
         }
-        /* Blob animations removed for better performance */
+        /* Hide scrollbars */
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        /* Hide all scrollbars in time slots container */
+        .time-slots-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .time-slots-container::-webkit-scrollbar {
+          display: none;
+        }
+        .time-slots-container * {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .time-slots-container *::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
       
   <section className="relative min-h-screen bg-[#231813] pt-0 pb-16 sm:pb-20 md:pb-24 lg:pb-32 xl:pb-40 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 overflow-hidden border-0 shadow-none">
@@ -585,7 +607,7 @@ const ContactSection = () => {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)] scrollbar-hide">
               {/* Step 1: Calendar and Time */}
               {bookingStep === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -675,7 +697,7 @@ const ContactSection = () => {
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-4">{t('contact.modal.calendar.selectTime')}</h3>
                     {selectedDate ? (
-                      <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50">
+                      <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50 overflow-hidden time-slots-container">
                         <div className="flex items-center gap-2 mb-4">
                           <Clock className="w-4 h-4 text-[#E86C28]" />
                           <p className="text-[#D4B896] text-sm">
@@ -683,16 +705,15 @@ const ContactSection = () => {
                           </p>
                         </div>
                         
-                        {/* Loading state */}
-                        {loadingSlots ? (
-                          <div className="col-span-2 flex items-center justify-center py-8">
-                            <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
-                            <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
-                          </div>
-                        ) : (
-                          /* Time slots from API - responsive grid with smaller buttons */
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                            {availableSlots.map(slot => {
+                        {/* Time slots container - consistent layout with hidden scrollbar */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 min-h-[120px] overflow-hidden">
+                          {loadingSlots ? (
+                            <div className="col-span-full flex items-center justify-center py-8">
+                              <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
+                              <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
+                            </div>
+                          ) : (
+                            availableSlots.map(slot => {
                               if (!slot.isAvailable) {
                                 // Geboekte tijd - grijs en niet klikbaar (zonder rode kruisjes)
                                 return (
@@ -735,9 +756,9 @@ const ContactSection = () => {
                                   </ClickSpark>
                                 );
                               }
-                            })}
-                          </div>
-                        )}
+                            })
+                          )}
+                        </div>
                       </div>
                     ) : (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-8 border border-[#4A372E]/50 text-center">
