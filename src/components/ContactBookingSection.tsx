@@ -690,19 +690,19 @@ const ContactSection = () => {
                             <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
                           </div>
                         ) : (
-                          /* Time slots from API */
-                          <div className="grid grid-cols-2 gap-3">
+                          /* Time slots from API - responsive grid with smaller buttons */
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             {availableSlots.map(slot => {
                               if (!slot.isAvailable) {
                                 // Geboekte tijd - grijs en niet klikbaar (zonder rode kruisjes)
                                 return (
                                   <div
                                     key={`booked-${slot.time}`}
-                                    className="w-full py-4 px-6 rounded-xl text-base font-semibold bg-gray-500/40 text-gray-300 border-2 border-gray-400/60 relative cursor-not-allowed opacity-60 min-w-[140px] transform transition-all duration-200"
+                                    className="w-full py-2.5 px-3 rounded-lg text-sm font-semibold bg-gray-500/40 text-gray-300 border border-gray-400/60 relative cursor-not-allowed opacity-60 transform transition-all duration-200"
                                   >
-                                    <div className="flex items-center justify-center gap-2 relative">
-                                      <Clock className="w-4 h-4 opacity-60" />
-                                      <span>{slot.time}</span>
+                                    <div className="flex items-center justify-center gap-1.5 relative">
+                                      <Clock className="w-3.5 h-3.5 opacity-60" />
+                                      <span className="text-xs">{slot.time}</span>
                                     </div>
                                   </div>
                                 );
@@ -712,24 +712,24 @@ const ContactSection = () => {
                                   <ClickSpark 
                                     key={slot.time}
                                     sparkColor="#E86C28" 
-                                    sparkRadius={18} 
-                                    sparkCount={8} 
-                                    duration={500}
+                                    sparkRadius={15} 
+                                    sparkCount={6} 
+                                    duration={400}
                                   >
                                     <button
                                       onClick={() => handleTimeSelect(slot.time)}
                                       className={`
-                                        w-full py-4 px-6 rounded-xl text-base font-semibold transition-all duration-300 transform min-w-[140px]
+                                        w-full py-2.5 px-3 rounded-lg text-sm font-semibold transition-all duration-300 transform
                                         ${selectedTime === slot.time
-                                          ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-xl scale-105 border-2 border-white/20'
-                                          : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-lg border-2 border-transparent'
+                                          ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-lg scale-105 border border-white/20'
+                                          : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-md border border-transparent'
                                         }
                                         backdrop-blur-sm
                                       `}
                                     >
-                                      <div className="flex items-center justify-center gap-2">
-                                        <Clock className="w-4 h-4" />
-                                        {slot.time}
+                                      <div className="flex items-center justify-center gap-1.5">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        <span className="text-xs">{slot.time}</span>
                                       </div>
                                     </button>
                                   </ClickSpark>
