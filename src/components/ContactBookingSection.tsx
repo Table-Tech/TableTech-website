@@ -414,7 +414,29 @@ const ContactSection = () => {
             transform: rotate(var(--angle)) translateY(-20px);
           }
         }
-        /* Blob animations removed for better performance */
+        /* Hide scrollbars */
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        /* Hide all scrollbars in time slots container */
+        .time-slots-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .time-slots-container::-webkit-scrollbar {
+          display: none;
+        }
+        .time-slots-container * {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .time-slots-container *::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
       
   <section className="relative min-h-screen bg-[#231813] pt-0 pb-16 sm:pb-20 md:pb-24 lg:pb-32 xl:pb-40 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 overflow-hidden border-0 shadow-none">
@@ -585,7 +607,7 @@ const ContactSection = () => {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)] scrollbar-hide">
               {/* Step 1: Calendar and Time */}
               {bookingStep === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -675,7 +697,7 @@ const ContactSection = () => {
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-4">{t('contact.modal.calendar.selectTime')}</h3>
                     {selectedDate ? (
-                      <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50">
+                      <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-4 border border-[#4A372E]/50 overflow-hidden time-slots-container">
                         <div className="flex items-center gap-2 mb-4">
                           <Clock className="w-4 h-4 text-[#E86C28]" />
                           <p className="text-[#D4B896] text-sm">
@@ -683,26 +705,25 @@ const ContactSection = () => {
                           </p>
                         </div>
                         
-                        {/* Loading state */}
-                        {loadingSlots ? (
-                          <div className="col-span-2 flex items-center justify-center py-8">
-                            <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
-                            <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
-                          </div>
-                        ) : (
-                          /* Time slots from API */
-                          <div className="grid grid-cols-2 gap-3">
-                            {availableSlots.map(slot => {
+                        {/* Time slots container - consistent layout with hidden scrollbar */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 min-h-[120px] overflow-hidden">
+                          {loadingSlots ? (
+                            <div className="col-span-full flex items-center justify-center py-8">
+                              <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
+                              <span className="ml-2 text-[#D4B896]">{t('contact.modal.calendar.loadingTimes')}</span>
+                            </div>
+                          ) : (
+                            availableSlots.map(slot => {
                               if (!slot.isAvailable) {
                                 // Geboekte tijd - grijs en niet klikbaar (zonder rode kruisjes)
                                 return (
                                   <div
                                     key={`booked-${slot.time}`}
-                                    className="w-full py-4 px-6 rounded-xl text-base font-semibold bg-gray-500/40 text-gray-300 border-2 border-gray-400/60 relative cursor-not-allowed opacity-60 min-w-[140px] transform transition-all duration-200"
+                                    className="w-full py-2.5 px-3 rounded-lg text-sm font-semibold bg-gray-500/40 text-gray-300 border border-gray-400/60 relative cursor-not-allowed opacity-60 transform transition-all duration-200"
                                   >
-                                    <div className="flex items-center justify-center gap-2 relative">
-                                      <Clock className="w-4 h-4 opacity-60" />
-                                      <span>{slot.time}</span>
+                                    <div className="flex items-center justify-center gap-1.5 relative">
+                                      <Clock className="w-3.5 h-3.5 opacity-60" />
+                                      <span className="text-xs">{slot.time}</span>
                                     </div>
                                   </div>
                                 );
@@ -712,32 +733,32 @@ const ContactSection = () => {
                                   <ClickSpark 
                                     key={slot.time}
                                     sparkColor="#E86C28" 
-                                    sparkRadius={18} 
-                                    sparkCount={8} 
-                                    duration={500}
+                                    sparkRadius={15} 
+                                    sparkCount={6} 
+                                    duration={400}
                                   >
                                     <button
                                       onClick={() => handleTimeSelect(slot.time)}
                                       className={`
-                                        w-full py-4 px-6 rounded-xl text-base font-semibold transition-all duration-300 transform min-w-[140px]
+                                        w-full py-2.5 px-3 rounded-lg text-sm font-semibold transition-all duration-300 transform
                                         ${selectedTime === slot.time
-                                          ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-xl scale-105 border-2 border-white/20'
-                                          : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-lg border-2 border-transparent'
+                                          ? 'bg-gradient-to-r from-[#E86C28] to-[#F97316] text-white shadow-lg scale-105 border border-white/20'
+                                          : 'bg-[#4A372E]/40 text-white hover:bg-[#E86C28]/20 hover:scale-105 hover:shadow-md border border-transparent'
                                         }
                                         backdrop-blur-sm
                                       `}
                                     >
-                                      <div className="flex items-center justify-center gap-2">
-                                        <Clock className="w-4 h-4" />
-                                        {slot.time}
+                                      <div className="flex items-center justify-center gap-1.5">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        <span className="text-xs">{slot.time}</span>
                                       </div>
                                     </button>
                                   </ClickSpark>
                                 );
                               }
-                            })}
-                          </div>
-                        )}
+                            })
+                          )}
+                        </div>
                       </div>
                     ) : (
                       <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-8 border border-[#4A372E]/50 text-center">
