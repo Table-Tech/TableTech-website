@@ -7,7 +7,7 @@ dotenv.config();
 const envSchema = z.object({
   // Node
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.string().default('3001').transform(Number),
+  PORT: z.string().default('3002').transform(Number),
   
   // Email
   RESEND_API_KEY: z.string().min(1),

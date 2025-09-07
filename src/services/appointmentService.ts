@@ -46,7 +46,7 @@ const generateUUID = (): string => {
 const getApiUrl = (): string => {
   // Check if we're in development by looking at the hostname
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:3001/api';
+    return 'http://localhost:3002/api';
   }
   return 'https://tabletech.nl/api';
 };

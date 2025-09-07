@@ -131,7 +131,7 @@ const initializeServices = async () => {
 };
 
 // Start server
-const PORT = env.PORT || 3001;
+const PORT = env.PORT || 3002;
 
 if (env.NODE_ENV !== 'test') {
   initializeServices().then(() => {
