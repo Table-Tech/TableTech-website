@@ -422,7 +422,7 @@ const ContactSection = () => {
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        /* Hide all scrollbars in time slots container */
+        /* Hide all scrollbars in time slots container and modal */
         .time-slots-container {
           -ms-overflow-style: none;
           scrollbar-width: none;
@@ -436,6 +436,21 @@ const ContactSection = () => {
         }
         .time-slots-container *::-webkit-scrollbar {
           display: none;
+        }
+        /* Custom scrolling for modal content */
+        .scrollbar-hide {
+          scroll-behavior: smooth;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          width: 0px;
+          background: transparent;
+        }
+        .scrollbar-hide::-webkit-scrollbar-thumb {
+          background: transparent;
+        }
+        /* Ensure modal content is always scrollable */
+        .modal-content {
+          overscroll-behavior: contain;
         }
       `}</style>
       
@@ -589,8 +604,8 @@ const ContactSection = () => {
       
       {/* Booking Modal */}
       {showBookingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#2C1E1A] rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-[#4A372E]/50 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#2C1E1A] rounded-3xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden border border-[#4A372E]/50 shadow-2xl">
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] p-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white">
@@ -607,7 +622,7 @@ const ContactSection = () => {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)] scrollbar-hide">
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-100px)] scrollbar-hide modal-content" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
               {/* Step 1: Calendar and Time */}
               {bookingStep === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -705,8 +720,8 @@ const ContactSection = () => {
                           </p>
                         </div>
                         
-                        {/* Time slots container - consistent layout with hidden scrollbar */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 min-h-[120px] overflow-hidden">
+                        {/* Time slots container - scrollable with hidden scrollbar */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                           {loadingSlots ? (
                             <div className="col-span-full flex items-center justify-center py-8">
                               <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>
@@ -772,7 +787,7 @@ const ContactSection = () => {
 
               {/* Step 2: Contact Form */}
               {bookingStep === 2 && (
-                <div className="max-w-2xl mx-auto">
+                <div className="max-w-2xl mx-auto min-h-full pb-4">
                   <div className="bg-[#3A2B24]/50 backdrop-blur-md rounded-2xl p-6 border border-[#4A372E]/50 mb-4">
                     <div className="flex items-center justify-between text-white mb-4">
                       <div>
@@ -786,10 +801,10 @@ const ContactSection = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-white text-sm font-medium mb-2">
+                        <label className="block text-white text-sm font-medium mb-1">
                           {t('contact.modal.form.firstName')}
                         </label>
                         <div className="relative">
@@ -800,13 +815,13 @@ const ContactSection = () => {
                             required
                             value={bookingData.firstName}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
                             placeholder={t('contact.modal.form.placeholders.firstName')}
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-white text-sm font-medium mb-2">
+                        <label className="block text-white text-sm font-medium mb-1">
                           {t('contact.modal.form.lastName')}
                         </label>
                         <div className="relative">
@@ -817,16 +832,16 @@ const ContactSection = () => {
                             required
                             value={bookingData.lastName}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
                             placeholder={t('contact.modal.form.placeholders.lastName')}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-white text-sm font-medium mb-2">
+                        <label className="block text-white text-sm font-medium mb-1">
                           {t('contact.modal.form.restaurant')}
                         </label>
                         <div className="relative">
@@ -836,16 +851,16 @@ const ContactSection = () => {
                             name="restaurant"
                             value={bookingData.restaurant}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
                             placeholder={t('contact.modal.form.placeholders.restaurant')}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-white text-sm font-medium mb-2">
+                        <label className="block text-white text-sm font-medium mb-1">
                           {t('contact.modal.form.email')}
                         </label>
                         <div className="relative">
@@ -857,14 +872,14 @@ const ContactSection = () => {
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                             value={bookingData.email}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
                             placeholder={t('contact.modal.form.placeholders.email')}
                             title={t('contact.modal.form.emailValidation')}
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-white text-sm font-medium mb-2">
+                        <label className="block text-white text-sm font-medium mb-1">
                           {t('contact.modal.form.phone')}
                         </label>
                         <div className="relative">
@@ -875,7 +890,7 @@ const ContactSection = () => {
                             required
                             value={bookingData.phone}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
                             placeholder={t('contact.modal.form.placeholders.phone')}
                           />
                         </div>
@@ -888,19 +903,19 @@ const ContactSection = () => {
                       </label>
                       <textarea
                         name="message"
-                        rows={4}
+                        rows={3}
                         value={bookingData.message}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent resize-none"
+                        className="w-full px-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent resize-none"
                         placeholder={t('contact.modal.form.placeholders.message')}
                       />
                     </div>
 
-                    <div className="flex gap-4 pt-6">
+                    <div className="flex gap-4 pt-4">
                       <ClickSpark sparkColor="#ffffff" sparkRadius={20} sparkCount={6} duration={400}>
                         <button
                           onClick={() => setBookingStep(1)}
-                          className="flex-1 bg-[#4A372E]/50 text-white py-4 px-6 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-[#4A372E]/70 border border-[#4A372E]/30 flex items-center justify-center gap-2 min-h-[56px]"
+                          className="flex-1 bg-[#4A372E]/50 text-white py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-[#4A372E]/70 border border-[#4A372E]/30 flex items-center justify-center gap-2 min-h-[48px]"
                         >
                           <ChevronLeft className="w-5 h-5" />
                           <span>{t('contact.modal.form.back')}</span>
@@ -910,7 +925,7 @@ const ContactSection = () => {
                         <button
                           onClick={handleSubmitBooking}
                           disabled={isSubmitting || !bookingData.firstName || !bookingData.lastName || !bookingData.email || !bookingData.phone || !bookingData.email.includes('@')}
-                          className="flex-1 bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-4 px-6 rounded-xl font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 border-2 border-white/20 backdrop-blur-sm min-h-[56px]"
+                          className="flex-1 bg-gradient-to-r from-[#E86C28] via-[#F97316] to-[#FFB366] text-white py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 border-2 border-white/20 backdrop-blur-sm min-h-[48px]"
                         >
                           {isSubmitting ? (
                             <>

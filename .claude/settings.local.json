@@ -36,7 +36,8 @@
       "WebSearch",
       "Bash(netstat:*)",
       "Bash(kill:*)",
-      "Bash(ss:*)"
+      "Bash(ss:*)",
+      "Read(//mnt/c/Users/Hicha/OneDrive/Afbeeldingen/Schermopnamen/**)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
