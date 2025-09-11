@@ -49,11 +49,14 @@ export const Navbar: React.FC = () => {
             });
             setIsScrolled(false);
           } else {
-            // Blur effect everywhere else (any scroll position > 0)
+            // Strong blur effect with brown tint when scrolled
+            const opacity = Math.min(0.25, scrollY / 200); // Gradually increase opacity
+            const blurAmount = Math.min(20, scrollY / 10); // Gradually increase blur
+            
             gsap.to(navbarRef.current, {
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(12px)",
-              borderColor: "rgba(255, 255, 255, 0.1)",
+              backgroundColor: `rgba(41, 37, 36, ${opacity})`, // stone-800 with opacity
+              backdropFilter: `blur(${blurAmount}px) saturate(1.8)`,
+              borderColor: "rgba(168, 162, 158, 0.2)", // stone-400 with opacity
               duration: 0.3,
               ease: "power2.out"
             });
