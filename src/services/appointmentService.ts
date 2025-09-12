@@ -51,14 +51,6 @@ const getApiUrl = (): string => {
   return 'https://tabletech.nl/api';
 };
 
-// Helper function to format date without timezone issues
-const formatDateString = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
 // Submit appointment to the secure V2 API
 export const submitAppointment = async (data: AppointmentData): Promise<AppointmentResponse> => {
   const apiUrl = getApiUrl();
@@ -113,16 +105,6 @@ export const submitAppointment = async (data: AppointmentData): Promise<Appointm
       message: 'Afspraak geregistreerd (offline mode)'
     };
   }
-};
-
-// Get UTM parameters from URL
-const getUTMParameters = () => {
-  const params = new URLSearchParams(window.location.search);
-  return {
-    source: params.get('utm_source') || undefined,
-    medium: params.get('utm_medium') || undefined,
-    campaign: params.get('utm_campaign') || undefined,
-  };
 };
 
 // Load Cloudflare Turnstile
