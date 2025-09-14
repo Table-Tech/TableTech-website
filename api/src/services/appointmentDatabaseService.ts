@@ -505,6 +505,13 @@ class AppointmentDatabaseService {
         )`
       );
 
+      const timeSlotsExist = await query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_name = 'appointment_time_slots'
+        )`
+      );
+
       // Create missing tables
       if (!appointmentsExist.rows[0].exists) {
         console.log('🔧 Creating appointments table...');
@@ -541,12 +548,75 @@ class AppointmentDatabaseService {
         console.log('✅ Email logs table created');
       }
 
+      if (!timeSlotsExist.rows[0].exists) {
+        console.log('🔧 Creating appointment_time_slots table...');
+        await query(`
+          CREATE TABLE appointment_time_slots (
+              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+              day_of_week INTEGER NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
+              start_time TIME NOT NULL,
+              end_time TIME NOT NULL,
+              duration_minutes INTEGER DEFAULT 60,
+              is_available BOOLEAN DEFAULT true,
+              max_appointments_per_slot INTEGER DEFAULT 1,
+              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+              CONSTRAINT unique_day_time_slot UNIQUE (day_of_week, start_time)
+          );
+        `);
+
+        // Insert default time slots for weekdays
+        console.log('🔧 Inserting default time slots...');
+        await query(`
+          INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
+          -- Monday (1) to Friday (5)
+          (1, '09:00', '10:00', 60),
+          (1, '10:00', '11:00', 60),
+          (1, '11:00', '12:00', 60),
+          (1, '13:00', '14:00', 60),
+          (1, '14:00', '15:00', 60),
+          (1, '15:00', '16:00', 60),
+          (1, '16:00', '17:00', 60),
+          (2, '09:00', '10:00', 60),
+          (2, '10:00', '11:00', 60),
+          (2, '11:00', '12:00', 60),
+          (2, '13:00', '14:00', 60),
+          (2, '14:00', '15:00', 60),
+          (2, '15:00', '16:00', 60),
+          (2, '16:00', '17:00', 60),
+          (3, '09:00', '10:00', 60),
+          (3, '10:00', '11:00', 60),
+          (3, '11:00', '12:00', 60),
+          (3, '13:00', '14:00', 60),
+          (3, '14:00', '15:00', 60),
+          (3, '15:00', '16:00', 60),
+          (3, '16:00', '17:00', 60),
+          (4, '09:00', '10:00', 60),
+          (4, '10:00', '11:00', 60),
+          (4, '11:00', '12:00', 60),
+          (4, '13:00', '14:00', 60),
+          (4, '14:00', '15:00', 60),
+          (4, '15:00', '16:00', 60),
+          (4, '16:00', '17:00', 60),
+          (5, '09:00', '10:00', 60),
+          (5, '10:00', '11:00', 60),
+          (5, '11:00', '12:00', 60),
+          (5, '13:00', '14:00', 60),
+          (5, '14:00', '15:00', 60),
+          (5, '15:00', '16:00', 60),
+          (5, '16:00', '17:00', 60)
+          ON CONFLICT (day_of_week, start_time) DO NOTHING;
+        `);
+        console.log('✅ Appointment time slots table created and populated');
+      }
+
       // Create indexes if they don't exist
       await query(`
         CREATE INDEX IF NOT EXISTS idx_appointments_date_time ON appointments(appointment_date, appointment_time);
         CREATE INDEX IF NOT EXISTS idx_appointments_reference ON appointments(reference_number);
         CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
         CREATE INDEX IF NOT EXISTS idx_email_logs_appointment ON email_logs(appointment_id);
+        CREATE INDEX IF NOT EXISTS idx_time_slots_day_time ON appointment_time_slots(day_of_week, start_time);
+        CREATE INDEX IF NOT EXISTS idx_time_slots_available ON appointment_time_slots(is_available);
       `);
 
       // Ensure critical functions exist
