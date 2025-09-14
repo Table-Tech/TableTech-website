@@ -139,7 +139,7 @@ const RestaurantThemesPage: React.FC = () => {
             className="relative"
           >
             {/* Modern Bezel-free Phone - Scaled down with more frame */}
-            <div className="relative" style={{ width: '342px', height: '745px' }}>
+            <div className="relative" style={{ width: '274px', height: '596px' }}>
               {/* Modern Phone Body - Dark and Minimal with thicker frame */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 rounded-[2.5rem] shadow-2xl">
                 {/* Subtle edge highlight */}

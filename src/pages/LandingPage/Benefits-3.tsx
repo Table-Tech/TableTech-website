@@ -711,11 +711,11 @@ export const BenefitsThree: React.FC = () => {
   return (
     <section
       id="benefits-3"
-      className="relative w-full min-h-screen flex items-center justify-center shrink-0 overflow-hidden py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 2xl:py-28"
+      className="relative w-full min-h-screen flex items-center justify-center shrink-0 overflow-hidden py-4 xs:py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20 2xl:py-24"
     >
         {/* Main content - Mobile first approach with smaller desktop layout */}
         <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-12 max-w-[1920px]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-8 xl:gap-10 2xl:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-5 sm:gap-6 md:gap-8 lg:gap-6 xl:gap-8 2xl:gap-10 items-center">
 
           {/* Left side - Video - Hidden on mobile and tablets, only visible on desktop - Smaller sizing */}
           <div className="hidden lg:flex relative items-center justify-center order-1 lg:order-1">
@@ -791,26 +791,26 @@ export const BenefitsThree: React.FC = () => {
           </div>
 
           {/* Right side - Description & Features - Mobile optimized, smaller desktop layout */}
-          <div className="space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-3 xl:space-y-4 2xl:space-y-5 order-2 md:order-2 lg:h-full lg:justify-center">
+          <div className="space-y-3 xs:space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-3 xl:space-y-4 2xl:space-y-5 order-2 md:order-2 lg:h-full lg:justify-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-lg xl:text-xl 2xl:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3 leading-tight lg:leading-[1.1] drop-shadow-lg">
+              <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-xl 2xl:text-2xl font-bold text-white mb-1 xs:mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3 leading-tight xs:leading-tight sm:leading-tight lg:leading-[1.1] drop-shadow-lg">
                 {t('benefits3.title')}
               </h2>
-              <p className="text-white/90 text-sm xs:text-base sm:text-lg md:text-base lg:text-sm xl:text-base 2xl:text-lg mb-3 sm:mb-4 md:mb-6 lg:mb-3 xl:mb-4 leading-relaxed lg:leading-relaxed drop-shadow-md">
+              <p className="text-white/90 text-xs xs:text-sm sm:text-base md:text-base lg:text-sm xl:text-base 2xl:text-lg mb-2 xs:mb-3 sm:mb-4 md:mb-5 lg:mb-3 xl:mb-4 leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed drop-shadow-md">
                 {t('benefits3.subtitle')}
               </p>
             </motion.div>
 
-            <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
+            <div className="space-y-2 xs:space-y-3 sm:space-y-4 md:space-y-4 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl min-h-[100px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[80px] xl:min-h-[90px] 2xl:min-h-[100px]"
+                className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl min-h-[80px] xs:min-h-[90px] sm:min-h-[100px] md:min-h-[120px] lg:min-h-[70px] xl:min-h-[80px] 2xl:min-h-[90px]"
                 style={{
                   background: 'rgba(255, 255, 255, 0.08)',
                   backdropFilter: 'blur(20px)',
@@ -820,14 +820,14 @@ export const BenefitsThree: React.FC = () => {
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
-                <div className="relative p-4 sm:p-5 md:p-6 lg:p-3 xl:p-4 2xl:p-5 z-10 h-full flex flex-col justify-center">
-                  <h3 className="text-base sm:text-lg md:text-xl lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3"
+                <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-3 xl:p-4 2xl:p-5 z-10 h-full flex flex-col justify-center">
+                  <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3"
                       style={{
                         textShadow: '0 2px 6px rgba(0,0,0,0.5)'
                       }}>
 {t('benefits3.dashboardTitle')}
                   </h3>
-                  <p className="text-white/95 text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed lg:leading-relaxed"
+                  <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed"
                      style={{
                        textShadow: '0 1px 4px rgba(0,0,0,0.4)'
                      }}>
@@ -853,36 +853,36 @@ export const BenefitsThree: React.FC = () => {
                 {/* Gradient overlay for depth */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/3 to-transparent pointer-events-none"></div>
                 
-                <div className="relative p-4 sm:p-5 md:p-6 lg:p-3 xl:p-4 2xl:p-5 z-10">
-                  <div className="text-center mb-4 sm:mb-5 md:mb-6 lg:mb-2 xl:mb-3">
-                    <h3 className="text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3"
+                <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-3 xl:p-4 2xl:p-5 z-10">
+                  <div className="text-center mb-3 xs:mb-4 sm:mb-4 md:mb-5 lg:mb-2 xl:mb-3">
+                    <h3 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3"
                         style={{
                           textShadow: '0 2px 8px rgba(0,0,0,0.6)'
                         }}>
                       {t('benefits3.moreFeaturesTitle')}
                     </h3>
-                    <div className="w-12 sm:w-16 md:w-20 lg:w-10 xl:w-12 2xl:w-16 h-0.5 md:h-1 lg:h-0.5 xl:h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+                    <div className="w-8 xs:w-10 sm:w-12 md:w-16 lg:w-10 xl:w-12 2xl:w-16 h-0.5 xs:h-0.5 sm:h-0.5 md:h-1 lg:h-0.5 xl:h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-2 xl:gap-3 2xl:gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 gap-2 xs:gap-3 sm:gap-3 md:gap-4 lg:gap-2 xl:gap-3 2xl:gap-4">
                     <motion.div 
-                      className="flex items-center space-x-3 sm:space-x-4 lg:space-x-2 xl:space-x-3 p-3 sm:p-4 md:p-5 lg:p-2 xl:p-3 2xl:p-4 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[40px] xl:min-h-[50px] 2xl:min-h-[60px]"
+                      className="flex items-center space-x-2 xs:space-x-3 sm:space-x-3 lg:space-x-2 xl:space-x-3 p-2 xs:p-3 sm:p-3 md:p-4 lg:p-2 xl:p-3 2xl:p-4 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[50px] xs:min-h-[55px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[40px] xl:min-h-[50px] 2xl:min-h-[60px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 min-w-[44px] min-h-[44px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-4 lg:h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 xs:w-9 sm:w-10 md:w-12 lg:w-8 xl:w-9 2xl:w-10 h-8 xs:h-9 sm:h-10 md:h-12 lg:h-8 xl:h-9 2xl:h-10 min-w-[32px] min-h-[32px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-blue-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 xs:w-4 sm:w-5 md:w-6 lg:w-4 xl:w-4 2xl:w-5 h-4 xs:h-4 sm:h-5 md:h-6 lg:h-4 xl:h-4 2xl:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-blue-100 transition-colors mb-1 lg:mb-1 xl:mb-1"
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-blue-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           {t('benefits3.features.mobileOptimization.title')}
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-xs xl:text-xs 2xl:text-sm text-white/85 group-hover:text-white/95 transition-colors leading-snug lg:leading-relaxed"
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-xs 2xl:text-sm text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -892,23 +892,23 @@ export const BenefitsThree: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 sm:space-x-4 lg:space-x-2 xl:space-x-3 p-3 sm:p-4 md:p-5 lg:p-2 xl:p-3 2xl:p-4 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[40px] xl:min-h-[50px] 2xl:min-h-[60px]"
+                      className="flex items-center space-x-2 xs:space-x-3 sm:space-x-3 lg:space-x-2 xl:space-x-3 p-2 xs:p-3 sm:p-3 md:p-4 lg:p-2 xl:p-3 2xl:p-4 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[50px] xs:min-h-[55px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[40px] xl:min-h-[50px] 2xl:min-h-[60px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-8 lg:h-8 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 min-w-[44px] min-h-[44px] bg-gradient-to-br from-green-500 to-green-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-4 lg:h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 xs:w-9 sm:w-10 md:w-12 lg:w-8 xl:w-9 2xl:w-10 h-8 xs:h-9 sm:h-10 md:h-12 lg:h-8 xl:h-9 2xl:h-10 min-w-[32px] min-h-[32px] bg-gradient-to-br from-green-500 to-green-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-green-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <svg className="w-4 xs:w-4 sm:w-5 md:w-6 lg:w-4 xl:w-4 2xl:w-5 h-4 xs:h-4 sm:h-5 md:h-6 lg:h-4 xl:h-4 2xl:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-green-100 transition-colors mb-1 lg:mb-1 xl:mb-1"
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-green-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           {t('benefits3.features.dashboardAnalysis.title')}
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg text-white/85 group-hover:text-white/95 transition-colors leading-snug lg:leading-relaxed"
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -918,23 +918,23 @@ export const BenefitsThree: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 sm:space-x-4 lg:space-x-4 xl:space-x-5 p-3 sm:p-4 md:p-5 lg:p-5 xl:p-6 2xl:p-7 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[80px] xl:min-h-[90px] 2xl:min-h-[100px]"
+                      className="flex items-center space-x-2 xs:space-x-3 sm:space-x-3 lg:space-x-3 xl:space-x-4 p-2 xs:p-3 sm:p-3 md:p-4 lg:p-4 xl:p-5 2xl:p-6 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] xs:min-h-[65px] sm:min-h-[70px] md:min-h-[75px] lg:min-h-[70px] xl:min-h-[80px] 2xl:min-h-[90px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 xl:w-14 xl:h-14 2xl:w-16 2xl:h-16 min-w-[44px] min-h-[44px] bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 xs:w-9 sm:w-10 md:w-12 lg:w-9 xl:w-10 2xl:w-12 h-8 xs:h-9 sm:h-10 md:h-12 lg:h-9 xl:h-10 2xl:h-12 min-w-[32px] min-h-[32px] bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-purple-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 xl:w-7 xl:h-7 2xl:w-8 2xl:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm sm:text-base md:text-lg lg:text-base xl:text-lg 2xl:text-xl font-semibold text-white group-hover:text-purple-100 transition-colors mb-1 lg:mb-2 xl:mb-2"
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-purple-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           {t('benefits3.features.inventoryLink.title')}
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg text-white/85 group-hover:text-white/95 transition-colors leading-snug lg:leading-relaxed"
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -944,23 +944,23 @@ export const BenefitsThree: React.FC = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="flex items-center space-x-3 sm:space-x-4 lg:space-x-4 xl:space-x-5 p-3 sm:p-4 md:p-5 lg:p-5 xl:p-6 2xl:p-7 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[80px] xl:min-h-[90px] 2xl:min-h-[100px]"
+                      className="flex items-center space-x-2 xs:space-x-3 sm:space-x-3 lg:space-x-3 xl:space-x-4 p-2 xs:p-3 sm:p-3 md:p-4 lg:p-4 xl:p-5 2xl:p-6 rounded-xl lg:rounded-2xl transition-all duration-300 hover:bg-white/10 group cursor-pointer min-h-[60px] xs:min-h-[65px] sm:min-h-[70px] md:min-h-[75px] lg:min-h-[70px] xl:min-h-[80px] 2xl:min-h-[90px]"
                       whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 xl:w-14 xl:h-14 2xl:w-16 2xl:h-16 min-w-[44px] min-h-[44px] bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                      <div className="w-8 xs:w-9 sm:w-10 md:w-12 lg:w-9 xl:w-10 2xl:w-12 h-8 xs:h-9 sm:h-10 md:h-12 lg:h-9 xl:h-10 2xl:h-12 min-w-[32px] min-h-[32px] bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg border border-orange-400/30 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                         <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 xl:w-7 xl:h-7 2xl:w-8 2xl:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.07 14H2.72c-.18 0-.35-.07-.47-.2A.67.67 0 012 13.33c0-.18.08-.35.25-.47L9.93 6c.12-.12.3-.2.47-.2.18 0 .35.08.47.2l7.68 6.86c.17.12.25.3.25.47 0 .18-.08.35-.25.47-.12.13-.3.2-.47.2h-1.35" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm sm:text-base md:text-lg lg:text-base xl:text-lg 2xl:text-xl font-semibold text-white group-hover:text-orange-100 transition-colors mb-1 lg:mb-2 xl:mb-2"
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-orange-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
                            style={{
                              textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                            }}>
                           {t('benefits3.features.serviceNotification.title')}
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg text-white/85 group-hover:text-white/95 transition-colors leading-snug lg:leading-relaxed"
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
                            style={{
                              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                            }}>
@@ -973,12 +973,12 @@ export const BenefitsThree: React.FC = () => {
               </div>
             </motion.div>
             {/* Bottom accent line - Smaller for desktop */}
-            <div className="flex flex-col items-center w-full mt-4 sm:mt-6 md:mt-8 lg:mt-8 xl:mt-10">
-              <div className="flex items-center justify-center space-x-2 sm:space-x-3 lg:space-x-3 xl:space-x-4">
-                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-3 lg:h-3 xl:w-3.5 xl:h-3.5 bg-blue-400 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-3 lg:h-3 xl:w-3.5 xl:h-3.5 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-3 lg:h-3 xl:w-3.5 xl:h-3.5 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-3 lg:h-3 xl:w-3.5 xl:h-3.5 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+            <div className="flex flex-col items-center w-full mt-3 xs:mt-4 sm:mt-5 md:mt-6 lg:mt-6 xl:mt-8">
+              <div className="flex items-center justify-center space-x-1 xs:space-x-2 sm:space-x-2 lg:space-x-3 xl:space-x-4">
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
               </div>
             </div>
             </div>

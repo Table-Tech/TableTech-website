@@ -16,6 +16,96 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading Screen Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseRing {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+}
+
+@keyframes loadingProgress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-pulseRing {
+  animation: pulseRing 2s ease-in-out infinite;
+}
+
+.animate-loadingProgress {
+  animation: loadingProgress 2s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Loading Screen Transitions */
+.loading-exit {
+  animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -249,9 +339,10 @@ video {
    Algemene HTML & BODY
 ========================== */
 html, body {
-  @apply bg-gradient-to-br from-blue-50 via-white to-cyan-50 text-gray-800;
+  background: linear-gradient(135deg, #1c1917, #292524, #44403c) !important;
+  color: #f5f5f4;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   min-height: 100vh;
   max-width: 100%;
   overflow-x: hidden; /* ✅ Alleen X verbergen, Y laat Lenis regelen */

@@ -16,13 +16,12 @@ const pricingTiers = [
     features: {
       "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
-      "Direct online betalen": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": false,
-      "Bestellingen aanpassen in keuken": false,
       "Inzicht in verkoop & omzet": false,
-      "Eigen themes": false,
+      "Eigen themas": false,
+      "Volledig op maat gemaakte applicatie": false,
       "Prioriteit bij support": false
     }
   },
@@ -38,13 +37,12 @@ const pricingTiers = [
     features: {
       "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
-      "Direct online betalen": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": false,
-      "Bestellingen aanpassen in keuken": true,
       "Inzicht in verkoop & omzet": true,
-      "Eigen themes": false,
+      "Eigen themas": false,
+      "Volledig op maat gemaakte applicatie": false,
       "Prioriteit bij support": false
     }
   },
@@ -59,14 +57,13 @@ const pricingTiers = [
     features: {
       "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
-      "Direct online betalen": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": true,
-      "Bestellingen aanpassen in keuken": true,
       "Inzicht in verkoop & omzet": true,
-      "Eigen themes": true,
+      "Eigen themas": true,
       "Aangepaste QR-standaards & tafelbordje": true,
+      "Volledig op maat gemaakte applicatie": false,
       "Prioriteit bij support": false
     }
   },
@@ -81,14 +78,13 @@ const pricingTiers = [
     features: {
       "Complete menu-inrichting eenmalig": true,
       "Bestellen via QR": true,
-      "Direct online betalen": true,
       "Keuken ontvangt bestellingen live": true,
       "Eigen menukaart, foto's & logo": true,
       "Inclusief tablet voor keuken": true,
-      "Bestellingen aanpassen in keuken": true,
       "Inzicht in verkoop & omzet": true,
-      "Eigen themes": true,
+      "Eigen themas": true,
       "Aangepaste QR-standaards & tafelbordje": true,
+      "Volledig op maat gemaakte applicatie": true,
       "Prioriteit bij support": true
     }
   }
@@ -98,14 +94,13 @@ const pricingTiers = [
 const featureOrder = [
   "Complete menu-inrichting eenmalig",
   "Bestellen via QR",
-  "Direct online betalen",
   "Keuken ontvangt bestellingen live",
   "Eigen menukaart, foto's & logo",
-  "Bestellingen aanpassen in keuken",
   "Inzicht in verkoop & omzet",
   "Inclusief tablet voor keuken",
-  "Eigen themes",
+  "Eigen themas",
   "Aangepaste QR-standaards & tafelbordje",
+  "Volledig op maat gemaakte applicatie",
   "Prioriteit bij support"
 ];
 

@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { LaptopMockup } from "../../components/LaptopMockup";
 
@@ -12,41 +12,41 @@ export const HeroSection: React.FC = () => {
   const [isEmployeeDemoOpen, setIsEmployeeDemoOpen] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
 
-  const handleOpenCustomerDemo = async () => {
+  const handleOpenCustomerDemo = useCallback(async () => {
     setIsPreloading(true);
     await Promise.resolve(import("../../components/DemoOverlay"));
     setIsPreloading(false);
-    
+
     setIsCustomerDemoOpen(true);
     setIsEmployeeDemoOpen(false);
     document.body.style.overflow = 'hidden';
-  };
+  }, []);
 
-  const handleOpenEmployeeDemo = async () => {
+  const handleOpenEmployeeDemo = useCallback(async () => {
     setIsPreloading(true);
     await Promise.resolve(import("../../components/DemoOverlay-laptop"));
     setIsPreloading(false);
-    
+
     setIsEmployeeDemoOpen(true);
     setIsCustomerDemoOpen(false);
     document.body.style.overflow = 'hidden';
-  };
+  }, []);
 
-  const handleCloseAllDemos = () => {
+  const handleCloseAllDemos = useCallback(() => {
     setIsCustomerDemoOpen(false);
     setIsEmployeeDemoOpen(false);
     document.body.style.overflow = 'unset';
-  };
+  }, []);
 
-  const handleSwitchToEmployee = () => {
+  const handleSwitchToEmployee = useCallback(() => {
     setIsCustomerDemoOpen(false);
     setIsEmployeeDemoOpen(true);
-  };
+  }, []);
 
-  const handleSwitchToCustomer = () => {
+  const handleSwitchToCustomer = useCallback(() => {
     setIsEmployeeDemoOpen(false);
     setIsCustomerDemoOpen(true);
-  };
+  }, []);
 
   return (
     <>
@@ -70,7 +70,7 @@ export const HeroSection: React.FC = () => {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             poster="/images/backgrounds/telefoon-fallback-achtergrond.webp"
             webkit-playsinline="true"
             x-webkit-airplay="allow"
