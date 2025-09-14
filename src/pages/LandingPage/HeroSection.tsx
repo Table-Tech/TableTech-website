@@ -585,16 +585,7 @@ export const HeroSection: React.FC = () => {
       </section>
 
       {/* Demo Overlays */}
-      <Suspense fallback={
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-lg font-medium">{t('demoLoading')}</span>
-            </div>
-          </div>
-        </div>
-      }>
+      <Suspense fallback={null}>
         <CustomerDemoOverlay
           isOpen={isCustomerDemoOpen}
           onClose={handleCloseAllDemos}
@@ -602,16 +593,7 @@ export const HeroSection: React.FC = () => {
         />
       </Suspense>
 
-      <Suspense fallback={
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 text-white">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-lg font-medium">{t('dashboardDemoLoading')}</span>
-            </div>
-          </div>
-        </div>
-      }>
+      <Suspense fallback={null}>
         <EmployeeDemoOverlay
           isOpen={isEmployeeDemoOpen}
           onClose={handleCloseAllDemos}

@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 
 const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
 const CookieConsentBanner = lazy(() => import("./components/CookieConsentBanner"));
-const LoadingScreen = lazy(() => import("./components/LoadingScreen"));
+import LoadingScreen from "./components/LoadingScreen";
 
 import ScrollToTop from "./components/ScrollToTop";
 import { ScrollDots } from "./components/ScrollDots";
@@ -46,15 +46,7 @@ const App: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return (
-      <Suspense fallback={
-        <div className="fixed inset-0 bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-800"></div>
-        </div>
-      }>
-        <LoadingScreen />
-      </Suspense>
-    );
+    return <LoadingScreen />;
   }
 
   return (
@@ -62,11 +54,7 @@ const App: React.FC = () => {
       <ScrollToTop />
       <ScrollDots />
       <ScrollProgressBar />
-      <Suspense fallback={
-        <div className="flex h-screen items-center justify-center bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-800"></div>
-        </div>
-      }>
+      <Suspense fallback={null}>
         <LandingPage />
       </Suspense>
       <Suspense fallback={null}>
