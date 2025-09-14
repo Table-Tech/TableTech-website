@@ -55,6 +55,17 @@ export default function ComputerMock() {
   const [tableNumberError, setTableNumberError] = useState('');
   const [language, setLanguage] = useState<'nl' | 'en'>('nl');
   const [activeSettingsTab, setActiveSettingsTab] = useState<'general' | 'payment' | 'staff'>('general');
+  const [hiddenItems, setHiddenItems] = useState<string[]>([]);
+  const [showHiddenItems, setShowHiddenItems] = useState(false);
+
+  // Functions for hiding/showing menu items
+  const hideMenuItem = (itemId: string) => {
+    setHiddenItems(prev => [...prev, itemId]);
+  };
+
+  const showMenuItem = (itemId: string) => {
+    setHiddenItems(prev => prev.filter(id => id !== itemId));
+  };
 
   // Translations
   const t = {
@@ -497,7 +508,7 @@ export default function ComputerMock() {
       price: 8.99,
       category: 'Burgers',
       available: true,
-      image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="14"%3EClassic Burger%3C/text%3E%3C/svg%3E'
+      image: '/Dashboard-demo-foto/hamburger.jpg'
     },
     {
       id: '2',
@@ -506,7 +517,7 @@ export default function ComputerMock() {
       price: 9.99,
       category: 'Burgers',
       available: true,
-      image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="14"%3EMexican Burger%3C/text%3E%3C/svg%3E'
+      image: '/Dashboard-demo-foto/mexican-burger-06_0.avif'
     },
     {
       id: '3',
@@ -515,16 +526,25 @@ export default function ComputerMock() {
       price: 12.55,
       category: 'Burgers',
       available: true,
-      image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="14"%3ESpicey Burger%3C/text%3E%3C/svg%3E'
+      image: '/Dashboard-demo-foto/spicy-burger.webp'
     },
     {
       id: '4',
-      name: 'Margherita Pizza',
-      description: 'alle soorten kies maar',
-      price: 10.99,
+      name: 'Italian Pizza',
+      description: 'Heel lekker',
+      price: 15.00,
       category: 'Pizzas',
       available: true,
-      image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="14"%3EMargherita%3C/text%3E%3C/svg%3E'
+      image: '/Dashboard-demo-foto/italian-pizza.jpg'
+    },
+    {
+      id: '5',
+      name: 'Italian pasta',
+      description: 'Very delicious',
+      price: 13.00,
+      category: 'Pastas',
+      available: true,
+      image: '/Dashboard-demo-foto/Rigatoni-with-Italian-Sausage-2022-FEATURE.jpg'
     }
   ];
 
@@ -1110,12 +1130,13 @@ export default function ComputerMock() {
 
   // Menu Page  
   const MenuPage = () => {
-    const [selectedCategory, setSelectedCategory] = useState('All Items');
+    const [selectedCategory, setSelectedCategory] = useState('Burgers');
     
-    const categories = ['All Items', 'Burgers', 'Pizzas'];
+    const categories = ['Burgers', 'Pizzas', 'Pastas'];
     
     const filteredItems = menuItems.filter(item => {
-      if (selectedCategory !== 'All Items' && item.category !== selectedCategory) return false;
+      if (item.category !== selectedCategory) return false;
+      if (!showHiddenItems && hiddenItems.includes(item.id)) return false;
       return true;
     });
 
@@ -1127,76 +1148,146 @@ export default function ComputerMock() {
 
     return (
       <div className="flex-1 p-6 overflow-auto" style={{ backgroundColor: '#FDF4E3' }}>
+        {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Menu Management</h1>
+            <h1 className="text-2xl font-bold mb-2" style={{ color: '#D17843' }}>Menu Beheer</h1>
             <p className="text-gray-600 text-sm">Manage your restaurant's menu items and categories</p>
           </div>
-          <button className="px-3 py-1 rounded-lg flex items-center space-x-1 text-xs"
-            style={{ backgroundColor: '#5D4037', color: 'white' }}>
-            <Plus className="w-3 h-3" />
-            <span className="font-medium">Add Menu Item</span>
-          </button>
+          <div className="flex space-x-2">
+            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center space-x-2 text-sm hover:bg-gray-200 transition-colors">
+              <span>📁</span>
+              <span>Categorie Toevoegen</span>
+            </button>
+            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center space-x-2 text-sm hover:bg-gray-200 transition-colors">
+              <span>📝</span>
+              <span>Modifier Templates</span>
+            </button>
+            <button className="px-4 py-2 rounded-lg flex items-center space-x-2 text-sm text-white hover:shadow-md transition-all"
+              style={{ backgroundColor: '#D17843' }}>
+              <Plus className="w-4 h-4" />
+              <span className="font-medium">Menu Item Toevoegen</span>
+            </button>
+          </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+        {/* Filter Section */}
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600 mb-2">Filteren op Categorie</p>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    selectedCategory === category
+                      ? 'text-white'
+                      : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+                  }`}
+                  style={{
+                    backgroundColor: selectedCategory === category ? '#8B4513' : undefined
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                  selectedCategory === category
-                    ? 'text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                onClick={() => setShowHiddenItems(!showHiddenItems)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  showHiddenItems 
+                    ? 'bg-orange-100 text-orange-700' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
-                style={{
-                  backgroundColor: selectedCategory === category ? '#5D4037' : undefined,
-                  background: selectedCategory !== category ? 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' : undefined
-                }}
               >
-                {category}
+                <div className={`w-5 h-5 rounded-full transition-colors ${
+                  showHiddenItems ? 'bg-orange-500' : 'bg-gray-300'
+                }`}></div>
+                <span>{showHiddenItems ? 'Verborgen Items Tonen' : 'Niet-beschikbare Verbergen'}</span>
               </button>
-            ))}
+            </div>
           </div>
         </div>
 
         {/* Menu Items */}
         {Object.entries(categoryGroups).map(([category, items]) => (
-          <div key={category} className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold flex items-center space-x-2">
-                <span className="text-xl">
-                  {category === 'Burgers' ? '🍔' : category === 'Pizzas' ? '🍕' : '🍽️'}
+          <div key={category} className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-base font-semibold flex items-center space-x-2" style={{ color: '#5D4037' }}>
+                <span className="text-lg">
+                  {category === 'Burgers' ? '🍔' : category === 'Pizzas' ? '🍕' : category === 'Pastas' ? '�' : '�🍽️'}
                 </span>
                 <span>{category}</span>
               </h2>
               <span className="text-xs text-gray-500">{items.length} items</span>
             </div>
+            <p className="text-xs text-gray-500 mb-3">
+              {category === 'Burgers' ? 'Ones a life time burger experience' : 
+               category === 'Pizzas' ? 'alle soorten kies maar' :
+               category === 'Pastas' ? 'all kinds' : 'Various menu items'}
+            </p>
             <div className="grid grid-cols-3 gap-3">
               {items.map((item) => (
-                <div key={item.id} className="rounded-xl overflow-hidden shadow-sm" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-                  <div className="h-24 relative" style={{ background: 'linear-gradient(135deg, #f2ede6 0%, #e6d7c3 100%)' }}>
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                <div key={item.id} className="bg-white rounded-lg overflow-hidden shadow-sm border hover:shadow-md transition-shadow">
+                  <div className="h-40 relative bg-gray-100">
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: 'center' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="14"%3E${item.name}%3C/text%3E%3C/svg%3E`;
+                      }}
+                    />
                   </div>
-                  <div className="p-3">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold text-sm" style={{ color: '#5D4037' }}>{item.name}</h3>
-                        <p className="text-xs" style={{ color: '#8D6E63' }}>{item.description}</p>
+                  <div className="p-4">
+                    <div className="mb-3">
+                      <h3 className="font-semibold text-base text-gray-900 mb-1">{item.name}</h3>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-lg font-bold text-green-600">
+                          €{item.price.toFixed(2)}
+                        </span>
                       </div>
-                      <span className="text-sm font-bold" style={{ color: '#4CAF50' }}>
-                        €{item.price.toFixed(2)}
-                      </span>
+                      <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{category}</span>
                     </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-gray-500">{category}</span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    
+                    <div className="mb-3">
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                         item.available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                       }`}>
-                        {item.available ? 'Available' : 'Unavailable'}
+                        {item.available ? 'Beschikbaar' : 'Niet beschikbaar'}
                       </span>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <button 
+                        className="flex-1 px-3 py-2 text-sm bg-gray-100 border border-gray-300 text-gray-700 rounded hover:bg-gray-200 transition-colors font-medium"
+                        onClick={() => {/* Bewerken functionaliteit - doet niets */}}
+                      >
+                        Bewerken
+                      </button>
+                      <button 
+                        className={`flex-1 px-3 py-2 text-sm border rounded transition-colors font-medium ${
+                          hiddenItems.includes(item.id)
+                            ? 'bg-green-50 border-green-300 text-green-600 hover:bg-green-100'
+                            : 'bg-orange-50 border-orange-300 text-orange-600 hover:bg-orange-100'
+                        }`}
+                        onClick={() => {
+                          if (hiddenItems.includes(item.id)) {
+                            showMenuItem(item.id);
+                          } else {
+                            hideMenuItem(item.id);
+                          }
+                        }}
+                      >
+                        {hiddenItems.includes(item.id) ? 'Tonen' : 'Verbergen'}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1433,7 +1524,7 @@ export default function ComputerMock() {
         );
       case 'settings': {
         const renderGeneralSettings = () => (
-          <div className="rounded-xl p-4 shadow-sm border border-gray-200 bg-white mb-4">
+          <div className="rounded-xl p-4 shadow-sm border border-gray-200 mb-4" style={{backgroundImage: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)'}}>
             <h2 className="text-lg font-semibold mb-2" style={{ color: '#5D4037' }}>
               {getText('settings.generalTitle')}
             </h2>
@@ -1540,7 +1631,7 @@ export default function ComputerMock() {
         );
 
         const renderPaymentSettings = () => (
-          <div className="rounded-xl p-8 shadow-sm border border-gray-200 bg-white mb-6">
+          <div className="rounded-xl p-8 shadow-sm border border-gray-200 mb-6" style={{backgroundImage: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)'}}>
             <h2 className="text-xl font-semibold mb-3" style={{ color: '#5D4037' }}>
               {getText('settings.paymentTitle')}
             </h2>
@@ -1640,7 +1731,7 @@ export default function ComputerMock() {
         );
 
         const renderStaffManagement = () => (
-          <div className="rounded-xl p-6 shadow-sm border border-gray-200 bg-white mb-6">
+          <div className="rounded-xl p-6 shadow-sm border border-gray-200 mb-6" style={{backgroundImage: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)'}}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-semibold mb-2" style={{ color: '#5D4037' }}>
@@ -1685,7 +1776,7 @@ export default function ComputerMock() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody style={{backgroundImage: 'linear-gradient(135deg, #faf9f7 0%, #f9f7f4 100%)'}} className="divide-y divide-gray-200">
                   {staffMembers.map((staff) => (
                     <tr key={staff.id} className="hover:bg-gray-50">
                       <td className="px-4 py-4 whitespace-nowrap">
@@ -1738,13 +1829,13 @@ export default function ComputerMock() {
               </div>
             </div>            {/* Deleted Staff Section */}
             {deletedStaff.length > 0 && (
-              <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="mt-6 p-4 border border-orange-200 rounded-lg" style={{backgroundImage: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)'}}>
                 <h4 className="text-sm font-medium text-orange-800 mb-3">
                   {getText('settings.deletedStaff')}
                 </h4>
                 <div className="space-y-2">
                   {deletedStaff.map((staff) => (
-                    <div key={staff.id} className="flex items-center justify-between p-3 bg-white rounded border">
+                    <div key={staff.id} className="flex items-center justify-between p-3 rounded border" style={{backgroundImage: 'linear-gradient(135deg, #faf9f7 0%, #f9f7f4 100%)'}}>
                       <div className="flex items-center space-x-3">
                         <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium bg-gray-400">
                           {staff.name.charAt(0)}
@@ -1769,11 +1860,11 @@ export default function ComputerMock() {
         );
 
         return (
-          <div className="flex-1 p-6 overflow-hidden" style={{ backgroundColor: '#f5f5f0' }}>
+          <div className="flex-1 p-6 overflow-hidden" style={{ backgroundColor: '#FDF4E3' }}>
               {/* Settings Header */}
               <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200" 
                 style={{ 
-                  backgroundImage: 'linear-gradient(120deg, #faf9f7 0%, #f2ede6 50%, #ede3d3 100%)'
+                  backgroundImage: 'linear-gradient(120deg, #f5f5f0 0%, #e6d7c3 50%, #d2b48c 100%)'
                 }}>
                 <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>
                   {getText('settings')}
