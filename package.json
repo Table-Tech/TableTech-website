@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
-    "@executeautomation/playwright-mcp-server": "^1.0.6",
+    "@executeautomation/playwright-mcp-server": "^1.0.4",
     "@magicuidesign/mcp": "^1.0.6",
     "@modelcontextprotocol/server-filesystem": "^2025.8.21",
     "@modelcontextprotocol/server-memory": "^2025.8.4",

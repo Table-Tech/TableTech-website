@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-2 text-base group">
             <Phone className="w-5 h-5 text-[#FFD382] group-hover:text-[#E86C28] transition-colors duration-300" />
             <a 
-              href="tel:+31853030723" 
+              href="tel:+31648447234" 
               className="hover:text-white transition-all duration-300 font-semibold hover:scale-105"
               style={{textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)'}}
               onMouseEnter={(e) => {
@@ -98,7 +98,7 @@ export const Footer: React.FC = () => {
                 e.currentTarget.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.4)';
               }}
             >
-              +31 85 303 07 23
+              +31 6 48447234
             </a>
           </div>
           <div className="flex items-center gap-2 text-base group">

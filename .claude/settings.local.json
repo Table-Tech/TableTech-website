@@ -37,7 +37,8 @@
       "Bash(netstat:*)",
       "Bash(kill:*)",
       "Bash(ss:*)",
-      "Read(//mnt/c/Users/Hicha/OneDrive/Afbeeldingen/Schermopnamen/**)"
+      "Read(//mnt/c/Users/Hicha/OneDrive/Afbeeldingen/Schermopnamen/**)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
