@@ -1,0 +1,22 @@
+node_modules/
+.env
+dist/
+*.log
+.DS_Store
+.vscode/
+coverage/
+
+# Database temporary files (prevent credential leaks)
+*database*.js
+setup*.js
+check*.js
+restore*.js
+
+# SQLite database files
+data/
+*.db
+*.sqlite
+
+# Prevent any temporary scripts with credentials
+temp*.js
+test-db*.js
