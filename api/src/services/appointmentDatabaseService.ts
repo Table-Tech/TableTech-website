@@ -359,38 +359,368 @@ class AppointmentDatabaseService {
     return crypto.createHash('sha256').update(email.toLowerCase()).digest('hex');
   }
 
+  private async ensureFunctionsExist(): Promise<void> {
+    try {
+      console.log('🔧 Ensuring critical database functions exist...');
+
+      // Generate reference number function
+      await query(`
+        CREATE OR REPLACE FUNCTION generate_reference_number()
+        RETURNS VARCHAR AS $$
+        DECLARE
+            ref_number VARCHAR;
+            date_part VARCHAR;
+            random_part VARCHAR;
+            exists_check BOOLEAN;
+        BEGIN
+            date_part := 'TT' || TO_CHAR(CURRENT_DATE, 'MMDD');
+
+            LOOP
+                random_part := UPPER(SUBSTRING(MD5(RANDOM()::TEXT), 1, 4));
+                ref_number := date_part || '-' || random_part;
+
+                SELECT EXISTS(SELECT 1 FROM appointments WHERE reference_number = ref_number) INTO exists_check;
+
+                EXIT WHEN NOT exists_check;
+            END LOOP;
+
+            RETURN ref_number;
+        END;
+        $$ LANGUAGE plpgsql;
+      `);
+
+      // Time slot availability checker
+      await query(`
+        CREATE OR REPLACE FUNCTION is_time_slot_available(
+            check_date DATE,
+            check_time TIME
+        )
+        RETURNS BOOLEAN AS $$
+        DECLARE
+            day_week INTEGER;
+            is_blocked BOOLEAN;
+            is_booked BOOLEAN;
+            slot_exists BOOLEAN;
+        BEGIN
+            day_week := EXTRACT(DOW FROM check_date);
+
+            SELECT EXISTS(
+                SELECT 1 FROM blocked_dates
+                WHERE blocked_date = check_date
+            ) INTO is_blocked;
+
+            IF is_blocked THEN
+                RETURN FALSE;
+            END IF;
+
+            SELECT EXISTS(
+                SELECT 1 FROM appointment_time_slots
+                WHERE day_of_week = day_week
+                AND start_time = check_time
+                AND is_available = true
+            ) INTO slot_exists;
+
+            IF NOT slot_exists THEN
+                RETURN FALSE;
+            END IF;
+
+            SELECT EXISTS(
+                SELECT 1 FROM appointments
+                WHERE appointment_date = check_date
+                AND appointment_time = check_time
+                AND status IN ('confirmed', 'pending')
+            ) INTO is_booked;
+
+            RETURN NOT is_booked;
+        END;
+        $$ LANGUAGE plpgsql;
+      `);
+
+      // Available slots function
+      await query(`
+        CREATE OR REPLACE FUNCTION get_available_slots(check_date DATE)
+        RETURNS TABLE(
+            slot_time TIME,
+            is_available BOOLEAN
+        ) AS $$
+        DECLARE
+            day_week INTEGER;
+        BEGIN
+            day_week := EXTRACT(DOW FROM check_date);
+
+            RETURN QUERY
+            SELECT
+                ts.start_time as slot_time,
+                NOT EXISTS(
+                    SELECT 1 FROM appointments a
+                    WHERE a.appointment_date = check_date
+                    AND a.appointment_time = ts.start_time
+                    AND a.status IN ('confirmed', 'pending')
+                ) AND NOT EXISTS(
+                    SELECT 1 FROM blocked_dates bd
+                    WHERE bd.blocked_date = check_date
+                ) as is_available
+            FROM appointment_time_slots ts
+            WHERE ts.day_of_week = day_week
+            AND ts.is_available = true
+            ORDER BY ts.start_time;
+        END;
+        $$ LANGUAGE plpgsql;
+      `);
+
+      console.log('✅ Critical database functions ensured');
+    } catch (error) {
+      console.error('❌ Failed to ensure functions exist:', error);
+      throw error;
+    }
+  }
+
   /**
-   * Initialize database tables
+   * Initialize database tables - Auto-creates missing tables and functions
    */
   async initializeDatabase(): Promise<void> {
     try {
-      console.log('Initializing appointment database...');
-      
+      console.log('🔄 Initializing appointment database...');
+
       // Test connection
       const connected = await pool.query('SELECT NOW()');
       console.log('✅ Database connected:', connected.rows[0].now);
 
-      // Check if tables exist
-      const tablesExist = await query(
+      // Start transaction for atomic initialization
+      await query('BEGIN;');
+      console.log('🔒 Started database initialization transaction');
+
+      // Enable required extensions
+      await query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+      await query('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
+
+      // Check if critical tables exist
+      const appointmentsExist = await query(
         `SELECT EXISTS (
-          SELECT FROM information_schema.tables 
+          SELECT FROM information_schema.tables
           WHERE table_name = 'appointments'
         )`
       );
 
-      if (!tablesExist.rows[0].exists) {
-        console.log('Creating appointment tables...');
-        // You would run the schema SQL here
-        // For now, just log
-        console.log('⚠️  Please run enhanced-schema.sql to create tables');
-      } else {
-        console.log('✅ Appointment tables already exist');
+      const emailLogsExist = await query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_name = 'email_logs'
+        )`
+      );
+
+      const timeSlotsExist = await query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_name = 'appointment_time_slots'
+        )`
+      );
+
+      // Create missing tables
+      if (!appointmentsExist.rows[0].exists) {
+        console.log('🔧 Creating appointments table...');
+        await query(`
+          CREATE TABLE appointments (
+              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+              reference_number VARCHAR(12) UNIQUE NOT NULL,
+              appointment_date DATE NOT NULL,
+              appointment_time TIME NOT NULL,
+              appointment_end_time TIME NOT NULL,
+              status VARCHAR(50) DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'cancelled', 'completed', 'no-show', 'pending')),
+              restaurant_name VARCHAR(255),
+              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+              CONSTRAINT unique_appointment_slot UNIQUE (appointment_date, appointment_time)
+          );
+        `);
+        console.log('✅ Appointments table created');
       }
 
+      if (!emailLogsExist.rows[0].exists) {
+        console.log('🔧 Creating email_logs table...');
+        await query(`
+          CREATE TABLE email_logs (
+              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+              appointment_id UUID REFERENCES appointments(id) ON DELETE SET NULL,
+              email_type VARCHAR(100) NOT NULL,
+              email_hash VARCHAR(64),
+              sent_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+              status VARCHAR(50) DEFAULT 'sent' CHECK (status IN ('sent', 'failed', 'bounced', 'pending')),
+              error_message TEXT
+          );
+        `);
+        console.log('✅ Email logs table created');
+      }
+
+      if (!timeSlotsExist.rows[0].exists) {
+        console.log('🔧 Creating appointment_time_slots table...');
+        await query(`
+          CREATE TABLE appointment_time_slots (
+              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+              day_of_week INTEGER NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
+              start_time TIME NOT NULL,
+              end_time TIME NOT NULL,
+              duration_minutes INTEGER DEFAULT 60,
+              is_available BOOLEAN DEFAULT true,
+              max_appointments_per_slot INTEGER DEFAULT 1,
+              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+              CONSTRAINT unique_day_time_slot UNIQUE (day_of_week, start_time)
+          );
+        `);
+
+        // Insert default time slots for weekdays
+        console.log('🔧 Inserting default time slots...');
+        await query(`
+          INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
+          -- Monday (1) to Friday (5)
+          (1, '09:00', '10:00', 60),
+          (1, '10:00', '11:00', 60),
+          (1, '11:00', '12:00', 60),
+          (1, '13:00', '14:00', 60),
+          (1, '14:00', '15:00', 60),
+          (1, '15:00', '16:00', 60),
+          (1, '16:00', '17:00', 60),
+          (2, '09:00', '10:00', 60),
+          (2, '10:00', '11:00', 60),
+          (2, '11:00', '12:00', 60),
+          (2, '13:00', '14:00', 60),
+          (2, '14:00', '15:00', 60),
+          (2, '15:00', '16:00', 60),
+          (2, '16:00', '17:00', 60),
+          (3, '09:00', '10:00', 60),
+          (3, '10:00', '11:00', 60),
+          (3, '11:00', '12:00', 60),
+          (3, '13:00', '14:00', 60),
+          (3, '14:00', '15:00', 60),
+          (3, '15:00', '16:00', 60),
+          (3, '16:00', '17:00', 60),
+          (4, '09:00', '10:00', 60),
+          (4, '10:00', '11:00', 60),
+          (4, '11:00', '12:00', 60),
+          (4, '13:00', '14:00', 60),
+          (4, '14:00', '15:00', 60),
+          (4, '15:00', '16:00', 60),
+          (4, '16:00', '17:00', 60),
+          (5, '09:00', '10:00', 60),
+          (5, '10:00', '11:00', 60),
+          (5, '11:00', '12:00', 60),
+          (5, '13:00', '14:00', 60),
+          (5, '14:00', '15:00', 60),
+          (5, '15:00', '16:00', 60),
+          (5, '16:00', '17:00', 60)
+          ON CONFLICT (day_of_week, start_time) DO NOTHING;
+        `);
+        console.log('✅ Appointment time slots table created and populated');
+      }
+
+      // Create indexes if they don't exist
+      await query(`
+        CREATE INDEX IF NOT EXISTS idx_appointments_date_time ON appointments(appointment_date, appointment_time);
+        CREATE INDEX IF NOT EXISTS idx_appointments_reference ON appointments(reference_number);
+        CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
+        CREATE INDEX IF NOT EXISTS idx_email_logs_appointment ON email_logs(appointment_id);
+        CREATE INDEX IF NOT EXISTS idx_time_slots_day_time ON appointment_time_slots(day_of_week, start_time);
+        CREATE INDEX IF NOT EXISTS idx_time_slots_available ON appointment_time_slots(is_available);
+      `);
+
+      // Ensure critical functions exist
+      await this.ensureFunctionsExist();
+
+      // Create update trigger
+      await query(`
+        CREATE OR REPLACE FUNCTION update_updated_at_column()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = CURRENT_TIMESTAMP;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        DROP TRIGGER IF EXISTS update_appointments_updated_at ON appointments;
+        CREATE TRIGGER update_appointments_updated_at
+            BEFORE UPDATE ON appointments
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+      `);
+
+      // Commit transaction
+      await query('COMMIT;');
+      console.log('✅ Database initialization completed successfully');
+
     } catch (error) {
+      // Rollback transaction on error
+      try {
+        await query('ROLLBACK;');
+        console.log('🔄 Transaction rolled back due to error');
+      } catch (rollbackError) {
+        console.error('❌ Failed to rollback transaction:', rollbackError);
+      }
       console.error('❌ Database initialization failed:', error);
       throw error;
     }
+  }
+
+  /**
+   * Ensure time slots exist - Safe method to re-create time slots if missing
+   */
+  async ensureTimeSlots(): Promise<void> {
+    try {
+      console.log('🔧 Ensuring time slots are populated...');
+
+      // Re-insert default time slots (using ON CONFLICT DO NOTHING for safety)
+      await query(`
+        INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
+        -- Monday (1) to Friday (5)
+        (1, '09:00', '10:00', 60),
+        (1, '10:00', '11:00', 60),
+        (1, '11:00', '12:00', 60),
+        (1, '13:00', '14:00', 60),
+        (1, '14:00', '15:00', 60),
+        (1, '15:00', '16:00', 60),
+        (1, '16:00', '17:00', 60),
+        (2, '09:00', '10:00', 60),
+        (2, '10:00', '11:00', 60),
+        (2, '11:00', '12:00', 60),
+        (2, '13:00', '14:00', 60),
+        (2, '14:00', '15:00', 60),
+        (2, '15:00', '16:00', 60),
+        (2, '16:00', '17:00', 60),
+        (3, '09:00', '10:00', 60),
+        (3, '10:00', '11:00', 60),
+        (3, '11:00', '12:00', 60),
+        (3, '13:00', '14:00', 60),
+        (3, '14:00', '15:00', 60),
+        (3, '15:00', '16:00', 60),
+        (3, '16:00', '17:00', 60),
+        (4, '09:00', '10:00', 60),
+        (4, '10:00', '11:00', 60),
+        (4, '11:00', '12:00', 60),
+        (4, '13:00', '14:00', 60),
+        (4, '14:00', '15:00', 60),
+        (4, '15:00', '16:00', 60),
+        (4, '16:00', '17:00', 60),
+        (5, '09:00', '10:00', 60),
+        (5, '10:00', '11:00', 60),
+        (5, '11:00', '12:00', 60),
+        (5, '13:00', '14:00', 60),
+        (5, '14:00', '15:00', 60),
+        (5, '15:00', '16:00', 60),
+        (5, '16:00', '17:00', 60)
+        ON CONFLICT (day_of_week, start_time) DO NOTHING;
+      `);
+
+      const result = await query('SELECT COUNT(*) FROM appointment_time_slots');
+      console.log(`✅ Time slots ensured: ${result.rows[0].count} total slots`);
+    } catch (error) {
+      console.error('❌ Failed to ensure time slots:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Public query method for hybrid service
+   */
+  async query(sql: string, params?: any[]): Promise<any> {
+    return query(sql, params);
   }
 }
 

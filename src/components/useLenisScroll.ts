@@ -50,44 +50,44 @@ export const useLenisScroll = () => {
 
     ScrollTrigger.refresh();
 
-    // Enhanced fade-in animations with better performance
-    gsap.utils.toArray(".fade-in").forEach((el: unknown) => {
-      if (el instanceof HTMLElement) {
-        gsap.from(el, {
-          opacity: 0,
-          y: 40,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none none",
-            scroller: document.body, // Explicitly set scroller for Lenis
-            refreshPriority: -1, // Lower priority for better performance
-          },
-        });
-      }
-    });
+    // Optimized fade-in animations with reduced overhead
+    const fadeElements = gsap.utils.toArray(".fade-in");
+    if (fadeElements.length > 0) {
+      gsap.from(fadeElements, {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: "power2.out",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: fadeElements[0],
+          start: "top 80%",
+          toggleActions: "play none none none",
+          scroller: document.body,
+          batch: true,
+        },
+      });
+    }
 
-    // Enhanced scroll animations for container scroll components
-    gsap.utils.toArray(".container-scroll-element").forEach((el: unknown) => {
-      if (el instanceof HTMLElement) {
-        gsap.from(el, {
-          opacity: 0.8,
-          y: 20,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 90%",
-            end: "bottom 10%",
-            toggleActions: "play none none reverse",
-            scroller: document.body,
-            refreshPriority: 0, // Higher priority for container scroll
-          },
-        });
-      }
-    });
+    // Optimized container scroll animations
+    const containerElements = gsap.utils.toArray(".container-scroll-element");
+    if (containerElements.length > 0) {
+      gsap.from(containerElements, {
+        opacity: 0.9,
+        y: 15,
+        duration: 1,
+        ease: "power2.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: containerElements[0],
+          start: "top 85%",
+          end: "bottom 15%",
+          toggleActions: "play none none reverse",
+          scroller: document.body,
+          batch: true,
+        },
+      });
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {

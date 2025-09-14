@@ -1,9 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Home, Users, Menu, BarChart3, Clock, CheckCircle, Euro, TrendingUp, AlertCircle, Coffee } from 'lucide-react';
 
 export const LaptopMockup: React.FC = () => {
-  const { t } = useTranslation();
   return (
     <div className="relative w-full mx-auto transform hover:scale-105 transition-transform duration-300"
          style={{ 
@@ -68,10 +65,11 @@ export const LaptopMockup: React.FC = () => {
 
             {/* Dashboard Content - Responsive afbeelding */}
             <div className="flex-1 overflow-hidden flex items-center justify-center">
-              <img 
-                src="/images/backgrounds/preview (17).jpg" 
-                alt="Dashboard preview" 
+              <img
+                src="/images/backgrounds/preview (17).jpg"
+                alt="Dashboard preview"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           </div>

@@ -25,13 +25,13 @@ const App: React.FC = () => {
       try {
         // Minimum loading time for smooth UX
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
+
         // Preload critical components
         await Promise.all([
           import("./pages/LandingPage/LandingPage"),
           import("./components/CookieConsentBanner")
         ]);
-        
+
         setIsLoading(false);
         // Small delay before showing content for smooth transition
         setTimeout(() => setShowContent(true), 300);

@@ -5,7 +5,7 @@ import { env } from './env';
 import { logger } from './lib/logging/logger';
 import appointmentRoutesV2 from './routes/appointmentsV2';
 import logoRoutes from './routes/logo';
-import appointmentDb from './services/appointmentDatabaseService';
+import hybridDb from './services/hybridDatabaseService';
 
 const app = express();
 
@@ -123,15 +123,19 @@ app.use((err: Error, _req: express.Request, res: express.Response) => {
 // Initialize database on startup
 const initializeServices = async () => {
   try {
-    await appointmentDb.initializeDatabase();
-    logger.info('Database services initialized');
+    await hybridDb.initialize();
+    logger.info('Hybrid database services initialized with automatic fallback');
+
+    // Start health monitoring
+    hybridDb.startHealthMonitoring();
+    logger.info('Database health monitoring started');
   } catch (error) {
-    logger.error('Failed to initialize database:', error);
+    logger.error('Failed to initialize database services:', error);
   }
 };
 
 // Start server
-const PORT = env.PORT || 3001;
+const PORT = env.PORT || 3002;
 
 if (env.NODE_ENV !== 'test') {
   initializeServices().then(() => {
