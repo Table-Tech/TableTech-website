@@ -66,7 +66,7 @@ export const LaptopMockup: React.FC = () => {
             {/* Dashboard Content - Responsive afbeelding */}
             <div className="flex-1 overflow-hidden flex items-center justify-center">
               <img
-                src="/images/backgrounds/preview (17).jpg"
+                src="/images/backgrounds/preview (17).webp"
                 alt="Dashboard preview"
                 className="w-full h-full object-cover"
                 loading="lazy"

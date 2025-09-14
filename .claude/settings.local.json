@@ -38,7 +38,10 @@
       "Bash(kill:*)",
       "Bash(ss:*)",
       "Read(//mnt/c/Users/Hicha/OneDrive/Afbeeldingen/Schermopnamen/**)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(for file in dist/assets/js/*.js)",
+      "Bash(done)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

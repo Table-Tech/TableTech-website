@@ -3,8 +3,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 import { imagetools } from 'vite-imagetools';
+import { visualizer } from 'rollup-plugin-visualizer';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/', // Voor custom domeinen zoals tabletech.nl BROO
   plugins: [
     react(),
@@ -17,7 +18,14 @@ export default defineConfig({
       filter: /\.(js|mjs|json|css|html)$/i
     }), // gzip compressie
     imagetools(),      // image optimalisatie
-  ],
+    // Bundle analyzer - alleen in analyze mode
+    mode === 'analyze' && visualizer({
+      open: true,
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+    }),
+  ].filter(Boolean),
   server: {
     host: '127.0.0.1',
     port: 5173,
@@ -48,42 +56,96 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: false, // Disable sourcemaps in production
+    reportCompressedSize: false, // Snellere build tijdens development
+    minify: 'esbuild', // Gebruik esbuild voor snellere minificatie
+    target: 'es2020', // Modern browser target voor kleinere bundles
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Group vendor libraries
+          // Skip voor CSS files
+          if (id.includes('.css')) return;
+
+          // Optimaliseerde vendor chunking
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react';
+            // React core - altijd apart
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+              return 'react-vendor';
             }
-            if (id.includes('lottie') || id.includes('framer-motion')) {  
-              return 'vendor-animations';
+
+            // Animations (groot, vaak niet direct nodig)
+            if (id.includes('lottie') || id.includes('framer-motion') || id.includes('gsap')) {
+              return 'animations-vendor';
             }
+
+            // Icons (kunnen groot zijn)
             if (id.includes('lucide-react') || id.includes('react-icons')) {
-              return 'vendor-ui';
+              return 'icons-vendor';
             }
-            if (id.includes('react-router')) {
-              return 'vendor-routing';
-            }
+
+            // i18n
             if (id.includes('i18next')) {
-              return 'vendor-i18n';
+              return 'i18n-vendor';
             }
-            return 'vendor';
+
+            // Lenis/scrolling libraries
+            if (id.includes('lenis') || id.includes('@studio-freight')) {
+              return 'scroll-vendor';
+            }
+
+            // Crypto libraries (voor security)
+            if (id.includes('crypto-js')) {
+              return 'crypto-vendor';
+            }
+
+            // Rest van de vendors
+            return 'misc-vendor';
           }
-          
-          // Group animation JSON files
-          if (id.includes('animations/') && id.includes('.json')) {
-            return 'animations';
+
+          // Application code chunking
+          if (id.includes('src/')) {
+            // Demo components (lazy loaded)
+            if (id.includes('Demo') || id.includes('demo')) {
+              return 'demo-components';
+            }
+
+            // Modal components
+            if (id.includes('Modal') || id.includes('modal')) {
+              return 'modal-components';
+            }
+
+            // Utils en services
+            if (id.includes('utils/') || id.includes('services/')) {
+              return 'utilities';
+            }
           }
-          
-          // Image assets are now in public/images/ folder
-        }
-      }
+        },
+        // Optimalisatie voor asset naming
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `assets/images/[name]-[hash][extname]`;
+          }
+          if (/woff2?|ttf|otf|eot/i.test(ext)) {
+            return `assets/fonts/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+      },
+      // Tree shaking optimalisaties
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
     },
-    chunkSizeWarningLimit: 1000, // Increase warning limit to 1MB
+    chunkSizeWarningLimit: 500, // Verlaag warning limit naar 500KB
   },
   test: {
     environment: 'jsdom',
     globals: true,
   },
-});
+}));

@@ -3,12 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "sideEffects": false,
   "homepage": "https://tabletech.nl",
   "scripts": {
     "dev": "vite",
     "dev:api": "cd api && npm run dev",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\"",
     "build": "vite build",
+    "build:analyze": "vite build --mode analyze",
+    "analyze": "npm run build:analyze",
     "build:api": "cd api && npm run build",
     "build:all": "npm run build && npm run build:api",
     "lint": "eslint .",
@@ -16,10 +19,10 @@
     "predeploy": "vite build",
     "deploy": "gh-pages -d dist",
     "test": "vitest",
-    "install:all": "npm install && cd api && npm install"
+    "install:all": "npm install && cd api && npm install",
+    "convert:webp": "node scripts/convert-to-webp.js"
   },
   "dependencies": {
-    "@studio-freight/lenis": "^1.0.42",
     "@types/aria-query": "^5.0.4",
     "@types/crypto-js": "^4.2.2",
     "@types/js-cookie": "^3.0.6",
@@ -68,6 +71,8 @@
     "globals": "^16.2.0",
     "jsdom": "^26.1.0",
     "puppeteer-mcp-server": "^0.7.2",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "sharp": "^0.34.3",
     "tailwindcss": "^4.1.7",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.33.1",
