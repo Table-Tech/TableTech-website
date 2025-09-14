@@ -24,6 +24,17 @@ interface Table {
   status: 'available' | 'occupied' | 'reserved' | 'maintenance';
 }
 
+interface StaffMember {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  active: boolean;
+  deleted: boolean;
+  deletedAt?: Date;
+}
+
 interface MenuItem {
   id: string;
   name: string;
@@ -37,9 +48,284 @@ interface MenuItem {
 export default function ComputerMock() {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'orders' | 'tables' | 'menu' | 'analytics' | 'settings'>('dashboard');
   const [showAddTableModal, setShowAddTableModal] = useState(false);
+  const [showManageTableModal, setShowManageTableModal] = useState(false);
+  const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const [newTableNumber, setNewTableNumber] = useState('');
   const [newTableSeats, setNewTableSeats] = useState('4');
   const [tableNumberError, setTableNumberError] = useState('');
+  const [language, setLanguage] = useState<'nl' | 'en'>('nl');
+  const [activeSettingsTab, setActiveSettingsTab] = useState<'general' | 'payment' | 'staff'>('general');
+
+  // Translations
+  const t = {
+    nl: {
+      // Navigation
+      dashboard: 'Dashboard',
+      orders: 'Bestellingen',
+      tables: 'Tafels',
+      menu: 'Menu',
+      analytics: 'Analytics',
+      settings: 'Instellingen',
+      
+      // Dashboard
+      'dashboard.title': 'Dashboard',
+      'dashboard.subtitle': 'Welkom terug! Hier is wat er vandaag gebeurt.',
+      'dashboard.todaysRevenue': "Vandaag's Omzet",
+      'dashboard.activeOrders': 'Actieve Bestellingen',
+      'dashboard.ordersToday': 'Bestellingen Vandaag',
+      'dashboard.avgOrderValue': 'Gem. Bestelwaarde',
+      'dashboard.recentOrders': 'Recente Bestellingen',
+      'dashboard.viewAll': 'Bekijk alle',
+      'dashboard.noOrders': 'Geen recente bestellingen',
+      'dashboard.noOrdersDesc': 'Er zijn momenteel geen actieve bestellingen.',
+      
+      // Orders
+      'orders.title': 'Live Bestellingen',
+      'orders.subtitle': 'Beheer actieve restaurantbestellingen',
+      'orders.live': 'Live',
+      'orders.refresh': 'Vernieuwen',
+      'orders.markCompleted': 'Markeer als Voltooid',
+      'orders.allCompleted': 'Alle orders voltooid! 🎉',
+      'orders.noActiveOrders': 'Er zijn momenteel geen actieve bestellingen.',
+      'orders.restoreDemo': 'Demo Orders Herstellen',
+      
+      // Tables
+      'tables.title': 'Tafels',
+      'tables.subtitle': 'Beheer restaurant tafels en beschikbaarheid',
+      'tables.addTable': 'Tafel Toevoegen',
+      'tables.totalTables': 'Totaal Tafels',
+      'tables.available': 'Beschikbaar',
+      'tables.occupied': 'Bezet',
+      'tables.reserved': 'Gereserveerd',
+      'tables.maintenance': 'Onderhoud',
+      'tables.searchPlaceholder': 'Zoek tafels...',
+      'tables.filter': 'Filter:',
+      'tables.allStatuses': 'Alle Statussen',
+      'tables.seats': 'plaatsen',
+      'tables.code': 'Code',
+      
+      // Status
+      'status.available': 'Beschikbaar',
+      'status.occupied': 'Bezet',
+      'status.reserved': 'Gereserveerd',
+      'status.maintenance': 'Onderhoud',
+      'status.pending': 'Bevestigd',
+      'status.preparing': 'In Voorbereiding',
+      'status.ready': 'Klaar',
+      'status.paid': 'Betaald',
+      'status.unpaid': 'Niet Betaald',
+      'status.waiting': 'Wacht op Betaling',
+      
+      // Settings
+      'settings.general': 'Algemeen',
+      'settings.payment': 'Betalingen',
+      'settings.staff': 'Personeel',
+      'settings.generalTitle': 'Algemene Instellingen',
+      'settings.generalSubtitle': 'Beheer basisinformatie en instellingen van het restaurant',
+      'settings.languageSettings': 'Taalinstellingen',
+      'settings.language': 'Taal',
+      'settings.restaurantInfo': 'Restaurantinformatie',
+      'settings.restaurantName': 'RESTAURANTNAAM',
+      'settings.address': 'ADRES',
+      'settings.phoneNumber': 'TELEFOONNUMMER',
+      'settings.subscriptionType': 'ABONNEMENT TYPE',
+      'settings.contactAdmin': 'Neem contact op met uw systeembeheerder om deze informatie bij te werken',
+      'settings.openingHours': 'Openingstijden',
+      'settings.openingHoursSubtitle': 'Stel de openingstijden van uw restaurant in voor elke dag van de week',
+      'settings.openingTime': 'OPENINGSTIJD',
+      'settings.closingTime': 'SLUITINGSTIJD',
+      'settings.closed': 'Gesloten',
+      'settings.paymentTitle': 'Betaalinstellingen',
+      'settings.paymentSubtitle': 'Configureer betaalproviders en opties',
+      'settings.acceptCash': 'Accepteer contante betalingen',
+      'settings.acceptCashDesc': 'Accepteer contante betalingen in het restaurant',
+      'settings.acceptCard': 'Accepteer kaartbetalingen',
+      'settings.acceptCardDesc': 'Accepteer credit- en betaalkaarten',
+      'settings.acceptOnline': 'Accepteer online betalingen',
+      'settings.acceptOnlineDesc': 'Accepteer betalingen via mobile apps en websites',
+      'settings.staffTitle': 'Personeelsbeheer',
+      'settings.staffSubtitle': 'Beheer teamleden en hun toegang',
+      'settings.addStaff': 'Personeelslid Toevoegen',
+      'settings.deletedStaff': 'Verwijderd Personeel (Herstelbaar)',
+      'settings.restore': 'Herstellen',
+      'settings.delete': 'Verwijderen',
+      'settings.confirmDelete': 'Weet je zeker dat je dit personeelslid wilt verwijderen?',
+      'settings.confirmDeleteDesc': 'Dit personeelslid wordt gedeactiveerd en kan later worden hersteld.',
+
+      // Days of the week
+      'days.monday': 'Maandag',
+      'days.tuesday': 'Dinsdag', 
+      'days.wednesday': 'Woensdag',
+      'days.thursday': 'Donderdag',
+      'days.friday': 'Vrijdag',
+      'days.saturday': 'Zaterdag',
+      'days.sunday': 'Zondag',
+
+      // Analytics
+      'analytics.comingSoon': 'Binnenkort beschikbaar',
+
+      // Table Management 
+      'tables.name': 'NAAM',
+      'tables.role': 'ROL', 
+      'tables.actions': 'BEWERKINGEN',
+      'tables.updateStatus': 'Tafel Status Bijwerken',
+      'tables.readyForCustomers': 'Tafel is klaar voor nieuwe klanten',
+      'tables.currentlyUsed': 'Tafel wordt momenteel gebruikt',
+      'tables.current': 'Huidig',
+      'tables.reservedForGuests': 'Tafel is gereserveerd voor toekomstige gasten',
+      'tables.outOfService': 'Tafel is tijdelijk buiten dienst',
+      'tables.numberAvailable': 'Tafelnummer beschikbaar!',
+      'tables.chooseNumber': 'Kies een uniek nummer voor deze tafel (1-999). Druk Enter om toe te voegen.',
+      'tables.seatingCapacity': 'Zitcapaciteit',
+      'tables.maxCustomers': 'Maximum aantal klanten dat aan deze tafel kan zitten (1-20). Druk Enter om toe te voegen.',
+      'tables.qrGenerated': 'QR Code wordt gegenereerd',
+      'tables.overview': 'Tafel Overzicht',
+      'tables.tableNumber': 'Tafelnummer:',
+      'tables.capacity': 'Zitcapaciteit:',
+      'tables.people': 'personen',
+
+      // Common
+      cancel: 'Annuleren',
+      close: 'Sluiten',
+      save: 'Opslaan',
+      edit: 'Bewerken'
+    },
+    en: {
+      // Navigation
+      dashboard: 'Dashboard',
+      orders: 'Orders',
+      tables: 'Tables',
+      menu: 'Menu',
+      analytics: 'Analytics',
+      settings: 'Settings',
+      
+      // Dashboard
+      'dashboard.title': 'Dashboard',
+      'dashboard.subtitle': 'Welcome back! Here\'s what\'s happening today.',
+      'dashboard.todaysRevenue': "Today's Revenue",
+      'dashboard.activeOrders': 'Active Orders',
+      'dashboard.ordersToday': 'Orders Today',
+      'dashboard.avgOrderValue': 'Avg Order Value',
+      'dashboard.recentOrders': 'Recent Orders',
+      'dashboard.viewAll': 'View all',
+      'dashboard.noOrders': 'No recent orders',
+      'dashboard.noOrdersDesc': 'There are currently no active orders.',
+      
+      // Orders
+      'orders.title': 'Live Orders',
+      'orders.subtitle': 'Manage active restaurant orders',
+      'orders.live': 'Live',
+      'orders.refresh': 'Refresh',
+      'orders.markCompleted': 'Mark as Completed',
+      'orders.allCompleted': 'All orders completed! 🎉',
+      'orders.noActiveOrders': 'There are currently no active orders.',
+      'orders.restoreDemo': 'Restore Demo Orders',
+      
+      // Tables
+      'tables.title': 'Tables',
+      'tables.subtitle': 'Manage restaurant tables and availability',
+      'tables.addTable': 'Add Table',
+      'tables.totalTables': 'Total Tables',
+      'tables.available': 'Available',
+      'tables.occupied': 'Occupied',
+      'tables.reserved': 'Reserved',
+      'tables.maintenance': 'Maintenance',
+      'tables.searchPlaceholder': 'Search tables...',
+      'tables.filter': 'Filter:',
+      'tables.allStatuses': 'All Statuses',
+      'tables.seats': 'seats',
+      'tables.code': 'Code',
+      
+      // Status
+      'status.available': 'Available',
+      'status.occupied': 'Occupied',
+      'status.reserved': 'Reserved',
+      'status.maintenance': 'Maintenance',
+      'status.pending': 'Confirmed',
+      'status.preparing': 'Preparing',
+      'status.ready': 'Ready',
+      'status.paid': 'Paid',
+      'status.unpaid': 'Unpaid',
+      'status.waiting': 'Awaiting Payment',
+      
+      // Settings
+      'settings.general': 'General',
+      'settings.payment': 'Payment',
+      'settings.staff': 'Staff',
+      'settings.generalTitle': 'General Settings',
+      'settings.generalSubtitle': 'Manage basic restaurant information and settings',
+      'settings.languageSettings': 'Language Settings',
+      'settings.language': 'Language',
+      'settings.restaurantInfo': 'Restaurant Information',
+      'settings.restaurantName': 'RESTAURANT NAME',
+      'settings.address': 'ADDRESS',
+      'settings.phoneNumber': 'PHONE NUMBER',
+      'settings.subscriptionType': 'SUBSCRIPTION TYPE',
+      'settings.contactAdmin': 'Contact your system administrator to update this information',
+      'settings.openingHours': 'Opening Hours',
+      'settings.openingHoursSubtitle': 'Set your restaurant\'s operating hours for each day of the week',
+      'settings.openingTime': 'OPENING TIME',
+      'settings.closingTime': 'CLOSING TIME',
+      'settings.closed': 'Closed',
+      'settings.paymentTitle': 'Payment Settings',
+      'settings.paymentSubtitle': 'Configure payment providers and options',
+      'settings.acceptCash': 'Accept cash payments',
+      'settings.acceptCashDesc': 'Accept cash payments at the restaurant',
+      'settings.acceptCard': 'Accept card payments',
+      'settings.acceptCardDesc': 'Accept credit and debit card payments',
+      'settings.acceptOnline': 'Accept online payments',
+      'settings.acceptOnlineDesc': 'Accept payments via mobile apps and websites',
+      'settings.staffTitle': 'Staff Management',
+      'settings.staffSubtitle': 'Manage team members and their access',
+      'settings.addStaff': 'Add Staff Member',
+      'settings.deletedStaff': 'Deleted Staff (Restorable)',
+      'settings.restore': 'Restore',
+      'settings.delete': 'Delete',
+      'settings.confirmDelete': 'Are you sure you want to delete this staff member?',
+      'settings.confirmDeleteDesc': 'This staff member will be deactivated and can be restored later.',
+
+      // Days of the week
+      'days.monday': 'Monday',
+      'days.tuesday': 'Tuesday',
+      'days.wednesday': 'Wednesday',
+      'days.thursday': 'Thursday',
+      'days.friday': 'Friday',
+      'days.saturday': 'Saturday',
+      'days.sunday': 'Sunday',
+
+      // Analytics
+      'analytics.comingSoon': 'Coming Soon',
+
+      // Table Management 
+      'tables.name': 'NAME',
+      'tables.role': 'ROLE', 
+      'tables.actions': 'ACTIONS',
+      'tables.updateStatus': 'Update Table Status',
+      'tables.readyForCustomers': 'Table is ready for new customers',
+      'tables.currentlyUsed': 'Table is currently being used',
+      'tables.current': 'Current',
+      'tables.reservedForGuests': 'Table is reserved for future guests',
+      'tables.outOfService': 'Table is temporarily out of service',
+      'tables.numberAvailable': 'Table number available!',
+      'tables.chooseNumber': 'Choose a unique number for this table (1-999). Press Enter to add.',
+      'tables.seatingCapacity': 'Seating Capacity',
+      'tables.maxCustomers': 'Maximum number of customers that can sit at this table (1-20). Press Enter to add.',
+      'tables.qrGenerated': 'QR Code will be generated',
+      'tables.overview': 'Table Overview',
+      'tables.tableNumber': 'Table Number:',
+      'tables.capacity': 'Seating Capacity:',
+      'tables.people': 'people',
+
+      // Common
+      cancel: 'Cancel',
+      close: 'Close',
+      save: 'Save',
+      edit: 'Edit'
+    }
+  };
+
+  // Get translation function
+  const getText = (key: string) => t[language][key as keyof typeof t.nl] || key;
 
   // Mock data with state management
   const [recentOrders, setRecentOrders] = useState<Order[]>([
@@ -56,6 +342,24 @@ export default function ComputerMock() {
     { id: 5, name: 'Table 5', seats: 4, code: 'DLB0Y3', status: 'maintenance' }
   ]);
 
+  // Staff management state
+  const [staffMembers, setStaffMembers] = useState<StaffMember[]>([
+    { id: 1, name: 'Damian Willemse', email: 'damian@tabletech.nl', role: 'Beheerder', status: 'Actief', active: true, deleted: false },
+    { id: 2, name: 'Wishant Bhajan', email: 'wishant@tabletech.nl', role: 'Beheerder', status: 'Actief', active: true, deleted: false },
+    { id: 3, name: 'Hicham Tahiri', email: 'hicham@tabletech.nl', role: 'Kok', status: 'Actief', active: true, deleted: false },
+    { id: 4, name: 'Mohammad Falaha', email: 'mohammad@tabletech.nl', role: 'Beheerder', status: 'Inactief', active: false, deleted: false }
+  ]);
+  const [deletedStaff, setDeletedStaff] = useState<StaffMember[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [staffToDelete, setStaffToDelete] = useState<StaffMember | null>(null);
+  
+  // Payment settings state
+  const [paymentSettings, setPaymentSettings] = useState({
+    cash: true,
+    card: true,
+    online: true
+  });
+
   // Helper functions
   const generateTableCode = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -70,6 +374,25 @@ export default function ComputerMock() {
     setRecentOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
   };
 
+  const handleTableClick = (table: Table) => {
+    setSelectedTable(table);
+    setShowManageTableModal(true);
+  };
+
+  const handleUpdateTableStatus = (newStatus: Table['status']) => {
+    if (!selectedTable) return;
+    
+    setTables(prevTables => 
+      prevTables.map(table => 
+        table.id === selectedTable.id 
+          ? { ...table, status: newStatus }
+          : table
+      )
+    );
+    setShowManageTableModal(false);
+    setSelectedTable(null);
+  };
+
   const validateTableNumber = (tableNum: string) => {
     if (!tableNum) {
       setTableNumberError('Tafelnummer is verplicht');
@@ -82,10 +405,11 @@ export default function ComputerMock() {
       return false;
     }
 
-    const existingTable = tables.find(table => 
-      table.name.toLowerCase() === `table ${numericTableNum}` || 
-      table.id === numericTableNum
-    );
+    // Check if table number already exists (more robust check)
+    const existingTable = tables.find(table => {
+      const tableNumFromName = parseInt(table.name.replace(/[^0-9]/g, ''));
+      return tableNumFromName === numericTableNum || table.id === numericTableNum;
+    });
     
     if (existingTable) {
       setTableNumberError('Dit tafelnummer bestaat al');
@@ -99,19 +423,70 @@ export default function ComputerMock() {
   const handleAddTable = () => {
     if (!validateTableNumber(newTableNumber)) return;
 
+    // Generate a unique ID that doesn't conflict with existing tables
+    const newId = Math.max(...tables.map(t => t.id), 0) + 1;
+    
     const newTable: Table = {
-      id: Math.max(...tables.map(t => t.id)) + 1,
+      id: newId,
       name: `Table ${newTableNumber}`,
       seats: parseInt(newTableSeats),
       code: generateTableCode(),
       status: 'available'
     };
 
-    setTables([...tables, newTable]);
+    setTables(prevTables => [...prevTables, newTable]);
     setShowAddTableModal(false);
     setNewTableNumber('');
     setNewTableSeats('4');
     setTableNumberError('');
+    
+    // Optional: Show success feedback
+    console.log(`Tafel ${newTableNumber} succesvol toegevoegd!`);
+  };
+
+  // Staff management functions
+  const handleDeleteStaff = (staff: StaffMember) => {
+    setStaffToDelete(staff);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteStaff = () => {
+    if (staffToDelete) {
+      setStaffMembers(prevStaff => 
+        prevStaff.filter(staff => staff.id !== staffToDelete.id)
+      );
+      setDeletedStaff(prev => [...prev, { ...staffToDelete, deletedAt: new Date() }]);
+      setShowDeleteConfirm(false);
+      setStaffToDelete(null);
+    }
+  };
+
+  const restoreStaff = (staffId: number) => {
+    const staffToRestore = deletedStaff.find(staff => staff.id === staffId);
+    if (staffToRestore) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { deletedAt, ...restoredStaff } = staffToRestore;
+      setStaffMembers(prev => [...prev, restoredStaff]);
+      setDeletedStaff(prev => prev.filter(staff => staff.id !== staffId));
+    }
+  };
+
+  const toggleStaffStatus = (staffId: number) => {
+    setStaffMembers(prevStaff => 
+      prevStaff.map(staff => 
+        staff.id === staffId 
+          ? { ...staff, active: !staff.active, status: !staff.active ? 'Actief' : 'Inactief' }
+          : staff
+      )
+    );
+  };
+
+  // Payment settings functions
+  const togglePaymentSetting = (type: 'cash' | 'card' | 'online') => {
+    setPaymentSettings(prev => ({
+      ...prev,
+      [type]: !prev[type]
+    }));
   };
 
   const menuItems: MenuItem[] = [
@@ -155,130 +530,163 @@ export default function ComputerMock() {
 
   // Sidebar Component
   const Sidebar = () => (
-    <div className="w-48 bg-brown-800 h-full flex flex-col relative" style={{ backgroundColor: '#3E2723' }}>
+    <div className="w-56 bg-brown-800 h-full flex flex-col relative" style={{ backgroundColor: '#3E2723' }}>
       {/* Top gloss/highlight */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
       <div className="absolute top-1 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent opacity-10"></div>
       
-      <div className="p-4 border-b border-brown-700" style={{ borderColor: '#4A3426' }}>
-        <div className="flex items-center space-x-2">
-          <div className="w-16 h-16 rounded-lg flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-            <img src="/favicon/apple-touch-icon.png" alt="TableTech Logo" className="w-16 h-16 object-cover scale-110" />
+      <div className="p-5 border-b border-brown-700" style={{ borderColor: '#4A3426' }}>
+        <div className="flex items-center space-x-3">
+          <div className="w-18 h-18 rounded-xl flex items-center justify-center overflow-hidden shadow-lg" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
+            <img src="/favicon/apple-touch-icon.png" alt="TableTech Logo" className="w-18 h-18 object-cover scale-110" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-base">TableTech</h1>
-            <p className="text-xs" style={{ color: '#FF8A50' }}>TableTech Demo</p>
+            <h1 className="text-white font-bold text-lg tracking-wide">TableTech</h1>
+            <p className="text-sm font-medium" style={{ color: '#FF8A50' }}>TableTech Demo</p>
           </div>
         </div>
       </div>
 
-      <nav className="flex-1 p-3">
+      <nav className="flex-1 p-4 space-y-2">
         <button
           onClick={() => setCurrentPage('dashboard')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'dashboard' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'dashboard' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'dashboard' ? '#5D4037' : 'transparent',
           }}
         >
-          <Home className="w-4 h-4" style={{ color: currentPage === 'dashboard' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'dashboard' ? 'text-white font-medium' : 'text-gray-300'}`}>Dashboard</span>
+          <Home className="w-5 h-5" style={{ color: currentPage === 'dashboard' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'dashboard' ? 'text-white' : 'text-gray-300'}`}>{getText('dashboard')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('orders')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'orders' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'orders' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'orders' ? '#5D4037' : 'transparent',
           }}
         >
-          <ShoppingCart className="w-4 h-4" style={{ color: currentPage === 'orders' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'orders' ? 'text-white font-medium' : 'text-gray-300'}`}>Orders</span>
+          <ShoppingCart className="w-5 h-5" style={{ color: currentPage === 'orders' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'orders' ? 'text-white' : 'text-gray-300'}`}>{getText('orders')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('tables')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'tables' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'tables' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'tables' ? '#5D4037' : 'transparent',
           }}
         >
-          <Users className="w-4 h-4" style={{ color: currentPage === 'tables' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'tables' ? 'text-white font-medium' : 'text-gray-300'}`}>Tables</span>
+          <Users className="w-5 h-5" style={{ color: currentPage === 'tables' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'tables' ? 'text-white' : 'text-gray-300'}`}>{getText('tables')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('menu')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'menu' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'menu' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'menu' ? '#5D4037' : 'transparent',
           }}
         >
-          <Menu className="w-4 h-4" style={{ color: currentPage === 'menu' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'menu' ? 'text-white font-medium' : 'text-gray-300'}`}>Menu</span>
+          <Menu className="w-5 h-5" style={{ color: currentPage === 'menu' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'menu' ? 'text-white' : 'text-gray-300'}`}>{getText('menu')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('analytics')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'analytics' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'analytics' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'analytics' ? '#5D4037' : 'transparent',
           }}
         >
-          <BarChart3 className="w-4 h-4" style={{ color: currentPage === 'analytics' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'analytics' ? 'text-white font-medium' : 'text-gray-300'}`}>Analytics</span>
+          <BarChart3 className="w-5 h-5" style={{ color: currentPage === 'analytics' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'analytics' ? 'text-white' : 'text-gray-300'}`}>{getText('analytics')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('settings')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg mb-1 transition-all duration-200 ${
-            currentPage === 'settings' ? 'bg-brown-700' : 'hover:bg-brown-700 hover:bg-opacity-50'
+          className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+            currentPage === 'settings' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
           style={{ 
             backgroundColor: currentPage === 'settings' ? '#5D4037' : 'transparent',
           }}
         >
-          <Settings className="w-4 h-4" style={{ color: currentPage === 'settings' ? '#FFFFFF' : '#8D6E63' }} />
-          <span className={`text-sm ${currentPage === 'settings' ? 'text-white font-medium' : 'text-gray-300'}`}>Settings</span>
+          <Settings className="w-5 h-5" style={{ color: currentPage === 'settings' ? '#FFFFFF' : '#8D6E63' }} />
+          <span className={`text-base font-medium ${currentPage === 'settings' ? 'text-white' : 'text-gray-300'}`}>{getText('settings')}</span>
         </button>
       </nav>
 
+      {/* Language Switcher */}
+      <div className="px-4 py-3 border-t border-b" style={{ borderColor: '#4A3426' }}>
+        <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Language</p>
+        <div className="flex bg-brown-700 rounded-lg p-1" style={{ backgroundColor: '#4A3426' }}>
+          <button
+            onClick={() => setLanguage('nl')}
+            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
+              language === 'nl' 
+                ? 'bg-orange-500 text-white shadow-md' 
+                : 'text-gray-400 hover:text-white hover:bg-brown-600'
+            }`}
+            style={{ 
+              backgroundColor: language === 'nl' ? '#FF6B35' : 'transparent'
+            }}
+          >
+            NL
+          </button>
+          <button
+            onClick={() => setLanguage('en')}
+            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
+              language === 'en' 
+                ? 'bg-orange-500 text-white shadow-md' 
+                : 'text-gray-400 hover:text-white hover:bg-brown-600'
+            }`}
+            style={{ 
+              backgroundColor: language === 'en' ? '#FF6B35' : 'transparent'
+            }}
+          >
+            EN
+          </button>
+        </div>
+      </div>
+
       <div className="p-3 border-t" style={{ borderColor: '#4A3426' }}>
         {/* Super Admin Profile */}
-        <div className="relative rounded-lg p-3 mb-3" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-          <div className="flex items-center space-x-3">
+        <div className="relative rounded-lg p-3 mb-3 shadow-sm" style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.12) 0%, rgba(249,115,22,0.12) 100%)' }}>
+          <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm" style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #F97316 50%, #EA580C 100%)' }}>
               <span className="text-white text-xs font-bold">S</span>
             </div>
             <div className="flex-1">
               <p className="text-white text-sm font-medium">Super Admin</p>
-              <p className="text-xs" style={{ color: '#8D6E63' }}>Super Admin</p>
+              <p className="text-xs" style={{ color: '#FF8A50' }}>Administrator</p>
             </div>
           </div>
         </div>
 
         {/* Switch Restaurant */}
-        <div className="relative rounded-lg mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
-          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-brown-700 hover:bg-opacity-50 transition-all">
+        <div className="relative rounded-lg mb-2 overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+          <button className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-brown-700 hover:bg-opacity-40 transition-all duration-200">
             <Building className="w-4 h-4" style={{ color: '#8D6E63' }} />
-            <span className="text-sm text-white">Switch Restaurant</span>
+            <span className="text-sm font-medium text-white">Switch Restaurant</span>
           </button>
         </div>
 
         {/* Logout */}
-        <div className="relative rounded-lg" style={{ backgroundColor: 'rgba(220,38,38,0.15)' }}>
-          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-red-700 hover:bg-opacity-30 transition-all">
+        <div className="relative rounded-lg overflow-hidden" style={{ backgroundColor: 'rgba(220,38,38,0.12)' }}>
+          <button className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-700 hover:bg-opacity-25 transition-all duration-200">
             <LogOut className="w-4 h-4" style={{ color: '#DC2626' }} />
-            <span className="text-sm" style={{ color: '#DC2626' }}>Logout</span>
+            <span className="text-sm font-medium" style={{ color: '#DC2626' }}>Logout</span>
           </button>
         </div>
       </div>
@@ -300,8 +708,8 @@ export default function ComputerMock() {
       <div className="flex-1 p-6 overflow-auto" style={{ backgroundColor: '#FDF4E3' }}>
         {/* Dashboard Header */}
         <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200" style={{backgroundImage: 'linear-gradient(120deg, #f5f5f0 0%, #e6d7c3 50%, #d2b48c 100%)'}}>
-          <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Dashboard</h1>
-          <p className="text-gray-600 text-sm">Welcome back! Here's what's happening today.</p>
+          <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>{getText('dashboard.title')}</h1>
+          <p className="text-gray-600 text-sm">{getText('dashboard.subtitle')}</p>
         </div>
 
         {/* Stats Grid */}
@@ -312,7 +720,7 @@ export default function ComputerMock() {
                 <Euro className="w-5 h-5" style={{ color: '#5D4037' }} />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>Today's Revenue</p>
+            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.todaysRevenue')}</p>
             <p className="text-xl font-bold" style={{ color: '#5D4037' }}>€{todaysRevenue.toFixed(2)}</p>
           </div>
 
@@ -322,7 +730,7 @@ export default function ComputerMock() {
                 <Clock className="w-5 h-5" style={{ color: '#5D4037' }} />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>Active Orders</p>
+            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.activeOrders')}</p>
             <p className="text-xl font-bold" style={{ color: '#5D4037' }}>{activeOrders}</p>
           </div>
 
@@ -332,7 +740,7 @@ export default function ComputerMock() {
                 <Users className="w-5 h-5" style={{ color: '#5D4037' }} />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>Orders Today</p>
+            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.ordersToday')}</p>
             <p className="text-xl font-bold" style={{ color: '#5D4037' }}>{totalOrdersToday}</p>
           </div>
 
@@ -342,7 +750,7 @@ export default function ComputerMock() {
                 <TrendingUp className="w-5 h-5" style={{ color: '#5D4037' }} />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>Avg Order Value</p>
+            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.avgOrderValue')}</p>
             <p className="text-xl font-bold" style={{ color: '#5D4037' }}>€{avgOrderValue.toFixed(2)}</p>
           </div>
         </div>
@@ -352,7 +760,7 @@ export default function ComputerMock() {
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-2">
             <Clock className="w-4 h-4" style={{ color: '#8D6E63' }} />
-            <h2 className="text-lg font-semibold" style={{ color: '#5D4037' }}>Recent Orders</h2>
+            <h2 className="text-lg font-semibold" style={{ color: '#5D4037' }}>{getText('dashboard.recentOrders')}</h2>
           </div>
           <button 
             onClick={() => setCurrentPage('orders')}
@@ -368,7 +776,7 @@ export default function ComputerMock() {
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundImage = 'linear-gradient(to right, #8D6E63 0%, #8D6E63 70%, #A1887F 90%, #BCAAA4 100%)';
             }}>
-            View all
+            {getText('dashboard.viewAll')}
           </button>
         </div>
         <div className="p-4 space-y-3">
@@ -465,8 +873,7 @@ export default function ComputerMock() {
 
   // Tables Page
   const TablesPage = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('All Statuses');
+    const [statusFilter, setStatusFilter] = useState(getText('tables.allStatuses'));
     
     const tableStats = {
       total: tables.length,
@@ -476,15 +883,12 @@ export default function ComputerMock() {
       maintenance: tables.filter(t => t.status === 'maintenance').length
     };
 
-    // Filter tables based on search term and status
+    // Filter tables based on status
     const filteredTables = tables.filter(table => {
-      const matchesSearch = table.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           table.code.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === getText('tables.allStatuses') || 
+                           statusFilter === getText(`status.${table.status}`);
       
-      const matchesStatus = statusFilter === 'All Statuses' || 
-                           table.status.toLowerCase() === statusFilter.toLowerCase();
-      
-      return matchesSearch && matchesStatus;
+      return matchesStatus;
     });
 
     return (
@@ -497,8 +901,8 @@ export default function ComputerMock() {
           }}>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Tables</h1>
-              <p className="text-gray-600 text-sm">Beheer restaurant tafels en beschikbaarheid</p>
+              <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>{getText('tables.title')}</h1>
+              <p className="text-gray-600 text-sm">{getText('tables.subtitle')}</p>
             </div>
             <div className="flex items-center space-x-3">
               <button 
@@ -528,7 +932,7 @@ export default function ComputerMock() {
                 }}
               >
                 <span className="text-lg">+</span>
-                <span>Add Table</span>
+                <span>{getText('tables.addTable')}</span>
               </button>
             </div>
           </div>
@@ -542,7 +946,7 @@ export default function ComputerMock() {
             }}>
             <div className="text-center">
               <p className="text-2xl font-bold mb-1" style={{ color: '#5D4037' }}>{tableStats.total}</p>
-              <p className="text-sm font-medium" style={{ color: '#8D6E63' }}>Total Tables</p>
+              <p className="text-sm font-medium" style={{ color: '#8D6E63' }}>{getText('tables.totalTables')}</p>
             </div>
           </div>
 
@@ -552,7 +956,7 @@ export default function ComputerMock() {
             }}>
             <div className="text-center">
               <p className="text-2xl font-bold mb-1 text-green-700">{tableStats.available}</p>
-              <p className="text-sm font-medium text-green-800">Available</p>
+              <p className="text-sm font-medium text-green-800">{getText('tables.available')}</p>
             </div>
           </div>
 
@@ -562,7 +966,7 @@ export default function ComputerMock() {
             }}>
             <div className="text-center">
               <p className="text-2xl font-bold mb-1 text-orange-700">{tableStats.occupied}</p>
-              <p className="text-sm font-medium text-orange-800">Occupied</p>
+              <p className="text-sm font-medium text-orange-800">{getText('tables.occupied')}</p>
             </div>
           </div>
 
@@ -572,7 +976,7 @@ export default function ComputerMock() {
             }}>
             <div className="text-center">
               <p className="text-2xl font-bold mb-1 text-yellow-700">{tableStats.reserved}</p>
-              <p className="text-sm font-medium text-yellow-800">Reserved</p>
+              <p className="text-sm font-medium text-yellow-800">{getText('tables.reserved')}</p>
             </div>
           </div>
 
@@ -582,33 +986,19 @@ export default function ComputerMock() {
             }}>
             <div className="text-center">
               <p className="text-2xl font-bold mb-1 text-purple-700">{tableStats.maintenance}</p>
-              <p className="text-sm font-medium text-purple-800">Maintenance</p>
+              <p className="text-sm font-medium text-purple-800">{getText('tables.maintenance')}</p>
             </div>
           </div>
         </div>
 
-        {/* Search and Filter Section */}
+        {/* Filter Section */}
         <div className="rounded-xl p-4 mb-6 shadow-sm border border-gray-200" 
           style={{ 
             backgroundImage: 'linear-gradient(to right, #ede3d3 0%, #f2ede6 70%, #f7f4f1 100%)'
           }}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <input 
-                type="text" 
-                placeholder="Search tables..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                style={{ 
-                  borderColor: '#e6d7c3',
-                  backgroundColor: 'white'
-                }}
-              />
-              <span className="text-sm font-medium" style={{ color: '#8D6E63' }}>Search Table</span>
-            </div>
+          <div className="flex items-center justify-end">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium" style={{ color: '#8D6E63' }}>Filter:</span>
+              <span className="text-sm font-medium" style={{ color: '#8D6E63' }}>{getText('tables.filter')}</span>
               <select 
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -619,11 +1009,11 @@ export default function ComputerMock() {
                   color: '#5D4037'
                 }}
               >
-                <option>All Statuses</option>
-                <option>Available</option>
-                <option>Occupied</option>
-                <option>Reserved</option>
-                <option>Maintenance</option>
+                <option>{getText('tables.allStatuses')}</option>
+                <option>{getText('status.available')}</option>
+                <option>{getText('status.occupied')}</option>
+                <option>{getText('status.reserved')}</option>
+                <option>{getText('status.maintenance')}</option>
               </select>
             </div>
           </div>
@@ -634,7 +1024,8 @@ export default function ComputerMock() {
           {filteredTables.length > 0 ? (
             filteredTables.map((table) => (
               <div key={table.id}
-                className="rounded-xl p-4 shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer border border-gray-200 flex flex-col items-center text-center"
+                onClick={() => handleTableClick(table)}
+                className="rounded-xl p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer border border-gray-200 flex flex-col items-center text-center"
                 style={{
                   backgroundImage:
                     table.status === 'available'
@@ -672,7 +1063,7 @@ export default function ComputerMock() {
                 {/* Seats with icon */}
                 <div className="flex items-center justify-center space-x-2 mb-3">
                   <Users className="w-4 h-4" style={{ color: '#8D6E63' }} />
-                  <span className="text-sm font-medium" style={{ color: '#8D6E63' }}>{table.seats} plaatsen</span>
+                  <span className="text-sm font-medium" style={{ color: '#8D6E63' }}>{table.seats} {getText('tables.seats')}</span>
                 </div>
 
                 {/* Code */}
@@ -693,10 +1084,10 @@ export default function ComputerMock() {
                     table.status === 'maintenance' ? 'bg-gray-100 text-gray-700' :
                     'bg-gray-100 text-gray-700'
                   }`}>
-                    {table.status === 'available' ? 'Beschikbaar' :
-                     table.status === 'occupied' ? 'Bezet' :
-                     table.status === 'reserved' ? 'Gereserveerd' :
-                     table.status === 'maintenance' ? 'Onderhoud' :
+                    {table.status === 'available' ? getText('status.available') :
+                     table.status === 'occupied' ? getText('status.occupied') :
+                     table.status === 'reserved' ? getText('status.reserved') :
+                     table.status === 'maintenance' ? getText('status.maintenance') :
                      String(table.status).charAt(0).toUpperCase() + String(table.status).slice(1)}
                   </span>
                 </div>
@@ -706,8 +1097,8 @@ export default function ComputerMock() {
             <div className="col-span-4 text-center py-8">
               <p className="text-lg font-medium mb-2" style={{ color: '#8D6E63' }}>No tables found</p>
               <p className="text-sm" style={{ color: '#8D6E63' }}>
-                {searchTerm || statusFilter !== 'All Statuses' 
-                  ? 'Try adjusting your search or filter criteria' 
+                {statusFilter !== getText('tables.allStatuses') 
+                  ? 'Try adjusting your filter criteria' 
                   : 'No tables available'}
               </p>
             </div>
@@ -837,8 +1228,8 @@ export default function ComputerMock() {
               }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Live Bestellingen</h1>
-                  <p className="text-gray-600 text-sm">Beheer actieve restaurantbestellingen</p>
+                  <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>{getText('orders.title')}</h1>
+                  <p className="text-gray-600 text-sm">{getText('orders.subtitle')}</p>
                 </div>
                 <div className="flex items-center space-x-3">
                   <button 
@@ -849,7 +1240,7 @@ export default function ComputerMock() {
                       border: '1px solid #A5D6A7'
                     }}>
                     <Wifi className="w-4 h-4 animate-pulse" />
-                    <span className="font-medium">Live</span>
+                    <span className="font-medium">{getText('orders.live')}</span>
                   </button>
                   <button className="px-4 py-2 rounded-lg flex items-center space-x-2 text-sm transition-all duration-200 hover:shadow-md"
                     style={{ 
@@ -857,7 +1248,7 @@ export default function ComputerMock() {
                       color: 'white' 
                     }}>
                     <RefreshCw className="w-4 h-4" />
-                    <span className="font-medium">Vernieuwen</span>
+                    <span className="font-medium">{getText('orders.refresh')}</span>
                   </button>
                 </div>
               </div>
@@ -993,7 +1384,7 @@ export default function ComputerMock() {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'linear-gradient(135deg, #5D4037 0%, #4A2C2A 100%)';
                       }}>
-                      Markeer als Voltooid
+                      {getText('orders.markCompleted')}
                     </button>
                   </div>
                 ))}
@@ -1029,18 +1420,453 @@ export default function ComputerMock() {
         );
       case 'analytics':
         return (
-          <div className="flex-1 p-6" style={{ backgroundColor: '#FDF4E3' }}>
-            <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Analytics</h1>
-            <p className="text-gray-600 text-sm">View detailed analytics and insights</p>
+          <div className="flex-1 flex items-center justify-center" style={{ backgroundColor: '#f5f5f0' }}>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-4" style={{ color: '#FF6B35' }}>
+                {getText('analytics')}
+              </h1>
+              <p className="text-2xl text-gray-500 font-light">
+                {getText('analytics.comingSoon')}
+              </p>
+            </div>
           </div>
         );
-      case 'settings':
+      case 'settings': {
+        const renderGeneralSettings = () => (
+          <div className="rounded-xl p-4 shadow-sm border border-gray-200 bg-white mb-4">
+            <h2 className="text-lg font-semibold mb-2" style={{ color: '#5D4037' }}>
+              {getText('settings.generalTitle')}
+            </h2>
+            <p className="text-gray-500 text-sm mb-4">
+              {getText('settings.generalSubtitle')}
+            </p>
+
+            {/* Language Settings */}
+            <div className="mb-4">
+              <h3 className="text-md font-medium mb-2" style={{ color: '#5D4037' }}>
+                {getText('settings.languageSettings')}
+              </h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">
+                  {getText('settings.language')}
+                </span>
+                <button
+                  onClick={() => setLanguage('en')}
+                  className={`px-3 py-1 text-sm rounded transition-colors ${
+                    language === 'en' 
+                      ? 'bg-gray-300 text-gray-700' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLanguage('nl')}
+                  className={`px-3 py-1 text-sm rounded transition-colors ${
+                    language === 'nl' 
+                      ? 'bg-gray-300 text-gray-700' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  NL
+                </button>
+              </div>
+            </div>
+
+            {/* Restaurant Information */}
+            <div className="mb-4">
+              <h3 className="text-md font-medium mb-2" style={{ color: '#5D4037' }}>
+                {getText('settings.restaurantInfo')}
+              </h3>
+              <p className="text-sm text-gray-500 mb-3">
+                {getText('settings.contactAdmin')}
+              </p>
+
+              <div className="grid grid-cols-2 gap-2">
+                {/* Restaurant Name */}
+                <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                  <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                    <span className="text-xs">🏢</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
+                      {getText('settings.restaurantName')}
+                    </p>
+                    <p className="text-sm font-medium text-gray-800 truncate">TableTech-Demo</p>
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                  <div className="w-6 h-6 bg-red-100 rounded flex items-center justify-center">
+                    <span className="text-xs">📍</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
+                      {getText('settings.address')}
+                    </p>
+                    <p className="text-sm font-medium text-gray-800 truncate">Rotterdam</p>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                  <div className="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
+                    <span className="text-xs">📞</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
+                      {getText('settings.phoneNumber')}
+                    </p>
+                    <p className="text-sm font-medium text-gray-800 truncate">+31612345678</p>
+                  </div>
+                </div>
+
+                {/* Subscription */}
+                <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                  <div className="w-6 h-6 bg-purple-100 rounded flex items-center justify-center">
+                    <span className="text-xs">📄</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
+                      {getText('settings.subscriptionType')}
+                    </p>
+                    <p className="text-sm font-medium text-gray-800 truncate">Full Dashboard</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+        const renderPaymentSettings = () => (
+          <div className="rounded-xl p-8 shadow-sm border border-gray-200 bg-white mb-6">
+            <h2 className="text-xl font-semibold mb-3" style={{ color: '#5D4037' }}>
+              {getText('settings.paymentTitle')}
+            </h2>
+            <p className="text-gray-500 text-base mb-8">
+              {getText('settings.paymentSubtitle')}
+            </p>
+
+            <div className="space-y-6">
+              {/* Cash Payments */}
+              <div className="flex items-center justify-between p-6 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-green-50 to-white">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM15 8a5 5 0 01-5 5v-1.025a2.4 2.4 0 002.5-2.475A2.4 2.4 0 0010 7.025V6a5 5 0 015 2z" clipRule="evenodd"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-800">
+                      {getText('settings.acceptCash')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {getText('settings.acceptCashDesc')}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => togglePaymentSetting('cash')}
+                  className="relative focus:outline-none"
+                >
+                  <div className={`w-14 h-8 rounded-full shadow-inner transition-colors duration-300 ${
+                    paymentSettings.cash ? 'bg-green-500' : 'bg-gray-300'
+                  }`}>
+                    <div className={`absolute w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 top-1 ${
+                      paymentSettings.cash ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </div>
+                </button>
+              </div>
+
+              {/* Card Payments */}
+              <div className="flex items-center justify-between p-6 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-50 to-white">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <span className="text-2xl">💳</span>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-800">
+                      {getText('settings.acceptCard')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {getText('settings.acceptCardDesc')}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => togglePaymentSetting('card')}
+                  className="relative focus:outline-none"
+                >
+                  <div className={`w-14 h-8 rounded-full shadow-inner transition-colors duration-300 ${
+                    paymentSettings.card ? 'bg-green-500' : 'bg-gray-300'
+                  }`}>
+                    <div className={`absolute w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 top-1 ${
+                      paymentSettings.card ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </div>
+                </button>
+              </div>
+
+              {/* Online Payments */}
+              <div className="flex items-center justify-between p-6 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-purple-50 to-white">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <span className="text-2xl">📱</span>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-800">
+                      {getText('settings.acceptOnline')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {getText('settings.acceptOnlineDesc')}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => togglePaymentSetting('online')}
+                  className="relative focus:outline-none"
+                >
+                  <div className={`w-14 h-8 rounded-full shadow-inner transition-colors duration-300 ${
+                    paymentSettings.online ? 'bg-green-500' : 'bg-gray-300'
+                  }`}>
+                    <div className={`absolute w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 top-1 ${
+                      paymentSettings.online ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+        const renderStaffManagement = () => (
+          <div className="rounded-xl p-6 shadow-sm border border-gray-200 bg-white mb-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-lg font-semibold mb-2" style={{ color: '#5D4037' }}>
+                  {getText('settings.staffTitle')}
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  {getText('settings.staffSubtitle')}
+                </p>
+              </div>
+              <button className="px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 hover:shadow-md"
+                style={{ 
+                  background: 'linear-gradient(135deg, #FF6B35 0%, #F97316 100%)'
+                }}>
+                {getText('settings.addStaff')}
+              </button>
+            </div>
+
+            <div className="overflow-hidden border border-gray-200 rounded-lg">
+              <div className="max-h-80 overflow-y-auto"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
+                <table className="w-full">
+                  <thead className="bg-gray-100 sticky top-0 z-10">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {getText('tables.name')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        E-MAIL
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {getText('tables.role')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        STATUS
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {getText('tables.actions')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                  {staffMembers.map((staff) => (
+                    <tr key={staff.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
+                            style={{ backgroundColor: '#8D6E63' }}>
+                            {staff.name.charAt(0)}
+                          </div>
+                          <span className="ml-3 text-sm font-medium text-gray-900">{staff.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {staff.email}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {staff.role}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => toggleStaffStatus(staff.id)}
+                            className="relative"
+                          >
+                            <div className={`w-10 h-6 rounded-full relative transition-colors ${staff.active ? 'bg-green-500' : 'bg-gray-300'}`}>
+                              <div className={`absolute w-4 h-4 bg-white rounded-full shadow transition-transform top-1 ${
+                                staff.active ? 'translate-x-5' : 'translate-x-1'
+                              }`}></div>
+                            </div>
+                          </button>
+                          <span className="text-sm text-gray-600">{staff.status}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm">
+                        <div className="flex space-x-2">
+                          <button className="text-blue-600 hover:text-blue-800 transition-colors">
+                            {getText('edit')}
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteStaff(staff)}
+                            className="text-orange-600 hover:text-orange-800 transition-colors"
+                          >
+                            {getText('settings.delete')}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>            {/* Deleted Staff Section */}
+            {deletedStaff.length > 0 && (
+              <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                <h4 className="text-sm font-medium text-orange-800 mb-3">
+                  {getText('settings.deletedStaff')}
+                </h4>
+                <div className="space-y-2">
+                  {deletedStaff.map((staff) => (
+                    <div key={staff.id} className="flex items-center justify-between p-3 bg-white rounded border">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium bg-gray-400">
+                          {staff.name.charAt(0)}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium text-gray-600">{staff.name}</span>
+                          <span className="text-xs text-gray-400 ml-2">({staff.email})</span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => restoreStaff(staff.id)}
+                        className="px-3 py-1 text-xs font-medium text-orange-600 hover:text-orange-800 hover:bg-orange-100 rounded transition-colors"
+                      >
+                        {getText('settings.restore')}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+
         return (
-          <div className="flex-1 p-6" style={{ backgroundColor: '#FDF4E3' }}>
-            <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>Settings</h1>
-            <p className="text-gray-600 text-sm">Configure your restaurant settings</p>
+          <div className="flex-1 p-6 overflow-hidden" style={{ backgroundColor: '#f5f5f0' }}>
+              {/* Settings Header */}
+              <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200" 
+                style={{ 
+                  backgroundImage: 'linear-gradient(120deg, #faf9f7 0%, #f2ede6 50%, #ede3d3 100%)'
+                }}>
+                <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>
+                  {getText('settings')}
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  {getText('settings.generalSubtitle')}
+                </p>
+              </div>
+
+              {/* Tab Navigation */}
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                <button
+                  onClick={() => setActiveSettingsTab('general')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeSettingsTab === 'general'
+                      ? 'text-white'
+                      : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+                  }`}
+                  style={{ 
+                    background: activeSettingsTab === 'general' 
+                      ? 'linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%)' 
+                      : undefined
+                  }}
+                >
+                  {getText('settings.general')}
+                </button>
+                <button
+                  onClick={() => setActiveSettingsTab('payment')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeSettingsTab === 'payment'
+                      ? 'text-white'
+                      : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+                  }`}
+                  style={{ 
+                    background: activeSettingsTab === 'payment' 
+                      ? 'linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%)' 
+                      : undefined
+                  }}
+                >
+                  {getText('settings.payment')}
+                </button>
+                <button
+                  onClick={() => setActiveSettingsTab('staff')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeSettingsTab === 'staff'
+                      ? 'text-white'
+                      : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+                  }`}
+                  style={{ 
+                    background: activeSettingsTab === 'staff' 
+                      ? 'linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%)' 
+                      : undefined
+                  }}
+                >
+                  {getText('settings.staff')}
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              {activeSettingsTab === 'general' && renderGeneralSettings()}
+              {activeSettingsTab === 'payment' && renderPaymentSettings()}
+              {activeSettingsTab === 'staff' && renderStaffManagement()}
+              
+              {/* Delete Confirmation Modal */}
+              {showDeleteConfirm && staffToDelete && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      {getText('settings.confirmDelete')}
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      {getText('settings.confirmDeleteDesc')}
+                    </p>
+                    <div className="flex justify-end space-x-3">
+                      <button
+                        onClick={() => setShowDeleteConfirm(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                      >
+                        {getText('cancel')}
+                      </button>
+                      <button
+                        onClick={confirmDeleteStaff}
+                        className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-colors"
+                      >
+                        {getText('settings.delete')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
           </div>
         );
+      }
       default:
         return <DashboardPage />;
     }
@@ -1052,20 +1878,21 @@ export default function ComputerMock() {
         background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)'
       }}>
       <style>{`
+        /* Hide all scrollbars completely */
         .demo-scroll::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
+          display: none;
         }
-        .demo-scroll::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 3px;
+        .demo-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
-        .demo-scroll::-webkit-scrollbar-thumb {
-          background: #8D6E63;
-          border-radius: 3px;
+        /* Hide scrollbars for all elements */
+        *::-webkit-scrollbar {
+          display: none;
         }
-        .demo-scroll::-webkit-scrollbar-thumb:hover {
-          background: #5D4037;
+        * {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
       <div className="w-full h-full bg-black rounded-t-2xl p-2">
@@ -1095,13 +1922,157 @@ export default function ComputerMock() {
         </div>
       </div>
 
+      {/* Manage Table Modal */}
+      {showManageTableModal && selectedTable && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold" style={{ color: '#5D4037' }}>Manage {selectedTable.name}</h2>
+              <button 
+                onClick={() => {
+                  setShowManageTableModal(false);
+                  setSelectedTable(null);
+                }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-gray-400 text-xl">×</span>
+              </button>
+            </div>
+
+            {/* Table Info Card */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8D6E63' }}>
+                    <Users className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg" style={{ color: '#5D4037' }}>{selectedTable.name}</h3>
+                    <p className="text-sm text-gray-600">{selectedTable.seats} {getText('tables.seats')} • {getText('tables.code')}: {selectedTable.code}</p>
+                  </div>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  selectedTable.status === 'available' ? 'bg-green-100 text-green-700' :
+                  selectedTable.status === 'occupied' ? 'bg-orange-100 text-orange-700' :
+                  selectedTable.status === 'reserved' ? 'bg-yellow-100 text-yellow-700' : 
+                  selectedTable.status === 'maintenance' ? 'bg-gray-100 text-gray-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {selectedTable.status === 'available' ? 'Available' :
+                   selectedTable.status === 'occupied' ? 'Occupied' :
+                   selectedTable.status === 'reserved' ? 'Reserved' :
+                   selectedTable.status === 'maintenance' ? 'Maintenance' :
+                   'Unknown'}
+                </span>
+              </div>
+            </div>
+
+            {/* Status Options */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4" style={{ color: '#5D4037' }}>{getText('tables.updateStatus')}</h3>
+              <div className="grid grid-cols-2 gap-3">
+                
+                {/* Available */}
+                <button
+                  onClick={() => handleUpdateTableStatus('available')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    selectedTable.status === 'available' 
+                      ? 'border-green-400 bg-green-50' 
+                      : 'border-gray-200 hover:border-green-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <span className="font-medium text-green-700">{getText('status.available')}</span>
+                  </div>
+                  <p className="text-xs text-green-600">{getText('tables.readyForCustomers')}</p>
+                </button>
+
+                {/* Occupied */}
+                <button
+                  onClick={() => handleUpdateTableStatus('occupied')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    selectedTable.status === 'occupied' 
+                      ? 'border-orange-400 bg-orange-50' 
+                      : 'border-gray-200 hover:border-orange-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <Users className="w-8 h-8 p-1.5 rounded-full bg-orange-500 text-white" />
+                    <span className="font-medium text-orange-700">{getText('status.occupied')}</span>
+                  </div>
+                  <p className="text-xs text-orange-600">{getText('tables.currentlyUsed')}</p>
+                </button>
+
+                {/* Reserved */}
+                <button
+                  onClick={() => handleUpdateTableStatus('reserved')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    selectedTable.status === 'reserved' 
+                      ? 'border-yellow-400 bg-yellow-50' 
+                      : 'border-gray-200 hover:border-yellow-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center">
+                      <span className="text-white text-sm">⏰</span>
+                    </div>
+                    <span className="font-medium text-yellow-700">{getText('status.reserved')}</span>
+                    {selectedTable.status === 'reserved' && (
+                      <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">{getText('tables.current')}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-yellow-600">{getText('tables.reservedForGuests')}</p>
+                </button>
+
+                {/* Maintenance */}
+                <button
+                  onClick={() => handleUpdateTableStatus('maintenance')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    selectedTable.status === 'maintenance' 
+                      ? 'border-gray-400 bg-gray-50' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center">
+                      <span className="text-white text-sm">🔧</span>
+                    </div>
+                    <span className="font-medium text-gray-700">{getText('status.maintenance')}</span>
+                  </div>
+                  <p className="text-xs text-gray-600">{getText('tables.outOfService')}</p>
+                </button>
+
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end">
+              <button
+                onClick={() => {
+                  setShowManageTableModal(false);
+                  setSelectedTable(null);
+                }}
+                className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                style={{ color: '#5D4037' }}
+              >
+                {getText('close')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add Table Modal */}
       {showAddTableModal && (
         <div className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-[1px] flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold" style={{ color: '#5D4037' }}>Nieuwe Tafel Toevoegen</h2>
+              <h2 className="text-xl font-bold" style={{ color: '#5D4037' }}>{getText('tables.addTable')}</h2>
               <button 
                 onClick={() => {
                   setShowAddTableModal(false);
@@ -1125,24 +2096,51 @@ export default function ComputerMock() {
                 type="text"
                 value={newTableNumber}
                 onChange={(e) => {
-                  setNewTableNumber(e.target.value);
-                  if (e.target.value && tableNumberError) {
-                    validateTableNumber(e.target.value);
+                  const value = e.target.value;
+                  setNewTableNumber(value);
+                  // Real-time validation while typing
+                  if (value) {
+                    validateTableNumber(value);
+                  } else {
+                    setTableNumberError('');
                   }
                 }}
-                onBlur={() => newTableNumber && validateTableNumber(newTableNumber)}
-                placeholder="Voer tafelnummer in (1-999)"
-                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                onBlur={() => {
+                  if (newTableNumber) {
+                    validateTableNumber(newTableNumber);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!tableNumberError && newTableNumber && newTableSeats) {
+                      handleAddTable();
+                    }
+                  }
+                }}
+                placeholder="Voer tafelnummer in (bijv. 6)"
+                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 transition-colors text-gray-800 ${
                   tableNumberError 
-                    ? 'border-red-300 focus:ring-red-200' 
-                    : 'border-gray-300 focus:ring-blue-200'
+                    ? 'border-red-300 focus:ring-red-200 bg-red-50' 
+                    : newTableNumber && !tableNumberError
+                    ? 'border-green-300 focus:ring-green-200 bg-green-50'
+                    : 'border-gray-300 focus:ring-blue-200 bg-white'
                 }`}
               />
               {tableNumberError && (
-                <p className="text-red-500 text-xs mt-1">{tableNumberError}</p>
+                <p className="text-red-500 text-xs mt-1 flex items-center">
+                  <span className="mr-1">⚠️</span>
+                  {tableNumberError}
+                </p>
               )}
               {!tableNumberError && newTableNumber && (
-                <p className="text-gray-500 text-xs mt-1">Kies een uniek nummer voor deze tafel (1-999)</p>
+                <p className="text-green-600 text-xs mt-1 flex items-center">
+                  <span className="mr-1">✅</span>
+                  {getText('tables.numberAvailable')}
+                </p>
+              )}
+              {!newTableNumber && (
+                <p className="text-gray-500 text-xs mt-1">{getText('tables.chooseNumber')}</p>
               )}
             </div>
 
@@ -1150,17 +2148,25 @@ export default function ComputerMock() {
             <div className="mb-6">
               <label className="flex items-center space-x-2 text-sm font-medium mb-2" style={{ color: '#5D4037' }}>
                 <span className="text-lg">👥</span>
-                <span>Zitcapaciteit</span>
+                <span>{getText('tables.seatingCapacity')}</span>
               </label>
               <input
                 type="number"
                 value={newTableSeats}
                 onChange={(e) => setNewTableSeats(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!tableNumberError && newTableNumber && newTableSeats) {
+                      handleAddTable();
+                    }
+                  }
+                }}
                 min="1"
                 max="20"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white text-gray-800"
               />
-              <p className="text-gray-500 text-xs mt-1">Maximum aantal klanten dat aan deze tafel kan zitten (1-20)</p>
+              <p className="text-gray-500 text-xs mt-1">{getText('tables.maxCustomers')}</p>
             </div>
 
             {/* QR Code Info */}
@@ -1168,10 +2174,13 @@ export default function ComputerMock() {
               <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="flex items-center space-x-2 mb-2">
                   <span className="text-blue-600 text-sm">📱</span>
-                  <span className="text-blue-800 text-sm font-medium">QR Code wordt gegenereerd</span>
+                  <span className="text-blue-800 text-sm font-medium">{getText('tables.qrGenerated')}</span>
                 </div>
                 <p className="text-blue-700 text-xs">
-                  Klanten scannen deze code om toegang te krijgen tot Tafel {newTableNumber}
+                  {language === 'nl' 
+                    ? `Klanten scannen deze code om toegang te krijgen tot Tafel ${newTableNumber}`
+                    : `Customers scan this code to access Table ${newTableNumber}`
+                  }
                 </p>
               </div>
             )}
@@ -1179,12 +2188,12 @@ export default function ComputerMock() {
             {/* Table Overview */}
             {newTableNumber && !tableNumberError && (
               <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="text-green-800 text-sm font-medium mb-2">Tafel Overzicht</h3>
+                <h3 className="text-green-800 text-sm font-medium mb-2">{getText('tables.overview')}</h3>
                 <ul className="text-green-700 text-xs space-y-1">
-                  <li>• <strong>Tafelnummer:</strong> {newTableNumber}</li>
-                  <li>• <strong>Zitcapaciteit:</strong> {newTableSeats} personen</li>
-                  <li>• <strong>QR Code:</strong> Wordt automatisch gegenereerd</li>
-                  <li>• <strong>Status:</strong> Beschikbaar (standaard)</li>
+                  <li>• <strong>{getText('tables.tableNumber')}</strong> {newTableNumber}</li>
+                  <li>• <strong>{getText('tables.capacity')}</strong> {newTableSeats} {getText('tables.people')}</li>
+                  <li>• <strong>QR Code:</strong> {language === 'nl' ? 'Wordt automatisch gegenereerd' : 'Generated automatically'}</li>
+                  <li>• <strong>Status:</strong> {language === 'nl' ? 'Beschikbaar (standaard)' : 'Available (default)'}</li>
                 </ul>
               </div>
             )}
@@ -1201,18 +2210,25 @@ export default function ComputerMock() {
                 className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
                 style={{ color: '#5D4037' }}
               >
-                Annuleren
+                {getText('cancel')}
               </button>
               <button
                 onClick={handleAddTable}
-                disabled={!newTableNumber || !!tableNumberError}
-                className="px-4 py-2 text-sm rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!newTableNumber || !!tableNumberError || !newTableSeats}
+                className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 font-medium ${
+                  !newTableNumber || !!tableNumberError || !newTableSeats
+                    ? 'opacity-50 cursor-not-allowed bg-gray-300 text-gray-500'
+                    : 'hover:shadow-md hover:scale-105'
+                }`}
                 style={{ 
-                  backgroundColor: !newTableNumber || !!tableNumberError ? '#ccc' : '#5D4037',
-                  color: 'white'
+                  backgroundColor: !newTableNumber || !!tableNumberError || !newTableSeats ? undefined : '#5D4037',
+                  color: !newTableNumber || !!tableNumberError || !newTableSeats ? undefined : 'white'
                 }}
               >
-                Tafel Aanmaken
+                {!newTableNumber || !!tableNumberError || !newTableSeats 
+                  ? (language === 'nl' ? 'Vul alle velden in' : 'Fill all fields') 
+                  : `+ ${getText('tables.addTable')}`
+                }
               </button>
             </div>
           </div>
@@ -1225,3 +2241,4 @@ export default function ComputerMock() {
     </div>
   );
 }
+
