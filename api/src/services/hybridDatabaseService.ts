@@ -19,8 +19,30 @@ interface TimeSlot {
 
 class HybridDatabaseService {
   private isPostgresAvailable = true;
+  private initializationInProgress = false;
+  private initializationPromise: Promise<void> | null = null;
 
   async initialize(): Promise<void> {
+    // Prevent concurrent initialization
+    if (this.initializationInProgress) {
+      if (this.initializationPromise) {
+        await this.initializationPromise;
+      }
+      return;
+    }
+
+    this.initializationInProgress = true;
+    this.initializationPromise = this.performInitialization();
+
+    try {
+      await this.initializationPromise;
+    } finally {
+      this.initializationInProgress = false;
+      this.initializationPromise = null;
+    }
+  }
+
+  private async performInitialization(): Promise<void> {
     try {
       // Always initialize SQLite as backup
       await sqliteBackup.initialize();
@@ -30,6 +52,12 @@ class HybridDatabaseService {
       await appointmentDb.initializeDatabase();
       this.isPostgresAvailable = true;
       logger.info('✅ PostgreSQL primary database initialized');
+
+      // Verify data integrity after initialization
+      await this.verifyReferenceData();
+
+      // Log database state for debugging
+      await this.logDatabaseState();
     } catch (error) {
       logger.error('❌ PostgreSQL initialization failed, using SQLite only:', error);
       this.isPostgresAvailable = false;
@@ -49,16 +77,20 @@ class HybridDatabaseService {
         logger.warn(`❌ PostgreSQL ${operationName} failed, falling back to SQLite:`, error);
         this.isPostgresAvailable = false;
 
-        // Auto-recovery attempt
-        setTimeout(async () => {
-          try {
-            await appointmentDb.initializeDatabase();
-            this.isPostgresAvailable = true;
-            logger.info('✅ PostgreSQL recovered automatically');
-          } catch (recoveryError) {
-            logger.error('❌ PostgreSQL auto-recovery failed:', recoveryError);
-          }
-        }, 5000);
+        // Auto-recovery attempt (only if not already in progress)
+        if (!this.initializationInProgress) {
+          setTimeout(async () => {
+            try {
+              logger.info('🔄 Attempting PostgreSQL auto-recovery...');
+              await this.initialize(); // Use the safe initialization method
+              if (this.isPostgresAvailable) {
+                logger.info('✅ PostgreSQL recovered automatically');
+              }
+            } catch (recoveryError) {
+              logger.error('❌ PostgreSQL auto-recovery failed:', recoveryError);
+            }
+          }, 5000);
+        }
       }
     }
 
@@ -153,6 +185,81 @@ class HybridDatabaseService {
       // SQLite doesn't need email logs for the basic functionality
     } catch (error) {
       logger.warn('❌ Email log update failed:', error);
+    }
+  }
+
+  private async verifyReferenceData(): Promise<void> {
+    try {
+      if (this.isPostgresAvailable) {
+        // Check PostgreSQL time slots
+        const result = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
+        const count = parseInt(result.rows[0].count);
+
+        if (count < 35) {
+          logger.warn(`⚠️ PostgreSQL time slots incomplete: ${count}/35 slots found`);
+          // Force re-initialization of time slots
+          await appointmentDb.ensureTimeSlots();
+        } else {
+          logger.info(`✅ PostgreSQL time slots verified: ${count} slots available`);
+        }
+      }
+    } catch (error) {
+      logger.error('❌ Reference data verification failed:', error);
+    }
+  }
+
+  private async logDatabaseState(): Promise<void> {
+    try {
+      if (this.isPostgresAvailable) {
+        const dbInfo = await appointmentDb.query('SELECT current_database(), current_schema(), current_user');
+        const timeSlotsCount = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
+        const appointmentsCount = await appointmentDb.query('SELECT COUNT(*) FROM appointments');
+
+        logger.info('📊 Database State Report:', {
+          database: dbInfo.rows[0].current_database,
+          schema: dbInfo.rows[0].current_schema,
+          user: dbInfo.rows[0].current_user,
+          timeSlots: timeSlotsCount.rows[0].count,
+          appointments: appointmentsCount.rows[0].count,
+          url: process.env.DATABASE_URL?.substring(0, 50) + '...'
+        });
+      }
+    } catch (error) {
+      logger.error('❌ Failed to log database state:', error);
+    }
+  }
+
+  /**
+   * Start periodic health monitoring
+   */
+  startHealthMonitoring(): void {
+    // Check every 5 minutes
+    setInterval(async () => {
+      await this.performHealthCheck();
+    }, 300000);
+
+    // Initial health check
+    setTimeout(() => this.performHealthCheck(), 10000);
+  }
+
+  private async performHealthCheck(): Promise<void> {
+    try {
+      if (this.isPostgresAvailable) {
+        const result = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
+        const count = parseInt(result.rows[0].count);
+
+        if (count < 10) {
+          logger.error('🚨 CRITICAL: Time slots table empty or corrupted - data loss detected', {
+            timeSlotsCount: count,
+            timestamp: new Date().toISOString()
+          });
+
+          // Attempt immediate recovery
+          await this.verifyReferenceData();
+        }
+      }
+    } catch (error) {
+      logger.warn('⚠️ Health check failed:', error);
     }
   }
 

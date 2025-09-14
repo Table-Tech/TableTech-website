@@ -125,6 +125,10 @@ const initializeServices = async () => {
   try {
     await hybridDb.initialize();
     logger.info('Hybrid database services initialized with automatic fallback');
+
+    // Start health monitoring
+    hybridDb.startHealthMonitoring();
+    logger.info('Database health monitoring started');
   } catch (error) {
     logger.error('Failed to initialize database services:', error);
   }

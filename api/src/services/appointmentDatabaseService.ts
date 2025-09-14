@@ -486,6 +486,10 @@ class AppointmentDatabaseService {
       const connected = await pool.query('SELECT NOW()');
       console.log('✅ Database connected:', connected.rows[0].now);
 
+      // Start transaction for atomic initialization
+      await query('BEGIN;');
+      console.log('🔒 Started database initialization transaction');
+
       // Enable required extensions
       await query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
       await query('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
@@ -638,12 +642,85 @@ class AppointmentDatabaseService {
             FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
       `);
 
+      // Commit transaction
+      await query('COMMIT;');
       console.log('✅ Database initialization completed successfully');
 
     } catch (error) {
+      // Rollback transaction on error
+      try {
+        await query('ROLLBACK;');
+        console.log('🔄 Transaction rolled back due to error');
+      } catch (rollbackError) {
+        console.error('❌ Failed to rollback transaction:', rollbackError);
+      }
       console.error('❌ Database initialization failed:', error);
       throw error;
     }
+  }
+
+  /**
+   * Ensure time slots exist - Safe method to re-create time slots if missing
+   */
+  async ensureTimeSlots(): Promise<void> {
+    try {
+      console.log('🔧 Ensuring time slots are populated...');
+
+      // Re-insert default time slots (using ON CONFLICT DO NOTHING for safety)
+      await query(`
+        INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
+        -- Monday (1) to Friday (5)
+        (1, '09:00', '10:00', 60),
+        (1, '10:00', '11:00', 60),
+        (1, '11:00', '12:00', 60),
+        (1, '13:00', '14:00', 60),
+        (1, '14:00', '15:00', 60),
+        (1, '15:00', '16:00', 60),
+        (1, '16:00', '17:00', 60),
+        (2, '09:00', '10:00', 60),
+        (2, '10:00', '11:00', 60),
+        (2, '11:00', '12:00', 60),
+        (2, '13:00', '14:00', 60),
+        (2, '14:00', '15:00', 60),
+        (2, '15:00', '16:00', 60),
+        (2, '16:00', '17:00', 60),
+        (3, '09:00', '10:00', 60),
+        (3, '10:00', '11:00', 60),
+        (3, '11:00', '12:00', 60),
+        (3, '13:00', '14:00', 60),
+        (3, '14:00', '15:00', 60),
+        (3, '15:00', '16:00', 60),
+        (3, '16:00', '17:00', 60),
+        (4, '09:00', '10:00', 60),
+        (4, '10:00', '11:00', 60),
+        (4, '11:00', '12:00', 60),
+        (4, '13:00', '14:00', 60),
+        (4, '14:00', '15:00', 60),
+        (4, '15:00', '16:00', 60),
+        (4, '16:00', '17:00', 60),
+        (5, '09:00', '10:00', 60),
+        (5, '10:00', '11:00', 60),
+        (5, '11:00', '12:00', 60),
+        (5, '13:00', '14:00', 60),
+        (5, '14:00', '15:00', 60),
+        (5, '15:00', '16:00', 60),
+        (5, '16:00', '17:00', 60)
+        ON CONFLICT (day_of_week, start_time) DO NOTHING;
+      `);
+
+      const result = await query('SELECT COUNT(*) FROM appointment_time_slots');
+      console.log(`✅ Time slots ensured: ${result.rows[0].count} total slots`);
+    } catch (error) {
+      console.error('❌ Failed to ensure time slots:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Public query method for hybrid service
+   */
+  async query(sql: string, params?: any[]): Promise<any> {
+    return query(sql, params);
   }
 }
 
