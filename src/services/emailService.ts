@@ -50,7 +50,7 @@ export const sendAppointmentEmail = async (appointmentData: AppointmentData): Pr
       });
       localStorage.setItem('tabletech-appointments', JSON.stringify(existingAppointments));
       // Appointment saved to localStorage
-    } catch (storageError) {
+    } catch {
       // Could not save to localStorage
     }
 
@@ -289,7 +289,7 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
         // Customer email failed, but business email succeeded
       }
 
-    } catch (formSubmitError) {
+    } catch {
       // Strato/FormSubmit method failed
     }
 
@@ -323,7 +323,7 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
         } else {
           throw new Error(`Formspree failed: ${formspreeResponse.status}`);
         }
-      } catch (formspreeError) {
+      } catch {
         // Formspree method failed
       }
     }
@@ -354,7 +354,7 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
         } else {
           throw new Error(`Netlify Forms failed: ${netlifyResponse.status}`);
         }
-      } catch (netlifyError) {
+      } catch {
         // Netlify Forms method failed
       }
     }
@@ -375,7 +375,7 @@ ${appointmentData.message ? `💬 KLANT BERICHT:
         const failedEmails = JSON.parse(localStorage.getItem('tabletech-failed-emails') || '[]');
         failedEmails.push(manualLog);
         localStorage.setItem('tabletech-failed-emails', JSON.stringify(failedEmails));
-      } catch (e) {
+      } catch {
         // Could not log failed email
       }
     }
@@ -399,7 +399,7 @@ export const isTimeSlotAvailable = (date: string, time: string): boolean => {
     const bookingKey = `${date}-${time}`;
     const existingBookings = JSON.parse(localStorage.getItem('tabletech-booked-slots') || '{}');
     return !existingBookings[bookingKey];
-  } catch (error) {
+  } catch {
     // Error checking time slot availability
     return true; // Allow booking if there's an error checking
   }
@@ -412,7 +412,7 @@ export const getBookedTimeSlotsForDate = (date: string): string[] => {
     return Object.keys(existingBookings)
       .filter(key => key.startsWith(date))
       .map(key => key.split('-').pop() || '');
-  } catch (error) {
+  } catch {
     // Error getting booked time slots
     return [];
   }
@@ -437,28 +437,31 @@ export const clearExpiredBookings = (): void => {
     
     localStorage.setItem('tabletech-booked-slots', JSON.stringify(updatedBookings));
     // Expired bookings cleared
-  } catch (error) {
+  } catch {
     // Error clearing expired bookings
   }
 };
 
 // Alternative method using EmailJS (if you prefer client-side email sending)
-export const sendAppointmentEmailWithEmailJS = async (appointmentData: AppointmentData): Promise<boolean> => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const sendAppointmentEmailWithEmailJS = async (_appointmentData: AppointmentData): Promise<boolean> => {
   try {
     // You would need to install emailjs-com: npm install emailjs-com
     // import emailjs from 'emailjs-com';
     
-    const templateParams = {
-      to_email: 'info@tabletech.nl',
-      from_name: appointmentData.name,
-      from_email: appointmentData.email,
-      phone: appointmentData.phone,
-      restaurant: appointmentData.restaurant || 'Niet opgegeven',
-      appointment_date: appointmentData.date,
-      appointment_time: appointmentData.time,
-      message: appointmentData.message || 'Geen bericht',
-      subject: `Nieuwe afspraak: ${appointmentData.name} - ${appointmentData.date} ${appointmentData.time}`
-    };
+    // Email would be sent with EmailJS using _appointmentData
+    // Template parameters would be:
+    // const templateParams = {
+    //   to_email: 'info@tabletech.nl',
+    //   from_name: _appointmentData.name,
+    //   from_email: _appointmentData.email,
+    //   phone: _appointmentData.phone,
+    //   restaurant: _appointmentData.restaurant || 'Niet opgegeven',
+    //   appointment_date: _appointmentData.date,
+    //   appointment_time: _appointmentData.time,
+    //   message: _appointmentData.message || 'Geen bericht',
+    //   subject: `Nieuwe afspraak: ${_appointmentData.name} - ${_appointmentData.date} ${_appointmentData.time}`
+    // };
 
     // Replace these with your EmailJS service ID, template ID, and user ID
     // const result = await emailjs.send(
@@ -470,7 +473,7 @@ export const sendAppointmentEmailWithEmailJS = async (appointmentData: Appointme
 
     // Email would be sent with EmailJS
     return true;
-  } catch (error) {
+  } catch {
     // Error sending email with EmailJS
     return false;
   }

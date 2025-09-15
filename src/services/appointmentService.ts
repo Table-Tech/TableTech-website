@@ -48,7 +48,8 @@ const getApiUrl = (): string => {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:3002/api';
   }
-  return 'https://tabletech.nl/api';
+  // For production, use environment variable or fallback to demo mode
+  return import.meta.env.VITE_API_URL || 'https://demo-api.tabletech.nl/api';
 };
 
 // Submit appointment to the secure V2 API

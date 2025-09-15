@@ -10,6 +10,7 @@ export interface AppointmentData {
   message?: string;
   date: string;
   time: string;
+  [key: string]: string | undefined;
 }
 
 export interface AvailableSlot {
@@ -54,12 +55,12 @@ export const submitSecureAppointment = async (data: AppointmentData): Promise<{ 
       {
         firstName: (value) => typeof value === 'string' && value.length > 0 && value.length <= 50,
         lastName: (value) => typeof value === 'string' && value.length > 0 && value.length <= 50,
-        email: (value) => securityManager.validateEmail(value),
-        phone: (value) => securityManager.validatePhone(value),
+        email: (value) => typeof value === 'string' && securityManager.validateEmail(value),
+        phone: (value) => typeof value === 'string' && securityManager.validatePhone(value),
         restaurant: (value) => typeof value === 'string' && value.length > 0 && value.length <= 100,
         message: (value) => !value || (typeof value === 'string' && value.length <= 500),
-        date: (value) => /^\d{4}-\d{2}-\d{2}$/.test(value),
-        time: (value) => /^\d{2}:\d{2}$/.test(value)
+        date: (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value),
+        time: (value) => typeof value === 'string' && /^\d{2}:\d{2}$/.test(value)
       }
     );
 
@@ -177,7 +178,7 @@ export const cancelSecureAppointment = async (appointmentId: string): Promise<{ 
       const appointments = JSON.parse(localStorage.getItem('tabletech_appointments_encrypted') || '[]');
       const updatedAppointments = appointments.filter((encrypted: string) => {
         try {
-          const decrypted = securityManager.decryptData<any>(encrypted);
+          const decrypted = securityManager.decryptData<AppointmentData & { id?: string }>(encrypted);
           return decrypted?.id !== appointmentId;
         } catch {
           return true; // Keep if can't decrypt

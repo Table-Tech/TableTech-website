@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Cookie, Settings, X, Check, ChevronDown, ChevronUp, BarChart3, Megaphone, Zap, Lock, ChevronRight } from 'lucide-react';
+import { Shield, Cookie, Settings, X, ChevronDown, ChevronUp, BarChart3, Megaphone, Zap, ChevronRight } from 'lucide-react';
 import cookieManager, { CookieCategory } from '../utils/cookieManager';
 import { shouldOpenCookieSettings } from '../utils/cookieSettings';
 

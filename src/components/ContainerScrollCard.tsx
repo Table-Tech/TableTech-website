@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useCallback } from "react";
 
 export interface ContainerScrollCardProps {
   rotate: number;
@@ -17,7 +17,6 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
   const togglePlay = () => {
@@ -40,9 +39,7 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
   };
 
   const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-    }
+    // Metadata loaded - video is ready to play
   };
 
   const updateVideoTime = (clientX: number, rect: DOMRect) => {
@@ -68,7 +65,7 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
     e.preventDefault();
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
       const progressBar = document.querySelector('.video-progress-bar') as HTMLElement;
       if (progressBar) {
@@ -77,7 +74,7 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
       }
       e.preventDefault();
     }
-  };
+  }, [isDragging]);
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -98,7 +95,7 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
         document.body.style.userSelect = '';
       };
     }
-  }, [isDragging]);
+  }, [isDragging, handleMouseMove]);
 
   // Enhanced shadow calculation based on rotation and scale
   const dynamicShadow = useMemo(() => {

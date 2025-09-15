@@ -56,7 +56,7 @@ class SecureAPI {
     return controller.signal;
   }
 
-  public async request<T = any>(
+  public async request<T = unknown>(
     endpoint: string,
     options: SecureRequestOptions = {}
   ): Promise<T> {
@@ -111,7 +111,7 @@ class SecureAPI {
         }
         
         body = JSON.stringify(sanitized);
-      } catch (e) {
+      } catch {
         // Body is not JSON, keep as is
       }
     }
@@ -133,7 +133,7 @@ class SecureAPI {
         const clonedResponse = response.clone();
         const responseText = await clonedResponse.text();
         
-        if (securityManager.detectSuspiciousActivity(responseText)) {
+        if (securityManager.detectSuspiciousActivity({ responseText })) {
           securityManager.logSecurityEvent('XSS_ATTEMPT', { 
             url,
             response: responseText.substring(0, 1000) 
@@ -154,16 +154,16 @@ class SecureAPI {
     }
   }
 
-  public async get<T = any>(
+  public async get<T = unknown>(
     endpoint: string,
     options?: Omit<SecureRequestOptions, 'method' | 'body'>
   ): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
-  public async post<T = any>(
+  public async post<T = unknown>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<SecureRequestOptions, 'method' | 'body'>
   ): Promise<T> {
     return this.request<T>(endpoint, {
@@ -173,9 +173,9 @@ class SecureAPI {
     });
   }
 
-  public async put<T = any>(
+  public async put<T = unknown>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<SecureRequestOptions, 'method' | 'body'>
   ): Promise<T> {
     return this.request<T>(endpoint, {
@@ -185,16 +185,16 @@ class SecureAPI {
     });
   }
 
-  public async delete<T = any>(
+  public async delete<T = unknown>(
     endpoint: string,
     options?: Omit<SecureRequestOptions, 'method' | 'body'>
   ): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
   }
 
-  public async patch<T = any>(
+  public async patch<T = unknown>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<SecureRequestOptions, 'method' | 'body'>
   ): Promise<T> {
     return this.request<T>(endpoint, {
@@ -205,10 +205,10 @@ class SecureAPI {
   }
 
   // Secure form submission with validation
-  public async submitForm<T = any>(
+  public async submitForm<T = unknown>(
     endpoint: string,
-    formData: Record<string, any>,
-    validationRules?: Record<string, (value: any) => boolean>
+    formData: Record<string, unknown>,
+    validationRules?: Record<string, (value: unknown) => boolean>
   ): Promise<T> {
     // Validate form data
     if (validationRules) {
@@ -234,10 +234,10 @@ class SecureAPI {
   }
 
   // Secure file upload
-  public async uploadFile<T = any>(
+  public async uploadFile<T = unknown>(
     endpoint: string,
     file: File,
-    additionalData?: Record<string, any>
+    additionalData?: Record<string, unknown>
   ): Promise<T> {
     // Validate file
     const maxSize = 10 * 1024 * 1024; // 10MB
@@ -267,7 +267,7 @@ class SecureAPI {
     
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: formData as any,
+      body: formData as RequestInit['body'],
       headers: {
         'X-CSRF-Token': csrfToken
       },
@@ -284,7 +284,7 @@ class SecureAPI {
   public async authenticate(
     email: string,
     password: string
-  ): Promise<{ token: string; user: any }> {
+  ): Promise<{ token: string; user: Record<string, unknown> }> {
     // Validate inputs
     if (!securityManager.validateEmail(email)) {
       throw new Error('Invalid email format');
@@ -294,7 +294,7 @@ class SecureAPI {
     const hashedPassword = securityManager.hashPassword(password);
 
     try {
-      const response = await this.post<{ token: string; user: any }>(
+      const response = await this.post<{ token: string; user: Record<string, unknown> }>(
         '/auth/login',
         { email, password: hashedPassword },
         {

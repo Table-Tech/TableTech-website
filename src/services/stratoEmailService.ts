@@ -68,7 +68,7 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json(); // Get result but no need to store it
         // Strato email sent successfully
         emailSent = true;
         
@@ -194,14 +194,14 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
           if (customerResponse.ok) {
             // Customer confirmation sent
           }
-        } catch (customerError) {
+        } catch {
           // Customer email failed
         }
         
       } else {
         throw new Error(`FormSubmit AJAX failed: ${response.status}`);
       }
-    } catch (error) {
+    } catch {
       // FormSubmit AJAX failed
     }
 
@@ -230,7 +230,7 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
           // Netlify backup email sent
           emailSent = true;
         }
-      } catch (netlifyError) {
+      } catch {
         // Netlify backup failed
       }
     }
@@ -264,7 +264,7 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
           // Formspree backup email sent
           emailSent = true;
         }
-      } catch (formspreeError) {
+      } catch {
         // Formspree backup failed
       }
     }
@@ -279,7 +279,7 @@ export const sendAppointmentEmailStrato = async (appointmentData: AppointmentDat
         timestamp: new Date().toISOString()
       });
       localStorage.setItem('tabletech-appointments', JSON.stringify(appointments));
-    } catch (storageError) {
+    } catch {
       // Storage error
     }
 

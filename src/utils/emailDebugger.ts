@@ -27,7 +27,7 @@ export const EmailDebugger = {
       const parsed = appointments ? JSON.parse(appointments) : [];
       // Stored appointments retrieved
       return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
+    } catch {
       // Error reading stored appointments
       return [];
     }
@@ -40,7 +40,7 @@ export const EmailDebugger = {
       const parsed = failed ? JSON.parse(failed) : [];
       // Failed emails retrieved
       return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
+    } catch {
       // Error reading failed emails
       return [];
     }
@@ -53,7 +53,7 @@ export const EmailDebugger = {
       const parsed = failed ? JSON.parse(failed) : [];
       // Failed bookings retrieved
       return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
+    } catch {
       // Error reading failed bookings
       return [];
     }
@@ -84,7 +84,7 @@ export const EmailDebugger = {
       }
       
       return result;
-    } catch (error) {
+    } catch {
       // Email test error
       return false;
     }

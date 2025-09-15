@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 interface ScrollArrowsProps {
@@ -10,11 +10,11 @@ export const ScrollArrows: React.FC<ScrollArrowsProps> = ({ targetSelector }) =>
   const [canScrollDown, setCanScrollDown] = useState(false);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollIntervalRef = useRef<number | null>(null);
   const scrollElementRef = useRef<HTMLElement | null>(null);
 
   // Update scroll state
-  const updateScrollState = () => {
+  const updateScrollState = useCallback(() => {
     const scrollElement = document.querySelector(targetSelector) as HTMLElement;
     if (scrollElement) {
       scrollElementRef.current = scrollElement;
@@ -22,7 +22,7 @@ export const ScrollArrows: React.FC<ScrollArrowsProps> = ({ targetSelector }) =>
       setCanScrollUp(scrollTop > 0);
       setCanScrollDown(scrollTop < scrollHeight - clientHeight - 1);
     }
-  };
+  }, [targetSelector]);
 
   // Set up scroll listener
   useEffect(() => {
@@ -36,7 +36,7 @@ export const ScrollArrows: React.FC<ScrollArrowsProps> = ({ targetSelector }) =>
         scrollElement.removeEventListener('scroll', updateScrollState);
       };
     }
-  }, [targetSelector]);
+  }, [targetSelector, updateScrollState]);
 
   // Handle continuous scrolling
   const startScrolling = (direction: 'up' | 'down') => {
