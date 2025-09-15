@@ -191,17 +191,11 @@ class HybridDatabaseService {
   private async verifyReferenceData(): Promise<void> {
     try {
       if (this.isPostgresAvailable) {
-        // Check PostgreSQL time slots
-        const result = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
-        const count = parseInt(result.rows[0].count);
+        // Check PostgreSQL tables exist
+        const appointmentsCount = await appointmentDb.query('SELECT COUNT(*) FROM appointments');
+        const blockedDatesCount = await appointmentDb.query('SELECT COUNT(*) FROM blocked_dates');
 
-        if (count < 35) {
-          logger.warn(`⚠️ PostgreSQL time slots incomplete: ${count}/35 slots found`);
-          // Force re-initialization of time slots
-          await appointmentDb.ensureTimeSlots();
-        } else {
-          logger.info(`✅ PostgreSQL time slots verified: ${count} slots available`);
-        }
+        logger.info(`✅ Database verified: ${appointmentsCount.rows[0].count} appointments, ${blockedDatesCount.rows[0].count} blocked dates`);
       }
     } catch (error) {
       logger.error('❌ Reference data verification failed:', error);
@@ -212,15 +206,15 @@ class HybridDatabaseService {
     try {
       if (this.isPostgresAvailable) {
         const dbInfo = await appointmentDb.query('SELECT current_database(), current_schema(), current_user');
-        const timeSlotsCount = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
         const appointmentsCount = await appointmentDb.query('SELECT COUNT(*) FROM appointments');
+        const blockedDatesCount = await appointmentDb.query('SELECT COUNT(*) FROM blocked_dates');
 
         logger.info('📊 Database State Report:', {
           database: dbInfo.rows[0].current_database,
           schema: dbInfo.rows[0].current_schema,
           user: dbInfo.rows[0].current_user,
-          timeSlots: timeSlotsCount.rows[0].count,
           appointments: appointmentsCount.rows[0].count,
+          blockedDates: blockedDatesCount.rows[0].count,
           url: process.env.DATABASE_URL?.substring(0, 50) + '...'
         });
       }
@@ -245,18 +239,22 @@ class HybridDatabaseService {
   private async performHealthCheck(): Promise<void> {
     try {
       if (this.isPostgresAvailable) {
-        const result = await appointmentDb.query('SELECT COUNT(*) FROM appointment_time_slots');
-        const count = parseInt(result.rows[0].count);
+        // Check if core tables are healthy
+        const appointmentsResult = await appointmentDb.query('SELECT COUNT(*) FROM appointments');
+        const blockedDatesResult = await appointmentDb.query('SELECT COUNT(*) FROM blocked_dates');
 
-        if (count < 10) {
-          logger.error('🚨 CRITICAL: Time slots table empty or corrupted - data loss detected', {
-            timeSlotsCount: count,
-            timestamp: new Date().toISOString()
-          });
+        const appointmentsCount = parseInt(appointmentsResult.rows[0].count);
+        const blockedDatesCount = parseInt(blockedDatesResult.rows[0].count);
 
-          // Attempt immediate recovery
-          await this.verifyReferenceData();
-        }
+        // Log health status
+        logger.debug('🏥 Health check completed', {
+          appointments: appointmentsCount,
+          blockedDates: blockedDatesCount,
+          timestamp: new Date().toISOString()
+        });
+
+        // Verify reference data if needed
+        await this.verifyReferenceData();
       }
     } catch (error) {
       logger.warn('⚠️ Health check failed:', error);

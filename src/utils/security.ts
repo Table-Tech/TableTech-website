@@ -47,7 +47,7 @@ export class SecurityManager {
       `style-src 'self' 'unsafe-inline'`, // Required for Tailwind
       `img-src 'self' data: https: blob:`,
       `font-src 'self' data: https://r2cdn.perplexity.ai`,
-      `connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://api.tabletech.nl https://tabletech.nl http://localhost:3002 ws://localhost:* wss://localhost:*`,
+      `connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://api.tabletech.nl https://tabletech.nl http://localhost:3001 http://localhost:3002 ws://localhost:* wss://localhost:*`,
       `frame-src 'self' https://www.youtube.com https://player.vimeo.com https://challenges.cloudflare.com`,
       `base-uri 'self'`,
       `form-action 'self'`,

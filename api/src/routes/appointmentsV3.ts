@@ -437,6 +437,66 @@ router.get('/status', async (_req: Request, res: Response): Promise<void> => {
 });
 
 /**
+ * GET /api/v2/appointments/available-dates
+ * Get available dates for a specific month
+ */
+router.get('/available-dates', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      res.status(400).json({
+        success: false,
+        error: 'Year and month are required'
+      });
+      return;
+    }
+
+    // Get all dates in the month
+    const yearNum = parseInt(year as string);
+    const monthNum = parseInt(month as string);
+    const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
+    const availableDates: string[] = [];
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dateObj = new Date(date);
+
+      // Skip weekends
+      if (dateObj.getDay() === 0 || dateObj.getDay() === 6) continue;
+
+      // Skip past dates
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (dateObj < today) continue;
+
+      // Check if date has available slots
+      const slots = await appointmentService.getAvailableSlots(date);
+      const hasAvailableSlots = slots.some(slot => slot.available);
+
+      if (hasAvailableSlots) {
+        availableDates.push(date);
+      }
+    }
+
+    res.json({
+      success: true,
+      year: yearNum,
+      month: monthNum,
+      availableDates,
+      count: availableDates.length
+    });
+
+  } catch (error) {
+    logger.error('Error fetching available dates:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch available dates'
+    });
+  }
+});
+
+/**
  * GET /api/v2/appointments/:reference
  * Get appointment details by reference number
  */

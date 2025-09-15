@@ -30,6 +30,7 @@ interface AppointmentResponse {
     code: string;
     message: string;
     details?: unknown;
+    missingFields?: string[];
   };
 }
 
@@ -46,7 +47,7 @@ const generateUUID = (): string => {
 const getApiUrl = (): string => {
   // Check if we're in development by looking at the hostname
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:3002/api';
+    return 'http://localhost:3001/api';
   }
   // For production, use environment variable or fallback to demo mode
   return import.meta.env.VITE_API_URL || 'https://demo-api.tabletech.nl/api';
@@ -90,10 +91,22 @@ export const submitAppointment = async (data: AppointmentData): Promise<Appointm
     });
     
     const result = await response.json();
-    
+
     if (!response.ok) {
-      console.warn('API error, but treating as success for demo:', result);
-      // Return success even if API fails for demo purposes
+      console.warn('API error:', result);
+      // Check if this is a validation error that should be shown to the user
+      if (result.code === 'MISSING_FIELDS' || result.code === 'VALIDATION_ERROR') {
+        return {
+          ok: false,
+          error: {
+            code: result.code,
+            message: result.error || result.message,
+            details: result.details,
+            missingFields: result.missingFields
+          }
+        };
+      }
+      // For other errors, still treat as success for demo purposes
       return {
         ok: true,
         requestId: idempotencyKey,
@@ -243,7 +256,7 @@ export const getAvailableSlots = async (date: string): Promise<{ time: string; i
 
     if (result.success && result.slots) {
       // Convert 'available' to 'isAvailable' for consistency
-      return result.slots.map((slot: any) => ({
+      return result.slots.map((slot: { time: string; available?: boolean; isAvailable?: boolean }) => ({
         time: slot.time,
         isAvailable: slot.available !== undefined ? slot.available : slot.isAvailable
       }));

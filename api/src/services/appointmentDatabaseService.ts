@@ -1,5 +1,4 @@
 import { pool, query } from '../lib/database/config';
-import crypto from 'crypto';
 
 interface AppointmentData {
   restaurantName: string;
@@ -51,15 +50,7 @@ class AppointmentDatabaseService {
 
       const appointment = result.rows[0];
 
-      // Hash email for logging purposes only
-      const emailHash = this.hashEmail(data.email);
-      
-      // Log email sent (no personal data)
-      await query(
-        `INSERT INTO email_logs (appointment_id, email_type, email_hash, status) 
-         VALUES ($1, 'confirmation', $2, 'pending')`,
-        [appointment.id, emailHash]
-      );
+      // Email logging removed - no email_logs table
 
       return {
         id: appointment.id,
@@ -76,14 +67,43 @@ class AppointmentDatabaseService {
    */
   async getAvailableSlots(date: string): Promise<TimeSlot[]> {
     try {
-      const result = await query(
-        `SELECT * FROM get_available_slots($1::date)`,
+      // Define business hours time slots
+      const timeSlots = [
+        '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+        '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+        '16:00', '16:30'
+      ];
+
+      // Check if date is blocked
+      const blockedResult = await query(
+        `SELECT 1 FROM blocked_dates WHERE blocked_date = $1`,
         [date]
       );
 
-      return result.rows.map(row => ({
-        time: row.slot_time.substring(0, 5), // Format: HH:MM
-        isAvailable: row.is_available
+      if (blockedResult.rows.length > 0) {
+        // Date is blocked, all slots unavailable
+        return timeSlots.map(time => ({
+          time,
+          isAvailable: false
+        }));
+      }
+
+      // Get booked appointments for this date
+      const bookedResult = await query(
+        `SELECT appointment_time FROM appointments
+         WHERE appointment_date = $1
+         AND status IN ('pending', 'confirmed')
+         AND deleted_at IS NULL`,
+        [date]
+      );
+
+      const bookedTimes = new Set(
+        bookedResult.rows.map(row => row.appointment_time.substring(0, 5))
+      );
+
+      return timeSlots.map(time => ({
+        time,
+        isAvailable: !bookedTimes.has(time)
       }));
     } catch (error) {
       console.error('Error getting available slots:', error);
@@ -96,12 +116,27 @@ class AppointmentDatabaseService {
    */
   async isTimeSlotAvailable(date: string, time: string): Promise<boolean> {
     try {
+      // Check if date is blocked
+      const blockedResult = await query(
+        `SELECT 1 FROM blocked_dates WHERE blocked_date = $1`,
+        [date]
+      );
+
+      if (blockedResult.rows.length > 0) {
+        return false;
+      }
+
+      // Check if slot is already booked
       const result = await query(
-        `SELECT is_time_slot_available($1::date, $2::time) as available`,
+        `SELECT 1 FROM appointments
+         WHERE appointment_date = $1
+         AND appointment_time = $2
+         AND status IN ('pending', 'confirmed')
+         AND deleted_at IS NULL`,
         [date, time]
       );
 
-      return result.rows[0]?.available || false;
+      return result.rows.length === 0;
     } catch (error) {
       console.error('Error checking time slot availability:', error);
       return false;
@@ -113,14 +148,8 @@ class AppointmentDatabaseService {
    */
   async isDateFullyBooked(date: string): Promise<boolean> {
     try {
-      const result = await query(
-        `SELECT COUNT(*) as available_count
-         FROM get_available_slots($1::date)
-         WHERE is_available = true`,
-        [date]
-      );
-
-      return parseInt(result.rows[0]?.available_count || '0') === 0;
+      const slots = await this.getAvailableSlots(date);
+      return !slots.some(slot => slot.isAvailable);
     } catch (error) {
       console.error('Error checking if date is fully booked:', error);
       return false;
@@ -202,12 +231,7 @@ class AppointmentDatabaseService {
       );
 
       if (result.rows.length > 0) {
-        // Log cancellation
-        await query(
-          `INSERT INTO email_logs (appointment_id, email_type, status) 
-           VALUES ($1, 'cancellation', 'pending')`,
-          [result.rows[0].id]
-        );
+        // Email logging removed - no email_logs table
         return true;
       }
 
@@ -247,19 +271,11 @@ class AppointmentDatabaseService {
   }
 
   /**
-   * Update email log status
+   * Update email log status - deprecated (no email_logs table)
    */
-  async updateEmailLogStatus(appointmentId: string, emailType: string, status: string, errorMessage?: string): Promise<void> {
-    try {
-      await query(
-        `UPDATE email_logs 
-         SET status = $1, error_message = $2
-         WHERE appointment_id = $3 AND email_type = $4`,
-        [status, errorMessage || null, appointmentId, emailType]
-      );
-    } catch (error) {
-      console.error('Error updating email log:', error);
-    }
+  async updateEmailLogStatus(_appointmentId: string, _emailType: string, _status: string, _errorMessage?: string): Promise<void> {
+    // Email logging removed - no email_logs table
+    console.log('Email status update skipped - no email_logs table');
   }
 
   /**
@@ -343,8 +359,16 @@ class AppointmentDatabaseService {
    */
   
   private async generateReferenceNumber(): Promise<string> {
-    const result = await query(`SELECT generate_reference_number() as ref_number`);
-    return result.rows[0].ref_number;
+    try {
+      const result = await query(`SELECT generate_reference_number() as ref_number`);
+      return result.rows[0].ref_number;
+    } catch (error) {
+      // Fallback to JavaScript generation if function doesn't exist
+      const prefix = 'TT';
+      const dateStr = new Date().toISOString().slice(5, 10).replace('-', '');
+      const random = Math.random().toString(36).substr(2, 4).toUpperCase();
+      return `${prefix}${dateStr}-${random}`;
+    }
   }
 
   private calculateEndTime(startTime: string, durationMinutes: number): string {
@@ -355,9 +379,6 @@ class AppointmentDatabaseService {
     return `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
   }
 
-  private hashEmail(email: string): string {
-    return crypto.createHash('sha256').update(email.toLowerCase()).digest('hex');
-  }
 
   private async ensureFunctionsExist(): Promise<void> {
     try {
@@ -389,81 +410,40 @@ class AppointmentDatabaseService {
         $$ LANGUAGE plpgsql;
       `);
 
-      // Time slot availability checker
+      // Simple date blocked checker
       await query(`
-        CREATE OR REPLACE FUNCTION is_time_slot_available(
-            check_date DATE,
-            check_time TIME
-        )
+        CREATE OR REPLACE FUNCTION is_date_blocked(check_date DATE)
         RETURNS BOOLEAN AS $$
-        DECLARE
-            day_week INTEGER;
-            is_blocked BOOLEAN;
-            is_booked BOOLEAN;
-            slot_exists BOOLEAN;
         BEGIN
-            day_week := EXTRACT(DOW FROM check_date);
-
-            SELECT EXISTS(
+            RETURN EXISTS(
                 SELECT 1 FROM blocked_dates
                 WHERE blocked_date = check_date
-            ) INTO is_blocked;
-
-            IF is_blocked THEN
-                RETURN FALSE;
-            END IF;
-
-            SELECT EXISTS(
-                SELECT 1 FROM appointment_time_slots
-                WHERE day_of_week = day_week
-                AND start_time = check_time
-                AND is_available = true
-            ) INTO slot_exists;
-
-            IF NOT slot_exists THEN
-                RETURN FALSE;
-            END IF;
-
-            SELECT EXISTS(
-                SELECT 1 FROM appointments
-                WHERE appointment_date = check_date
-                AND appointment_time = check_time
-                AND status IN ('confirmed', 'pending')
-            ) INTO is_booked;
-
-            RETURN NOT is_booked;
+            );
         END;
         $$ LANGUAGE plpgsql;
       `);
 
-      // Available slots function
+      // Slot availability checker
       await query(`
-        CREATE OR REPLACE FUNCTION get_available_slots(check_date DATE)
-        RETURNS TABLE(
-            slot_time TIME,
-            is_available BOOLEAN
-        ) AS $$
-        DECLARE
-            day_week INTEGER;
+        CREATE OR REPLACE FUNCTION is_slot_available(
+            check_date DATE,
+            check_time TIME
+        )
+        RETURNS BOOLEAN AS $$
         BEGIN
-            day_week := EXTRACT(DOW FROM check_date);
+            -- Check if date is blocked
+            IF is_date_blocked(check_date) THEN
+                RETURN FALSE;
+            END IF;
 
-            RETURN QUERY
-            SELECT
-                ts.start_time as slot_time,
-                NOT EXISTS(
-                    SELECT 1 FROM appointments a
-                    WHERE a.appointment_date = check_date
-                    AND a.appointment_time = ts.start_time
-                    AND a.status IN ('confirmed', 'pending')
-                ) AND NOT EXISTS(
-                    SELECT 1 FROM blocked_dates bd
-                    WHERE bd.blocked_date = check_date
-                ) as is_available
-            FROM appointment_time_slots ts
-            WHERE ts.day_of_week = day_week
-            AND ts.is_available = true
-            ORDER BY ts.start_time;
+            -- Check if slot is already booked
+            RETURN NOT EXISTS(
+                SELECT 1 FROM appointments
+                WHERE appointment_date = check_date
+                AND appointment_time = check_time
+                AND status IN ('pending', 'confirmed')
+                AND deleted_at IS NULL
+            );
         END;
         $$ LANGUAGE plpgsql;
       `);
@@ -502,17 +482,10 @@ class AppointmentDatabaseService {
         )`
       );
 
-      const emailLogsExist = await query(
+      const blockedDatesExist = await query(
         `SELECT EXISTS (
           SELECT FROM information_schema.tables
-          WHERE table_name = 'email_logs'
-        )`
-      );
-
-      const timeSlotsExist = await query(
-        `SELECT EXISTS (
-          SELECT FROM information_schema.tables
-          WHERE table_name = 'appointment_time_slots'
+          WHERE table_name = 'blocked_dates'
         )`
       );
 
@@ -521,106 +494,47 @@ class AppointmentDatabaseService {
         console.log('🔧 Creating appointments table...');
         await query(`
           CREATE TABLE appointments (
-              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-              reference_number VARCHAR(12) UNIQUE NOT NULL,
+              id SERIAL PRIMARY KEY,
+              reference_number VARCHAR(50) UNIQUE NOT NULL,
+              first_name VARCHAR(255),
+              last_name VARCHAR(255),
+              email VARCHAR(255) NOT NULL,
+              phone VARCHAR(50),
+              restaurant_name VARCHAR(255),
               appointment_date DATE NOT NULL,
               appointment_time TIME NOT NULL,
-              appointment_end_time TIME NOT NULL,
-              status VARCHAR(50) DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'cancelled', 'completed', 'no-show', 'pending')),
-              restaurant_name VARCHAR(255),
-              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-              updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-              CONSTRAINT unique_appointment_slot UNIQUE (appointment_date, appointment_time)
+              appointment_end_time TIME,
+              duration_minutes INTEGER DEFAULT 30,
+              message TEXT,
+              status VARCHAR(50) DEFAULT 'pending',
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              deleted_at TIMESTAMP
           );
         `);
         console.log('✅ Appointments table created');
       }
 
-      if (!emailLogsExist.rows[0].exists) {
-        console.log('🔧 Creating email_logs table...');
+      if (!blockedDatesExist.rows[0].exists) {
+        console.log('🔧 Creating blocked_dates table...');
         await query(`
-          CREATE TABLE email_logs (
-              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-              appointment_id UUID REFERENCES appointments(id) ON DELETE SET NULL,
-              email_type VARCHAR(100) NOT NULL,
-              email_hash VARCHAR(64),
-              sent_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-              status VARCHAR(50) DEFAULT 'sent' CHECK (status IN ('sent', 'failed', 'bounced', 'pending')),
-              error_message TEXT
+          CREATE TABLE blocked_dates (
+              id SERIAL PRIMARY KEY,
+              blocked_date DATE NOT NULL UNIQUE,
+              reason TEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           );
         `);
-        console.log('✅ Email logs table created');
-      }
-
-      if (!timeSlotsExist.rows[0].exists) {
-        console.log('🔧 Creating appointment_time_slots table...');
-        await query(`
-          CREATE TABLE appointment_time_slots (
-              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-              day_of_week INTEGER NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
-              start_time TIME NOT NULL,
-              end_time TIME NOT NULL,
-              duration_minutes INTEGER DEFAULT 60,
-              is_available BOOLEAN DEFAULT true,
-              max_appointments_per_slot INTEGER DEFAULT 1,
-              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-              CONSTRAINT unique_day_time_slot UNIQUE (day_of_week, start_time)
-          );
-        `);
-
-        // Insert default time slots for weekdays
-        console.log('🔧 Inserting default time slots...');
-        await query(`
-          INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
-          -- Monday (1) to Friday (5)
-          (1, '09:00', '10:00', 60),
-          (1, '10:00', '11:00', 60),
-          (1, '11:00', '12:00', 60),
-          (1, '13:00', '14:00', 60),
-          (1, '14:00', '15:00', 60),
-          (1, '15:00', '16:00', 60),
-          (1, '16:00', '17:00', 60),
-          (2, '09:00', '10:00', 60),
-          (2, '10:00', '11:00', 60),
-          (2, '11:00', '12:00', 60),
-          (2, '13:00', '14:00', 60),
-          (2, '14:00', '15:00', 60),
-          (2, '15:00', '16:00', 60),
-          (2, '16:00', '17:00', 60),
-          (3, '09:00', '10:00', 60),
-          (3, '10:00', '11:00', 60),
-          (3, '11:00', '12:00', 60),
-          (3, '13:00', '14:00', 60),
-          (3, '14:00', '15:00', 60),
-          (3, '15:00', '16:00', 60),
-          (3, '16:00', '17:00', 60),
-          (4, '09:00', '10:00', 60),
-          (4, '10:00', '11:00', 60),
-          (4, '11:00', '12:00', 60),
-          (4, '13:00', '14:00', 60),
-          (4, '14:00', '15:00', 60),
-          (4, '15:00', '16:00', 60),
-          (4, '16:00', '17:00', 60),
-          (5, '09:00', '10:00', 60),
-          (5, '10:00', '11:00', 60),
-          (5, '11:00', '12:00', 60),
-          (5, '13:00', '14:00', 60),
-          (5, '14:00', '15:00', 60),
-          (5, '15:00', '16:00', 60),
-          (5, '16:00', '17:00', 60)
-          ON CONFLICT (day_of_week, start_time) DO NOTHING;
-        `);
-        console.log('✅ Appointment time slots table created and populated');
+        console.log('✅ Blocked dates table created');
       }
 
       // Create indexes if they don't exist
       await query(`
-        CREATE INDEX IF NOT EXISTS idx_appointments_date_time ON appointments(appointment_date, appointment_time);
+        CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(appointment_date);
+        CREATE INDEX IF NOT EXISTS idx_appointments_time ON appointments(appointment_time);
         CREATE INDEX IF NOT EXISTS idx_appointments_reference ON appointments(reference_number);
         CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
-        CREATE INDEX IF NOT EXISTS idx_email_logs_appointment ON email_logs(appointment_id);
-        CREATE INDEX IF NOT EXISTS idx_time_slots_day_time ON appointment_time_slots(day_of_week, start_time);
-        CREATE INDEX IF NOT EXISTS idx_time_slots_available ON appointment_time_slots(is_available);
+        CREATE INDEX IF NOT EXISTS idx_appointments_deleted ON appointments(deleted_at);
       `);
 
       // Ensure critical functions exist
@@ -659,62 +573,6 @@ class AppointmentDatabaseService {
     }
   }
 
-  /**
-   * Ensure time slots exist - Safe method to re-create time slots if missing
-   */
-  async ensureTimeSlots(): Promise<void> {
-    try {
-      console.log('🔧 Ensuring time slots are populated...');
-
-      // Re-insert default time slots (using ON CONFLICT DO NOTHING for safety)
-      await query(`
-        INSERT INTO appointment_time_slots (day_of_week, start_time, end_time, duration_minutes) VALUES
-        -- Monday (1) to Friday (5)
-        (1, '09:00', '10:00', 60),
-        (1, '10:00', '11:00', 60),
-        (1, '11:00', '12:00', 60),
-        (1, '13:00', '14:00', 60),
-        (1, '14:00', '15:00', 60),
-        (1, '15:00', '16:00', 60),
-        (1, '16:00', '17:00', 60),
-        (2, '09:00', '10:00', 60),
-        (2, '10:00', '11:00', 60),
-        (2, '11:00', '12:00', 60),
-        (2, '13:00', '14:00', 60),
-        (2, '14:00', '15:00', 60),
-        (2, '15:00', '16:00', 60),
-        (2, '16:00', '17:00', 60),
-        (3, '09:00', '10:00', 60),
-        (3, '10:00', '11:00', 60),
-        (3, '11:00', '12:00', 60),
-        (3, '13:00', '14:00', 60),
-        (3, '14:00', '15:00', 60),
-        (3, '15:00', '16:00', 60),
-        (3, '16:00', '17:00', 60),
-        (4, '09:00', '10:00', 60),
-        (4, '10:00', '11:00', 60),
-        (4, '11:00', '12:00', 60),
-        (4, '13:00', '14:00', 60),
-        (4, '14:00', '15:00', 60),
-        (4, '15:00', '16:00', 60),
-        (4, '16:00', '17:00', 60),
-        (5, '09:00', '10:00', 60),
-        (5, '10:00', '11:00', 60),
-        (5, '11:00', '12:00', 60),
-        (5, '13:00', '14:00', 60),
-        (5, '14:00', '15:00', 60),
-        (5, '15:00', '16:00', 60),
-        (5, '16:00', '17:00', 60)
-        ON CONFLICT (day_of_week, start_time) DO NOTHING;
-      `);
-
-      const result = await query('SELECT COUNT(*) FROM appointment_time_slots');
-      console.log(`✅ Time slots ensured: ${result.rows[0].count} total slots`);
-    } catch (error) {
-      console.error('❌ Failed to ensure time slots:', error);
-      throw error;
-    }
-  }
 
   /**
    * Public query method for hybrid service

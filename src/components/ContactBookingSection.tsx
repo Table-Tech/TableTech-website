@@ -332,6 +332,12 @@ const ContactSection = () => {
         if (response.error?.code === 'RATE_LIMIT_EXCEEDED') {
           alert(t('contact.modal.errors.tooManyRequests'));
           return;
+        } else if (response.error?.code === 'MISSING_FIELDS') {
+          // Show which fields are missing
+          const missingFields = response.error?.missingFields || response.error?.details?.map((d: any) => d.field) || [];
+          const message = `Vul alle verplichte velden in:\n${missingFields.join('\n')}`;
+          alert(message);
+          return;
         } else if (response.error?.code === 'VALIDATION_ERROR') {
           alert(t('contact.modal.errors.validationError'));
           return;

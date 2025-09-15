@@ -13,10 +13,7 @@ export const appointmentSchemaV2 = z.object({
   restaurant: z.string().min(1, 'Restaurant naam is verplicht').max(255).optional(),
 
   email: z.string().email('Ongeldig e-mailadres'),
-  phone: z.string().optional().refine(
-    (val) => !val || /^(\+31|0031|0)?[1-9][0-9]{8}$/.test(val.replace(/\s/g, '')),
-    'Ongeldig telefoonnummer'
-  ),
+  phone: z.string().optional(),
 
   // Accept both date and preferredDate
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum moet in YYYY-MM-DD formaat').optional(),
@@ -79,6 +76,52 @@ export const blockDateSchema = z.object({
  */
 export const validateAppointment = (req: Request, res: Response, next: NextFunction): void => {
   try {
+    console.log('📝 Validating appointment data:', JSON.stringify(req.body, null, 2));
+
+    // Check for missing required fields before parsing
+    const missingFields: string[] = [];
+
+    // Check name fields
+    if (!req.body.firstName && !req.body.lastName && !req.body.contactPerson) {
+      missingFields.push('Naam (voornaam en achternaam)');
+    }
+
+    // Check restaurant
+    if (!req.body.restaurantName && !req.body.restaurant) {
+      missingFields.push('Restaurant naam');
+    }
+
+    // Check date
+    if (!req.body.date && !req.body.preferredDate) {
+      missingFields.push('Datum');
+    }
+
+    // Check time
+    if (!req.body.time && !req.body.preferredTime) {
+      missingFields.push('Tijd');
+    }
+
+    // Check email
+    if (!req.body.email) {
+      missingFields.push('E-mailadres');
+    }
+
+    // If there are missing fields, return early with clear error
+    if (missingFields.length > 0) {
+      console.log('❌ Missing required fields:', missingFields);
+      res.status(400).json({
+        success: false,
+        error: 'Vul alle verplichte velden in',
+        details: missingFields.map(field => ({
+          field,
+          message: `${field} is verplicht`
+        })),
+        missingFields,
+        code: 'MISSING_FIELDS'
+      });
+      return;
+    }
+
     const result = appointmentSchemaV2.parse(req.body);
 
     // Normalize data - use either variant of the fields
@@ -150,6 +193,7 @@ export const validateAppointment = (req: Request, res: Response, next: NextFunct
     
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.log('❌ Validation failed:', error.errors);
       res.status(400).json({
         success: false,
         error: 'Validatiefout in formuliergegevens',
