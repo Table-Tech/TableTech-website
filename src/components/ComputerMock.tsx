@@ -508,7 +508,7 @@ export default function ComputerMock() {
       price: 8.99,
       category: 'Burgers',
       available: true,
-      image: '/Dashboard-demo-foto/hamburger.webp'
+      image: '/Dashboard-demo-foto/hamburger.jpg'
     },
     {
       id: '2',
@@ -535,7 +535,7 @@ export default function ComputerMock() {
       price: 15.00,
       category: 'Pizzas',
       available: true,
-      image: '/Dashboard-demo-foto/italian-pizza.webp'
+      image: '/Dashboard-demo-foto/italian-pizza.jpg'
     },
     {
       id: '5',
@@ -544,7 +544,7 @@ export default function ComputerMock() {
       price: 13.00,
       category: 'Pastas',
       available: true,
-      image: '/Dashboard-demo-foto/Rigatoni-with-Italian-Sausage-2022-FEATURE.webp'
+      image: '/Dashboard-demo-foto/Rigatoni-with-Italian-Sausage-2022-FEATURE.jpg'
     }
   ];
 
@@ -558,7 +558,7 @@ export default function ComputerMock() {
       <div className="p-5 border-b border-brown-700" style={{ borderColor: '#4A3426' }}>
         <div className="flex items-center space-x-3">
           <div className="w-18 h-18 rounded-xl flex items-center justify-center overflow-hidden shadow-lg" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-            <img src="/favicon/apple-touch-icon.webp" alt="TableTech Logo" className="w-18 h-18 object-cover scale-110" />
+            <img src="/favicon/apple-touch-icon.png" alt="TableTech Logo" className="w-18 h-18 object-cover scale-110" />
           </div>
           <div>
             <h1 className="text-white font-bold text-lg tracking-wide">TableTech</h1>
