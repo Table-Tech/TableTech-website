@@ -3,7 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { env } from './env';
 import { logger } from './lib/logging/logger';
-import appointmentRoutesV2 from './routes/appointmentsV2';
+import appointmentRoutesV2 from './routes/appointmentsV3';
 import logoRoutes from './routes/logo';
 import hybridDb from './services/hybridDatabaseService';
 

@@ -3,21 +3,52 @@ import { Request, Response, NextFunction } from 'express';
 
 // V2 Appointment schema for enhanced privacy-focused system
 export const appointmentSchemaV2 = z.object({
-  restaurantName: z.string().min(1, 'Restaurant naam is verplicht').max(255),
-  contactPerson: z.string().min(1, 'Contactpersoon is verplicht').max(255),
+  // Accept both new format (firstName/lastName) and old format (contactPerson)
+  firstName: z.string().min(1, 'Voornaam is verplicht').max(255).optional(),
+  lastName: z.string().min(1, 'Achternaam is verplicht').max(255).optional(),
+  contactPerson: z.string().min(1, 'Contactpersoon is verplicht').max(255).optional(),
+
+  // Accept both restaurantName and restaurant
+  restaurantName: z.string().min(1, 'Restaurant naam is verplicht').max(255).optional(),
+  restaurant: z.string().min(1, 'Restaurant naam is verplicht').max(255).optional(),
+
   email: z.string().email('Ongeldig e-mailadres'),
   phone: z.string().optional().refine(
     (val) => !val || /^(\+31|0031|0)?[1-9][0-9]{8}$/.test(val.replace(/\s/g, '')),
     'Ongeldig telefoonnummer'
   ),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum moet in YYYY-MM-DD formaat'),
-  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Tijd moet in HH:MM formaat'),
+
+  // Accept both date and preferredDate
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum moet in YYYY-MM-DD formaat').optional(),
+  preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum moet in YYYY-MM-DD formaat').optional(),
+
+  // Accept both time and preferredTime
+  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Tijd moet in HH:MM formaat').optional(),
+  preferredTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Tijd moet in HH:MM formaat').optional(),
+
   message: z.string().max(1000, 'Bericht mag maximaal 1000 tekens bevatten').optional(),
-  
+
   // Anti-spam fields
   hp: z.string().optional(), // Honeypot
   formRenderTs: z.number().optional(), // Form render timestamp
-});
+}).refine(
+  (data) => {
+    // Ensure we have either firstName/lastName OR contactPerson
+    const hasName = (data.firstName && data.lastName) || data.contactPerson;
+    // Ensure we have either restaurantName OR restaurant
+    const hasRestaurant = data.restaurantName || data.restaurant;
+    // Ensure we have either date OR preferredDate
+    const hasDate = data.date || data.preferredDate;
+    // Ensure we have either time OR preferredTime
+    const hasTime = data.time || data.preferredTime;
+
+    return hasName && hasRestaurant && hasDate && hasTime;
+  },
+  {
+    message: 'Verplichte velden ontbreken',
+    path: ['validation']
+  }
+);
 
 export type AppointmentDataV2 = z.infer<typeof appointmentSchemaV2>;
 
@@ -49,12 +80,25 @@ export const blockDateSchema = z.object({
 export const validateAppointment = (req: Request, res: Response, next: NextFunction): void => {
   try {
     const result = appointmentSchemaV2.parse(req.body);
-    
+
+    // Normalize data - use either variant of the fields
+    const normalizedData = {
+      ...result,
+      // Ensure we have firstName and lastName
+      firstName: result.firstName || (result.contactPerson ? result.contactPerson.split(' ')[0] : ''),
+      lastName: result.lastName || (result.contactPerson ? result.contactPerson.split(' ').slice(1).join(' ') : ''),
+      // Ensure we have restaurantName
+      restaurantName: result.restaurantName || result.restaurant || '',
+      // Ensure we have date and time
+      date: result.date || result.preferredDate || '',
+      time: result.time || result.preferredTime || '',
+    };
+
     // Additional validation for date/time
-    const appointmentDate = new Date(result.date);
+    const appointmentDate = new Date(normalizedData.date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Check if date is not in the past
     if (appointmentDate < today) {
       res.status(400).json({
@@ -64,7 +108,7 @@ export const validateAppointment = (req: Request, res: Response, next: NextFunct
       });
       return;
     }
-    
+
     // Check if date is not too far in the future (3 months max)
     const maxDate = new Date();
     maxDate.setMonth(maxDate.getMonth() + 3);
@@ -76,7 +120,7 @@ export const validateAppointment = (req: Request, res: Response, next: NextFunct
       });
       return;
     }
-    
+
     // Honeypot check
     if (result.hp && result.hp.length > 0) {
       res.status(400).json({
@@ -86,7 +130,7 @@ export const validateAppointment = (req: Request, res: Response, next: NextFunct
       });
       return;
     }
-    
+
     // Form fill time check (minimum 2 seconds)
     if (result.formRenderTs) {
       const timeTaken = Date.now() - result.formRenderTs;
@@ -99,9 +143,9 @@ export const validateAppointment = (req: Request, res: Response, next: NextFunct
         return;
       }
     }
-    
-    // Store validated data
-    req.body = result;
+
+    // Store normalized data
+    req.body = normalizedData;
     next();
     
   } catch (error) {

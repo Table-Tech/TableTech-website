@@ -57,8 +57,15 @@ export const submitAppointment = async (data: AppointmentData): Promise<Appointm
   const apiUrl = getApiUrl();
   const idempotencyKey = generateUUID();
   
-  // Convert to V2 API format
+  // Convert to V2 API format - send both formats for compatibility
   const v2Data = {
+    // New format fields
+    firstName: data.firstName,
+    lastName: data.lastName,
+    restaurant: data.restaurant || 'Niet opgegeven',
+    preferredDate: data.preferredDate,
+    preferredTime: data.preferredTime,
+    // Old format fields (for backwards compatibility)
     restaurantName: data.restaurant || 'Niet opgegeven',
     contactPerson: `${data.firstName} ${data.lastName}`.trim(),
     email: data.email,
@@ -66,6 +73,9 @@ export const submitAppointment = async (data: AppointmentData): Promise<Appointm
     date: data.preferredDate,
     time: data.preferredTime,
     message: data.message || 'Demo afspraak aangevraagd via website',
+    // Anti-spam fields
+    formRenderTs: data.formRenderTs,
+    hp: data.hp || '',
   };
   
   try {
@@ -215,7 +225,7 @@ export const getAvailableSlots = async (date: string): Promise<{ time: string; i
   ];
 
   const apiUrl = getApiUrl();
-  
+
   try {
     const response = await fetch(`${apiUrl}/v2/appointments/slots?date=${date}`, {
       method: 'GET',
@@ -223,18 +233,22 @@ export const getAvailableSlots = async (date: string): Promise<{ time: string; i
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (!response.ok) {
       console.warn('API not available, using default slots');
       return defaultSlots;
     }
-    
+
     const result = await response.json();
-    
+
     if (result.success && result.slots) {
-      return result.slots;
+      // Convert 'available' to 'isAvailable' for consistency
+      return result.slots.map((slot: any) => ({
+        time: slot.time,
+        isAvailable: slot.available !== undefined ? slot.available : slot.isAvailable
+      }));
     }
-    
+
     return defaultSlots;
   } catch (error) {
     console.warn('Error fetching available slots, using defaults:', error);

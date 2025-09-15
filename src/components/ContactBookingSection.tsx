@@ -150,9 +150,18 @@ const ContactSection = () => {
         const year = currentMonth.getFullYear();
         const month = currentMonth.getMonth() + 1; // JavaScript months are 0-indexed
         const dates = await getAvailableDates(year, month);
-        setAvailableDates(dates);
+
+        // If API returns empty or fails, generate fallback dates
+        if (!dates || dates.length === 0) {
+          console.log('No dates from API, using fallback');
+          // Don't set availableDates, let isDateAvailable handle the fallback
+          setAvailableDates([]);
+        } else {
+          setAvailableDates(dates);
+        }
       } catch (error) {
         console.error('Error fetching available dates:', error);
+        // Don't set availableDates, let isDateAvailable handle the fallback
         setAvailableDates([]);
       } finally {
         setLoadingDates(false);
@@ -220,17 +229,22 @@ const ContactSection = () => {
     if (!date) return false;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Check if date is in the past
     if (date < today) return false;
-    
+
     // Check if it's a weekend
     const dayOfWeek = date.getDay();
     if (dayOfWeek === 0 || dayOfWeek === 6) return false;
-    
-    // Check if the date is in the available dates list
-    const dateString = formatDateString(date); // Use timezone-safe formatting
-    return availableDates.includes(dateString);
+
+    // If we have available dates from API, use them
+    if (availableDates.length > 0) {
+      const dateString = formatDateString(date);
+      return availableDates.includes(dateString);
+    }
+
+    // Fallback: all weekdays in the future are available
+    return true;
   };
 
   const formatDate = (date: Date | null) => {
@@ -869,7 +883,7 @@ const ContactSection = () => {
                             type="email"
                             name="email"
                             required
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                            pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
                             value={bookingData.email}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-2 bg-[#3A2B24]/50 border border-[#4A372E]/50 rounded-xl text-white placeholder-[#D4B896]/50 focus:outline-none focus:ring-2 focus:ring-[#E86C28] focus:border-transparent"
