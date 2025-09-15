@@ -9,7 +9,7 @@ const CHECK_INTERVAL = 30000; // Check every 30 seconds
  * Middleware that ensures database tables exist before each request
  * This prevents the constant table disappearing issue with Neon free tier
  */
-export const ensureDatabase = async (req: Request, res: Response, next: NextFunction) => {
+export const ensureDatabase = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const now = Date.now();
 

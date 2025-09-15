@@ -504,7 +504,7 @@ router.post('/',
  * GET /api/v2/appointments/status
  * Get database status and which system is being used
  */
-router.get('/status', async (req: Request, res: Response): Promise<void> => {
+router.get('/status', async (_req: Request, res: Response): Promise<void> => {
   try {
     const status = hybridDb.getDatabaseStatus();
 

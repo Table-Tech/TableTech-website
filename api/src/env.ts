@@ -14,6 +14,9 @@ const envSchema = z.object({
   MAIL_FROM: z.string().email().or(z.string().regex(/^.+\s<.+@.+>$/)).default('TableTech Team <noreply@tabletech.nl>'),
   MAIL_TO_INTERNAL: z.string().email().default('info@tabletech.nl'),
   
+  // Database
+  DATABASE_URL: z.string().url(),
+  
   // Brand
   BRAND_NAME: z.string().default('TableTech'),
   BRAND_COLOR: z.string().default('#E86C28'),
