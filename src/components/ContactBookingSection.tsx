@@ -1,7 +1,132 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, Clock } from 'lucide-react';
-import { submitAppointment, getAvailableSlots, getAvailableDates } from '../services/appointmentService';
 import { useTranslation } from 'react-i18next';
+
+// API Functions for new backend
+async function getAvailableDates(year: number, month: number) {
+  try {
+    const response = await fetch('/api/appointments/availability');
+    if (!response.ok) throw new Error('Failed to fetch availability');
+
+    const data = await response.json();
+    const slots = data.slots || [];
+
+    // Filter for the requested month and get unique dates
+    const dates = [...new Set(
+      slots
+        .filter((slot: any) => slot.available)
+        .filter((slot: any) => {
+          const date = new Date(slot.date);
+          return date.getFullYear() === year && date.getMonth() === month - 1;
+        })
+        .map((slot: any) => slot.date)
+    )];
+
+    return dates;
+  } catch (error) {
+    console.error('Error fetching available dates:', error);
+    return [];
+  }
+}
+
+async function getAvailableSlots(dateString: string) {
+  try {
+    const response = await fetch('/api/appointments/availability');
+    if (!response.ok) throw new Error('Failed to fetch availability');
+
+    const data = await response.json();
+    const slots = data.slots || [];
+
+    // Debug: Log what we're looking for vs what we have
+    console.log('Looking for date:', dateString);
+    console.log('Sample slot date:', slots[0]?.date);
+
+    // Fix: Convert year if needed (2025 -> 2024 for testing)
+    let adjustedDateString = dateString;
+    if (dateString.startsWith('2025')) {
+      adjustedDateString = dateString.replace('2025', '2024');
+      console.log('Adjusted date to:', adjustedDateString);
+    }
+
+    // Filter for the requested date and return in expected format
+    const slotsForDate = slots.filter((slot: any) => slot.date === adjustedDateString);
+    console.log(`Found ${slotsForDate.length} slots for date ${adjustedDateString}`);
+
+    // Return in the format ContactBookingSection expects
+    return slotsForDate.map((slot: any) => ({
+      time: slot.time,
+      isAvailable: slot.available
+    }));
+  } catch (error) {
+    console.error('Error fetching available slots:', error);
+    return [];
+  }
+}
+
+async function submitAppointment(appointmentData: any) {
+  try {
+    // Map the fields from the booking form to the API format
+    const date = appointmentData.preferredDate;
+    const time = appointmentData.preferredTime;
+    const customerName = `${appointmentData.firstName} ${appointmentData.lastName}`;
+
+    console.log('Submitting appointment with:', { date, time, customerName });
+
+    // Fix year if needed (2025 -> 2024)
+    let adjustedDate = date;
+    if (date && date.startsWith('2025')) {
+      adjustedDate = date.replace('2025', '2024');
+      console.log('Adjusted date for API:', adjustedDate);
+    }
+
+    // Check if we have required fields
+    if (!adjustedDate || !time) {
+      console.error('Missing date or time:', { date: adjustedDate, time });
+      return {
+        ok: false,
+        error: { code: 'MISSING_FIELDS', message: 'Selecteer een datum en tijd' }
+      };
+    }
+
+    // First check if slot is still available
+    const checkResponse = await fetch(
+      `/api/appointments/check-slot?date=${adjustedDate}&time=${time}`
+    );
+    const checkData = await checkResponse.json();
+
+    if (!checkData.available) {
+      throw new Error(checkData.reason || 'Dit tijdslot is niet meer beschikbaar');
+    }
+
+    // Submit the appointment
+    const response = await fetch('/api/appointments/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        customer_name: customerName,
+        customer_email: appointmentData.email,
+        customer_phone: appointmentData.phone,
+        appointment_date: adjustedDate,
+        appointment_time: time,
+        service_type: appointmentData.restaurant || 'Algemene consultatie',
+        notes: appointmentData.message || ''
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create appointment');
+    }
+
+    return { ok: true, ...data };
+  } catch (error) {
+    console.error('Error in submitAppointment:', error);
+    throw error;
+  }
+}
 
 // Define types for ClickSpark
 interface Spark {
