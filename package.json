@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
-    "@studio-freight/lenis": "^1.0.42",
     "@types/aria-query": "^5.0.4",
     "@types/crypto-js": "^4.2.2",
     "@types/js-cookie": "^3.0.6",
@@ -84,7 +83,7 @@
     "tailwindcss": "^4.1.7",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.33.1",
-    "vercel": "^25.2.0",
+    "vercel": "^48.0.2",
     "vite": "^6.3.1",
     "vitest": "^3.2.2"
   }
