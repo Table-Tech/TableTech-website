@@ -19,14 +19,14 @@ app.use(express.json());
 
 // Database connection
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_XE2U8kfAILQR@ep-little-haze-agtrjreh.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require',
+  connectionString: process.env.DATABASE_URL_new || process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 };
 
 // Resend client
-const resend = new Resend(process.env.RESEND_API_KEY || 're_KxSUc845_8PT8WHE6ZK7py7hCCTRsLZDR');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Cache for availability
 let availabilityCache = null;

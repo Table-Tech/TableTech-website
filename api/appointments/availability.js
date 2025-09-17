@@ -8,7 +8,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Database configuration
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_new,
   ssl: {
     rejectUnauthorized: false
   }
@@ -36,15 +36,15 @@ module.exports = async function handler(req, res) {
 
   console.log('📅 GET /api/appointments/availability');
   console.log('🔍 Environment check:');
-  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+  console.log('DATABASE_URL_new exists:', !!process.env.DATABASE_URL_new);
   console.log('NODE_ENV:', process.env.NODE_ENV);
 
   // Check if environment variables exist
-  if (!process.env.DATABASE_URL) {
-    console.error('❌ DATABASE_URL not found');
-    return res.status(500).json({ 
+  if (!process.env.DATABASE_URL_new) {
+    console.error('❌ DATABASE_URL_new not found');
+    return res.status(500).json({
       error: 'Database configuration missing',
-      message: 'DATABASE_URL environment variable not set'
+      message: 'DATABASE_URL_new environment variable not set'
     });
   }
 

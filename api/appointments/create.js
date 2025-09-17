@@ -3,7 +3,7 @@ const { Client } = require('pg');
 
 // Database configuration
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_new,
   ssl: {
     rejectUnauthorized: false
   }
@@ -30,7 +30,7 @@ async function sendEmail(to, subject, html) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'TableTech <info@tabletech.nl>',
+        from: process.env.MAIL_FROM || 'TableTech <info@tabletech.nl>',
         to: [to],
         subject: subject,
         html: html,
@@ -63,9 +63,9 @@ module.exports = async function handler(req, res) {
   console.log('  Body:', req.body);
 
   // Check if environment variables exist
-  if (!process.env.DATABASE_URL) {
-    console.error('❌ DATABASE_URL not found');
-    return res.status(500).json({ 
+  if (!process.env.DATABASE_URL_new) {
+    console.error('❌ DATABASE_URL_new not found');
+    return res.status(500).json({
       error: 'Database configuration missing'
     });
   }
@@ -162,7 +162,7 @@ module.exports = async function handler(req, res) {
 
       // Company notification
       const companyEmail = await sendEmail(
-        process.env.COMPANY_EMAIL || 'info@tabletech.nl',
+        process.env.MAIL_TO_INTERNAL || 'info@tabletech.nl',
         `🔔 Nieuwe afspraak - ${customer_name}`,
         `
           <h2>Nieuwe Afspraak</h2>

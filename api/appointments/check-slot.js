@@ -3,7 +3,7 @@ const { Client } = require('pg');
 
 // Database configuration
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_new,
   ssl: {
     rejectUnauthorized: false
   }
@@ -40,9 +40,9 @@ module.exports = async function handler(req, res) {
   }
 
   // Check if environment variables exist
-  if (!process.env.DATABASE_URL) {
-    console.error('❌ DATABASE_URL not found');
-    return res.status(500).json({ 
+  if (!process.env.DATABASE_URL_new) {
+    console.error('❌ DATABASE_URL_new not found');
+    return res.status(500).json({
       error: 'Database configuration missing',
       available: false
     });
