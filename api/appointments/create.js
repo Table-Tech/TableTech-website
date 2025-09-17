@@ -52,8 +52,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -62,6 +61,14 @@ module.exports = async function handler(req, res) {
 
   console.log('✉️ POST /api/appointments/create');
   console.log('  Body:', req.body);
+
+  // Check if environment variables exist
+  if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL not found');
+    return res.status(500).json({ 
+      error: 'Database configuration missing'
+    });
+  }
 
   const {
     customer_name,
@@ -196,7 +203,10 @@ module.exports = async function handler(req, res) {
       await client.query('ROLLBACK');
     }
     console.error('  ❌ Error:', error);
-    res.status(500).json({ error: 'Failed to create appointment' });
+    res.status(500).json({ 
+      error: 'Failed to create appointment',
+      message: error.message
+    });
   } finally {
     if (client) {
       await client.end();

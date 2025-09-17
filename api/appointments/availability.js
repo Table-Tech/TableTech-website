@@ -27,8 +27,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'GET') {
@@ -36,6 +35,18 @@ module.exports = async function handler(req, res) {
   }
 
   console.log('📅 GET /api/appointments/availability');
+  console.log('🔍 Environment check:');
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+
+  // Check if environment variables exist
+  if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL not found');
+    return res.status(500).json({ 
+      error: 'Database configuration missing',
+      message: 'DATABASE_URL environment variable not set'
+    });
+  }
 
   // Check cache
   if (availabilityCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
@@ -46,6 +57,7 @@ module.exports = async function handler(req, res) {
   let client;
   try {
     client = await getDbClient();
+    console.log('✅ Database connected');
 
     // Get availability config
     const availabilityResult = await client.query(
@@ -136,8 +148,14 @@ module.exports = async function handler(req, res) {
     console.log(`  ✅ Returning ${slots.length} slots`);
     res.json(response);
   } catch (error) {
-    console.error('  ❌ Error:', error);
-    res.status(500).json({ error: 'Failed to fetch availability' });
+    console.error('  ❌ Error:', error.message);
+    console.error('Full error:', error);
+    
+    res.status(500).json({ 
+      error: 'Failed to fetch availability',
+      message: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   } finally {
     if (client) {
       await client.end();

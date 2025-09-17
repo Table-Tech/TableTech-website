@@ -22,8 +22,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'GET') {
@@ -36,6 +35,15 @@ module.exports = async function handler(req, res) {
   if (!date || !time) {
     return res.status(400).json({
       error: 'Date and time parameters are required',
+      available: false
+    });
+  }
+
+  // Check if environment variables exist
+  if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL not found');
+    return res.status(500).json({ 
+      error: 'Database configuration missing',
       available: false
     });
   }
@@ -65,7 +73,11 @@ module.exports = async function handler(req, res) {
     });
   } catch (error) {
     console.error('  ❌ Error:', error);
-    res.status(500).json({ error: 'Failed to check slot', available: false });
+    res.status(500).json({ 
+      error: 'Failed to check slot', 
+      available: false,
+      message: error.message
+    });
   } finally {
     if (client) {
       await client.end();
