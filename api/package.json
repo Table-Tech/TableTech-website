@@ -1,0 +1,22 @@
+{
+  "name": "tabletech-api",
+  "version": "1.0.0",
+  "description": "TableTech Backend API Server",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "pg": "^8.16.3",
+    "resend": "^6.1.0",
+    "dotenv": "^17.2.2"
+  },
+  "keywords": ["api", "express", "tabletech"],
+  "author": "TableTech",
+  "license": "ISC"
+}
