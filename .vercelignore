@@ -1,7 +1,3 @@
-# Ignore TypeScript files in API directory
-api/**/*.ts
-*.ts
-
 # Ignore development files
 .env.local
 .env.development
