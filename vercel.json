@@ -1,12 +1,12 @@
 {
   "functions": {
-    "api/appointments/*.js": {
+    "api/**/*.js": {
       "maxDuration": 10
     }
   },
   "builds": [
     {
-      "src": "api/appointments/*.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
@@ -34,10 +34,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "RESEND_API_KEY": "@resend_api_key",
-    "COMPANY_EMAIL": "@company_email"
-  }
+  ]
 }
