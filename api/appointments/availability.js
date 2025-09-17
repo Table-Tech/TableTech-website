@@ -1,5 +1,5 @@
 // Vercel Function for appointment availability
-import { Client } from 'pg';
+const { Client } = require('pg');
 
 // Cache for availability
 let availabilityCache = null;
@@ -20,7 +20,7 @@ async function getDbClient() {
   return client;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -143,4 +143,4 @@ export default async function handler(req, res) {
       await client.end();
     }
   }
-}
+};

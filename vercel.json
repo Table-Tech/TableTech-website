@@ -4,6 +4,12 @@
       "maxDuration": 10
     }
   },
+  "builds": [
+    {
+      "src": "api/appointments/*.js",
+      "use": "@vercel/node"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
