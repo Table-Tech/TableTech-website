@@ -179,7 +179,7 @@ const ClickSpark = ({ children, sparkColor = "#ffffff", sparkRadius = 20, sparkC
 };
 
 const ContactSection = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState('');
@@ -419,6 +419,7 @@ const ContactSection = () => {
         message: bookingData.message || t('contact.modal.defaultMessage'),
         formRenderTs,
         hp: '', // Honeypot field (empty)
+        language: i18n.language, // Add current language
       };
 
       console.log('🚀 Submitting to new secure API:', apiData);
