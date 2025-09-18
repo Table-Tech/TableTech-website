@@ -216,8 +216,8 @@ module.exports = async function handler(req, res) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <div style="background: #000000; padding: 40px 0; min-height: 100vh;">
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #000000;">
+            <div style="background: #000000; padding: 40px 0;">
               <div style="max-width: 600px; margin: 0 auto; background: #000000; border: 1px solid #333; overflow: hidden;">
                 <!-- Header -->
                 <div style="background: #ff6600; padding: 40px 30px; text-align: center;">
@@ -254,7 +254,7 @@ module.exports = async function handler(req, res) {
                       </tr>
                       ${notes ? `
                       <tr>
-                        <td style="padding: 10px 0; color: #999; vertical-align: top;">📝 Opmerkingen:</td>
+                        <td style="padding: 10px 0; color: #999; vertical-align: top;">Opmerkingen:</td>
                         <td style="padding: 10px 0; color: white;">${notes}</td>
                       </tr>
                       ` : ''}
@@ -263,8 +263,7 @@ module.exports = async function handler(req, res) {
 
                   <!-- Contact Info -->
                   <div style="text-align: center; margin: 40px 0; padding: 30px; border: 1px solid #333;">
-                    <p style="color: white; margin: 0 0 10px 0; font-size: 16px;">Ons team neemt binnen 1 werkdag contact met u op.</p>
-                    <p style="color: #999; margin: 20px 0 5px 0; font-size: 14px;">Contact:</p>
+                    <p style="color: #999; margin: 0 0 5px 0; font-size: 14px;">Contact:</p>
                     <p style="color: white; margin: 5px 0; font-size: 14px;">
                       📧 <a href="mailto:info@tabletech.nl" style="color: #ff6600; text-decoration: none;">info@tabletech.nl</a>
                     </p>
