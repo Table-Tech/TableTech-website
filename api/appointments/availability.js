@@ -6,25 +6,12 @@ let availabilityCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Database configuration - Use DATABASE_URL_new as primary (Vercel setup)
-const dbConfig = {
-  connectionString: process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-};
-
-async function getDbClient() {
-  const client = new Client(dbConfig);
-  await client.connect();
-  return client;
-}
-
 module.exports = async function handler(req, res) {
-  // Set CORS headers
+  // Set CORS headers first
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -36,45 +23,66 @@ module.exports = async function handler(req, res) {
 
   console.log('📅 GET /api/appointments/availability');
   console.log('🔍 Environment check:');
-  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
   console.log('DATABASE_URL_new exists:', !!process.env.DATABASE_URL_new);
-  console.log('DIRECT_DATABASE_URL exists:', !!process.env.DIRECT_DATABASE_URL);
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
   console.log('NODE_ENV:', process.env.NODE_ENV);
 
-  // Check if environment variables exist
-  const hasDbConfig = process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL;
-  if (!hasDbConfig) {
+  // Get connection string with priority
+  const connectionString = process.env.DATABASE_URL_new ||
+                           process.env.DATABASE_URL ||
+                           process.env.DIRECT_DATABASE_URL;
+
+  if (!connectionString) {
     console.error('❌ No database configuration found');
-    console.error('Checked: DATABASE_URL, DATABASE_URL_new, DIRECT_DATABASE_URL');
     return res.status(500).json({
       error: 'Database configuration missing',
-      message: 'No database environment variable found. Please set DATABASE_URL in Vercel Environment Variables.',
-      checked: ['DATABASE_URL', 'DATABASE_URL_new', 'DIRECT_DATABASE_URL']
+      message: 'No database environment variable found. Please set DATABASE_URL_new in Vercel Environment Variables.',
+      checked: ['DATABASE_URL_new', 'DATABASE_URL', 'DIRECT_DATABASE_URL'],
+      envVars: Object.keys(process.env).filter(k => k.includes('DATABASE')).map(k => k)
     });
   }
 
   // Check cache
   if (availabilityCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
-    console.log('  📦 Returning cached data');
-    return res.json(availabilityCache);
+    console.log('📦 Returning cached data');
+    return res.status(200).json(availabilityCache);
   }
 
-  let client;
+  let client = null;
+
   try {
-    client = await getDbClient();
-    console.log('✅ Database connected');
+    // Create client with connection string
+    client = new Client({
+      connectionString: connectionString,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    });
+
+    console.log('🔌 Attempting to connect to database...');
+    await client.connect();
+    console.log('✅ Database connected successfully');
+
+    // Test connection
+    const testResult = await client.query('SELECT NOW() as current_time');
+    console.log('✅ Database query test successful:', testResult.rows[0].current_time);
 
     // Get availability config
+    console.log('📊 Fetching availability config...');
     const availabilityResult = await client.query(
       'SELECT * FROM availability_config WHERE is_active = true ORDER BY day_of_week'
     );
+    console.log(`✅ Found ${availabilityResult.rows.length} availability configs`);
 
     // Get blocked dates
+    console.log('🚫 Fetching blocked dates...');
     const blockedResult = await client.query(
       'SELECT * FROM blocked_dates WHERE blocked_date >= CURRENT_DATE'
     );
+    console.log(`✅ Found ${blockedResult.rows.length} blocked dates`);
 
     // Get existing appointments
+    console.log('📅 Fetching existing appointments...');
     const appointmentsResult = await client.query(
       `SELECT appointment_date, appointment_time
        FROM appointments
@@ -82,6 +90,7 @@ module.exports = async function handler(req, res) {
        AND appointment_date <= CURRENT_DATE + INTERVAL '30 days'
        AND status != 'cancelled'`
     );
+    console.log(`✅ Found ${appointmentsResult.rows.length} existing appointments`);
 
     const slots = [];
     const today = new Date();
@@ -150,20 +159,57 @@ module.exports = async function handler(req, res) {
     availabilityCache = response;
     cacheTimestamp = Date.now();
 
-    console.log(`  ✅ Returning ${slots.length} slots`);
-    res.json(response);
+    console.log(`✅ Returning ${slots.length} slots`);
+    return res.status(200).json(response);
+
   } catch (error) {
-    console.error('  ❌ Error:', error.message);
-    console.error('Full error:', error);
-    
-    res.status(500).json({ 
-      error: 'Failed to fetch availability',
+    console.error('❌ Database error:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error detail:', error.detail);
+
+    // Specific error handling
+    if (error.code === '42P01') {
+      return res.status(500).json({
+        error: 'Database table missing',
+        message: 'The required database tables do not exist. Please run the database setup script.',
+        details: error.message,
+        table: error.message.match(/relation "(.*)" does not exist/)?.[1]
+      });
+    }
+
+    if (error.message.includes('password authentication failed')) {
+      return res.status(500).json({
+        error: 'Database authentication failed',
+        message: 'Unable to authenticate with the database. Please check DATABASE_URL_new in Vercel Environment Variables.',
+        hint: 'Make sure you are using the pooled connection string from Neon'
+      });
+    }
+
+    if (error.message.includes('ECONNREFUSED')) {
+      return res.status(500).json({
+        error: 'Database connection refused',
+        message: 'Unable to connect to the database server.',
+        hint: 'The database might be sleeping or the URL is incorrect'
+      });
+    }
+
+    // Generic error
+    return res.status(500).json({
+      error: 'Database error',
       message: error.message,
+      code: error.code,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
+
   } finally {
+    // Always close the connection
     if (client) {
-      await client.end();
+      try {
+        await client.end();
+        console.log('🔌 Database connection closed');
+      } catch (err) {
+        console.error('Error closing database connection:', err);
+      }
     }
   }
 };
