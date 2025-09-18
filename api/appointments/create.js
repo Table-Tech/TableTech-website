@@ -23,7 +23,7 @@ async function sendEmail(to, subject, html) {
   if (!process.env.RESEND_API_KEY) {
     console.log('⚠️ No RESEND_API_KEY found, skipping email');
     console.log('   Available env vars:', Object.keys(process.env).filter(k => k.includes('RESEND') || k.includes('MAIL')));
-    return { id: 'no-email-service', error: 'RESEND_API_KEY not configured' };
+    return { error: 'RESEND_API_KEY not configured', skipped: true };
   }
 
   console.log('   API Key found:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
@@ -65,14 +65,14 @@ async function sendEmail(to, subject, html) {
 
     if (!response.ok) {
       console.error('   ❌ Resend API error:', response.status, result);
-      return { id: 'error', error: result };
+      return { error: result, status: response.status };
     }
 
     console.log('   ✅ Email sent successfully:', result.id);
     return result;
   } catch (error) {
     console.error('   ❌ Email send error:', error.message);
-    return { id: 'error', error: error.message };
+    return { error: error.message, exception: true };
   }
 }
 

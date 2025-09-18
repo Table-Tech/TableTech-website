@@ -112,7 +112,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         success: true,
         message: `Test email sent to ${email}`,
-        resendId: result.id,
+        emailId: result.id || result.data?.id,
         config,
         resendResponse: result
       });
