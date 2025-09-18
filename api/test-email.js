@@ -49,6 +49,15 @@ module.exports = async function handler(req, res) {
       console.log('🚀 Attempting to send test email to:', email);
       console.log('Using API Key:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
 
+      // Fix from email format
+      let fromEmail = 'TableTech <info@tabletech.nl>';
+      if (process.env.MAIL_FROM) {
+        fromEmail = process.env.MAIL_FROM.replace(/["']/g, '');
+      } else if (process.env.FROM_EMAIL) {
+        const cleanEmail = process.env.FROM_EMAIL.replace(/["']/g, '');
+        fromEmail = `TableTech <${cleanEmail}>`;
+      }
+
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -56,7 +65,7 @@ module.exports = async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: process.env.MAIL_FROM || process.env.FROM_EMAIL || 'TableTech <info@tabletech.nl>',
+          from: fromEmail,
           to: [email],
           subject: '🧪 Test Email from TableTech',
           html: `

@@ -27,10 +27,22 @@ async function sendEmail(to, subject, html) {
   }
 
   console.log('   API Key found:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
-  console.log('   From address:', process.env.MAIL_FROM || process.env.FROM_EMAIL || 'info@tabletech.nl');
 
   try {
-    const fromEmail = process.env.MAIL_FROM || process.env.FROM_EMAIL || 'TableTech <info@tabletech.nl>';
+    // Fix: Ensure correct email format without extra quotes
+    let fromEmail = 'TableTech <info@tabletech.nl>'; // Default
+
+    if (process.env.MAIL_FROM) {
+      // Clean up the from address - remove any extra quotes
+      fromEmail = process.env.MAIL_FROM.replace(/["']/g, '');
+    } else if (process.env.FROM_EMAIL) {
+      // If only email provided, add name
+      const cleanEmail = process.env.FROM_EMAIL.replace(/["']/g, '');
+      fromEmail = `TableTech <${cleanEmail}>`;
+    }
+
+    console.log('   From address (cleaned):', fromEmail);
+
     const requestBody = {
       from: fromEmail,
       to: [to],
