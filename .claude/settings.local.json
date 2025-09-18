@@ -44,7 +44,9 @@
       "Bash(git push:*)",
       "Bash(git config:*)",
       "Bash(sudo service:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(xargs rm:*)",
+      "Bash(xargs ls:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
