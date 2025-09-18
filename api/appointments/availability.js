@@ -6,9 +6,9 @@ let availabilityCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Database configuration
+// Database configuration - Use DATABASE_URL as primary
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL_new,
+  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
@@ -36,15 +36,20 @@ module.exports = async function handler(req, res) {
 
   console.log('📅 GET /api/appointments/availability');
   console.log('🔍 Environment check:');
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
   console.log('DATABASE_URL_new exists:', !!process.env.DATABASE_URL_new);
+  console.log('DIRECT_DATABASE_URL exists:', !!process.env.DIRECT_DATABASE_URL);
   console.log('NODE_ENV:', process.env.NODE_ENV);
 
   // Check if environment variables exist
-  if (!process.env.DATABASE_URL_new) {
-    console.error('❌ DATABASE_URL_new not found');
+  const hasDbConfig = process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL;
+  if (!hasDbConfig) {
+    console.error('❌ No database configuration found');
+    console.error('Checked: DATABASE_URL, DATABASE_URL_new, DIRECT_DATABASE_URL');
     return res.status(500).json({
       error: 'Database configuration missing',
-      message: 'DATABASE_URL_new environment variable not set'
+      message: 'No database environment variable found. Please set DATABASE_URL in Vercel Environment Variables.',
+      checked: ['DATABASE_URL', 'DATABASE_URL_new', 'DIRECT_DATABASE_URL']
     });
   }
 
