@@ -6,9 +6,9 @@ let availabilityCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Database configuration - Use DATABASE_URL as primary
+// Database configuration - Use DATABASE_URL_new as primary (Vercel setup)
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
   console.log('NODE_ENV:', process.env.NODE_ENV);
 
   // Check if environment variables exist
-  const hasDbConfig = process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL;
+  const hasDbConfig = process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL;
   if (!hasDbConfig) {
     console.error('❌ No database configuration found');
     console.error('Checked: DATABASE_URL, DATABASE_URL_new, DIRECT_DATABASE_URL');

@@ -1,9 +1,9 @@
 // Vercel Function for creating appointments
 const { Client } = require('pg');
 
-// Database configuration - Use DATABASE_URL as primary
+// Database configuration - Use DATABASE_URL_new as primary (Vercel setup)
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
@@ -63,7 +63,7 @@ module.exports = async function handler(req, res) {
   console.log('  Body:', req.body);
 
   // Check if environment variables exist
-  const hasDbConfig = process.env.DATABASE_URL || process.env.DATABASE_URL_new || process.env.DIRECT_DATABASE_URL;
+  const hasDbConfig = process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL;
   if (!hasDbConfig) {
     console.error('❌ No database configuration found');
     return res.status(500).json({
