@@ -178,7 +178,12 @@ module.exports = async function handler(req, res) {
         `
       );
 
-      console.log('  📧 Customer email sent:', customerEmail.id);
+      console.log('  📧 Customer email result:', JSON.stringify(customerEmail));
+      if (customerEmail.error) {
+        console.error('  ❌ Customer email failed:', customerEmail.error);
+      } else {
+        console.log('  ✅ Customer email sent:', customerEmail.id);
+      }
 
       // Company notification
       const companyEmail = await sendEmail(
@@ -202,9 +207,15 @@ module.exports = async function handler(req, res) {
         `
       );
 
-      console.log('  📧 Company email sent:', companyEmail.id);
+      console.log('  📧 Company email result:', JSON.stringify(companyEmail));
+      if (companyEmail.error) {
+        console.error('  ❌ Company email failed:', companyEmail.error);
+      } else {
+        console.log('  ✅ Company email sent:', companyEmail.id);
+      }
     } catch (emailError) {
       console.error('  ⚠️ Email error (appointment still created):', emailError);
+      console.error('  Error details:', JSON.stringify(emailError));
     }
 
     res.status(201).json({
