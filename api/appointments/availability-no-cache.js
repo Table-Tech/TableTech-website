@@ -100,14 +100,31 @@ module.exports = async function handler(req, res) {
 
         // Check if slot is in the past
         const slotDateTime = new Date(`${dateStr}T${time}:00`);
-        const isPast = slotDateTime < new Date();
+        const now = new Date();
 
-        slots.push({
-          date: dateStr,
-          time: time,
-          available: !isBooked && !isPast,
-          dayName: dayNames[dayOfWeek]
-        });
+        // For timezone correction (Amsterdam is UTC+1 or UTC+2)
+        const amsterdamOffset = 2; // hours (summer time)
+        now.setHours(now.getHours() + amsterdamOffset);
+
+        // Add 30 minute buffer (don't allow booking within next 30 min)
+        const bufferTime = new Date(now.getTime() + 30 * 60000);
+        const isPast = slotDateTime < bufferTime;
+
+        // Only include future slots
+        if (!isPast) {
+          slots.push({
+            date: dateStr,
+            time: time,
+            available: !isBooked,
+            dayName: dayNames[dayOfWeek],
+            debug: {
+              slotTime: slotDateTime.toISOString(),
+              currentTime: now.toISOString(),
+              bufferTime: bufferTime.toISOString(),
+              isPast: isPast
+            }
+          });
+        }
       }
     }
 
