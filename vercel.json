@@ -1,8 +1,7 @@
 {
   "functions": {
-    "api/appointments/*.js": {
-      "maxDuration": 10,
-      "runtime": "nodejs18.x"
+    "api/**/*.js": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
