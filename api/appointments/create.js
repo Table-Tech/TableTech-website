@@ -29,19 +29,35 @@ async function sendEmail(to, subject, html) {
   console.log('   API Key found:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
 
   try {
-    // Fix: Ensure correct email format without extra quotes
+    // Fix: Ensure correct email format with proper brackets
     let fromEmail = 'TableTech <info@tabletech.nl>'; // Default
 
     if (process.env.MAIL_FROM) {
-      // Clean up the from address - remove any extra quotes
-      fromEmail = process.env.MAIL_FROM.replace(/["']/g, '');
+      // Clean up and ensure proper format
+      let cleanFrom = process.env.MAIL_FROM.replace(/["']/g, '').trim();
+
+      // Check if it already has brackets
+      if (!cleanFrom.includes('<') && !cleanFrom.includes('>')) {
+        // Format: "Name email@domain" -> "Name <email@domain>"
+        const parts = cleanFrom.split(' ');
+        if (parts.length >= 2) {
+          const email = parts[parts.length - 1];
+          const name = parts.slice(0, -1).join(' ');
+          fromEmail = `${name} <${email}>`;
+        } else {
+          // Just an email address
+          fromEmail = `TableTech <${cleanFrom}>`;
+        }
+      } else {
+        fromEmail = cleanFrom;
+      }
     } else if (process.env.FROM_EMAIL) {
       // If only email provided, add name
-      const cleanEmail = process.env.FROM_EMAIL.replace(/["']/g, '');
+      const cleanEmail = process.env.FROM_EMAIL.replace(/["']/g, '').trim();
       fromEmail = `TableTech <${cleanEmail}>`;
     }
 
-    console.log('   From address (cleaned):', fromEmail);
+    console.log('   From address (formatted):', fromEmail);
 
     const requestBody = {
       from: fromEmail,
