@@ -1,4 +1,4 @@
-// Vercel Function for appointment availability - V2 with guaranteed fallback
+// Vercel Function for appointment availability - V3 with URL validation
 const { Client } = require('pg');
 
 // Cache for availability
@@ -46,6 +46,32 @@ function generateFallbackSlots() {
   };
 }
 
+// Validate database URL
+function isValidDatabaseUrl(url) {
+  if (!url) return false;
+
+  // Check if it's a proper PostgreSQL URL
+  if (!url.startsWith('postgresql://') && !url.startsWith('postgres://')) {
+    return false;
+  }
+
+  // Check for invalid hostnames
+  const invalidHosts = ['base', 'localhost', 'example.com', 'your-database-url'];
+  for (const invalid of invalidHosts) {
+    if (url.includes(invalid)) {
+      console.error(`❌ Invalid database URL detected: contains '${invalid}'`);
+      return false;
+    }
+  }
+
+  // Check if it contains Neon hostname pattern
+  if (!url.includes('.neon.tech') && !url.includes('.amazonaws.com')) {
+    console.warn('⚠️ Database URL does not appear to be a Neon or AWS database');
+  }
+
+  return true;
+}
+
 module.exports = async function handler(req, res) {
   try {
     // Set CORS headers first
@@ -62,20 +88,42 @@ module.exports = async function handler(req, res) {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    console.log('📅 GET /api/appointments/availability - V2');
-    console.log('🔍 Environment check:');
-    console.log('DATABASE_URL_new:', !!process.env.DATABASE_URL_new);
-    console.log('DATABASE_URL:', !!process.env.DATABASE_URL);
+    console.log('📅 GET /api/appointments/availability - V3');
 
-    // Get connection string
-    const connectionString = process.env.DATABASE_URL_new ||
-                           process.env.DATABASE_URL ||
-                           process.env.DIRECT_DATABASE_URL;
+    // Check DATABASE_URL_new first (Vercel setup)
+    let connectionString = process.env.DATABASE_URL_new;
+    let dbSource = 'DATABASE_URL_new';
 
-    // If no database, return fallback immediately
-    if (!connectionString) {
-      console.log('📦 No database configured - returning fallback data');
-      return res.status(200).json(generateFallbackSlots());
+    // Fallback to DATABASE_URL if needed
+    if (!connectionString || !isValidDatabaseUrl(connectionString)) {
+      connectionString = process.env.DATABASE_URL;
+      dbSource = 'DATABASE_URL';
+    }
+
+    // Final fallback to DIRECT_DATABASE_URL
+    if (!connectionString || !isValidDatabaseUrl(connectionString)) {
+      connectionString = process.env.DIRECT_DATABASE_URL;
+      dbSource = 'DIRECT_DATABASE_URL';
+    }
+
+    console.log('🔍 Database check:');
+    console.log(`  Using: ${dbSource}`);
+    console.log(`  Valid: ${isValidDatabaseUrl(connectionString)}`);
+
+    // If no valid database URL, return fallback
+    if (!connectionString || !isValidDatabaseUrl(connectionString)) {
+      console.log('📦 No valid database URL - returning fallback data');
+      console.log('  DATABASE_URL_new:', process.env.DATABASE_URL_new ? 'SET but invalid' : 'NOT SET');
+      console.log('  DATABASE_URL:', process.env.DATABASE_URL ? 'SET but invalid' : 'NOT SET');
+
+      const response = generateFallbackSlots();
+      response.debug = {
+        message: 'Database URL is invalid or not set correctly',
+        help: 'Please set DATABASE_URL_new in Vercel with your Neon pooled connection string',
+        example: 'postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname?sslmode=require'
+      };
+
+      return res.status(200).json(response);
     }
 
     // Check cache
@@ -87,6 +135,11 @@ module.exports = async function handler(req, res) {
     // Try database connection
     let client = null;
     try {
+      // Parse and validate connection
+      console.log('🔌 Connecting to database...');
+      const urlPreview = connectionString.substring(0, 30) + '...';
+      console.log(`  URL preview: ${urlPreview}`);
+
       client = new Client({
         connectionString: connectionString,
         ssl: { rejectUnauthorized: false },
@@ -94,12 +147,13 @@ module.exports = async function handler(req, res) {
       });
 
       await client.connect();
-      console.log('✅ Database connected');
+      console.log('✅ Database connected successfully');
 
       // Get availability config
       const availabilityResult = await client.query(
         'SELECT * FROM availability_config WHERE is_active = true ORDER BY day_of_week'
       );
+      console.log(`  Found ${availabilityResult.rows.length} availability configs`);
 
       // Get blocked dates
       const blockedResult = await client.query(
@@ -185,10 +239,27 @@ module.exports = async function handler(req, res) {
 
     } catch (dbError) {
       console.error('⚠️ Database error:', dbError.message);
+
+      // Specific error messages
+      if (dbError.message.includes('ENOTFOUND')) {
+        console.error('  → Database hostname not found. Check your DATABASE_URL.');
+      } else if (dbError.message.includes('password authentication failed')) {
+        console.error('  → Invalid database password. Check your credentials.');
+      } else if (dbError.message.includes('does not exist')) {
+        console.error('  → Database table missing. Run database setup script.');
+      }
+
       console.log('📦 Returning fallback data due to database error');
 
-      // Return fallback data on any database error
-      return res.status(200).json(generateFallbackSlots());
+      // Return fallback data with error info
+      const response = generateFallbackSlots();
+      response.debug = {
+        error: dbError.message,
+        source: dbSource,
+        help: 'Check DATABASE_URL_new in Vercel Environment Variables'
+      };
+
+      return res.status(200).json(response);
 
     } finally {
       if (client) {
