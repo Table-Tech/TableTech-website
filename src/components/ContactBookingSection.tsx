@@ -40,17 +40,11 @@ async function getAvailableSlots(dateString: string) {
     // Debug: Log what we're looking for vs what we have
     console.log('Looking for date:', dateString);
     console.log('Sample slot date:', slots[0]?.date);
-
-    // Fix: Convert year if needed (2025 -> 2024 for testing)
-    let adjustedDateString = dateString;
-    if (dateString.startsWith('2025')) {
-      adjustedDateString = dateString.replace('2025', '2024');
-      console.log('Adjusted date to:', adjustedDateString);
-    }
+    console.log('Total slots received:', slots.length);
 
     // Filter for the requested date and return in expected format
-    const slotsForDate = slots.filter((slot: any) => slot.date === adjustedDateString);
-    console.log(`Found ${slotsForDate.length} slots for date ${adjustedDateString}`);
+    const slotsForDate = slots.filter((slot: any) => slot.date === dateString);
+    console.log(`Found ${slotsForDate.length} slots for date ${dateString}`);
 
     // Return in the format ContactBookingSection expects
     return slotsForDate.map((slot: any) => ({
@@ -72,16 +66,9 @@ async function submitAppointment(appointmentData: any) {
 
     console.log('Submitting appointment with:', { date, time, customerName });
 
-    // Fix year if needed (2025 -> 2024)
-    let adjustedDate = date;
-    if (date && date.startsWith('2025')) {
-      adjustedDate = date.replace('2025', '2024');
-      console.log('Adjusted date for API:', adjustedDate);
-    }
-
     // Check if we have required fields
-    if (!adjustedDate || !time) {
-      console.error('Missing date or time:', { date: adjustedDate, time });
+    if (!date || !time) {
+      console.error('Missing date or time:', { date, time });
       return {
         ok: false,
         error: { code: 'MISSING_FIELDS', message: 'Selecteer een datum en tijd' }
@@ -90,7 +77,7 @@ async function submitAppointment(appointmentData: any) {
 
     // First check if slot is still available
     const checkResponse = await fetch(
-      `/api/appointments/check-slot?date=${adjustedDate}&time=${time}`
+      `/api/appointments/check-slot?date=${date}&time=${time}`
     );
     const checkData = await checkResponse.json();
 
@@ -108,7 +95,7 @@ async function submitAppointment(appointmentData: any) {
         customer_name: customerName,
         customer_email: appointmentData.email,
         customer_phone: appointmentData.phone,
-        appointment_date: adjustedDate,
+        appointment_date: date,
         appointment_time: time,
         service_type: appointmentData.restaurant || 'Algemene consultatie',
         notes: appointmentData.message || ''
