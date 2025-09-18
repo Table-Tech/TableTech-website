@@ -17,31 +17,50 @@ async function getDbClient() {
 
 // Email service function
 async function sendEmail(to, subject, html) {
+  console.log(`📧 Attempting to send email to: ${to}`);
+  console.log(`   Subject: ${subject}`);
+
   if (!process.env.RESEND_API_KEY) {
     console.log('⚠️ No RESEND_API_KEY found, skipping email');
-    return { id: 'no-email-service' };
+    console.log('   Available env vars:', Object.keys(process.env).filter(k => k.includes('RESEND') || k.includes('MAIL')));
+    return { id: 'no-email-service', error: 'RESEND_API_KEY not configured' };
   }
 
+  console.log('   API Key found:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
+  console.log('   From address:', process.env.MAIL_FROM || process.env.FROM_EMAIL || 'info@tabletech.nl');
+
   try {
+    const fromEmail = process.env.MAIL_FROM || process.env.FROM_EMAIL || 'TableTech <info@tabletech.nl>';
+    const requestBody = {
+      from: fromEmail,
+      to: [to],
+      subject: subject,
+      html: html,
+    };
+
+    console.log('   Sending to Resend API...');
+
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: process.env.MAIL_FROM || 'TableTech <info@tabletech.nl>',
-        to: [to],
-        subject: subject,
-        html: html,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const result = await response.json();
+
+    if (!response.ok) {
+      console.error('   ❌ Resend API error:', response.status, result);
+      return { id: 'error', error: result };
+    }
+
+    console.log('   ✅ Email sent successfully:', result.id);
     return result;
   } catch (error) {
-    console.error('Email error:', error);
-    throw error;
+    console.error('   ❌ Email send error:', error.message);
+    return { id: 'error', error: error.message };
   }
 }
 
