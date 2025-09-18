@@ -368,6 +368,121 @@
       "defaultMessage": "Ik wil graag meer informatie over TableTech en zou een adviesgesprek willen plannen."
     }
   },
+  "pricingSection": {
+    "title": "Kies een prijsplan",
+    "titleHighlight": "dat bij jouw restaurant past",
+    "subtitle": "Start gratis en schakel over naar een betaald plan naarmate je groeit. Alle plannen bevatten een gratis aangepast ontwerp.",
+    "badge": "Wij maken jouw restaurant efficiënter",
+    "monthlyToggle": "Maandelijks",
+    "yearlyToggle": "Jaarlijks",
+    "currency": "€",
+    "features": {
+      "appointmentSystem": "Afsprakensysteem",
+      "orderManagement": "Bestellingsbeheer systeem",
+      "inventoryTracking": "Voorraad tracking",
+      "staffManagement": "Personeelsbeheer",
+      "salesReports": "Verkooprapporten",
+      "loyaltyProgram": "Loyaliteitsprogramma",
+      "multiLocation": "Multi-locatie ondersteuning",
+      "apiIntegration": "API integratie",
+      "prioritySupport": "Prioriteit ondersteuning",
+      "customReports": "Aangepaste rapporten",
+      "advancedAnalytics": "Geavanceerde analytics",
+      "whiteLabel": "White-label oplossing",
+      "dedicatedSupport": "Dedicated ondersteuning",
+      "customIntegrations": "Aangepaste integraties",
+      "enterpriseFeatures": "Enterprise functies"
+    },
+    "plans": {
+      "gratis": {
+        "name": "Starter",
+        "popular": false,
+        "monthlyPrice": "0",
+        "yearlyPrice": "0",
+        "transactionFee": "1,5%",
+        "description": "Perfect voor kleine restaurants die beginnen",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "salesReports"
+        ],
+        "buttonText": "Start Gratis",
+        "buttonVariant": "outline"
+      },
+      "groei": {
+        "name": "Groei",
+        "popular": true,
+        "monthlyPrice": "49,99",
+        "yearlyPrice": "499",
+        "transactionFee": "0,5%",
+        "description": "Ideaal voor groeiende restaurants",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram"
+        ],
+        "buttonText": "Kies Groei",
+        "buttonVariant": "default"
+      },
+      "pro": {
+        "name": "Professional",
+        "popular": false,
+        "monthlyPrice": "99",
+        "yearlyPrice": "999",
+        "transactionFee": "0%",
+        "description": "Voor gevestigde restaurants met meerdere behoeften",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram",
+          "multiLocation",
+          "apiIntegration",
+          "prioritySupport",
+          "customReports"
+        ],
+        "buttonText": "Kies Pro",
+        "buttonVariant": "outline"
+      },
+      "ultimate": {
+        "name": "Enterprise",
+        "popular": false,
+        "monthlyPrice": "199",
+        "yearlyPrice": "1999",
+        "transactionFee": "0%",
+        "description": "Complete oplossing voor restaurantketens",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram",
+          "multiLocation",
+          "apiIntegration",
+          "prioritySupport",
+          "customReports",
+          "advancedAnalytics",
+          "whiteLabel",
+          "dedicatedSupport",
+          "customIntegrations",
+          "enterpriseFeatures"
+        ],
+        "buttonText": "Contact Verkoop",
+        "buttonVariant": "outline"
+      }
+    },
+    "transactionFeeLabel": "per bestelling",
+    "perMonth": "/maand",
+    "perYear": "/jaar",
+    "popularBadge": "Meest Populair",
+    "yearlyDiscount": "Bespaar 2 maanden!"
+  },
   "footer": {
     "tagline": "De slimme oplossing voor elk restaurant",
     "country": "Nederland",
