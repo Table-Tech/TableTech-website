@@ -205,7 +205,7 @@ module.exports = async function handler(req, res) {
         }
       };
 
-      // Customer email with beautiful dark theme
+      // Customer email - simple black/white/orange theme
       const customerEmail = await sendEmail(
         customer_email,
         `Bevestiging afspraak - TableTech`,
@@ -217,74 +217,80 @@ module.exports = async function handler(req, res) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
           <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0; min-height: 100vh;">
-              <div style="max-width: 600px; margin: 0 auto; background: #1a1a2e; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <div style="background: #000000; padding: 40px 0; min-height: 100vh;">
+              <div style="max-width: 600px; margin: 0 auto; background: #000000; border: 1px solid #333; overflow: hidden;">
                 <!-- Header -->
-                <div style="background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); padding: 40px 30px; text-align: center;">
+                <div style="background: #ff6600; padding: 40px 30px; text-align: center;">
                   <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 600;">TableTech</h1>
-                  <p style="color: rgba(255, 255, 255, 0.9); margin: 10px 0 0 0; font-size: 16px;">Afspraak Bevestiging</p>
+                  <p style="color: white; margin: 10px 0 0 0; font-size: 16px;">Afspraak Bevestiging</p>
                 </div>
 
                 <!-- Content -->
-                <div style="padding: 40px 30px; color: #e0e0e0;">
-                  <h2 style="color: #00d4ff; margin: 0 0 20px 0; font-size: 24px;">Beste ${customer_name},</h2>
+                <div style="padding: 40px 30px; color: white;">
+                  <h2 style="color: #ff6600; margin: 0 0 20px 0; font-size: 24px;">Beste ${customer_name},</h2>
 
-                  <p style="line-height: 1.6; color: #b0b0b0; margin-bottom: 30px;">
+                  <p style="line-height: 1.6; color: white; margin-bottom: 30px;">
                     Bedankt voor uw aanvraag! We hebben uw afspraak succesvol ontvangen.
                   </p>
 
                   <!-- Appointment Card -->
-                  <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid #00d4ff; border-radius: 15px; padding: 25px; margin: 30px 0;">
-                    <h3 style="color: #00d4ff; margin: 0 0 20px 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">
+                  <div style="border: 2px solid #ff6600; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #ff6600; margin: 0 0 20px 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">
                       📅 Afspraak Details
                     </h3>
 
                     <table style="width: 100%; border-collapse: collapse;">
                       <tr>
-                        <td style="padding: 10px 0; color: #888; vertical-align: top; width: 40%;">📆 Datum:</td>
-                        <td style="padding: 10px 0; color: #e0e0e0; font-weight: 600;">${formatDate(appointment_date)}</td>
+                        <td style="padding: 10px 0; color: #999; vertical-align: top; width: 40%;">📆 Datum:</td>
+                        <td style="padding: 10px 0; color: white; font-weight: 600;">${formatDate(appointment_date)}</td>
                       </tr>
                       <tr>
-                        <td style="padding: 10px 0; color: #888; vertical-align: top;">🕐 Tijd:</td>
-                        <td style="padding: 10px 0; color: #e0e0e0; font-weight: 600;">${appointment_time}</td>
+                        <td style="padding: 10px 0; color: #999; vertical-align: top;">🕐 Tijd:</td>
+                        <td style="padding: 10px 0; color: white; font-weight: 600;">${appointment_time}</td>
                       </tr>
                       <tr>
-                        <td style="padding: 10px 0; color: #888; vertical-align: top;">💼 Service:</td>
-                        <td style="padding: 10px 0; color: #e0e0e0; font-weight: 600;">${service_type || 'Algemene consultatie'}</td>
+                        <td style="padding: 10px 0; color: #999; vertical-align: top;">💼 Service:</td>
+                        <td style="padding: 10px 0; color: white; font-weight: 600;">${service_type || 'Algemene consultatie'}</td>
                       </tr>
                       ${notes ? `
                       <tr>
-                        <td style="padding: 10px 0; color: #888; vertical-align: top;">📝 Opmerkingen:</td>
-                        <td style="padding: 10px 0; color: #e0e0e0;">${notes}</td>
+                        <td style="padding: 10px 0; color: #999; vertical-align: top;">📝 Opmerkingen:</td>
+                        <td style="padding: 10px 0; color: white;">${notes}</td>
                       </tr>
                       ` : ''}
                     </table>
                   </div>
 
-                  <!-- Next Steps -->
-                  <div style="background: rgba(118, 75, 162, 0.2); border-left: 4px solid #764ba2; padding: 20px; margin: 30px 0; border-radius: 10px;">
-                    <h4 style="color: #00d4ff; margin: 0 0 10px 0; font-size: 16px;">⏭️ Volgende stappen</h4>
-                    <p style="color: #b0b0b0; margin: 0; line-height: 1.6;">
-                      Ons team neemt binnen 1 werkdag contact met u op om de afspraak definitief te bevestigen.
-                    </p>
-                  </div>
-
                   <!-- Contact Info -->
-                  <div style="text-align: center; margin: 40px 0; padding: 30px; background: rgba(0, 0, 0, 0.3); border-radius: 15px;">
-                    <p style="color: #888; margin: 0 0 15px 0; font-size: 14px;">Heeft u vragen?</p>
-                    <a href="mailto:info@tabletech.nl" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); color: white; text-decoration: none; border-radius: 30px; font-weight: 600; transition: all 0.3s;">Contact Opnemen</a>
+                  <div style="text-align: center; margin: 40px 0; padding: 30px; border: 1px solid #333;">
+                    <p style="color: white; margin: 0 0 10px 0; font-size: 16px;">Ons team neemt binnen 1 werkdag contact met u op.</p>
+                    <p style="color: #999; margin: 20px 0 5px 0; font-size: 14px;">Contact:</p>
+                    <p style="color: white; margin: 5px 0; font-size: 14px;">
+                      📧 <a href="mailto:info@tabletech.nl" style="color: #ff6600; text-decoration: none;">info@tabletech.nl</a>
+                    </p>
+                    <p style="color: white; margin: 5px 0; font-size: 14px;">
+                      📱 <a href="tel:+31648447234" style="color: #ff6600; text-decoration: none;">+31 6 48447234</a>
+                    </p>
+                    <p style="color: white; margin: 5px 0; font-size: 14px;">
+                      🌐 <a href="https://tabletech.nl" style="color: #ff6600; text-decoration: none;">www.tabletech.nl</a>
+                    </p>
                   </div>
                 </div>
 
                 <!-- Footer -->
-                <div style="background: rgba(0, 0, 0, 0.5); padding: 30px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                  <p style="color: #666; margin: 0; font-size: 14px;">
+                <div style="padding: 30px; text-align: center; border-top: 1px solid #333;">
+                  <p style="color: #999; margin: 0; font-size: 14px;">
                     Met vriendelijke groet,<br>
-                    <strong style="color: #00d4ff;">Team TableTech</strong>
+                    <strong style="color: #ff6600;">Team TableTech</strong>
                   </p>
-                  <p style="color: #555; margin: 15px 0 0 0; font-size: 12px;">
-                    © ${new Date().getFullYear()} TableTech. Alle rechten voorbehouden.
-                  </p>
+                  <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #222;">
+                    <p style="color: #666; margin: 5px 0; font-size: 11px;">
+                      © 2025 TableTech - Alle rechten voorbehouden
+                    </p>
+                    <p style="color: #555; margin: 5px 0; font-size: 11px;">
+                      Je ontvangt deze email omdat je een afspraak hebt aangevraagd op de website
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
