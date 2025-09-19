@@ -50,7 +50,7 @@ declare module "*.ico" {
   export default src;
 }
 
-declare module "@studio-freight/lenis";
+declare module "lenis";
 declare module "gsap";
 declare module "gsap/ScrollTrigger";
 declare module "react-i18next";

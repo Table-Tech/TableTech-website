@@ -19,13 +19,12 @@ export default defineConfig({
     imagetools(),      // image optimalisatie
   ],
   server: {
-    host: '127.0.0.1',
+    host: 'localhost',
     port: 5173,
-    strictPort: true, // Don't try other ports if 5173 is busy
+    strictPort: false,
     hmr: {
       port: 5173,
-      host: '127.0.0.1',
-      clientPort: 5173 // Explicitly set client port
+      host: 'localhost'
     },
     cors: true,
     headers: {
@@ -36,7 +35,7 @@ export default defineConfig({
       'Referrer-Policy': 'strict-origin-when-cross-origin',
       'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
       'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data: https://r2cdn.perplexity.ai; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://api.tabletech.nl https://tabletech.nl http://localhost:3001 http://localhost:3002 ws://localhost:* wss://localhost:*; frame-src 'self' https://www.youtube.com https://player.vimeo.com https://challenges.cloudflare.com; base-uri 'self'; form-action 'self'"
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data: https://r2cdn.perplexity.ai; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://api.tabletech.nl https://tabletech.nl http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* wss://localhost:* wss://127.0.0.1:*; frame-src 'self' https://www.youtube.com https://player.vimeo.com https://challenges.cloudflare.com; base-uri 'self'; form-action 'self'"
     },
     proxy: {
       '/api': {

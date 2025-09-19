@@ -61,29 +61,37 @@ export const EmailDebugger = {
 
   // Test email functionaliteit
   testEmailService: async () => {
-    // Testing email service
-    
-    const testData: AppointmentData = {
-      name: 'Test Gebruiker',
-      email: 'test@example.com',
-      phone: '06-12345678',
-      restaurant: 'Test Restaurant',
-      message: 'Dit is een test bericht',
-      date: new Date().toLocaleDateString('nl-NL'),
-      time: '14:00'
+    // Testing email service via API
+
+    const testData = {
+      customer_name: 'Test Gebruiker',
+      customer_email: 'test@example.com',
+      customer_phone: '06-12345678',
+      appointment_date: new Date().toISOString().split('T')[0],
+      appointment_time: '14:00',
+      service_type: 'Test Service',
+      notes: 'Dit is een test bericht'
     };
 
     try {
-      const { sendAppointmentEmail } = await import('../services/emailService');
-      const result = await sendAppointmentEmail(testData);
-      
-      if (result) {
+      // Use the new API endpoint for testing
+      const response = await fetch('/api/appointments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         // Email test successful
+        return true;
       } else {
         // Email test failed
+        return false;
       }
-      
-      return result;
     } catch {
       // Email test error
       return false;

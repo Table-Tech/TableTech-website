@@ -367,6 +367,121 @@
       "defaultMessage": "I would like to learn more about TableTech and would like to schedule a consultation."
     }
   },
+  "pricingSection": {
+    "title": "Select a pricing plan",
+    "titleHighlight": "that fits your restaurant",
+    "subtitle": "Start for free and switch to a paid plan as you grow. All plans include a free custom design.",
+    "badge": "We make your restaurant more efficient",
+    "monthlyToggle": "Monthly",
+    "yearlyToggle": "Yearly",
+    "currency": "$",
+    "features": {
+      "appointmentSystem": "Appointment system",
+      "orderManagement": "Order management system",
+      "inventoryTracking": "Inventory tracking",
+      "staffManagement": "Staff management",
+      "salesReports": "Sales reports",
+      "loyaltyProgram": "Loyalty program",
+      "multiLocation": "Multi-location support",
+      "apiIntegration": "API integration",
+      "prioritySupport": "Priority support",
+      "customReports": "Custom reports",
+      "advancedAnalytics": "Advanced analytics",
+      "whiteLabel": "White-label solution",
+      "dedicatedSupport": "Dedicated support",
+      "customIntegrations": "Custom integrations",
+      "enterpriseFeatures": "Enterprise features"
+    },
+    "plans": {
+      "gratis": {
+        "name": "Starter",
+        "popular": false,
+        "monthlyPrice": "0",
+        "yearlyPrice": "0",
+        "transactionFee": "1.5%",
+        "description": "Perfect for small restaurants starting out",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "salesReports"
+        ],
+        "buttonText": "Start Free",
+        "buttonVariant": "outline"
+      },
+      "groei": {
+        "name": "Growth",
+        "popular": true,
+        "monthlyPrice": "49.99",
+        "yearlyPrice": "499",
+        "transactionFee": "0.5%",
+        "description": "Ideal for growing restaurants",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram"
+        ],
+        "buttonText": "Choose Growth",
+        "buttonVariant": "default"
+      },
+      "pro": {
+        "name": "Professional",
+        "popular": false,
+        "monthlyPrice": "99",
+        "yearlyPrice": "999",
+        "transactionFee": "0%",
+        "description": "For established restaurants with multiple needs",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram",
+          "multiLocation",
+          "apiIntegration",
+          "prioritySupport",
+          "customReports"
+        ],
+        "buttonText": "Choose Pro",
+        "buttonVariant": "outline"
+      },
+      "ultimate": {
+        "name": "Enterprise",
+        "popular": false,
+        "monthlyPrice": "199",
+        "yearlyPrice": "1999",
+        "transactionFee": "0%",
+        "description": "Complete solution for restaurant chains",
+        "features": [
+          "appointmentSystem",
+          "orderManagement",
+          "inventoryTracking",
+          "staffManagement",
+          "salesReports",
+          "loyaltyProgram",
+          "multiLocation",
+          "apiIntegration",
+          "prioritySupport",
+          "customReports",
+          "advancedAnalytics",
+          "whiteLabel",
+          "dedicatedSupport",
+          "customIntegrations",
+          "enterpriseFeatures"
+        ],
+        "buttonText": "Contact Sales",
+        "buttonVariant": "outline"
+      }
+    },
+    "transactionFeeLabel": "Transaction fee per order",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "popularBadge": "Most Popular",
+    "yearlyDiscount": "Save 2 months!"
+  },
   "footer": {
     "tagline": "The smart solution for every restaurant",
     "country": "Netherlands",

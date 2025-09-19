@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2022",
+    "checkJs": false,
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", ".vercel"]
+}
