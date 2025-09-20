@@ -1576,7 +1576,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
     if (theme === "tabletech") {
       return (
         <div ref={sectionRefs[categoryId]} className="mb-6" key={`section-${categoryId}`}>
-          <h2 className="text-lg font-bold mb-3 px-1 sticky -top-2 py-2 border-b z-50 shadow-sm bg-white text-gray-800 border-gray-300">
+          <h2 className="text-lg font-bold mb-3 px-1 sticky -top-2 py-2 border-b z-50 shadow-sm bg-white text-gray-900 border-gray-300">
             {categories.find((c) => c.id === categoryId)?.name}
           </h2>
           <div className="grid grid-cols-2 gap-2 px-1 pb-16">
@@ -1591,11 +1591,11 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                   alt={item.name}
                   className="w-full aspect-square object-cover rounded-lg mb-1"
                 />
-                <h3 className="text-sm font-semibold text-center leading-tight mb-1 text-gray-800">
+                <h3 className="text-sm font-semibold text-center leading-tight mb-1 text-gray-900">
                   {isEnglish && item.nameEn ? item.nameEn : item.name}
                 </h3>
                 <div className="flex items-center w-full mt-auto">
-                  <span className="text-base font-bold flex-1 text-gray-600">
+                  <span className="text-base font-bold flex-1 text-gray-800">
                     €{item.price.toFixed(2)}
                   </span>
                   <button
@@ -1680,7 +1680,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                   {isEnglish && item.nameEn ? item.nameEn : item.name}
                 </h3>
                 {item.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-gray-700 mb-3 line-clamp-2">
                     {isEnglish && item.descriptionEn ? item.descriptionEn : item.description}
                   </p>
                 )}
@@ -2039,7 +2039,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
               }}
             >
               <div className="p-4 flex justify-between items-center border-b">
-                <h2 className="text-lg font-bold">{translationTexts.yourOrder}</h2>
+                <h2 className="text-lg font-bold text-gray-900">{translationTexts.yourOrder}</h2>
                 <button
                   onClick={() => setCartOpen(false)}
                   aria-label="Close basket"
@@ -2097,16 +2097,32 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                             className="w-12 h-12 rounded object-cover"
                           />
                           <div className="flex-1">
-                            <p className="text-sm font-medium mb-0.5">
+                            <p className="text-sm font-medium text-gray-900 mb-0.5">
                               {isEnglish && item.nameEn ? item.nameEn : item.name}
                             </p>
-                            <p className="text-xs text-gray-500 mb-1">
+                            <p className="text-xs text-gray-600 mb-1">
                               €{item.price.toFixed(2)}
                             </p>
                             {item.toppings && item.toppings.length > 0 && (
-                              <div className="text-xs text-gray-400 mt-1 bg-orange-50 px-2 py-1 rounded border border-orange-200">
-                                <span className="font-medium text-gray-600">Toppings: </span>
-                                <span className="text-orange-600 font-medium">
+                              <div className={`text-xs mt-1 px-2 py-1 rounded border ${
+                                theme === "coffeecorner"
+                                  ? "bg-amber-50 border-amber-200"
+                                  : theme === "sweetdelights"
+                                  ? "bg-pink-50 border-pink-200"
+                                  : theme === "spicepalace"
+                                  ? "bg-red-50 border-red-200"
+                                  : "bg-orange-50 border-orange-200"
+                              }`}>
+                                <span className="font-medium text-gray-700">Toppings: </span>
+                                <span className={`font-medium ${
+                                  theme === "coffeecorner"
+                                    ? "text-amber-700"
+                                    : theme === "sweetdelights"
+                                    ? "text-pink-700"
+                                    : theme === "spicepalace"
+                                    ? "text-red-700"
+                                    : "text-orange-600"
+                                }`}>
                                   {item.toppings.map(topping => 
                                     topping.replace(/^extra\s+/i, '')
                                   ).join(', ')}
@@ -2134,14 +2150,14 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                                 });
                               }
                             }}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150"
+                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
                           >
                             −
                           </button>
-                          <span className="text-xl font-bold">{qty}</span>
+                          <span className="text-xl font-bold text-gray-900">{qty}</span>
                           <button
                             onClick={() => addToCart(id, item.category, toppings)}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150"
+                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
                           >
                             +
                           </button>
@@ -2152,8 +2168,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
               </div>
 
               <div className="px-4 py-2 border-t flex justify-between items-center font-semibold">
-                <span>{translationTexts.subtotal}</span>
-                <span className="text-lg font-bold">€{total}</span>
+                <span className="text-gray-900">{translationTexts.subtotal}</span>
+                <span className="text-lg font-bold text-gray-900">€{total}</span>
               </div>
 
               <div className="p-4">
@@ -2213,15 +2229,15 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                 }}
               >
                 <div>
-                  <h2 className="text-2xl font-bold text-black">
+                  <h2 className="text-2xl font-bold text-gray-900">
                     {isEnglish && selectedItem.nameEn ? selectedItem.nameEn : selectedItem.name}
                   </h2>
-                  <p className="text-xl font-semibold text-gray-500 mt-1">
+                  <p className="text-xl font-semibold text-gray-700 mt-1">
                     €{selectedItem.price.toFixed(2)}
                   </p>
                 </div>
 
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-700 leading-relaxed">
                   {selectedItem.description || selectedItem.descriptionEn || (isEnglish 
                     ? "This is a delicious example dish with rich flavor and presentation. Perfect for sharing or enjoying as a main course. Made with fresh ingredients and expertly prepared by our chefs."
                     : "Dit is een heerlijk voorbeeldgerecht met rijke smaak en presentatie. Perfect om te delen of te genieten als hoofdgerecht. Gemaakt met verse ingrediënten en vakkundig bereid door onze chefs."
@@ -2230,10 +2246,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
 
                 {theme === "tabletech" && (selectedItem.category === "curry" || selectedItem.category === "ramen" || selectedItem.category === "popular") && (
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold mb-2">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">
                       {translationTexts.chooseSpicy}
                     </h4>
-                    <p className="text-xs text-gray-500 mb-3">{translationTexts.chooseUpTo1}</p>
+                    <p className="text-xs text-gray-600 mb-3">{translationTexts.chooseUpTo1}</p>
                     <div className="flex flex-col gap-3">
                       {["Spicy", "Original"].map((option) => (
                         <label
@@ -2245,7 +2261,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                             name="flavor"
                             className="accent-black w-4 h-4"
                           />
-                          <span className="font-medium">{option}</span>
+                          <span className="font-medium text-gray-800">{option}</span>
                         </label>
                       ))}
                     </div>
@@ -2259,13 +2275,13 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                     theme === "coffeecorner" ? "bg-amber-50" :
                     "bg-gray-50"
                   } p-4 rounded-lg`}>
-                    <h4 className="text-sm font-semibold mb-2">
-                      {theme === "spicepalace" ? (isEnglish ? "Customize your dish" : "Personaliseer je gerecht") : 
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                      {theme === "spicepalace" ? (isEnglish ? "Customize your dish" : "Personaliseer je gerecht") :
                        theme === "sweetdelights" ? (isEnglish ? "Sweet extras" : "Zoete extra's") :
                        theme === "coffeecorner" ? (isEnglish ? "Customize your drink" : "Personaliseer je drankje") :
                        translationTexts.addToppings}
                     </h4>
-                    <p className="text-xs text-gray-500 mb-3">
+                    <p className="text-xs text-gray-600 mb-3">
                       {theme === "spicepalace" ? (isEnglish ? "Choose your preferred additions" : "Kies je gewenste toevoegingen") : 
                        theme === "sweetdelights" ? (isEnglish ? "Make it extra special" : "Maak het extra speciaal") :
                        theme === "coffeecorner" ? (isEnglish ? "Perfect your drink" : "Perfectioneer je drankje") :
@@ -2278,8 +2294,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                           className="flex justify-between items-center text-sm p-3 rounded-lg hover:bg-white cursor-pointer transition"
                         >
                           <div>
-                            <span className="block font-medium">{isEnglish ? top.nameEn : top.name}</span>
-                            <span className="text-xs text-gray-500">
+                            <span className="block font-medium text-gray-900">{isEnglish ? top.nameEn : top.name}</span>
+                            <span className="text-xs text-gray-600">
                               +€{top.price.toFixed(2)}
                             </span>
                           </div>

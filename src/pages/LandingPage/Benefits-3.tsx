@@ -40,9 +40,17 @@ export const BenefitsThree: React.FC = () => {
               
               const playPromise = video.play();
               if (playPromise !== undefined) {
-                playPromise.catch((error: Error) => {
-                  console.warn("Video auto-play failed:", error);
-                });
+                playPromise
+                  .then(() => {
+                    // Video started successfully
+                  })
+                  .catch((error: Error) => {
+                    // Silently handle autoplay failures
+                    // This is expected behavior in some browsers
+                    if (error.name !== 'AbortError') {
+                      console.warn("Video playback issue:", error.name);
+                    }
+                  });
               }
             }
             observer.disconnect();
@@ -67,8 +75,11 @@ export const BenefitsThree: React.FC = () => {
         if (video && video.paused && video.hasAttribute('data-persistent-play')) {
           const playPromise = video.play();
           if (playPromise !== undefined) {
-            playPromise.catch(() => {
-              // Silent fail
+            playPromise.catch((error: Error) => {
+              // Silent fail - expected behavior
+              if (error.name !== 'AbortError') {
+                console.warn("Video resume issue:", error.name);
+              }
             });
           }
         }
@@ -81,8 +92,11 @@ export const BenefitsThree: React.FC = () => {
         if (video && video.paused && video.hasAttribute('data-persistent-play')) {
           const playPromise = video.play();
           if (playPromise !== undefined) {
-            playPromise.catch(() => {
-              // Silent fail
+            playPromise.catch((error: Error) => {
+              // Silent fail - expected behavior
+              if (error.name !== 'AbortError') {
+                console.warn("Video resume issue:", error.name);
+              }
             });
           }
         }
@@ -96,8 +110,11 @@ export const BenefitsThree: React.FC = () => {
         if (video && video.paused && video.hasAttribute('data-persistent-play')) {
           const playPromise = video.play();
           if (playPromise !== undefined) {
-            playPromise.catch(() => {
-              // Silent fail
+            playPromise.catch((error: Error) => {
+              // Silent fail - expected behavior
+              if (error.name !== 'AbortError') {
+                console.warn("Video resume issue:", error.name);
+              }
             });
           }
         }

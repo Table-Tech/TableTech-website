@@ -1,0 +1,24 @@
+# Ignore development files
+.env.local
+.env.development
+node_modules
+.git
+
+# Ignore build artifacts
+dist/
+build/
+.next/
+
+# Ignore logs
+*.log
+npm-debug.log*
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
