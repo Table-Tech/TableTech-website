@@ -140,10 +140,7 @@ export const PricingNew = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] overflow-hidden"
-             style={{
-               padding: 'clamp(2rem, 8vh, 4rem) clamp(1rem, 4vw, 2rem)'
-             }}>
+    <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] overflow-hidden p-[clamp(2rem,8vh,4rem)_clamp(1rem,4vw,2rem)]">
       {/* Smooth transition from ContainerScroll */}
       <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-transparent"></div>
@@ -157,23 +154,12 @@ export const PricingNew = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mx-auto"
-          style={{ marginBottom: 'clamp(3rem, 8vh, 5rem)' }}
+          className="text-center mx-auto mb-[clamp(3rem,8vh,5rem)]"
         >
-          <h1 className="font-bold text-white"
-              style={{
-                fontSize: 'clamp(1.5rem, 4.5vw, 2.5rem)',
-                marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)',
-                lineHeight: '1.3'
-              }}>
+          <h1 className="font-bold text-white text-[clamp(1.5rem,4.5vw,2.5rem)] mb-[clamp(1.5rem,4vh,2.5rem)] leading-[1.3]">
             Kies jouw <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">TableTech</span> pakket
           </h1>
-          <p className="text-[#D4B896] mx-auto"
-             style={{
-               fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-               maxWidth: 'min(80vw, 500px)',
-               lineHeight: '1.7'
-             }}>
+          <p className="text-[#D4B896] mx-auto text-[clamp(0.9rem,2.5vw,1.1rem)] max-w-[min(80vw,500px)] leading-[1.7]">
             Transparante prijzen voor elk type restaurant. Start gratis en groei op jouw tempo.
           </p>
         </motion.div>
@@ -289,12 +275,7 @@ export const PricingNew = () => {
 
           {/* Mobile view - vertical stacked cards */}
           <div className="lg:hidden">
-            <div style={{
-              gap: 'clamp(1rem, 4vw, 1.5rem)',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: 'clamp(1rem, 4vw, 1.5rem)'
-            }}>
+            <div className="gap-[clamp(1rem,4vw,1.5rem)] flex flex-col p-[clamp(1rem,4vw,1.5rem)]">
               {pricingTiers.map((tier) => {
                 const colors = colorClasses[tier.color as keyof typeof colorClasses];
                 return (
@@ -314,20 +295,15 @@ export const PricingNew = () => {
                         colorTo={tier.color === 'green' ? '#D4B896' : tier.color === 'blue' ? '#FFB366' : tier.color === 'purple' ? '#F4A460' : '#FFB366'}
                         delay={pricingTiers.indexOf(tier) * 0.5}
                       />
-                      <div style={{ padding: 'clamp(1rem, 5vw, 1.5rem)' }}>
-                        <div className="text-center"
-                             style={{ marginBottom: 'clamp(1rem, 4vw, 1.5rem)' }}>
-                          <div style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', marginBottom: 'clamp(0.5rem, 2vw, 1rem)' }}>{tier.icon}</div>
-                          <h3 className="font-bold text-white"
-                              style={{ fontSize: 'clamp(1.2rem, 5vw, 1.5rem)', marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)' }}>{tier.name}</h3>
-                          <p className={colors.text}
-                             style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>{tier.tagline}</p>
-                          <div style={{ marginTop: 'clamp(1rem, 3vw, 1.5rem)' }}>
+                      <div className="p-[clamp(1rem,5vw,1.5rem)]">
+                        <div className="text-center mb-[clamp(1rem,4vw,1.5rem)]">
+                          <div className="text-[clamp(2rem,8vw,2.5rem)] mb-[clamp(0.5rem,2vw,1rem)]">{tier.icon}</div>
+                          <h3 className="font-bold text-white text-[clamp(1.2rem,5vw,1.5rem)] mb-[clamp(0.25rem,1vw,0.5rem)]">{tier.name}</h3>
+                          <p className={`${colors.text} text-[clamp(0.8rem,3vw,1rem)]`}>{tier.tagline}</p>
+                          <div className="mt-[clamp(1rem,3vw,1.5rem)]">
                             <div className="flex items-baseline justify-center gap-1">
-                              <span className="font-bold text-white"
-                                    style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)' }}>{tier.monthlyFee}</span>
-                              {tier.monthlyFee !== "€0" && <span className="text-[#D4B896]"
-                                                                         style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>/maand</span>}
+                              <span className="font-bold text-white text-[clamp(1.5rem,6vw,2rem)]">{tier.monthlyFee}</span>
+                              {tier.monthlyFee !== "€0" && <span className="text-[#D4B896] text-[clamp(0.8rem,3vw,1rem)]">/maand</span>}
                             </div>
                             {tier.monthlyFee !== "€0" && (
                               <div className="text-xs text-[#D4B896]/80 mt-1">excl. BTW</div>
@@ -349,12 +325,11 @@ export const PricingNew = () => {
                             </div>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
+                        <div className="flex flex-col gap-[clamp(0.5rem,2vw,0.75rem)]">
                           {featureOrder.map((feature) => {
                             const hasFeature = tier.features[feature as keyof typeof tier.features];
                             return (
-                              <div key={feature} className="flex items-center justify-between"
-                                   style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>
+                              <div key={feature} className="flex items-center justify-between text-[clamp(0.8rem,3vw,1rem)]">
                                 <span className="text-[#D4B896]">{feature}</span>
                                 {hasFeature ? (
                                   <Check className={`${colors.text} flex-shrink-0`}
