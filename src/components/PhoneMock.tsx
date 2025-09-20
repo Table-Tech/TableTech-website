@@ -2150,14 +2150,14 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                                 });
                               }
                             }}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150"
+                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
                           >
                             −
                           </button>
                           <span className="text-xl font-bold text-gray-900">{qty}</span>
                           <button
                             onClick={() => addToCart(id, item.category, toppings)}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150"
+                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
                           >
                             +
                           </button>
