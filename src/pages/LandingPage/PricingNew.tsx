@@ -140,10 +140,7 @@ export const PricingNew = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] overflow-hidden"
-             style={{
-               padding: 'clamp(2rem, 8vh, 4rem) clamp(1rem, 4vw, 2rem)'
-             }}>
+    <section className="relative min-h-screen bg-gradient-to-b from-[#2C1E1A] via-[#3A2B24] to-[#2C1E1A] overflow-hidden py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
       {/* Smooth transition from ContainerScroll */}
       <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-[#2C1E1A] to-transparent"></div>
@@ -157,23 +154,12 @@ export const PricingNew = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mx-auto"
-          style={{ marginBottom: 'clamp(3rem, 8vh, 5rem)' }}
+          className="text-center mx-auto mb-12 lg:mb-20"
         >
-          <h1 className="font-bold text-white"
-              style={{
-                fontSize: 'clamp(1.5rem, 4.5vw, 2.5rem)',
-                marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)',
-                lineHeight: '1.3'
-              }}>
+          <h1 className="font-bold text-white text-2xl sm:text-3xl lg:text-4xl mb-6 lg:mb-10 leading-tight">
             Kies jouw <span className="bg-gradient-to-r from-[#E86C28] to-[#FFB366] bg-clip-text text-transparent">TableTech</span> pakket
           </h1>
-          <p className="text-[#D4B896] mx-auto"
-             style={{
-               fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-               maxWidth: 'min(80vw, 500px)',
-               lineHeight: '1.7'
-             }}>
+          <p className="text-[#D4B896] mx-auto text-sm sm:text-base lg:text-lg max-w-xs sm:max-w-md lg:max-w-lg leading-relaxed">
             Transparante prijzen voor elk type restaurant. Start gratis en groei op jouw tempo.
           </p>
         </motion.div>
@@ -184,12 +170,7 @@ export const PricingNew = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl overflow-hidden"
-          style={{
-            borderRadius: 'clamp(1rem, 3vw, 1.5rem)',
-            maxWidth: '100%',
-            width: '100%'
-          }}
+          className="relative backdrop-blur-xl bg-[#3A2B24]/30 border border-[#4A372E]/50 shadow-2xl overflow-hidden rounded-2xl lg:rounded-3xl max-w-full w-full"
         >
           {/* BorderBeam animation */}
           <BorderBeam 
@@ -289,12 +270,7 @@ export const PricingNew = () => {
 
           {/* Mobile view - vertical stacked cards */}
           <div className="lg:hidden">
-            <div style={{
-              gap: 'clamp(1rem, 4vw, 1.5rem)',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: 'clamp(1rem, 4vw, 1.5rem)'
-            }}>
+            <div className="flex flex-col gap-4 lg:gap-6 p-4 lg:p-6">
               {pricingTiers.map((tier) => {
                 const colors = colorClasses[tier.color as keyof typeof colorClasses];
                 return (
@@ -314,20 +290,15 @@ export const PricingNew = () => {
                         colorTo={tier.color === 'green' ? '#D4B896' : tier.color === 'blue' ? '#FFB366' : tier.color === 'purple' ? '#F4A460' : '#FFB366'}
                         delay={pricingTiers.indexOf(tier) * 0.5}
                       />
-                      <div style={{ padding: 'clamp(1rem, 5vw, 1.5rem)' }}>
-                        <div className="text-center"
-                             style={{ marginBottom: 'clamp(1rem, 4vw, 1.5rem)' }}>
-                          <div style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', marginBottom: 'clamp(0.5rem, 2vw, 1rem)' }}>{tier.icon}</div>
-                          <h3 className="font-bold text-white"
-                              style={{ fontSize: 'clamp(1.2rem, 5vw, 1.5rem)', marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)' }}>{tier.name}</h3>
-                          <p className={colors.text}
-                             style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>{tier.tagline}</p>
-                          <div style={{ marginTop: 'clamp(1rem, 3vw, 1.5rem)' }}>
+                      <div className="p-4 lg:p-6">
+                        <div className="text-center mb-4 lg:mb-6">
+                          <div className="text-4xl lg:text-5xl mb-2 lg:mb-4">{tier.icon}</div>
+                          <h3 className="font-bold text-white text-xl lg:text-2xl mb-1">{tier.name}</h3>
+                          <p className={colors.text + " text-sm lg:text-base"}>{tier.tagline}</p>
+                          <div className="mt-4 lg:mt-6">
                             <div className="flex items-baseline justify-center gap-1">
-                              <span className="font-bold text-white"
-                                    style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)' }}>{tier.monthlyFee}</span>
-                              {tier.monthlyFee !== "€0" && <span className="text-[#D4B896]"
-                                                                         style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>/maand</span>}
+                              <span className="font-bold text-white text-2xl lg:text-3xl">{tier.monthlyFee}</span>
+                              {tier.monthlyFee !== "€0" && <span className="text-[#D4B896] text-sm lg:text-base">/maand</span>}
                             </div>
                             {tier.monthlyFee !== "€0" && (
                               <div className="text-xs text-[#D4B896]/80 mt-1">excl. BTW</div>
@@ -349,19 +320,16 @@ export const PricingNew = () => {
                             </div>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
+                        <div className="flex flex-col gap-2 lg:gap-3">
                           {featureOrder.map((feature) => {
                             const hasFeature = tier.features[feature as keyof typeof tier.features];
                             return (
-                              <div key={feature} className="flex items-center justify-between"
-                                   style={{ fontSize: 'clamp(0.8rem, 3vw, 1rem)' }}>
+                              <div key={feature} className="flex items-center justify-between text-sm lg:text-base">
                                 <span className="text-[#D4B896]">{feature}</span>
                                 {hasFeature ? (
-                                  <Check className={`${colors.text} flex-shrink-0`}
-                                         style={{ width: 'clamp(16px, 4vw, 20px)', height: 'clamp(16px, 4vw, 20px)' }} />
+                                  <Check className={`${colors.text} flex-shrink-0 w-4 h-4 lg:w-5 lg:h-5`} />
                                 ) : (
-                                  <X className="text-[#4A372E] flex-shrink-0"
-                                     style={{ width: 'clamp(16px, 4vw, 20px)', height: 'clamp(16px, 4vw, 20px)' }} />
+                                  <X className="text-[#4A372E] flex-shrink-0 w-4 h-4 lg:w-5 lg:h-5" />
                                 )}
                               </div>
                             );
