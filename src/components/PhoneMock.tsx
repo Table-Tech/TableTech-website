@@ -7,6 +7,19 @@ interface PhoneMockupProps {
   theme?: "tabletech" | "spicepalace" | "sweetdelights" | "coffeecorner";
 }
 
+// Image preloader utility
+const preloadImage = (src: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = reject;
+    img.src = src;
+  });
+};
+
+// Cache for preloaded images
+const imageCache = new Set<string>();
+
 type CategoryId = "all" | "popular" | "curry" | "ramen" | "pizza" | "drinks" | "handi" | "kebab" | "rice" | "bbq" | "karahi" | "tandoori" | "cakes" | "coffee-specialties" | "cold-drinks" | "hot-drinks" | "pastries";
 
 interface MenuItem {
@@ -1119,24 +1132,55 @@ const getThemeConfig = (theme: string): ThemeConfig => {
   }
 };
 
-// Image loading component for better UX
-const ImageWithLoading: React.FC<{ src: string; alt: string; className: string }> = ({ src, alt, className }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+// Optimized Image loading component with preloading
+const ImageWithLoading: React.FC<{
+  src: string;
+  alt: string;
+  className: string;
+  onHover?: () => void;
+  priority?: boolean;
+}> = ({ src, alt, className, onHover, priority = false }) => {
+  const [isLoaded, setIsLoaded] = useState(imageCache.has(src));
   const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // If image is in cache, mark as loaded immediately
+    if (imageCache.has(src)) {
+      setIsLoaded(true);
+      return;
+    }
+
+    // Priority images get loaded immediately
+    if (priority) {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        imageCache.add(src);
+        setIsLoaded(true);
+      };
+      img.onerror = () => setHasError(true);
+    }
+  }, [src, priority]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} onMouseEnter={onHover}>
       {!isLoaded && !hasError && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
           <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
         </div>
       )}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
-        loading="lazy"
-        className={`${className} transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setIsLoaded(true)}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        className={`${className} transition-opacity duration-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => {
+          imageCache.add(src);
+          setIsLoaded(true);
+        }}
         onError={() => setHasError(true)}
       />
       {hasError && (
@@ -1158,6 +1202,19 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
   const [isEnglish, setIsEnglish] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+
+  // Preload images when hovering over items
+  const handleImageHover = useCallback((imageSrc: string) => {
+    if (!imageCache.has(imageSrc)) {
+      preloadImage(imageSrc)
+        .then(() => {
+          imageCache.add(imageSrc);
+          setLoadedImages(prev => new Set(prev).add(imageSrc));
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   // Custom smooth touch scroll implementation - ALLEEN VOOR MOBIELE TELEFOON DEMO
   useEffect(() => {
@@ -1299,6 +1356,50 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
     });
     return refs;
   }, [categories]);
+
+  // Preload images when component mounts or theme changes
+  useEffect(() => {
+    const currentMenu = getCurrentMenu();
+    const imagesToPreload: string[] = [];
+
+    // Preload first 6 items from popular and all categories
+    ['popular', 'all'].forEach(catId => {
+      const items = currentMenu[catId as CategoryId] || [];
+      items.slice(0, 6).forEach(item => {
+        if (item.image && !imageCache.has(item.image)) {
+          imagesToPreload.push(item.image);
+        }
+      });
+    });
+
+    // Batch preload images
+    imagesToPreload.forEach(src => {
+      preloadImage(src)
+        .then(() => {
+          imageCache.add(src);
+          setLoadedImages(prev => new Set(prev).add(src));
+        })
+        .catch(err => console.warn('Failed to preload:', src));
+    });
+  }, [theme]);
+
+  // Preload images when category changes
+  useEffect(() => {
+    const currentMenu = getCurrentMenu();
+    const items = currentMenu[activeCategory] || [];
+
+    // Preload all images in active category
+    items.forEach((item, index) => {
+      if (item.image && !imageCache.has(item.image) && index < 10) {
+        preloadImage(item.image)
+          .then(() => {
+            imageCache.add(item.image);
+            setLoadedImages(prev => new Set(prev).add(item.image));
+          })
+          .catch(() => {});
+      }
+    });
+  }, [activeCategory, theme]);
 
   const scrollToSection = useCallback((categoryId: CategoryId) => {
     setActiveCategory(categoryId);
@@ -1495,7 +1596,13 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             {items.map((item) => (
               <div
                 key={`${item.id}-${item.category}-${theme}`}
-                onClick={() => setSelectedItem(item)}
+                onClick={() => {
+                  if (!imageCache.has(item.image)) {
+                    preloadImage(item.image).then(() => imageCache.add(item.image));
+                  }
+                  setSelectedItem(item);
+                }}
+                onMouseEnter={() => handleImageHover(item.image)}
                 className={`relative flex items-center rounded-2xl overflow-hidden shadow-md transform transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-105 ${
                   isSweet 
                     ? "bg-white" 
@@ -1583,13 +1690,21 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             {items.map((item) => (
               <div
                 key={`${item.id}-${item.category}-${theme}`}
-                onClick={() => setSelectedItem(item)}
+                onClick={() => {
+                  // Preload detail image before opening
+                  if (!imageCache.has(item.image)) {
+                    preloadImage(item.image).then(() => imageCache.add(item.image));
+                  }
+                  setSelectedItem(item);
+                }}
+                onMouseEnter={() => handleImageHover(item.image)}
                 className="relative flex flex-col items-center bg-white ring-1 ring-gray-200 rounded-2xl overflow-hidden p-2 pb-2 transform transition hover:-translate-y-1 hover:shadow-lg cursor-pointer"
               >
                 <ImageWithLoading
                   src={item.image}
                   alt={item.name}
                   className="w-full aspect-square object-cover rounded-lg mb-1"
+                  priority={items.indexOf(item) < 4}
                 />
                 <h3 className="text-sm font-semibold text-center leading-tight mb-1 text-gray-900">
                   {isEnglish && item.nameEn ? item.nameEn : item.name}
@@ -1654,7 +1769,13 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
           {items.map((item) => (
             <div
               key={`${item.id}-${item.category}-${theme}`}
-              onClick={() => setSelectedItem(item)}
+              onClick={() => {
+                if (!imageCache.has(item.image)) {
+                  preloadImage(item.image).then(() => imageCache.add(item.image));
+                }
+                setSelectedItem(item);
+              }}
+              onMouseEnter={() => handleImageHover(item.image)}
               className={`relative flex flex-col ${themeConfig.cardBg} rounded-2xl overflow-hidden shadow-lg transform transition-all duration-300 cursor-pointer group ${
                 theme === "spicepalace" 
                   ? "scroll-snap-align-start hover:shadow-xl" 
@@ -2150,16 +2271,36 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                                 });
                               }
                             }}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
+                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 font-bold text-lg shadow-sm active:scale-95 ${
+                              theme === "tabletech"
+                                ? "bg-[#7b4f35] hover:bg-[#5e3b29] active:bg-[#4a3020] text-white"
+                                : theme === "spicepalace"
+                                ? "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white"
+                                : theme === "sweetdelights"
+                                ? "bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white"
+                                : theme === "coffeecorner"
+                                ? "bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white"
+                                : "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 text-white"
+                            }`}
                           >
-                            −
+                            <span className="text-xl leading-none">−</span>
                           </button>
                           <span className="text-xl font-bold text-gray-900">{qty}</span>
                           <button
                             onClick={() => addToCart(id, item.category, toppings)}
-                            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 active:bg-gray-300 transition-colors duration-150 text-gray-900 font-bold text-lg"
+                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 font-bold text-lg shadow-sm active:scale-95 ${
+                              theme === "tabletech"
+                                ? "bg-[#7b4f35] hover:bg-[#5e3b29] active:bg-[#4a3020] text-white"
+                                : theme === "spicepalace"
+                                ? "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white"
+                                : theme === "sweetdelights"
+                                ? "bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white"
+                                : theme === "coffeecorner"
+                                ? "bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white"
+                                : "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 text-white"
+                            }`}
                           >
-                            +
+                            <span className="text-xl leading-none">+</span>
                           </button>
                         </div>
                       </div>
@@ -2202,10 +2343,10 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             data-phone-container="true"
           >
             <div className="relative">
-              <img
+              <ImageWithLoading
                 src={selectedItem.image}
                 alt={selectedItem.name}
-                loading="lazy"
+                priority={true}
                 className="w-full h-44 object-cover"
               />
               <button
