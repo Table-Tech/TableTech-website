@@ -2104,9 +2104,25 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                               €{item.price.toFixed(2)}
                             </p>
                             {item.toppings && item.toppings.length > 0 && (
-                              <div className="text-xs text-gray-400 mt-1 bg-orange-50 px-2 py-1 rounded border border-orange-200">
-                                <span className="font-medium text-gray-600">Toppings: </span>
-                                <span className="text-orange-600 font-medium">
+                              <div className={`text-xs mt-1 px-2 py-1 rounded border ${
+                                theme === "coffeecorner"
+                                  ? "bg-amber-50 border-amber-200"
+                                  : theme === "sweetdelights"
+                                  ? "bg-pink-50 border-pink-200"
+                                  : theme === "spicepalace"
+                                  ? "bg-red-50 border-red-200"
+                                  : "bg-orange-50 border-orange-200"
+                              }`}>
+                                <span className="font-medium text-gray-700">Toppings: </span>
+                                <span className={`font-medium ${
+                                  theme === "coffeecorner"
+                                    ? "text-amber-700"
+                                    : theme === "sweetdelights"
+                                    ? "text-pink-700"
+                                    : theme === "spicepalace"
+                                    ? "text-red-700"
+                                    : "text-orange-600"
+                                }`}>
                                   {item.toppings.map(topping => 
                                     topping.replace(/^extra\s+/i, '')
                                   ).join(', ')}
