@@ -1,8 +1,7 @@
 {
   "functions": {
     "api/**/*.js": {
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     }
   },
   "installCommand": "npm ci --legacy-peer-deps || npm install --legacy-peer-deps --force",
