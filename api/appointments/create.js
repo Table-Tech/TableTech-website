@@ -29,30 +29,36 @@ async function sendEmail(to, subject, html) {
   console.log('   API Key found:', process.env.RESEND_API_KEY.substring(0, 10) + '...');
 
   try {
-    // Fix: Ensure correct email format with proper brackets
+    // Fix email format - handle various input formats
     let fromEmail = 'TableTech <info@tabletech.nl>'; // Default
 
     if (process.env.MAIL_FROM) {
-      // Clean up and ensure proper format
-      let cleanFrom = process.env.MAIL_FROM.replace(/["']/g, '').trim();
+      // Clean up the MAIL_FROM variable
+      let cleanFrom = process.env.MAIL_FROM
+        .replace(/["']/g, '') // Remove quotes
+        .replace(/\s+/g, ' ') // Normalize spaces
+        .trim();
 
-      // Check if it already has brackets
-      if (!cleanFrom.includes('<') && !cleanFrom.includes('>')) {
-        // Format: "Name email@domain" -> "Name <email@domain>"
-        const parts = cleanFrom.split(' ');
-        if (parts.length >= 2) {
-          const email = parts[parts.length - 1];
-          const name = parts.slice(0, -1).join(' ');
+      // Check different formats
+      if (cleanFrom.includes('<') && cleanFrom.includes('>')) {
+        // Already properly formatted: "Name <email>"
+        fromEmail = cleanFrom;
+      } else if (cleanFrom.includes('@')) {
+        // Contains email somewhere
+        const emailMatch = cleanFrom.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/);
+        if (emailMatch) {
+          const email = emailMatch[1];
+          // Get the name part (everything before the email)
+          const namePart = cleanFrom.replace(email, '').trim();
+          const name = namePart || 'TableTech';
           fromEmail = `${name} <${email}>`;
-        } else {
-          // Just an email address
-          fromEmail = `TableTech <${cleanFrom}>`;
         }
       } else {
-        fromEmail = cleanFrom;
+        // Fallback to default
+        console.log('   ⚠️ Invalid MAIL_FROM format, using default');
       }
     } else if (process.env.FROM_EMAIL) {
-      // If only email provided, add name
+      // If only FROM_EMAIL is provided
       const cleanEmail = process.env.FROM_EMAIL.replace(/["']/g, '').trim();
       fromEmail = `TableTech <${cleanEmail}>`;
     }
@@ -432,8 +438,12 @@ module.exports = async function handler(req, res) {
         timeStyle: 'medium',
       });
 
+      // Use COMPANY_EMAIL or MAIL_TO_INTERNAL or default
+      const companyEmailAddress = process.env.COMPANY_EMAIL || process.env.MAIL_TO_INTERNAL || 'info@tabletech.nl';
+      console.log('  📨 Sending company notification to:', companyEmailAddress);
+
       const companyEmail = await sendEmail(
-        process.env.MAIL_TO_INTERNAL || 'info@tabletech.nl',
+        companyEmailAddress,
         texts.companySubject,
         `
           <!DOCTYPE html>
