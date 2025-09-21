@@ -113,6 +113,9 @@ module.exports = async function handler(req, res) {
   }
 
   console.log('✉️ POST /api/appointments/create');
+  console.log('  Environment:', process.env.VERCEL_ENV || 'local');
+  console.log('  Has Resend Key:', !!process.env.RESEND_API_KEY);
+  console.log('  Has Database:', !!process.env.DATABASE_URL_new || !!process.env.DATABASE_URL);
   console.log('  Body:', req.body);
 
   // Check if environment variables exist
@@ -145,17 +148,19 @@ module.exports = async function handler(req, res) {
   let newAppointment = null;
   let dbAvailable = false;
 
-  // Try database connection if config exists
-  if (hasDbConfig) {
+  try {
+
+    // Try database connection if config exists
+    if (hasDbConfig) {
     try {
       client = await getDbClient();
       dbAvailable = true;
 
-    // Start transaction
-    await client.query('BEGIN');
+      // Start transaction
+      await client.query('BEGIN');
 
-    // Check if slot is available
-    const checkResult = await client.query(
+      // Check if slot is available
+      const checkResult = await client.query(
       `SELECT id FROM appointments
        WHERE appointment_date = $1
        AND appointment_time = $2
@@ -164,16 +169,16 @@ module.exports = async function handler(req, res) {
       [appointment_date, appointment_time + ':00']
     );
 
-    if (checkResult.rows.length > 0) {
-      await client.query('ROLLBACK');
-      return res.status(409).json({
+      if (checkResult.rows.length > 0) {
+        await client.query('ROLLBACK');
+        return res.status(409).json({
         error: 'Dit tijdslot is niet meer beschikbaar',
         field: 'appointment_time'
       });
     }
 
-    // Create appointment
-    const insertResult = await client.query(
+      // Create appointment
+      const insertResult = await client.query(
       `INSERT INTO appointments
        (customer_name, customer_email, customer_phone,
         appointment_date, appointment_time, service_type,
@@ -192,7 +197,7 @@ module.exports = async function handler(req, res) {
       ]
     );
 
-    await client.query('COMMIT');
+      await client.query('COMMIT');
 
       newAppointment = insertResult.rows[0];
       console.log('  ✅ Appointment created in database:', newAppointment.id);
@@ -225,6 +230,7 @@ module.exports = async function handler(req, res) {
   }
 
     // Send emails
+    let emailsSent = false;
     try {
       // Format date for display based on language
       const formatDate = (dateString) => {
@@ -428,6 +434,7 @@ module.exports = async function handler(req, res) {
       console.log('  📧 Customer email result:', JSON.stringify(customerEmail));
       if (customerEmail.error) {
         console.error('  ❌ Customer email failed:', customerEmail.error);
+        // Don't fail the whole request, just note the email error
       } else {
         console.log('  ✅ Customer email sent:', customerEmail.id);
       }
@@ -589,15 +596,21 @@ module.exports = async function handler(req, res) {
       console.log('  📧 Company email result:', JSON.stringify(companyEmail));
       if (companyEmail.error) {
         console.error('  ❌ Company email failed:', companyEmail.error);
+        // Don't fail the whole request, just note the email error
       } else {
         console.log('  ✅ Company email sent:', companyEmail.id);
       }
+
+      // Track if any email failed
+      const emailFailed = customerEmail.error || companyEmail.error;
+      emailsSent = !emailFailed;
     } catch (emailError) {
       console.error('  ⚠️ Email error (appointment still created):', emailError);
       console.error('  Error details:', JSON.stringify(emailError));
+      emailsSent = false;
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       appointment: {
         id: newAppointment.id,
@@ -606,10 +619,11 @@ module.exports = async function handler(req, res) {
         customer_name: newAppointment.customer_name,
         status: newAppointment.status
       },
-      message: dbAvailable
+      message: dbAvailable && emailsSent
         ? 'Afspraak succesvol aangemaakt. U ontvangt een bevestiging per email.'
         : 'Afspraak geregistreerd. We nemen contact met u op voor bevestiging.',
-      demo: !dbAvailable
+      demo: !dbAvailable,
+      emailSent: emailsSent
     });
   } catch (error) {
     console.error('  ❌ Error:', error);

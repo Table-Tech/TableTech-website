@@ -435,9 +435,11 @@ const ContactSection = () => {
       
       if (response.ok) {
         console.log('✅ Appointment submitted successfully');
-        setEmailError(false); // Geen email error - alles is goed gegaan
+        // Check if email was sent successfully
+        const emailSentSuccessfully = response.emailSent !== false;
+        setEmailError(!emailSentSuccessfully);
         setBookingStep(3);
-        
+
         // Refresh available slots to show the newly booked slot
         if (selectedDate) {
           const dateString = formatDateString(selectedDate);
