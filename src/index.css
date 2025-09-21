@@ -113,8 +113,22 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  /* Legacy IE and Edge support */
+  -ms-overflow-style: none;
+}
+
+/* Firefox support with feature detection */
+@supports (scrollbar-width: none) {
+  .scrollbar-hide {
+    scrollbar-width: none;
+  }
+}
+
+/* WebKit/Blink support (Chrome, Safari, Edge Chromium) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* =======================
@@ -349,15 +363,20 @@ html, body {
   
   /* Verbeterde scroll prestaties */
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 
-  /* Scrollbar verbergen voor Firefox/IE */
-  scrollbar-width: none;
+  /* Scrollbar verbergen voor IE/Edge */
   -ms-overflow-style: none;
   
   /* Viewport scaling optimalisatie voor laptops */
   @media (min-width: 1024px) and (max-width: 1920px) {
     font-size: 14px;
+  }
+}
+
+/* Firefox scrollbar hiding with feature detection */
+@supports (scrollbar-width: none) {
+  body {
+    scrollbar-width: none;
   }
 }
 
@@ -410,6 +429,7 @@ body.modal-open {
 
 /* Demo overlay backdrop blur enhancement */
 .demo-backdrop {
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   backdrop-filter: blur(12px) saturate(180%);
   background: rgba(0, 0, 0, 0.4);
 }
@@ -417,6 +437,7 @@ body.modal-open {
 /* Glassmorphism effect voor panel backgrounds */
 .glass-panel {
   background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
@@ -427,6 +448,7 @@ body.modal-open {
 /* Hover effects voor interactive elementen */
 .glass-button {
   background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -447,9 +469,16 @@ body.modal-open {
    Scrollbar helper class
 ========================== */
 .no-scrollbar {
-  scrollbar-width: none;         /* Firefox */
   -ms-overflow-style: none;      /* IE/Edge */
 }
+
+/* Firefox support with feature detection */
+@supports (scrollbar-width: none) {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;                 /* WebKit */
 }
@@ -573,9 +602,16 @@ body.modal-open {
 
 /* Scrollbar volledig verbergen */
 .scrollbar-none {
-  scrollbar-width: none;            /* Firefox */
   -ms-overflow-style: none;         /* IE/Edge */
 }
+
+/* Firefox support with feature detection */
+@supports (scrollbar-width: none) {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+}
+
 .scrollbar-none::-webkit-scrollbar {
   display: none;                    /* Chrome, Safari, Opera */
 }
@@ -673,4 +709,72 @@ body.modal-open {
 .demo-focus:focus-visible {
   outline: 2px solid rgba(59, 130, 246, 0.8);
   outline-offset: 2px;
+}
+
+/* =======================
+   Benefits component styles
+========================== */
+.phone-overlay-style {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6));
+  transform: scale(1.1) translateY(-45%);
+  transition: opacity 1s cubic-bezier(0.4, 0.0, 0.2, 1), transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 10;
+}
+
+.phone-overlay-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.phone-overlay-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.text-shadow-primary {
+  text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.text-shadow-secondary {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.text-shadow-tertiary {
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.text-shadow-light {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.text-shadow-subtle {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.text-shadow-description {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+/* Benefits component specific styles */
+.benefits-container {
+  background-color: transparent;
+}
+
+.video-element {
+  max-width: 100%;
+  height: auto;
+  background: transparent;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6));
+  transform: scale(1);
+  transition: opacity 1s cubic-bezier(0.4, 0.0, 0.2, 1), transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.video-element-visible {
+  display: block;
+}
+
+.video-element-hidden {
+  display: none;
 }

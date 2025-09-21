@@ -22,7 +22,7 @@ export const BenefitsOne: React.FC = () => {
   const [videoHasStarted, setVideoHasStarted] = useState(false);
   const [videoHasCompleted, setVideoHasCompleted] = useState(false);
   const [showPhoneImage, setShowPhoneImage] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -639,11 +639,10 @@ export const BenefitsOne: React.FC = () => {
   }, [videoHasStarted, videoHasCompleted]);
 
   return (
-    <section
-      ref={sectionRef}
+    <div
+      ref={sectionRef as React.RefObject<HTMLDivElement>}
       id="benefits-1"
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-4 xs:py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20"
-      style={{ backgroundColor: 'transparent' }}
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-4 xs:py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20 benefits-container"
     >
       {/* Main content - Mobile first approach with smaller desktop sizing */}
       <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-12 max-w-[1920px]">
@@ -657,22 +656,14 @@ export const BenefitsOne: React.FC = () => {
                 ref={videoRef}
                 autoPlay={false}
                 muted
-                playsInline
+                playsInline={true}
                 controls={false}
-                webkit-playsinline="true"
                 preload="metadata"
                 poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className="w-full h-auto object-contain rounded-lg shadow-2xl"
-                style={{ 
-                  display: videoHasCompleted ? 'none' : 'block',
-                  maxWidth: '100%',
-                  height: 'auto',
-                  background: 'transparent',
-                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))',
-                  transform: 'scale(1)',
-                  transition: 'opacity 1s cubic-bezier(0.4, 0.0, 0.2, 1), transform 1s cubic-bezier(0.4, 0.0, 0.2, 1)'
-                }}
+                className={`w-full h-auto object-contain rounded-lg shadow-2xl video-element ${
+                  videoHasCompleted ? 'video-element-hidden' : 'video-element-visible'
+                }`}
                 onCanPlay={(e) => {
                   // Alleen afspelen als video al gestart is via scroll trigger
                   const video = e.target as HTMLVideoElement;
@@ -763,17 +754,9 @@ export const BenefitsOne: React.FC = () => {
               <img
                 src="/images/backgrounds/telefoon-3.png"
                 alt="TableTech App Mockup"
-                className="phone-overlay absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl"
-                style={{ 
-                  maxWidth: '100%',
-                  height: 'auto',
-                  filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6))',
-                  opacity: (showPhoneImage || videoHasCompleted) ? '1' : '0',
-                  visibility: (showPhoneImage || videoHasCompleted) ? 'visible' : 'hidden',
-                  transform: 'scale(1.1) translateY(-45%)',
-                  transition: 'opacity 1s cubic-bezier(0.4, 0.0, 0.2, 1), transform 1s cubic-bezier(0.4, 0.0, 0.2, 1)',
-                  zIndex: '10'
-                }}
+                className={`phone-overlay absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl phone-overlay-style ${
+                  (showPhoneImage || videoHasCompleted) ? 'phone-overlay-visible' : 'phone-overlay-hidden'
+                }`}
               />
             </div>
           </div>
@@ -787,16 +770,10 @@ export const BenefitsOne: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="lg:order-1"
             >
-              <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-xl 2xl:text-2xl font-bold text-white mb-1 xs:mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3 leading-tight xs:leading-tight sm:leading-tight lg:leading-[1.1]"
-                  style={{
-                    textShadow: '0 4px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4)'
-                  }}>
+              <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-xl 2xl:text-2xl font-bold text-white mb-1 xs:mb-2 sm:mb-3 md:mb-4 lg:mb-2 xl:mb-3 leading-tight sm:leading-tight lg:leading-[1.1] text-shadow-primary">
                 {t('benefits1.title')}
               </h2>
-              <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-base lg:text-sm xl:text-base 2xl:text-lg mb-2 xs:mb-3 sm:mb-4 md:mb-5 lg:mb-3 xl:mb-4 leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed"
-                 style={{
-                   textShadow: '0 2px 6px rgba(0,0,0,0.5)'
-                 }}>
+              <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-base lg:text-sm xl:text-base 2xl:text-lg mb-2 xs:mb-3 sm:mb-4 md:mb-5 lg:mb-3 xl:mb-4 leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed text-shadow-secondary">
                 {t('benefits1.subtitle')}
               </p>
             </motion.div>
@@ -821,16 +798,10 @@ export const BenefitsOne: React.FC = () => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
                   <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-3 xl:p-4 2xl:p-5 z-10">
-                    <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-base xl:text-lg 2xl:text-xl font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3"
-                        style={{
-                          textShadow: '0 2px 6px rgba(0,0,0,0.5)'
-                        }}>
+                    <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-base xl:text-lg 2xl:text-xl font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3 text-shadow-secondary">
                       {getCurrentMessage().title}
                     </h3>
-                    <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed"
-                       style={{
-                         textShadow: '0 1px 4px rgba(0,0,0,0.4)'
-                       }}>
+                    <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed text-shadow-description">
                       {getCurrentMessage().description}
                     </p>
                   </div>
@@ -856,10 +827,7 @@ export const BenefitsOne: React.FC = () => {
                 
                 <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-4 xl:p-5 2xl:p-6 z-10">
                   <div className="text-center mb-3 xs:mb-4 sm:mb-4 md:mb-5 lg:mb-4 xl:mb-5">
-                    <h3 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-base xl:text-lg 2xl:text-xl font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-3 xl:mb-4"
-                        style={{
-                          textShadow: '0 2px 8px rgba(0,0,0,0.6)'
-                        }}>
+                    <h3 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-base xl:text-lg 2xl:text-xl font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-3 xl:mb-4 text-shadow-tertiary">
                       {t('benefits1.whyMobileOrdering')}
                     </h3>
                     <div className="w-8 xs:w-10 sm:w-12 md:w-16 lg:w-14 xl:w-16 2xl:w-20 h-0.5 xs:h-0.5 sm:h-0.5 md:h-1 lg:h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
@@ -878,16 +846,10 @@ export const BenefitsOne: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-blue-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-blue-100 transition-colors mb-0 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 text-shadow-light">
                           {t('benefits1.features.noWaiting.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-snug"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug sm:leading-snug lg:leading-snug text-shadow-subtle">
                           {t('benefits1.features.noWaiting.description')}
                         </p>
                       </div>
@@ -905,16 +867,10 @@ export const BenefitsOne: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-green-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-green-100 transition-colors mb-0 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 text-shadow-light">
                           {t('benefits1.features.liveTracking.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-snug"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug sm:leading-snug lg:leading-snug text-shadow-subtle">
                           {t('benefits1.features.liveTracking.description')}
                         </p>
                       </div>
@@ -932,16 +888,10 @@ export const BenefitsOne: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-purple-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-purple-100 transition-colors mb-0 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 text-shadow-light">
                           {t('benefits1.features.contactlessPayment.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-snug"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug sm:leading-snug lg:leading-snug text-shadow-subtle">
                           {t('benefits1.features.contactlessPayment.description')}
                         </p>
                       </div>
@@ -959,16 +909,10 @@ export const BenefitsOne: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-orange-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-orange-100 transition-colors mb-0 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 text-shadow-light">
                           {t('benefits1.features.preciseOrdering.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-snug"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/80 group-hover:text-white/90 transition-colors leading-snug sm:leading-snug lg:leading-snug text-shadow-subtle">
                           {t('benefits1.features.preciseOrdering.description')}
                         </p>
                       </div>
@@ -981,7 +925,7 @@ export const BenefitsOne: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

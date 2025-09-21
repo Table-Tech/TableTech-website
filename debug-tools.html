@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTech API Debug Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .troubleshooting-list {
+            margin-left: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 TableTech API Debug Tools</h1>
+            <p>Test en debug tools voor de Resend API integratie</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h3>📋 Environment Variables Check</h3>
+                <p>Controleer welke environment variables beschikbaar zijn voor de Resend API.</p>
+                <button class="button" onclick="checkEnvironment()">Check Environment</button>
+                <div id="envResult"></div>
+            </div>
+            
+            <div class="section">
+                <h3>🧪 Resend API Test</h3>
+                <p>Test de Resend API door een test email te versturen.</p>
+                <input type="email" class="input" id="testEmail" placeholder="Test email adres (optioneel)" value="">
+                <br>
+                <button class="button" onclick="testResendAPI()">Test Resend API</button>
+                <div id="resendResult"></div>
+            </div>
+            
+            <div class="section">
+                <h3>📧 Send Test Email</h3>
+                <p>Verstuur een test email via de bestaande appointment API.</p>
+                <input type="email" class="input" id="appointmentEmail" placeholder="Email adres" required>
+                <input type="text" class="input" id="appointmentName" placeholder="Naam" value="Test Gebruiker">
+                <input type="tel" class="input" id="appointmentPhone" placeholder="Telefoonnummer" value="0612345678">
+                <br>
+                <button class="button" onclick="testAppointmentEmail()">Test Appointment Email</button>
+                <div id="appointmentResult"></div>
+            </div>
+            
+            <div class="section">
+                <h3>💡 Troubleshooting Tips</h3>
+                <ul class="troubleshooting-list">
+                    <li>Zorg dat je <code>RESEND_API_KEY</code> correct hebt ingesteld in je Vercel environment variables</li>
+                    <li>De API key moet beginnen met <code>re_</code></li>
+                    <li>Controleer of je domain geverifieerd is in je Resend dashboard</li>
+                    <li>Check of je Resend account actief is en niet over de limiet zit</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-debug-auth': 'tabletech-debug-2024'
+                    },
+                    ...options
+                });
+                
+                const data = await response.json();
+                return { success: response.ok, status: response.status, data };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+        
+        function showResult(elementId, result, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${JSON.stringify(result, null, 2)}</div>`;
+        }
+        
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '<div class="loading"></div>Loading...';
+        }
+        
+        async function checkEnvironment() {
+            showLoading('envResult');
+            
+            const result = await makeRequest('/api/debug/env', {
+                method: 'GET'
+            });
+            
+            if (result.success) {
+                showResult('envResult', result.data, 'success');
+            } else {
+                showResult('envResult', result, 'error');
+            }
+        }
+        
+        async function testResendAPI() {
+            showLoading('resendResult');
+            
+            const testEmail = document.getElementById('testEmail').value || 'test@tabletech.nl';
+            
+            const result = await makeRequest('/api/debug/test-resend', {
+                method: 'POST',
+                body: JSON.stringify({ testEmail })
+            });
+            
+            if (result.success) {
+                showResult('resendResult', result.data, 'success');
+            } else {
+                showResult('resendResult', result, 'error');
+            }
+        }
+        
+        async function testAppointmentEmail() {
+            showLoading('appointmentResult');
+            
+            const email = document.getElementById('appointmentEmail').value;
+            const name = document.getElementById('appointmentName').value;
+            const phone = document.getElementById('appointmentPhone').value;
+            
+            if (!email) {
+                showResult('appointmentResult', { error: 'Email is verplicht' }, 'error');
+                return;
+            }
+            
+            const appointmentData = {
+                name,
+                email,
+                phone,
+                date: new Date().toISOString().split('T')[0],
+                time: '14:00',
+                guests: 2,
+                notes: 'Test appointment via debug tool'
+            };
+            
+            const result = await makeRequest('/api/appointments/create', {
+                method: 'POST',
+                body: JSON.stringify(appointmentData)
+            });
+            
+            if (result.success) {
+                showResult('appointmentResult', result.data, 'success');
+            } else {
+                showResult('appointmentResult', result, 'error');
+            }
+        }
+        
+        // Auto-check environment on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkEnvironment, 1000);
+        });
+    </script>
+</body>
+</html>
