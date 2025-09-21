@@ -112,10 +112,8 @@ module.exports = async function handler(req, res) {
   // Check if environment variables exist
   const hasDbConfig = process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL;
   if (!hasDbConfig) {
-    console.error('❌ No database configuration found');
-    return res.status(500).json({
-      error: 'Database configuration missing'
-    });
+    console.log('⚠️ No database configuration found - demo mode active');
+    // Continue anyway - we'll send emails even without database
   }
 
   const {
@@ -138,8 +136,14 @@ module.exports = async function handler(req, res) {
   }
 
   let client;
-  try {
-    client = await getDbClient();
+  let newAppointment = null;
+  let dbAvailable = false;
+
+  // Try database connection if config exists
+  if (hasDbConfig) {
+    try {
+      client = await getDbClient();
+      dbAvailable = true;
 
     // Start transaction
     await client.query('BEGIN');
@@ -184,9 +188,35 @@ module.exports = async function handler(req, res) {
 
     await client.query('COMMIT');
 
-    const newAppointment = insertResult.rows[0];
+      newAppointment = insertResult.rows[0];
+      console.log('  ✅ Appointment created in database:', newAppointment.id);
+    } catch (dbError) {
+      console.error('  ⚠️ Database error:', dbError.message);
+      console.log('  📧 Will continue with email sending only');
+      // Don't throw - continue to send emails
+      if (client) {
+        await client.query('ROLLBACK').catch(() => {});
+      }
+      dbAvailable = false;
+    }
+  }
 
-    console.log('  ✅ Appointment created:', newAppointment.id);
+  // If no database or database failed, create a mock appointment object
+  if (!newAppointment) {
+    newAppointment = {
+      id: 'DEMO-' + Date.now(),
+      customer_name,
+      customer_email,
+      customer_phone,
+      appointment_date,
+      appointment_time: appointment_time + ':00',
+      service_type: service_type || 'Algemene consultatie',
+      notes: notes || '',
+      status: 'pending-confirmation',
+      created_at: new Date()
+    };
+    console.log('  📝 Demo appointment created:', newAppointment.id);
+  }
 
     // Send emails
     try {
@@ -566,12 +596,12 @@ module.exports = async function handler(req, res) {
         customer_name: newAppointment.customer_name,
         status: newAppointment.status
       },
-      message: 'Afspraak succesvol aangemaakt. U ontvangt een bevestiging per email.'
+      message: dbAvailable
+        ? 'Afspraak succesvol aangemaakt. U ontvangt een bevestiging per email.'
+        : 'Afspraak geregistreerd. We nemen contact met u op voor bevestiging.',
+      demo: !dbAvailable
     });
   } catch (error) {
-    if (client) {
-      await client.query('ROLLBACK');
-    }
     console.error('  ❌ Error:', error);
     res.status(500).json({ 
       error: 'Failed to create appointment',

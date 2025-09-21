@@ -38,10 +38,11 @@ function generateFallbackSlots() {
 
         // Only add future slots
         if (!isPast) {
+          // All slots are available in demo mode (no database)
           slots.push({
             date: dateStr,
             time: time,
-            available: Math.random() > 0.3,
+            available: true, // Changed from random to always available
             dayName: dayNames[dayOfWeek]
           });
         }

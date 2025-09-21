@@ -42,10 +42,14 @@ module.exports = async function handler(req, res) {
   // Check if environment variables exist
   const hasDbConfig = process.env.DATABASE_URL_new || process.env.DATABASE_URL || process.env.DIRECT_DATABASE_URL;
   if (!hasDbConfig) {
-    console.error('❌ No database configuration found');
-    return res.status(500).json({
-      error: 'Database configuration missing',
-      available: false
+    console.log('⚠️ No database configuration found - using fallback (all slots available)');
+    // Return available in demo mode when no database
+    return res.status(200).json({
+      available: true,
+      date: date,
+      time: time,
+      demo: true,
+      message: 'Demo mode - all slots available'
     });
   }
 
@@ -73,11 +77,15 @@ module.exports = async function handler(req, res) {
       reason: isAvailable ? null : 'Dit tijdslot is al geboekt'
     });
   } catch (error) {
-    console.error('  ❌ Error:', error);
-    res.status(500).json({ 
-      error: 'Failed to check slot', 
-      available: false,
-      message: error.message
+    console.error('  ⚠️ Database error:', error.message);
+    // In case of database error, return slot as available (demo mode)
+    console.log('  📦 Using fallback - slot marked as available');
+    res.status(200).json({
+      available: true,
+      date: date,
+      time: time,
+      demo: true,
+      message: 'Database unavailable - demo mode active'
     });
   } finally {
     if (client) {

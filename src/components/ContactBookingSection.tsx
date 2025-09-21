@@ -98,7 +98,8 @@ async function submitAppointment(appointmentData: any) {
         appointment_date: date,
         appointment_time: time,
         service_type: appointmentData.restaurant || 'Algemene consultatie',
-        notes: appointmentData.message || ''
+        notes: appointmentData.message || '',
+        language: appointmentData.language || 'nl'
       }),
     });
 
@@ -108,10 +109,15 @@ async function submitAppointment(appointmentData: any) {
       throw new Error(data.error || 'Failed to create appointment');
     }
 
+    // Return success even if email fails (appointment is still created)
     return { ok: true, ...data };
   } catch (error) {
     console.error('Error in submitAppointment:', error);
-    throw error;
+    // Return error but don't throw - let the component handle it
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'Er is een fout opgetreden'
+    };
   }
 }
 
