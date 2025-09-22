@@ -650,8 +650,9 @@ export const BenefitsOne: React.FC = () => {
 
           {/* Left side - Video - Hidden on mobile, only visible on desktop - Maximum sizing */}
           <div className="hidden lg:flex relative items-start justify-center order-1 lg:order-1 lg:pt-0">
+            {/* Container voor zowel video als afbeelding - exact dezelfde positie */}
             <div className="relative drop-shadow-2xl lg:w-[90%] lg:max-w-[550px] xl:w-[95%] xl:max-w-[600px] 2xl:w-[100%] 2xl:max-w-[650px] lg:mt-0">
-              {/* Video element */}
+              {/* Video element - position relative als basis */}
               <video 
                 ref={videoRef}
                 autoPlay={false}
@@ -661,9 +662,11 @@ export const BenefitsOne: React.FC = () => {
                 preload="metadata"
                 poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className={`w-full h-auto object-contain rounded-lg shadow-2xl video-element ${
-                  videoHasCompleted ? 'video-element-hidden' : 'video-element-visible'
-                }`}
+                className="w-full h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-1000 ease-in-out"
+                style={{
+                  opacity: videoHasCompleted ? 0 : 1,
+                  visibility: videoHasCompleted ? 'hidden' : 'visible'
+                }}
                 onCanPlay={(e) => {
                   // Alleen afspelen als video al gestart is via scroll trigger
                   const video = e.target as HTMLVideoElement;
@@ -690,54 +693,16 @@ export const BenefitsOne: React.FC = () => {
                 }}
                 onTimeUpdate={(e) => {
                   const video = e.target as HTMLVideoElement;
-                  const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
-
-                  // Alleen fade logic als video actief bezig is en nog niet voltooid
-                  if (video.duration > 0 && !videoHasCompleted && videoHasStarted) {
-                    const timeRemaining = video.duration - video.currentTime;
-
-                    // Start fade op 2.5 seconden voor het einde voor een veel vloeiendere overgang
-                    if (timeRemaining <= 2.5 && phoneImage) {
-                      // Bereken opacity voor vloeiende overgang in laatste 2.5 seconden
-                      const fadeProgress = 1 - (timeRemaining / 2.5); // 0 to 1 in laatste 2.5 seconden
-                      const imageOpacity = Math.min(fadeProgress, 1);
-                      const videoOpacity = Math.max(1 - (fadeProgress * 0.8), 0); // Video blijft langer zichtbaar
-
-                      // Zeer vloeiende crossfade tussen video en afbeelding
-                      video.style.opacity = videoOpacity.toString();
-                      video.style.transition = 'opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-                      phoneImage.style.opacity = imageOpacity.toString();
-                      phoneImage.style.visibility = 'visible';
-                      phoneImage.style.transition = 'opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-                    }
-                  }
+                  // Verwijderd - geen pre-emptieve fade meer tijdens afspelen
+                  // Alleen checken voor video progress, geen visuele changes
                 }}
                 onError={() => {
                   // Silent error handling - geen console spam
                 }}
-                onEnded={(e) => {
-                  // Na afloop: permanent state instellen - video is klaar
-                  const video = e.target as HTMLVideoElement;
-                  const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
-
-                  // Markeer video als definitief voltooid
+                onEnded={() => {
+                  // Na afloop: simpele state switch voor clean crossfade
                   setVideoHasCompleted(true);
                   setShowPhoneImage(true);
-
-                  // Remove persistent-play attribute - video is klaar
-                  video.removeAttribute('data-persistent-play');
-                  video.removeAttribute('data-keep-playing');
-
-                  // Finale state met zeer vloeiende overgang
-                  video.style.transition = 'opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 1s ease-out';
-                  video.style.opacity = '0';
-                  video.style.visibility = 'hidden';
-
-                  if (phoneImage) {
-                    phoneImage.style.transition = 'opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 1s ease-in';
-                    phoneImage.style.opacity = '1';
-                    phoneImage.style.visibility = 'visible';
-                  }
 
                   // Stop observer definitief
                   if (observerRef.current) {
@@ -750,13 +715,16 @@ export const BenefitsOne: React.FC = () => {
                 Your browser does not support the video tag.
               </video>
               
-              {/* Telefoon afbeelding overlay - robuuste state handling met maximum upward positioning en grootte */}
+              {/* Telefoon afbeelding - exact dezelfde positie als video, alleen opacity transition */}
               <img
                 src="/images/backgrounds/telefoon-3.png"
                 alt="TableTech App Mockup"
-                className={`phone-overlay absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl phone-overlay-style ${
-                  (showPhoneImage || videoHasCompleted) ? 'phone-overlay-visible' : 'phone-overlay-hidden'
-                }`}
+                className="absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-1000 ease-in-out"
+                style={{
+                  opacity: (showPhoneImage || videoHasCompleted) ? 1 : 0,
+                  visibility: (showPhoneImage || videoHasCompleted) ? 'visible' : 'hidden',
+                  pointerEvents: (showPhoneImage || videoHasCompleted) ? 'auto' : 'none'
+                }}
               />
             </div>
           </div>
