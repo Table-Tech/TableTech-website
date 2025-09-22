@@ -165,7 +165,8 @@ export const BenefitsThree: React.FC = () => {
       video.removeAttribute('data-persistent-play');
     }
     
-    // Direct smooth fade naar afbeelding via CSS transitions (1 seconde)
+    // Smooth fade transitie is nu gehandeld via CSS opacity en zIndex changes
+    // De motion.img animate prop zorgt voor de smooth fade-in van de afbeelding
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -450,8 +451,8 @@ export const BenefitsThree: React.FC = () => {
                   <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.pizzaMargherita')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
-                    <div className="bg-purple-400 h-full rounded-full" style={{width: '85%'}}></div>
+                  <div className="bg-purple-600/50 h-1 rounded-full progress-bar-container">
+                    <div className="bg-purple-400 h-full rounded-full progress-bar-85"></div>
                   </div>
                   <span className="text-white text-[9px] font-semibold">47</span>
                 </div>
@@ -462,8 +463,8 @@ export const BenefitsThree: React.FC = () => {
                   <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.chickenKatsu')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
-                    <div className="bg-purple-400 h-full rounded-full" style={{width: '72%'}}></div>
+                  <div className="bg-purple-600/50 h-1 rounded-full progress-bar-container">
+                    <div className="bg-purple-400 h-full rounded-full progress-bar-72"></div>
                   </div>
                   <span className="text-white text-[9px] font-semibold">38</span>
                 </div>
@@ -474,8 +475,8 @@ export const BenefitsThree: React.FC = () => {
                   <span className="text-gray-200 text-[9px]">{t('dashboard.menuItems.caesarSalad')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <div className="bg-purple-600/50 h-1 rounded-full" style={{width: '60px'}}>
-                    <div className="bg-purple-400 h-full rounded-full" style={{width: '55%'}}></div>
+                  <div className="bg-purple-600/50 h-1 rounded-full progress-bar-container">
+                    <div className="bg-purple-400 h-full rounded-full progress-bar-55"></div>
                   </div>
                   <span className="text-white text-[9px] font-semibold">29</span>
                 </div>
@@ -762,16 +763,9 @@ export const BenefitsThree: React.FC = () => {
                   webkit-playsinline="true"
                   preload="metadata"
                   poster="/images/hero-images/telefoon.webp"
-                  className="absolute inset-0 w-full h-auto object-contain rounded-lg shadow-lg transition-all duration-1000 ease-in-out"
-                  style={{ 
-                    display: videoHasCompleted ? 'none' : 'block',
-                    maxWidth: '100%',
-                    height: 'auto',
-                    background: 'transparent',
-                    transform: videoHasCompleted ? 'scale(0.98)' : 'scale(1)',
-                    opacity: videoHasCompleted ? 0 : 1,
-                    filter: videoHasCompleted ? 'blur(1px)' : 'blur(0px)'
-                  }}
+                  className={`absolute inset-0 w-full h-auto object-contain rounded-lg shadow-lg video-fade-transition benefits3-video-position ${
+                    videoHasCompleted ? 'video-fade-hidden' : 'video-fade-visible'
+                  }`}
                   onEnded={handleVideoEnded}
                   onError={() => {
                     // Silent error handling
@@ -782,25 +776,21 @@ export const BenefitsThree: React.FC = () => {
                   Your browser does not support the video tag.
                 </video>
 
-                {/* Static Image - Enhanced sizing for desktop ONLY */}
+                {/* Static Image - Enhanced sizing for desktop - Same position as video */}
                 <motion.img
                   src="/images/backgrounds/ipad-foto.png"
                   alt="TableTech Dashboard Interface"
-                  className="absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl"
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  className={`absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl ${
+                    videoHasCompleted ? 'image-fade-visible' : 'image-fade-hidden'
+                  }`}
+                  initial={{ opacity: 0 }}
                   animate={{ 
-                    opacity: videoHasCompleted ? 1 : 0,
-                    scale: videoHasCompleted ? 1 : 0.95
+                    opacity: videoHasCompleted ? 1 : 0
                   }}
                   transition={{
                     duration: 1.5,
-                    ease: "easeInOut"
-                  }}
-                  style={{ 
-                    display: videoHasCompleted ? 'block' : 'none',
-                    maxWidth: '100%',
-                    height: 'auto',
-                    filter: videoHasCompleted ? 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4))' : 'blur(2px)'
+                    ease: "easeInOut",
+                    delay: 0.2
                   }}
                 />
               </div>
@@ -838,16 +828,10 @@ export const BenefitsThree: React.FC = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent pointer-events-none"></div>
                 <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-3 xl:p-4 2xl:p-5 z-10 h-full flex flex-col justify-center">
-                  <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3"
-                      style={{
-                        textShadow: '0 2px 6px rgba(0,0,0,0.5)'
-                      }}>
+                  <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3 benefits3-text-shadow-strong">
 {t('benefits3.dashboardTitle')}
                   </h3>
-                  <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed"
-                     style={{
-                       textShadow: '0 1px 4px rgba(0,0,0,0.4)'
-                     }}>
+                  <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg leading-relaxed xs:leading-relaxed sm:leading-relaxed lg:leading-relaxed benefits3-text-shadow-medium">
 {t('benefits3.dashboardDescription')}
                   </p>
                 </div>
@@ -872,10 +856,7 @@ export const BenefitsThree: React.FC = () => {
                 
                 <div className="relative p-3 xs:p-4 sm:p-4 md:p-5 lg:p-3 xl:p-4 2xl:p-5 z-10">
                   <div className="text-center mb-3 xs:mb-4 sm:mb-4 md:mb-5 lg:mb-2 xl:mb-3">
-                    <h3 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3"
-                        style={{
-                          textShadow: '0 2px 8px rgba(0,0,0,0.6)'
-                        }}>
+                    <h3 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-sm xl:text-base 2xl:text-lg font-bold text-white mb-1 xs:mb-2 sm:mb-2 md:mb-3 lg:mb-2 xl:mb-3 benefits3-text-shadow-extra-strong">
                       {t('benefits3.moreFeaturesTitle')}
                     </h3>
                     <div className="w-8 xs:w-10 sm:w-12 md:w-16 lg:w-10 xl:w-12 2xl:w-16 h-0.5 xs:h-0.5 sm:h-0.5 md:h-1 lg:h-0.5 xl:h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
@@ -893,16 +874,10 @@ export const BenefitsThree: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-blue-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-blue-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1 benefits3-text-shadow-light">
                           {t('benefits3.features.mobileOptimization.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-xs 2xl:text-sm text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-xs 2xl:text-sm text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed benefits3-text-shadow-subtle">
                           {t('benefits3.features.mobileOptimization.description')}
                         </p>
                       </div>
@@ -919,16 +894,10 @@ export const BenefitsThree: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-green-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-xs xl:text-sm 2xl:text-base font-semibold text-white group-hover:text-green-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-1 benefits3-text-shadow-light">
                           {t('benefits3.features.dashboardAnalysis.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed benefits3-text-shadow-subtle">
                           {t('benefits3.features.dashboardAnalysis.description')}
                         </p>
                       </div>
@@ -945,16 +914,10 @@ export const BenefitsThree: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-purple-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-purple-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 benefits3-text-shadow-light">
                           {t('benefits3.features.inventoryLink.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed benefits3-text-shadow-subtle">
                           {t('benefits3.features.inventoryLink.description')}
                         </p>
                       </div>
@@ -971,16 +934,10 @@ export const BenefitsThree: React.FC = () => {
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-orange-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2"
-                           style={{
-                             textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                           }}>
+                        <p className="text-xs xs:text-sm sm:text-sm md:text-base lg:text-sm xl:text-base 2xl:text-lg font-semibold text-white group-hover:text-orange-100 transition-colors mb-0.5 xs:mb-1 sm:mb-1 lg:mb-1 xl:mb-2 benefits3-text-shadow-light">
                           {t('benefits3.features.serviceNotification.title')}
                         </p>
-                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed"
-                           style={{
-                             textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                           }}>
+                        <p className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-xs xl:text-sm 2xl:text-base text-white/85 group-hover:text-white/95 transition-colors leading-snug xs:leading-snug sm:leading-snug lg:leading-relaxed benefits3-text-shadow-subtle">
                           {t('benefits3.features.serviceNotification.description')}
                         </p>
                       </div>
@@ -993,9 +950,9 @@ export const BenefitsThree: React.FC = () => {
             <div className="flex flex-col items-center w-full mt-3 xs:mt-4 sm:mt-5 md:mt-6 lg:mt-6 xl:mt-8">
               <div className="flex items-center justify-center space-x-1 xs:space-x-2 sm:space-x-2 lg:space-x-3 xl:space-x-4">
                 <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-blue-400 rounded-full animate-pulse"></div>
-                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-orange-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-green-400 rounded-full animate-pulse animate-delay-500"></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-purple-400 rounded-full animate-pulse animate-delay-1000"></div>
+                <div className="w-1.5 xs:w-2 sm:w-2 md:w-2.5 lg:w-2.5 xl:w-3 h-1.5 xs:h-2 sm:h-2 md:h-2.5 lg:h-2.5 xl:h-3 bg-orange-400 rounded-full animate-pulse animate-delay-1500"></div>
               </div>
             </div>
             </div>

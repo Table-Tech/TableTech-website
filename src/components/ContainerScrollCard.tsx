@@ -117,10 +117,8 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
       style={{
         transform: `rotateX(${rotate}deg) scale(${scale})`,
         boxShadow: dynamicShadow,
-        opacity: isInView ? 1 : 0.8,
-        transition: 'opacity 0.3s ease-out',
-      }}
-      className="mx-auto -mt-12 h-[325px] w-full max-w-4xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[485px] md:max-w-4xl md:p-6 transform-gpu will-change-transform"
+      } as React.CSSProperties}
+      className={`mx-auto -mt-12 h-[325px] w-full max-w-4xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[485px] md:max-w-4xl md:p-6 transform-gpu will-change-transform container-scroll-card ${isInView ? 'in-view' : ''}`}
     >
       <div className="size-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 md:rounded-2xl">
         <div 
@@ -178,24 +176,21 @@ export const ContainerScrollCard: React.FC<ContainerScrollCardProps> = ({
               <div className="relative w-full h-1.5 bg-black/50 rounded-full backdrop-blur-sm">
                 {/* Progress fill */}
                 <div 
-                  className="h-full bg-white/90 rounded-full transition-all duration-200"
+                  className={`h-full bg-white/90 rounded-full transition-all duration-200 container-scroll-progress-dynamic ${isDragging ? 'container-scroll-progress-no-transition' : 'container-scroll-progress-with-transition'}`}
                   style={{ 
-                    width: `${progress}%`,
-                    transition: isDragging ? 'none' : 'width 0.2s ease'
-                  }}
+                    '--progress-width': `${progress}%`
+                  } as React.CSSProperties}
                 />
               </div>
               {/* Draggable thumb */}
               <div 
-                className={`absolute w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-200 ${
+                className={`absolute w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-200 container-scroll-thumb container-scroll-thumb-dynamic ${
                   isDragging ? 'scale-125' : 'scale-100 group-hover:scale-110'
                 } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                 style={{ 
-                  left: `calc(${progress}% - 8px)`,
-                  opacity: showControls || isDragging ? 1 : 0,
-                  top: '50%',
-                  transform: 'translateY(-50%)'
-                }}
+                  '--progress': `${progress}%`,
+                  '--thumb-opacity': showControls || isDragging ? 1 : 0,
+                } as React.CSSProperties}
               />
             </div>
           </div>

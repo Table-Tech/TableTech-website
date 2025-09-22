@@ -550,19 +550,19 @@ export default function ComputerMock() {
 
   // Sidebar Component
   const Sidebar = () => (
-    <div className="w-56 bg-brown-800 h-full flex flex-col relative" style={{ backgroundColor: '#3E2723' }}>
+    <div className="w-56 bg-brown-800 h-full flex flex-col relative computer-mock-sidebar">
       {/* Top gloss/highlight */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
       <div className="absolute top-1 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent opacity-10"></div>
       
-      <div className="p-5 border-b border-brown-700" style={{ borderColor: '#4A3426' }}>
+      <div className="p-5 border-b border-brown-700 computer-mock-border">
         <div className="flex items-center space-x-3">
-          <div className="w-18 h-18 rounded-xl flex items-center justify-center overflow-hidden shadow-lg" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
+          <div className="w-18 h-18 rounded-xl flex items-center justify-center overflow-hidden shadow-lg computer-mock-logo-bg">
             <img src="/favicon/apple-touch-icon.png" alt="TableTech Logo" className="w-18 h-18 object-cover scale-110" />
           </div>
           <div>
             <h1 className="text-white font-bold text-lg tracking-wide">TableTech</h1>
-            <p className="text-sm font-medium" style={{ color: '#FF8A50' }}>TableTech Demo</p>
+            <p className="text-sm font-medium computer-mock-demo-text">TableTech Demo</p>
           </div>
         </div>
       </div>
@@ -573,84 +573,66 @@ export default function ComputerMock() {
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
             currentPage === 'dashboard' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'dashboard' ? '#5D4037' : 'transparent',
-          }}
         >
-          <Home className="w-5 h-5" style={{ color: currentPage === 'dashboard' ? '#FFFFFF' : '#8D6E63' }} />
+          <Home className={`w-5 h-5 ${currentPage === 'dashboard' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'dashboard' ? 'text-white' : 'text-gray-300'}`}>{getText('dashboard')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('orders')}
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-            currentPage === 'orders' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
+            currentPage === 'orders' ? 'bg-brown-700 shadow-md nav-button-active' : 'hover:bg-brown-700 hover:bg-opacity-50 nav-button-inactive'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'orders' ? '#5D4037' : 'transparent',
-          }}
         >
-          <ShoppingCart className="w-5 h-5" style={{ color: currentPage === 'orders' ? '#FFFFFF' : '#8D6E63' }} />
+          <ShoppingCart className={`w-5 h-5 ${currentPage === 'orders' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'orders' ? 'text-white' : 'text-gray-300'}`}>{getText('orders')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('tables')}
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-            currentPage === 'tables' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
+            currentPage === 'tables' ? 'bg-brown-700 shadow-md nav-button-active' : 'hover:bg-brown-700 hover:bg-opacity-50 nav-button-inactive'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'tables' ? '#5D4037' : 'transparent',
-          }}
         >
-          <Users className="w-5 h-5" style={{ color: currentPage === 'tables' ? '#FFFFFF' : '#8D6E63' }} />
+          <Users className={`w-5 h-5 ${currentPage === 'tables' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'tables' ? 'text-white' : 'text-gray-300'}`}>{getText('tables')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('menu')}
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-            currentPage === 'menu' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
+            currentPage === 'menu' ? 'bg-brown-700 shadow-md nav-button-active' : 'hover:bg-brown-700 hover:bg-opacity-50 nav-button-inactive'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'menu' ? '#5D4037' : 'transparent',
-          }}
         >
-          <Menu className="w-5 h-5" style={{ color: currentPage === 'menu' ? '#FFFFFF' : '#8D6E63' }} />
+          <Menu className={`w-5 h-5 ${currentPage === 'menu' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'menu' ? 'text-white' : 'text-gray-300'}`}>{getText('menu')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('analytics')}
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-            currentPage === 'analytics' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
+            currentPage === 'analytics' ? 'bg-brown-700 shadow-md nav-button-active' : 'hover:bg-brown-700 hover:bg-opacity-50 nav-button-inactive'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'analytics' ? '#5D4037' : 'transparent',
-          }}
         >
-          <BarChart3 className="w-5 h-5" style={{ color: currentPage === 'analytics' ? '#FFFFFF' : '#8D6E63' }} />
+          <BarChart3 className={`w-5 h-5 ${currentPage === 'analytics' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'analytics' ? 'text-white' : 'text-gray-300'}`}>{getText('analytics')}</span>
         </button>
 
         <button
           onClick={() => setCurrentPage('settings')}
           className={`w-full flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-            currentPage === 'settings' ? 'bg-brown-700 shadow-md' : 'hover:bg-brown-700 hover:bg-opacity-50'
+            currentPage === 'settings' ? 'bg-brown-700 shadow-md nav-button-active' : 'hover:bg-brown-700 hover:bg-opacity-50 nav-button-inactive'
           }`}
-          style={{ 
-            backgroundColor: currentPage === 'settings' ? '#5D4037' : 'transparent',
-          }}
         >
-          <Settings className="w-5 h-5" style={{ color: currentPage === 'settings' ? '#FFFFFF' : '#8D6E63' }} />
+          <Settings className={`w-5 h-5 ${currentPage === 'settings' ? 'nav-icon-active' : 'nav-icon-inactive'}`} />
           <span className={`text-base font-medium ${currentPage === 'settings' ? 'text-white' : 'text-gray-300'}`}>{getText('settings')}</span>
         </button>
       </nav>
 
       {/* Language Switcher */}
-      <div className="px-4 py-3 border-t border-b" style={{ borderColor: '#4A3426' }}>
+      <div className="px-4 py-3 border-t border-b computer-mock-border">
         <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Language</p>
-        <div className="flex bg-brown-700 rounded-lg p-1" style={{ backgroundColor: '#4A3426' }}>
+        <div className="flex bg-brown-700 rounded-lg p-1 computer-mock-bg">
           <button
             onClick={() => setLanguage('nl')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
@@ -680,33 +662,33 @@ export default function ComputerMock() {
         </div>
       </div>
 
-      <div className="p-3 border-t" style={{ borderColor: '#4A3426' }}>
+      <div className="p-3 border-t computer-mock-border">
         {/* Super Admin Profile */}
-        <div className="relative rounded-lg p-3 mb-3 shadow-sm" style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.12) 0%, rgba(249,115,22,0.12) 100%)' }}>
+        <div className="relative rounded-lg p-3 mb-3 shadow-sm computer-mock-gradient">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm" style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #F97316 50%, #EA580C 100%)' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm admin-gradient">
               <span className="text-white text-xs font-bold">S</span>
             </div>
             <div className="flex-1">
               <p className="text-white text-sm font-medium">Super Admin</p>
-              <p className="text-xs" style={{ color: '#FF8A50' }}>Administrator</p>
+              <p className="text-xs admin-text-color">Administrator</p>
             </div>
           </div>
         </div>
 
         {/* Switch Restaurant */}
-        <div className="relative rounded-lg mb-2 overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="relative rounded-lg mb-2 overflow-hidden bg-white-06">
           <button className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-brown-700 hover:bg-opacity-40 transition-all duration-200">
-            <Building className="w-4 h-4" style={{ color: '#8D6E63' }} />
+            <Building className="w-4 h-4 nav-icon-inactive" />
             <span className="text-sm font-medium text-white">Switch Restaurant</span>
           </button>
         </div>
 
         {/* Logout */}
-        <div className="relative rounded-lg overflow-hidden" style={{ backgroundColor: 'rgba(220,38,38,0.12)' }}>
+        <div className="relative rounded-lg overflow-hidden bg-red-12">
           <button className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-700 hover:bg-opacity-25 transition-all duration-200">
-            <LogOut className="w-4 h-4" style={{ color: '#DC2626' }} />
-            <span className="text-sm font-medium" style={{ color: '#DC2626' }}>Logout</span>
+            <LogOut className="w-4 h-4 text-red-626" />
+            <span className="text-sm font-medium text-red-626">Logout</span>
           </button>
         </div>
       </div>
@@ -725,10 +707,10 @@ export default function ComputerMock() {
     const avgOrderValue = totalOrdersToday > 0 ? todaysRevenue / totalOrdersToday : 0;
 
     return (
-      <div className="flex-1 p-6 overflow-auto" style={{ backgroundColor: '#FDF4E3' }}>
+      <div className="flex-1 p-6 overflow-auto dashboard-bg">
         {/* Dashboard Header */}
-        <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200" style={{backgroundImage: 'linear-gradient(120deg, #f5f5f0 0%, #e6d7c3 50%, #d2b48c 100%)'}}>
-          <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>{getText('dashboard.title')}</h1>
+        <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200 dashboard-header-gradient">
+          <h1 className="text-2xl font-bold mb-2 dashboard-title-color">{getText('dashboard.title')}</h1>
           <p className="text-gray-600 text-sm">{getText('dashboard.subtitle')}</p>
         </div>
 
@@ -736,51 +718,51 @@ export default function ComputerMock() {
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="bg-gradient-to-r from-yellow-50 via-amber-200 to-yellow-800/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200" style={{backgroundImage: 'linear-gradient(to right, #d2b48c 0%, #e6d7c3 70%, #e6d7c3 100%)'}}>
             <div className="flex items-start justify-between mb-3">
-              <div className="rounded-lg p-2 shadow-sm" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-                <Euro className="w-5 h-5" style={{ color: '#5D4037' }} />
+              <div className="rounded-lg p-2 shadow-sm card-subtle-gradient">
+                <Euro className="w-5 h-5 text-brown-dark" />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.todaysRevenue')}</p>
-            <p className="text-xl font-bold" style={{ color: '#5D4037' }}>€{todaysRevenue.toFixed(2)}</p>
+            <p className="text-xs mb-1 text-brown-light">{getText('dashboard.todaysRevenue')}</p>
+            <p className="text-xl font-bold text-brown-dark">€{todaysRevenue.toFixed(2)}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-50 via-amber-200 to-yellow-800/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200" style={{backgroundImage: 'linear-gradient(120deg, #e6d7c3 0%, #e6d7c3 50%, #d2b48c 100%)'}}>
+          <div className="card-gradient-2 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200">
             <div className="flex items-start justify-between mb-3">
-              <div className="rounded-lg p-2 shadow-sm" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-                <Clock className="w-5 h-5" style={{ color: '#5D4037' }} />
+              <div className="rounded-lg p-2 shadow-sm card-subtle-gradient">
+                <Clock className="w-5 h-5 text-brown-dark" />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.activeOrders')}</p>
-            <p className="text-xl font-bold" style={{ color: '#5D4037' }}>{activeOrders}</p>
+            <p className="text-xs mb-1 text-brown-light">{getText('dashboard.activeOrders')}</p>
+            <p className="text-xl font-bold text-brown-dark">{activeOrders}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-50 via-amber-200 to-yellow-800/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200" style={{backgroundImage: 'linear-gradient(140deg, #e6d7c3 0%, #dcc7a8 50%, #c8a882 100%)'}}>
+          <div className="card-gradient-3 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200">
             <div className="flex items-start justify-between mb-3">
-              <div className="rounded-lg p-2 shadow-sm" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-                <Users className="w-5 h-5" style={{ color: '#5D4037' }} />
+              <div className="rounded-lg p-2 shadow-sm card-subtle-gradient">
+                <Users className="w-5 h-5 text-brown-dark" />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.ordersToday')}</p>
-            <p className="text-xl font-bold" style={{ color: '#5D4037' }}>{totalOrdersToday}</p>
+            <p className="text-xs mb-1 text-brown-light">{getText('dashboard.ordersToday')}</p>
+            <p className="text-xl font-bold text-brown-dark">{totalOrdersToday}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-50 via-amber-200 to-yellow-800/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200" style={{backgroundImage: 'linear-gradient(160deg, #e6d7c3 0%, #e8d2b0 50%, #d4a574 100%)'}}>
+          <div className="card-gradient-4 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 border border-gray-200">
             <div className="flex items-start justify-between mb-3">
-              <div className="rounded-lg p-2 shadow-sm" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
-                <TrendingUp className="w-5 h-5" style={{ color: '#5D4037' }} />
+              <div className="rounded-lg p-2 shadow-sm card-subtle-gradient">
+                <TrendingUp className="w-5 h-5 text-brown-dark" />
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: '#8D6E63' }}>{getText('dashboard.avgOrderValue')}</p>
-            <p className="text-xl font-bold" style={{ color: '#5D4037' }}>€{avgOrderValue.toFixed(2)}</p>
+            <p className="text-xs mb-1 text-brown-light">{getText('dashboard.avgOrderValue')}</p>
+            <p className="text-xl font-bold text-brown-dark">€{avgOrderValue.toFixed(2)}</p>
           </div>
         </div>
 
       {/* Recent Orders */}
-      <div className="rounded-xl shadow-sm" style={{backgroundImage: 'linear-gradient(135deg, #e6d7c3 0%, #e6d7c3 50%, #d2b48c 100%)'}}>
+      <div className="rounded-xl shadow-sm card-gradient-2">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-2">
-            <Clock className="w-4 h-4" style={{ color: '#8D6E63' }} />
-            <h2 className="text-lg font-semibold" style={{ color: '#5D4037' }}>{getText('dashboard.recentOrders')}</h2>
+            <Clock className="w-4 h-4 text-brown-light" />
+            <h2 className="text-lg font-semibold text-brown-dark">{getText('dashboard.recentOrders')}</h2>
           </div>
           <button 
             onClick={() => setCurrentPage('orders')}
@@ -1860,13 +1842,10 @@ export default function ComputerMock() {
         );
 
         return (
-          <div className="flex-1 p-6 overflow-hidden" style={{ backgroundColor: '#FDF4E3' }}>
+          <div className="flex-1 p-6 overflow-hidden bg-computer-dashboard">
               {/* Settings Header */}
-              <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200" 
-                style={{ 
-                  backgroundImage: 'linear-gradient(120deg, #f5f5f0 0%, #e6d7c3 50%, #d2b48c 100%)'
-                }}>
-                <h1 className="text-2xl font-bold mb-2" style={{ color: '#FF6B35' }}>
+              <div className="rounded-xl p-6 mb-6 shadow-sm border border-gray-200 bg-computer-card-gradient">
+                <h1 className="text-2xl font-bold mb-2 text-computer-orange">
                   {getText('settings')}
                 </h1>
                 <p className="text-gray-600 text-sm">
@@ -1987,16 +1966,16 @@ export default function ComputerMock() {
         }
       `}</style>
       <div className="w-full h-full bg-black rounded-t-2xl p-2">
-        <div className="w-full h-full rounded-xl overflow-auto flex flex-col relative demo-scroll" style={{ background: 'linear-gradient(135deg, #f5f5f0 0%, #e6d7c3 100%)' }}>
+        <div className="w-full h-full rounded-xl overflow-auto flex flex-col relative demo-scroll bg-computer-screen-gradient">
           {/* Browser bar */}
-          <div className="border-b flex items-center justify-between px-4 py-2 flex-shrink-0" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
+          <div className="border-b flex items-center justify-between px-4 py-2 flex-shrink-0 bg-computer-header-gradient">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
             <div className="flex-1 mx-6">
-              <div className="rounded-lg px-4 py-2 text-sm text-gray-600 flex items-center" style={{ background: 'linear-gradient(135deg, #f9f7f4 0%, #f2ede6 100%)' }}>
+              <div className="rounded-lg px-4 py-2 text-sm text-gray-600 flex items-center bg-computer-sidebar-gradient">
                 <div className="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
                 tabletech.app/dashboard
               </div>

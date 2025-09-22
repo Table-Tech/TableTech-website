@@ -2,27 +2,53 @@ import { useState, useEffect } from 'react';
 import { Calendar, Phone, Mail, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, X, User, Building, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+// Type definitions
+interface AppointmentSlot {
+  date: string;
+  time: string;
+  available: boolean;
+}
+
+interface AvailabilityData {
+  slots: AppointmentSlot[];
+}
+
+interface AppointmentData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company?: string;
+  restaurant?: string;
+  preferredDate?: string;
+  preferredTime: string;
+  message?: string;
+  language?: string;
+  formRenderTs?: number;
+  hp?: string;
+}
+
 // API Functions for new backend
 async function getAvailableDates(year: number, month: number) {
   try {
     const response = await fetch('/api/appointments/availability');
     if (!response.ok) throw new Error('Failed to fetch availability');
 
-    const data = await response.json();
+    const data: AvailabilityData = await response.json();
     const slots = data.slots || [];
 
     // Filter for the requested month and get unique dates
     const dates = [...new Set(
       slots
-        .filter((slot: any) => slot.available)
-        .filter((slot: any) => {
+        .filter((slot: AppointmentSlot) => slot.available)
+        .filter((slot: AppointmentSlot) => {
           const date = new Date(slot.date);
           return date.getFullYear() === year && date.getMonth() === month - 1;
         })
-        .map((slot: any) => slot.date)
+        .map((slot: AppointmentSlot) => slot.date)
     )];
 
-    return dates;
+    return dates as string[];
   } catch (error) {
     console.error('Error fetching available dates:', error);
     return [];
@@ -43,11 +69,11 @@ async function getAvailableSlots(dateString: string) {
     console.log('Total slots received:', slots.length);
 
     // Filter for the requested date and return in expected format
-    const slotsForDate = slots.filter((slot: any) => slot.date === dateString);
+    const slotsForDate = slots.filter((slot: AppointmentSlot) => slot.date === dateString);
     console.log(`Found ${slotsForDate.length} slots for date ${dateString}`);
 
     // Return in the format ContactBookingSection expects
-    return slotsForDate.map((slot: any) => ({
+    return slotsForDate.map((slot: AppointmentSlot) => ({
       time: slot.time,
       isAvailable: slot.available
     }));
@@ -57,7 +83,7 @@ async function getAvailableSlots(dateString: string) {
   }
 }
 
-async function submitAppointment(appointmentData: any) {
+async function submitAppointment(appointmentData: AppointmentData) {
   try {
     // Map the fields from the booking form to the API format
     const date = appointmentData.preferredDate;
@@ -160,26 +186,31 @@ const ClickSpark = ({ children, sparkColor = "#ffffff", sparkRadius = 20, sparkC
   };
 
   return (
-    <div onClick={createSparks} style={{ position: 'relative', display: 'block' }}>
+    <div onClick={createSparks} className="contact-spark-container">
       {children}
-      {sparks.map((spark) => (
-        <div
-          key={spark.id}
-          style={{
-            position: 'fixed',
-            left: spark.x,
-            top: spark.y,
-            width: '4px',
-            height: '4px',
-            backgroundColor: sparkColor,
-            borderRadius: '50%',
-            pointerEvents: 'none',
-            zIndex: 9999,
-            animation: `sparkAnimation ${duration}ms ease-out forwards`,
-            transform: `rotate(${spark.angle}deg)`,
-          }}
-        />
-      ))}
+      {sparks.map((spark) => {
+        // Create unique class for this spark animation
+        const sparkClass = `spark-${spark.id}`;
+        
+        // Set CSS custom properties via dataset
+        const sparkElement = (
+          <div
+            key={spark.id}
+            className={`click-spark-item ${sparkClass}`}
+            ref={(el) => {
+              if (el) {
+                el.style.setProperty('--spark-x', `${spark.x}px`);
+                el.style.setProperty('--spark-y', `${spark.y}px`);
+                el.style.setProperty('--spark-color', sparkColor);
+                el.style.setProperty('--spark-duration', `${duration}ms`);
+                el.style.setProperty('--spark-angle', `${spark.angle}deg`);
+              }
+            }}
+          />
+        );
+        
+        return sparkElement;
+      })}
     </div>
   );
 };
@@ -455,7 +486,7 @@ const ContactSection = () => {
           return;
         } else if (response.error?.code === 'MISSING_FIELDS') {
           // Show which fields are missing
-          const missingFields = response.error?.missingFields || response.error?.details?.map((d: any) => d.field) || [];
+          const missingFields = response.error?.missingFields || response.error?.details?.map((d: { field: string }) => d.field) || [];
           const message = `Vul alle verplichte velden in:\n${missingFields.join('\n')}`;
           alert(message);
           return;
@@ -755,15 +786,18 @@ const ContactSection = () => {
                 {bookingStep === 3 && t('contact.modal.steps.confirmed')}
               </h2>
               <button
+                type="button"
                 onClick={handleCloseModal}
                 className="text-white hover:text-white/80 transition-colors"
+                aria-label={t('contact.modal.close') || 'Sluiten'}
+                title={t('contact.modal.close') || 'Sluiten'}
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-100px)] scrollbar-hide modal-content" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-100px)] scrollbar-hide modal-content contact-modal-content">
               {/* Step 1: Calendar and Time */}
               {bookingStep === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -775,8 +809,11 @@ const ContactSection = () => {
                       <div className="flex items-center justify-between mb-4">
                         <ClickSpark sparkColor="#E86C28" sparkRadius={15} sparkCount={6} duration={300}>
                           <button
+                            type="button"
                             onClick={handlePreviousMonth}
                             className="text-white hover:text-[#E86C28] transition-colors"
+                            aria-label={t('contact.modal.calendar.previousMonth') || 'Vorige maand'}
+                            title={t('contact.modal.calendar.previousMonth') || 'Vorige maand'}
                           >
                             <ChevronLeft className="w-5 h-5" />
                           </button>
@@ -786,8 +823,11 @@ const ContactSection = () => {
                         </h4>
                         <ClickSpark sparkColor="#E86C28" sparkRadius={15} sparkCount={6} duration={300}>
                           <button
+                            type="button"
                             onClick={handleNextMonth}
                             className="text-white hover:text-[#E86C28] transition-colors"
+                            aria-label={t('contact.modal.calendar.nextMonth') || 'Volgende maand'}
+                            title={t('contact.modal.calendar.nextMonth') || 'Volgende maand'}
                           >
                             <ChevronRight className="w-5 h-5" />
                           </button>
@@ -862,7 +902,7 @@ const ContactSection = () => {
                         </div>
                         
                         {/* Time slots container - scrollable with hidden scrollbar */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto scrollbar-hide contact-time-slots-grid">
                           {loadingSlots ? (
                             <div className="col-span-full flex items-center justify-center py-8">
                               <div className="w-6 h-6 border-2 border-[#E86C28] border-t-transparent rounded-full animate-spin"></div>

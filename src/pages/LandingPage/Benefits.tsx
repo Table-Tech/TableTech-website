@@ -662,11 +662,9 @@ export const BenefitsOne: React.FC = () => {
                 preload="metadata"
                 poster="/images/backgrounds/Render_Mockup_4000_4000_2025-08-26.png"
                 loop={false}
-                className="w-full h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-1000 ease-in-out"
-                style={{
-                  opacity: videoHasCompleted ? 0 : 1,
-                  visibility: videoHasCompleted ? 'hidden' : 'visible'
-                }}
+                className={`w-full h-auto object-contain rounded-lg shadow-2xl video-fade-transition ${
+                  videoHasCompleted ? 'video-fade-hidden' : 'video-fade-visible'
+                }`}
                 onCanPlay={(e) => {
                   // Alleen afspelen als video al gestart is via scroll trigger
                   const video = e.target as HTMLVideoElement;
@@ -691,8 +689,7 @@ export const BenefitsOne: React.FC = () => {
                     }, 10);
                   }
                 }}
-                onTimeUpdate={(e) => {
-                  const video = e.target as HTMLVideoElement;
+                onTimeUpdate={() => {
                   // Verwijderd - geen pre-emptieve fade meer tijdens afspelen
                   // Alleen checken voor video progress, geen visuele changes
                 }}
@@ -719,12 +716,9 @@ export const BenefitsOne: React.FC = () => {
               <img
                 src="/images/backgrounds/telefoon-3.png"
                 alt="TableTech App Mockup"
-                className="absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-1000 ease-in-out"
-                style={{
-                  opacity: (showPhoneImage || videoHasCompleted) ? 1 : 0,
-                  visibility: (showPhoneImage || videoHasCompleted) ? 'visible' : 'hidden',
-                  pointerEvents: (showPhoneImage || videoHasCompleted) ? 'auto' : 'none'
-                }}
+                className={`absolute inset-0 w-full h-auto object-contain rounded-lg shadow-2xl image-fade-transition benefits-image-larger ${
+                  (showPhoneImage || videoHasCompleted) ? 'image-fade-visible' : 'image-fade-hidden'
+                }`}
               />
             </div>
           </div>

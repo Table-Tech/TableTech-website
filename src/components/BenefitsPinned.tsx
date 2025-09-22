@@ -215,31 +215,17 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
   return (
     <div 
       ref={wrapperRef}
-      className={`benefits-wrapper relative w-full ${className}`}
-      style={{
-        minHeight: '100vh',
-        background: 'transparent' // Maintain transparent background
-      }}
+      className={`benefits-wrapper relative w-full benefits-wrapper-min-height benefits-background-transparent ${className}`}
     >
       {/* Background Image Layer */}
       <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(/images/backgrounds/optie4.webp)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed'
-        }}
+        className="absolute inset-0 z-0 benefits-bg-image"
       />
 
       {/* Content Container */}
       <div 
         ref={containerRef}
-        className="benefits-container relative z-10 w-full h-screen overflow-hidden"
-        style={{
-          background: 'transparent' // Keep content transparent to show background
-        }}
+        className="benefits-container relative z-10 w-full h-screen overflow-hidden benefits-background-transparent"
       >
 
         {/* Panels Container */}
@@ -247,11 +233,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
           {/* Panel 1 - Benefits One */}
           <div 
             ref={el => panelsRef.current[0] = el!}
-            className="panel absolute w-full h-full flex items-center justify-center"
-            style={{ 
-              zIndex: 1,
-              willChange: 'transform'
-            }}
+            className="panel absolute w-full h-full flex items-center justify-center benefits-panel-z1"
           >
             <div className="w-full h-full">
               <BenefitsOne />
@@ -261,11 +243,7 @@ export const BenefitsPinned: React.FC<BenefitsPinnedProps> = ({ className = '' }
           {/* Panel 2 - Benefits Three */}
           <div 
             ref={el => panelsRef.current[1] = el!}
-            className="panel absolute w-full h-full flex items-center justify-center"
-            style={{ 
-              zIndex: 2,
-              willChange: 'transform'
-            }}
+            className="panel absolute w-full h-full flex items-center justify-center benefits-panel-z2"
           >
             <div className="w-full h-full">
               <BenefitsThree />

@@ -1362,7 +1362,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
     let ticking = false;
     let isUserScrolling = false;
     let programmaticScrolling = false; // Flag to prevent category updates during programmatic scrolling
-    let scrollTimeout: NodeJS.Timeout;
+    let scrollTimeout: number;
 
     const updateActiveCategory = () => {
       if (!ticking && !isUserScrolling && !programmaticScrolling) {
@@ -1535,16 +1535,18 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                       €{item.price.toFixed(2)}
                     </span>
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(item.id, item.category, []);
                       }}
-                      className={`text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-all duration-200 relative z-10 transform hover:scale-110 ${
+                      className={`text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-all duration-200 relative z-10 transform hover:scale-110 phone-button-size ${
                         isSweet 
                           ? "bg-pink-500 hover:bg-pink-600" 
                           : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg"
                       }`}
-                      style={{ minWidth: '32px', minHeight: '32px' }}
+                      aria-label={`Add ${item.name} to cart`}
+                      title={`Add ${item.name} to cart`}
                     >
                       <FaPlus size={14} className="text-white" />
                     </button>
@@ -1599,12 +1601,14 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                     €{item.price.toFixed(2)}
                   </span>
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       addToCart(item.id, item.category, []);
                     }}
-                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-colors duration-150 relative z-10"
-                    style={{ minWidth: '32px', minHeight: '32px' }}
+                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-colors duration-150 relative z-10 phone-button-size"
+                    aria-label={`Add ${item.name} to cart`}
+                    title={`Add ${item.name} to cart`}
                   >
                     <FaPlus size={14} className="text-white" />
                   </button>
@@ -1633,19 +1637,12 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
 
     // Spice Palace gebruikt de grote kaart layout
     return (
-      <div ref={sectionRefs[categoryId]} className="mb-0" key={`section-${categoryId}`} style={{
-        scrollMarginTop: theme === "spicepalace" ? "60px" : "0px"
-      }}>
-        <h2 className={`text-lg font-bold px-4 py-3 z-20 shadow-sm ${
+      <div ref={sectionRefs[categoryId]} className={`mb-0 ${theme === "spicepalace" ? "phone-section-scroll-margin-spice" : "phone-section-scroll-margin-default"}`} key={`section-${categoryId}`}>
+        <h2 className={`text-lg font-bold px-4 py-3 z-20 shadow-sm phone-header-static ${theme === "spicepalace" ? "phone-header-margin-spice" : "phone-header-margin-default"} ${
           theme === "spicepalace" 
             ? "bg-gradient-to-r from-red-800 via-red-900 to-red-950 text-amber-100 border-b border-amber-400/40 mb-0 shadow-lg" 
             : `${themeConfig.bgColor} ${themeConfig.textColor} mb-4 border-b`
-        }`}
-        style={{
-          position: 'static',
-          zIndex: 20,
-          marginBottom: theme === "spicepalace" ? 0 : '16px'
-        }}>
+        }`}>
           {categories.find((c) => c.id === categoryId)?.name}
         </h2>
         <div className={`px-3 ${
@@ -1655,15 +1652,11 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
             <div
               key={`${item.id}-${item.category}-${theme}`}
               onClick={() => setSelectedItem(item)}
-              className={`relative flex flex-col ${themeConfig.cardBg} rounded-2xl overflow-hidden shadow-lg transform transition-all duration-300 cursor-pointer group ${
+              className={`relative flex flex-col ${themeConfig.cardBg} rounded-2xl overflow-hidden shadow-lg transform transition-all duration-300 cursor-pointer group phone-scroll-snap-none ${
                 theme === "spicepalace" 
                   ? "scroll-snap-align-start hover:shadow-xl" 
                   : "hover:scale-105 hover:shadow-xl"
               }`}
-              style={{
-                scrollSnapAlign: 'none',
-                scrollSnapStop: 'normal'
-              }}
             >
               <div className="relative overflow-hidden">
                 <ImageWithLoading
@@ -1786,11 +1779,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
       data-phone-container="true"
       data-phone-mockup="true"
       data-theme={theme}
-      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans gpu-accelerated phone-screen ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
-      style={{
-        willChange: 'transform',
-        contain: 'layout style paint'
-      }}
+      className={`relative w-[320px] h-[600px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-black flex flex-col font-sans gpu-accelerated phone-screen phone-main-container ${theme === "tabletech" ? "bg-white" : themeConfig.bgColor}`}
     >
       {renderHeader()}
 
@@ -1798,19 +1787,12 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
       {theme === "tabletech" ? (
         // TableTech: Rechthoekige categorieën zoals in afbeelding
         <div 
-          className={`flex overflow-x-auto px-4 py-3 gap-3 scrollbar-hide ${
+          className={`flex overflow-x-auto px-4 py-3 gap-3 scrollbar-hide phone-horizontal-scroll ${
             theme === "tabletech" 
               ? "border-b-2 border-gray-200" 
               : "border-b-2 border-amber-300/50"
           }`}
           data-horizontal-scroll="true"
-          style={{ 
-            overscrollBehavior: 'contain',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-x'
-          }}
         >
           {categories.map((cat) => (
             <button
@@ -1885,15 +1867,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
       ) : (
         // Spice Palace: Cirkelvormige scroll
         <div 
-          className="flex overflow-x-auto px-4 py-4 gap-3 scrollbar-hide"
+          className="flex overflow-x-auto px-4 py-4 gap-3 scrollbar-hide phone-horizontal-scroll"
           data-horizontal-scroll="true"
-          style={{ 
-            overscrollBehavior: 'contain',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-x'
-          }}
         >
           {categories.map((cat) => (
             <div
@@ -1940,18 +1915,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
         data-phone-scroll-container="true"
         className={`flex-1 overflow-y-auto pt-2 ${
           theme === "tabletech" ? "pb-28" : "pb-40"
-        } gpu-accelerated optimized-scroll`}
-        style={{ 
-          overscrollBehavior: 'contain',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
-          touchAction: 'pan-y',
-          contain: 'layout style paint',
-          willChange: 'scroll-position',
-          position: 'relative', // Required for scroll positioning
-          height: '100%' // Zorg dat de container een vaste hoogte heeft
-        }}
+        } gpu-accelerated optimized-scroll phone-main-scroll-area h-full`}
       >
         {/* Show content based on active category */}
         {renderMenuSection(activeCategory, false)}
@@ -2052,14 +2016,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
               </div>
 
               <div 
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto phone-cart-scroll"
                 data-phone-scroll-container="true"
                 data-phone-cart-scroll="true"
-                style={{ 
-                  overscrollBehavior: 'contain',
-                  WebkitOverflowScrolling: 'touch',
-                  touchAction: 'pan-y'
-                }}
               >
                 {[...new Set(cart.map((i) => `${i.id}|||${JSON.stringify(i.toppings || [])}`))]
                   .map((uniqueKey) => {
@@ -2209,8 +2168,11 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
                 className="w-full h-44 object-cover"
               />
               <button
+                type="button"
                 onClick={() => setSelectedItem(null)}
                 className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-100 active:bg-gray-600 transition-colors duration-150"
+                aria-label="Go back to menu"
+                title="Go back to menu"
               >
                 <IoArrowBack size={20} className="text-gray-800" />
               </button>
@@ -2218,15 +2180,9 @@ const PhoneMockup: React.FC<PhoneMockupProps> = memo(({ theme = "tabletech" }) =
 
             <div className="relative flex-1 overflow-hidden">
               <div 
-                className="p-4 h-full overflow-y-auto pb-[120px] flex flex-col gap-4"
+                className="p-4 h-full overflow-y-auto pb-[120px] flex flex-col gap-4 phone-product-detail-scroll"
                 data-phone-scroll-container="true"
                 data-product-detail-scroll="true"
-                style={{ 
-                  overscrollBehavior: 'contain',
-                  maxHeight: 'calc(100vh - 200px)',
-                  WebkitOverflowScrolling: 'touch',
-                  touchAction: 'pan-y'
-                }}
               >
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">

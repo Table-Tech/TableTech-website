@@ -57,13 +57,7 @@ export const HeroSection: React.FC = () => {
         {/* Background video */}
         <div className="absolute inset-0 w-full h-full">
           <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat md:hidden"
-            style={{
-              backgroundImage: `url(/images/backgrounds/telefoon-fallback-achtergrond.webp)`,
-              backgroundColor: '#3b2a1d',
-              backgroundPosition: '90% center',
-              zIndex: 0
-            }}
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat md:hidden hero-mobile-background"
           />
           <video
             autoPlay
@@ -74,15 +68,10 @@ export const HeroSection: React.FC = () => {
             poster="/images/backgrounds/telefoon-fallback-achtergrond.webp"
             webkit-playsinline="true"
             x-webkit-airplay="allow"
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-            style={{
-              objectPosition: 'center center',
-              backgroundColor: 'transparent',
-              zIndex: 1
-            }}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 hero-video-positioning"
             onError={(e) => {
               const video = e.target as HTMLVideoElement;
-              video.style.display = 'none';
+              video.className += ' hero-video-error-hidden';
             }}
           >
             <source src="/videos/background-2.webm" type="video/webm" />
@@ -101,47 +90,24 @@ export const HeroSection: React.FC = () => {
           <div className="h-20 xs:h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 2xl:h-44 flex-shrink-0"></div>
           
           {/* Content container - Responsive vertical positioning */}
-          <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-12 sm:py-16 md:py-20 lg:justify-start lg:pt-8"
-               style={{ 
-                 transform: 'translateY(clamp(-2rem, -4vw, -8rem))', 
-                 maxWidth: '85vw', 
-                 margin: '0 auto' 
-               }}>
+          <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-12 sm:py-16 md:py-20 lg:justify-start lg:pt-8 hero-content-container">
             {/* Inner content wrapper with max width */}
             <div className="w-full max-w-7xl mx-auto">
               {/* Title - Scaled down */}
-              <h1 className="font-bold leading-tight drop-shadow-md text-center text-white"
-                  style={{
-                    fontSize: 'clamp(1.2rem, 4vw, 2.5rem)',
-                    marginBottom: 'clamp(1rem, 3vw, 2rem)'
-                  }}>
+              <h1 className="font-bold leading-tight drop-shadow-md text-center text-white hero-title-responsive">
                 {t('hero.title')}
               </h1>
               
               {/* Subtitle - Closer to title */}
-              <p className="text-white/90 leading-relaxed text-center mx-auto px-6"
-                 style={{
-                   fontSize: 'clamp(0.8rem, 2.5vw, 1.1rem)',
-                   marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)',
-                   maxWidth: 'min(75vw, 500px)'
-                 }}>
+              <p className="text-white/90 leading-relaxed text-center mx-auto px-6 hero-subtitle-responsive">
                 {t('hero.subtitle')}
               </p>
 
               {/* Mobile Layout - More spaced out */}
-              <div className="sm:hidden flex flex-col w-full px-6"
-                   style={{
-                     gap: 'clamp(1rem, 3vw, 1.5rem)',
-                     maxWidth: 'min(80vw, 350px)',
-                     margin: '0 auto'
-                   }}>
+              <div className="sm:hidden flex flex-col w-full px-6 hero-mobile-layout">
               {/* Customer Demo Card - Scaled down */}
               <div className="bg-gradient-to-br from-stone-700/50 to-amber-800/50 backdrop-blur-lg 
-                           text-center shadow-xl border border-stone-600/50 rounded-xl flex flex-col justify-between"
-                   style={{
-                     padding: 'clamp(1.5rem, 5vw, 2rem)',
-                     minHeight: 'clamp(120px, 16vh, 160px)'
-                   }}>
+                           text-center shadow-xl border border-stone-600/50 rounded-xl flex flex-col justify-between hero-card-mobile">
                 <div>
                   <div className="flex items-center justify-center mb-3">
                     <div className="bg-gradient-to-br from-stone-600 to-stone-700 p-3 xs:p-3.5 rounded-xl shadow-md">
@@ -248,25 +214,16 @@ export const HeroSection: React.FC = () => {
                        style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                     <div className="relative transform hover:scale-105 transition-transform duration-300"
                          style={{ maxWidth: 'clamp(120px, 15vw, 160px)' }}>
-                      <div className="relative rounded-lg overflow-hidden shadow-lg backdrop-blur-lg border border-white/40" 
-                           style={{
-                             backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                             padding: 'clamp(0.5rem, 1.5vw, 0.75rem)'
-                           }}>
-                        <div className="bg-white rounded-md mx-auto w-fit shadow-lg"
-                             style={{ padding: 'clamp(0.5rem, 1vw, 0.75rem)' }}>
+                      <div className="relative rounded-lg overflow-hidden shadow-lg backdrop-blur-lg border border-white/40 hero-qr-background qr-container-padding">
+                        <div className="bg-white rounded-md mx-auto w-fit shadow-lg qr-inner-padding">
                           <img 
                             src="/images/qr-codes/iyd.webp" 
                             alt="Scan QR code voor menu demo" 
                             loading="eager"
-                            style={{
-                              width: 'clamp(48px, 8vw, 64px)',
-                              height: 'clamp(48px, 8vw, 64px)'
-                            }}
+                            className="qr-image-responsive"
                           />
                         </div>
-                        <div className="text-center"
-                             style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+                        <div className="text-center qr-text-margin">
                           <p className="text-white/95 font-medium"
                              style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.75rem)' }}>
                             {t('hero.customerDemo.qrInstruction')}
