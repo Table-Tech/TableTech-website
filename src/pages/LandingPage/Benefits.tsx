@@ -691,24 +691,24 @@ export const BenefitsOne: React.FC = () => {
                 onTimeUpdate={(e) => {
                   const video = e.target as HTMLVideoElement;
                   const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
-                  
+
                   // Alleen fade logic als video actief bezig is en nog niet voltooid
                   if (video.duration > 0 && !videoHasCompleted && videoHasStarted) {
                     const timeRemaining = video.duration - video.currentTime;
-                    
-                    // Start fade op 1 seconde voor het einde voor een vloeiende overgang
-                    if (timeRemaining <= 1.0 && phoneImage) {
-                      // Bereken opacity voor vloeiende overgang in laatste 1 seconde
-                      const fadeProgress = 1 - (timeRemaining / 1.0); // 0 to 1 in laatste 1 seconde
+
+                    // Start fade op 2.5 seconden voor het einde voor een veel vloeiendere overgang
+                    if (timeRemaining <= 2.5 && phoneImage) {
+                      // Bereken opacity voor vloeiende overgang in laatste 2.5 seconden
+                      const fadeProgress = 1 - (timeRemaining / 2.5); // 0 to 1 in laatste 2.5 seconden
                       const imageOpacity = Math.min(fadeProgress, 1);
-                      const videoOpacity = Math.max(1 - fadeProgress, 0); // Gelijke fade snelheid
-                      
-                      // Vloeiende crossfade tussen video en afbeelding
+                      const videoOpacity = Math.max(1 - (fadeProgress * 0.8), 0); // Video blijft langer zichtbaar
+
+                      // Zeer vloeiende crossfade tussen video en afbeelding
                       video.style.opacity = videoOpacity.toString();
-                      video.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                      video.style.transition = 'opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
                       phoneImage.style.opacity = imageOpacity.toString();
                       phoneImage.style.visibility = 'visible';
-                      phoneImage.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                      phoneImage.style.transition = 'opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
                     }
                   }
                 }}
@@ -719,26 +719,26 @@ export const BenefitsOne: React.FC = () => {
                   // Na afloop: permanent state instellen - video is klaar
                   const video = e.target as HTMLVideoElement;
                   const phoneImage = video.parentElement?.querySelector('.phone-overlay') as HTMLElement;
-                  
+
                   // Markeer video als definitief voltooid
                   setVideoHasCompleted(true);
                   setShowPhoneImage(true);
-                  
+
                   // Remove persistent-play attribute - video is klaar
                   video.removeAttribute('data-persistent-play');
                   video.removeAttribute('data-keep-playing');
-                  
-                  // Finale state met vloeiende overgang
-                  video.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), visibility 0.6s ease-out';
+
+                  // Finale state met zeer vloeiende overgang
+                  video.style.transition = 'opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 1s ease-out';
                   video.style.opacity = '0';
                   video.style.visibility = 'hidden';
-                  
+
                   if (phoneImage) {
-                    phoneImage.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), visibility 0.6s ease-in';
+                    phoneImage.style.transition = 'opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 1s ease-in';
                     phoneImage.style.opacity = '1';
                     phoneImage.style.visibility = 'visible';
                   }
-                  
+
                   // Stop observer definitief
                   if (observerRef.current) {
                     observerRef.current.disconnect();

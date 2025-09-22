@@ -95,6 +95,68 @@
   animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Benefits Video to Image Transition */
+.video-element {
+  position: relative;
+  z-index: 1;
+  will-change: opacity;
+}
+
+.video-element-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-element-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.phone-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity;
+  transition: opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1),
+              visibility 2s ease-in;
+}
+
+.phone-overlay-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.phone-overlay-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Smooth crossfade animation */
+@keyframes smoothFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+.phone-overlay-style {
+  animation: smoothFadeIn 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
 @keyframes slideDown {
   from {
     opacity: 1;
